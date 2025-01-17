@@ -6,12 +6,12 @@ __author__ = "DV Klopfenstein, PhD"
 from os import system
 from argparse import ArgumentParser
 from configparser import ConfigParser
-from timetracker.timetracker import TimeTracker
+from timetracker.recorder import Recorder
 
 
 def main():
     """Track your time; record it in a csv file"""
-    obj = TimeTracker()
+    obj = Recorder()
 
 #def _get_args():
 #    parser = ArgumentParser(description="Track your time; record it in a csv file")

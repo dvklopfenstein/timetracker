@@ -12,7 +12,7 @@ from datetime import timedelta
 from datetime import datetime
 
 
-class TimeTracker:
+class Recorder:
     """Track your time; record it in a csv file"""
 
     datpat = '%Y-%m-%d %H:%M:%S.%f'

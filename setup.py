@@ -1,7 +1,7 @@
 """For building and installing TimeTracker"""
 
-from setuptools import setup
 from os.path import join
+from setuptools import setup
 
 PACKAGES = [
     'timetracker',
@@ -11,7 +11,7 @@ PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
 print(PACKAGE_DIRS)
 
 CONSOLE_SCRIPTS = [
-    'timetracker=timetracker.cli:main',
+    'trkr=timetracker.cli:main',
 ]
 
 setup(

@@ -40,26 +40,33 @@ class Recorder:
         toc = default_timer()
         dtx = datetime.now()
         delta = f'{timedelta(seconds=toc-tic)}'
+        tags = ''
         if not exists(self.csv):
             self._wr_csvhdrs()
         with open(self.csv, 'a', encoding='utf8') as prt:
             prt.write(f'{dt0.strftime("%a")},{dt0},{tic},'
                       f'{dtx.strftime("%a")},{dtx},{toc},'
-                      f'{delta},{description}\n')
+                      f'{tags},{delta},{description}\n')
             info(f'Elapsed H:M:S={delta} APPENDED TO {self.csv}')
         ##print(f'{dt0} {tic}  START')
         ##print(f'{dtx} {toc}  STOP  {description}')
 
     def _wr_csvhdrs(self):
+        # aTimeLogger columns: Activity From To Notes
         with open(self.csv, 'w', encoding='utf8') as prt:
             prt.write('start_day',
                       'start_datetime,'
                       'start_tic,'
+                      # Stop
                       'stop_day',
                       'stop_datetime,'
                       'stop_toc,'
-                      'timedelta,'
-                      'description\n')
+                      # Duration
+                      'duration,'
+                      # Info
+                      'tags',
+                      'type',
+                      'comment\n')
 
     def _rd_datetime(self):
         txt = self._rd_startfile()

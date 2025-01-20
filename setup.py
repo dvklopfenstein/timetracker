@@ -11,7 +11,7 @@ PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
 print(PACKAGE_DIRS)
 
 CONSOLE_SCRIPTS = [
-    'timetracker=timetracker.main:main',
+    'timetracker=timetracker.cli:main',
 ]
 
 setup(

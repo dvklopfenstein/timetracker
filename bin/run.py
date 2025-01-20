@@ -4,7 +4,7 @@
 __copyright__ = 'Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from timetracker.scripts import main
+from timetracker.cli import main
 
 
 if __name__ == '__main__':

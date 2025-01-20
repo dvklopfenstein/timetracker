@@ -4,3 +4,6 @@ test_timetracker.csv
 
 # Python
 __pycache__
+
+# Linux
+tmp*

@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
+from os.path import isfile
 from os.path import expanduser
 from configparser import ConfigParser
 
@@ -17,9 +18,18 @@ class Cfg:
 
     def _init_cfg(self):
         cfg = ConfigParser()
+        return cfg
+
+    def get_cfgfile(self):
+        """Get the config file from the config search path"""
+        for cfgname in self._get_cfg_searchpath():
+            if cfgname is not None and isfile(cfgname):
+                return cfgname
+        return None
 
     def _get_cfg_searchpath(self):
-        cfgs = [
+        """Get config search path"""
+        return [
             # 1. Local directory
             './.timetracker/config',
             # 2. Home directory:
@@ -30,6 +40,7 @@ class Cfg:
             # 4. Environmental variable:
             environ.get('TIMETRACKERCONF'),
         ]
+
 
 
 

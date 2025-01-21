@@ -5,7 +5,14 @@ __author__ = "DV Klopfenstein, PhD"
 
 from timetracker.cfg import Cfg
 from timetracker.cli import Cli
+from timetracker.init import run_init
 #from timetracker.recorder import Recorder
+
+fncs = {
+    'init': run_init,
+    #'start': run_start,
+    #'stop': run_stop,
+}
 
 
 def main():
@@ -15,6 +22,7 @@ def main():
     print(f'CONF({ini})')
     cli = Cli(ini)
     args = cli.get_args()
+    fncs[args.command](**vars(args))
     #rec = Recorder()
 
 

@@ -40,7 +40,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        parser.add_argument('directory', nargs='?', default='./timetracker',
+        parser.add_argument('directory', nargs='?', default='./.timetracker',
             help='Optional user specified directory')
         return parser
 

@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from logging import error
 from argparse import ArgumentParser
+from argparse import ArgumentDefaultsHelpFormatter
 
 
 class Cli:
@@ -13,16 +14,16 @@ class Cli:
 
     def __init__(self, cfgfile):
         self.cfgfile = cfgfile
+        self.parser = self._init_parser()
 
     def get_args(self):
         """Get arguments for ScriptFrame"""
-        parser = self._get_parser()
-        args = parser.parse_args()
+        args = self.parser.parse_args()
         print(f'ARGS: {args}')
         self._chkargs(args)
         return args
 
-    def _get_parser(self):
+    def _init_parser(self):
         parser = ArgumentParser(
             prog='timetracker',
             description="Track your time in git-managed repos",
@@ -36,7 +37,11 @@ class Cli:
 
     def _add_parser_init(self, subparsers):
         parser = subparsers.add_parser(name='init',
-            help='Initialize timetracking')
+            help='Initialize the .timetracking directory',
+            formatter_class=ArgumentDefaultsHelpFormatter,
+        )
+        parser.add_argument('directory', nargs='?', default='./timetracker',
+            help='Optional user specified directory')
         return parser
 
     def _add_parser_start(self, subparsers):
@@ -52,6 +57,8 @@ class Cli:
     def _chkargs(self, args):
         if args.command is None:
             if self.cfgfile is None:
+                self.parser.print_help()
+                print('')
                 error('Use `trkr init` to initialize '
                      'a timetracker config file')
 

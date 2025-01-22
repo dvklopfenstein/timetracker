@@ -52,7 +52,8 @@ class TimeTracker:
         #subprocess.run(cmd.split())
         start_file = self.fmgr.get_filename_start()
         if not exists(start_file):
-            print('Run `trkr start` to begin timetracking')
+            print('Run `trkr start` to begin timetracking '
+                  f'for extant name({self.fmgr.name})')
             return
 
     def _msg_init(self):

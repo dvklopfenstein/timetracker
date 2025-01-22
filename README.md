@@ -17,8 +17,8 @@ Helps to track time spent on multiple projects, one repo at a time.
 * Quickly see the current task being recorded
 * Quickly see elapsed time spent on the current task
 * No clicking and clicking and clicking on a GUI
-* Does not require the internet or any cloud-based services
-* Stop-timer data supports
+* No required use of the internet or cloud-based services
+* Data supported for each time interval includes:
   * A required free-form descriptive message
   * An optional `activity` or `type`
   * Any number of tags

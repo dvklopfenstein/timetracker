@@ -53,7 +53,8 @@ upgrade:
 
 clean_build:
 	rm -rf build/
-	rm -rf timetracker.egg-info/
+	rm -rf timetracker_csv.egg-info/
+	rm -rf dist/
 
 clean_pycache:
 	find . -type d -name __pycache__ | xargs rm -rf

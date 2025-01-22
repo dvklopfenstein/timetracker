@@ -8,7 +8,7 @@ Helps to track time spent on multiple projects, one repo at a time.
 * [Installation](#installation)
 * [Other time-trackers](#other-timetrackers)
 
-# Advantages
+## Advantages
 * Freedom software (aka open-source)
 * Own your data
 * Human-readable ASCII data
@@ -23,32 +23,32 @@ Helps to track time spent on multiple projects, one repo at a time.
   * An optional `activity` or `type`
   * Any number of tags
 
-# Quickstart
-## 1) Initialize a `.timetracker/` directory
+## Quickstart
+### 1) Initialize a `.timetracker/` directory
 ```
 $ trkr init
 Initialized empty timetracker directory: /DIR/.timetracker for name(dvk)
 ```
-## 2) Start the timer
+### 2) Start the timer
 ```
 $ trkr start
 Timetracker started Wed 03:19 PM: 2025-01-22 15:19:46.479951 for name(dvk)
 ```
-## 3) Stop the timer
+### 3) Stop the timer
 ```
 $ trkr stop -m 'Accomplished the planned task'
 Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
 ```
-## 4) Reporting functions are coming...
+### 4) Reporting functions are coming...
 
-# Installation
+## Installation
 ```
 $ git clone git@github.com:dvklopfenstein/timetracker.git
 $ cd timetracker
 $ pip install .
 ```
 
-# Other timetrackers
+## Other timetrackers
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
 * 5 start [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
 * https://atimelogger.pro/ csv files

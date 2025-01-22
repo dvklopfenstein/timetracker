@@ -1,4 +1,4 @@
-# Timetracker
+# Timetracker-csv
 A lightweight, repo-based, login-based, command-line time tracker that stores data in csv files.
 
 Helps to track time spent on multiple projects, one repo at a time.
@@ -57,6 +57,8 @@ $ pip install .
 
 ## Other timetrackers
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
+* 85 stars [ti](https://github.com/richmeta/ti)
+* 44 stars [tim](https://github.com/MatthiasKauer/tim)
 * 6 stars [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
 * https://atimelogger.pro/ csv files
 * [List of timetrackers in PyPi](https://pypi.org/search/?q=timetracker)

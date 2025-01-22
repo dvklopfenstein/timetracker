@@ -1,5 +1,5 @@
 # Timetracker
-A minimal repo-based, command-line timetracker tool that stores data in csv files.
+A lightweight, repo-based, command-line time tracker that stores data in csv files.
 
 Helps to track time spent on multiple projects, one repo at a time.
 

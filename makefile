@@ -13,12 +13,52 @@ pylint:
 	chmod 755 tmp_pylint
 	tmp_pylint
 
+# -----------------------------------------------------------------------------
+# 1) Increase the version number:
+vim_ver:
+	vim -p timetracker/__init__.py setup.py CHANGELOG.md
+
+vim_md:
+	vim -p README.md docs/index.md
+
+# 2) Create wheel - Check PyPi packages are up-to-date: make upgrade
+# https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project
+# universal wheels are pure Python
+#   Needs wheel package to run bdist_wheel: pip3 install wheel
+.PHONY: build
+build:
+	# python3 -m pip install -U pip
+	# python3 -m pip install --user --upgrade setuptools wheel
+	make clean_build
+	$(PYTHON) setup.py sdist
+	$(PYTHON) setup.py bdist_wheel --universal
+	ls -lh dist
+	twine check dist/*
+
+# 3) Upload wheel to https://pypi.org
+# https://pypi.org/manage/account/token/
+# python3 -m pip install --upgrade timetracker
+upload:
+	#twine upload dist/* --verbose
+	twine upload dist/* --repository timetracker --verbose
+
+
+# -----------------------------------------------------------------------------
+upgrade:
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install --upgrade setuptools wheel twine
+	$(PYTHON) -m pip install --upgrade distutils
+
 clean_build:
 	rm -rf build/
 	rm -rf timetracker.egg-info/
 
+clean_pycache:
+	find . -type d -name __pycache__ | xargs rm -rf
+
 clean:
 	make clean_build
+	make clean_pycache
 	rm -f test_timetracker.csv
 	rm -f .timetracker_start
 

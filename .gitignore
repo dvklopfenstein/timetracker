@@ -1,6 +1,8 @@
 # Project files
 .timetracker_start
 test_timetracker.csv
+/build/
+/timetracker.egg-info/
 
 # Python
 __pycache__

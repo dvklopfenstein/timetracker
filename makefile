@@ -13,7 +13,12 @@ pylint:
 	chmod 755 tmp_pylint
 	tmp_pylint
 
+clean_build:
+	rm -rf build/
+	rm -rf timetracker.egg-info/
+
 clean:
+	make clean_build
 	rm -f test_timetracker.csv
 	rm -f .timetracker_start
 

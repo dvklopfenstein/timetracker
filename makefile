@@ -1,4 +1,5 @@
 MAKEFLAGS := --no-print-directory
+PYTHON := python3
 
 install:
 	pip install .
@@ -20,9 +21,6 @@ pylint:
 # 1) Increase the version number:
 vim_ver:
 	vim -p timetracker/__init__.py setup.py CHANGELOG.md
-
-vim_md:
-	vim -p README.md docs/index.md
 
 # 2) Create wheel - Check PyPi packages are up-to-date: make upgrade
 # https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project
@@ -49,8 +47,9 @@ upload:
 # -----------------------------------------------------------------------------
 upgrade:
 	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install --upgrade setuptools wheel twine
-	$(PYTHON) -m pip install --upgrade distutils
+	$(PYTHON) -m pip install --upgrade setuptools
+	$(PYTHON) -m pip install --upgrade wheel
+	$(PYTHON) -m pip install --upgrade twine
 
 clean_build:
 	rm -rf build/

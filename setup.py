@@ -5,6 +5,8 @@ __author__ = "DV Klopfenstein, PhD"
 
 
 from os.path import join
+from os.path import abspath
+from os.path import dirname
 from setuptools import setup
 
 PACKAGES = [
@@ -13,7 +15,15 @@ PACKAGES = [
 ]
 
 PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
-print(PACKAGE_DIRS)
+
+def get_long_description():
+    """Return the contents of the README.md as a string"""
+    dir_cur = abspath(dirname(__file__))
+    # python3
+    #with open(join(dir_cur, 'README.md'), encoding='utf-8') as ifstrm:
+    # python3 or python2
+    with open(join(dir_cur, 'README.md'), 'rb') as ifstrm:
+        return ifstrm.read().decode("UTF-8")
 
 CONSOLE_SCRIPTS = [
     'trkr=timetracker.trkr:main',
@@ -42,6 +52,8 @@ setup(
     url='http://github.com/dvklopfenstein/timetracking',
     description="A lightweight, repo-based, command-line timetracker "
                 "that stores data in csv files",
+    long_description=get_long_description(),
+    long_description_content_type='text/markdown',
 )
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

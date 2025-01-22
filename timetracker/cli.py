@@ -63,6 +63,8 @@ class Cli:
     def _add_subparser_start(self, subparsers):
         parser = subparsers.add_parser(name='start',
             help='Start timetracking')
+        parser.add_argument('-f', '--force', action='store_true',
+            help='Force over-writing of start time')
         return parser
 
     def _add_subparser_stop(self, subparsers):

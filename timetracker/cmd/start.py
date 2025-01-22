@@ -13,18 +13,27 @@ from logging import info
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
+from timetracker.hms import hms_from_startfile
 
 
 def run_start(fmgr):
     """Initialize timetracking on a project"""
     now = datetime.now()
     fin_start = fmgr.get_filename_start()
-    if not exists(fin_start) or fmgr.force():
+    # Print elapsed time, if timer was started
+    if exists(fin_start):
+        hms = hms_from_startfile(fin_start)
+        print(f'\n{hms} H:M:S; elapsed time for name({fmgr.name})')
+    # Set/reset starting time, if applicable
+    if not exists(fin_start) or fmgr.forced():
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
             info(f'  WROTE: {fin_start}')
-            return
-    print('Use `--force` to reset start time to current time')
+    # Informational message
+    if not fmgr.forced():
+        print('Use `--force` to reset start time to now')
+    else:
+        print(f'Reseting start time to now({now})')
 
 
     #dirtrk = kws['directory']

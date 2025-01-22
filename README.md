@@ -14,6 +14,19 @@ Helps to track time spent on multiple projects, one repo at a time.
 * No clicking and clicking and clicking on a GUI
 * Does not require the internet or any cloud-based services
 
+# Quickstart
+## 1) Initialize a `.timetracker/` directory
+```
+$ trkr init
+```
+
+# Installation
+```
+$ git clone git@github.com:dvklopfenstein/timetracker.git
+$ cd timetracker
+$ pip install .
+```
+
 # Other timetrackers
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
 * 5 start [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format

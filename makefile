@@ -1,5 +1,8 @@
 MAKEFLAGS := --no-print-directory
 
+install:
+	pip install .
+
 py:
 	find tests timetracker bin -name \*.py
 	find .timetracker -type f
@@ -63,4 +66,5 @@ clean:
 	rm -f .timetracker_start
 
 clobber:
+	make clean
 	rm -rf .timetracker/

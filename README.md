@@ -50,7 +50,7 @@ $ pip install .
 
 ## Other timetrackers
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
-* 5 start [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
+* 6 stars [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
 * https://atimelogger.pro/ csv files
 * [List of timetrackers in PyPi](https://pypi.org/search/?q=timetracker)
 * [web-based time tracking application](https://github.com/anuko/timetracker)

@@ -40,7 +40,7 @@ setup(
         'Topic :: Office/Business :: Financial :: Spreadsheet',
     ],
     url='http://github.com/dvklopfenstein/timetracking',
-    description="A minimal repo-based, command-line timetracker "
+    description="A lightweight, repo-based, command-line timetracker "
                 "that stores data in csv files",
 )
 

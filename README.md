@@ -54,7 +54,7 @@ $ pip install .
 * https://atimelogger.pro/ csv files
 * [List of timetrackers in PyPi](https://pypi.org/search/?q=timetracker)
 * [web-based time tracking application](https://github.com/anuko/timetracker)
-* [Wage Labor record](https://pypi.org/project/wage-labor-record/)
+* [Wage Labor record](https://pypi.org/project/wage-labor-record/):
   * jupyter-timetracker - GUI too complex/too close to DB editing tools. No support for clients
   * tim CLI only, no idle time detection but uses hledger as a backend!
   * salary-timetracker CLI only, tracking bound to git repos, fixed hourly rate but hey it uses CSV files!

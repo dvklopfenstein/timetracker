@@ -23,7 +23,7 @@ class Cli:
     def get_args(self):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args()
-        print(f'DVK ARGS: {args}')
+        ##print(f'DVK ARGS: {args}')
         return args
 
     def _init_parsers(self):

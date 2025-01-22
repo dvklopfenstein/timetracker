@@ -4,9 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
-##from os.path import join
 from logging import error
-##import subprocess
 from timetracker.filemgr import FileMgr
 ##from timetracker.cfg import Cfg
 from timetracker.cli import Cli
@@ -50,9 +48,6 @@ class TimeTracker:
             self._msg_init()
             return
         # Check for start time
-        #cmd = 'find ./.timetracker'
-        #print(f'DVK CMD: {cmd}')
-        #subprocess.run(cmd.split())
         start_file = self.fmgr.get_filename_start()
         if not exists(start_file):
             print('Run `trkr start` to begin timetracking '

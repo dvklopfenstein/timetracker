@@ -3,6 +3,11 @@ A lightweight, repo-based, command-line time tracker that stores data in csv fil
 
 Helps to track time spent on multiple projects, one repo at a time.
 
+* [Advantages](#advantages)
+* [Quickstart](#quickstart)
+* [Installation](#installation)
+* [Other time-trackers](#other-timetrackers)
+
 # Advantages
 * Freedom software (aka open-source)
 * Own your data

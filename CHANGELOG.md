@@ -2,7 +2,8 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* [**Release 2025-01-22 v0.0.1-tp.1**](#release-2025-01-22-v001) Initial implementation of cmds: init, start, and stop
+* [**Release 2025-01-22 v0.0.1-tp.1**](#release-2025-01-22-v001-tp1) Initial implementation of cmds: init, start, and stop
+
 
 # Details
 

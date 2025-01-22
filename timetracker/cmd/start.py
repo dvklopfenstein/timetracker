@@ -12,6 +12,7 @@ from logging import info
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
+from timetracker.msgs import prt_started
 
 
 def run_start(fmgr):
@@ -29,8 +30,7 @@ def run_start(fmgr):
             info(f'  WROTE: {fin_start}')
     # Informational message
     elif not fmgr.forced():
-        print('DO `trkr stop -m "task description"` to stop tracking this time unit')
-        print('Do `trkr start --force`              to reset start time to now')
+        prt_started()
     else:
         print(f'Reseting start time to now({now})')
 
@@ -46,12 +46,12 @@ def run_start(fmgr):
     #        print(f'  WROTE: {relpath(fout_cfg)}')
 
 
-class CmdStart:
-    """Initialize a timetracker project"""
-    # pylint: disable=too-few-public-methods
-
-    def __init__(self, cfgfile):
-        self.cfgfile = cfgfile
+#class CmdStart:
+#    """Initialize a timetracker project"""
+#    # pylint: disable=too-few-public-methods
+#
+#    def __init__(self, cfgfile):
+#        self.cfgfile = cfgfile
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -3,37 +3,59 @@ A lightweight, repo-based, command-line time tracker that stores data in csv fil
 
 Helps to track time spent on multiple projects, one repo at a time.
 
-# Advantages
+* [Advantages](#advantages)
+* [Quickstart](#quickstart)
+* [Installation](#installation)
+* [Other time-trackers](#other-timetrackers)
+
+## Advantages
 * Freedom software (aka open-source)
 * Own your data
-* Human-readable ASCII data
+* Human-readable ASCII data stored in csv files
 * Modify your data if you forget to log time
 * Quick to set up
 * Quickly see the current task being recorded
 * Quickly see elapsed time spent on the current task
 * No clicking and clicking and clicking on a GUI
 * Does not require the internet or any cloud-based services
+* Stop-timer data supports
+  * A required free-form descriptive message
+  * An optional `activity` or `type`
+  * Any number of tags
+* Plans to support exporting data for import by external time-tracking viewers
 
-# Quickstart
-## 1) Initialize a `.timetracker/` directory
+## Quickstart
+### 1) Initialize a `.timetracker/` directory
 ```
 $ trkr init
+Initialized empty timetracker directory: /DIR/.timetracker for name(dvk)
 ```
+### 2) Start the timer
+```
+$ trkr start
+Timetracker started Wed 03:19 PM: 2025-01-22 15:19:46.479951 for name(dvk)
+```
+### 3) Stop the timer
+```
+$ trkr stop -m 'Accomplished the planned task'
+Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
+```
+### 4) Reporting functions are coming...
 
-# Installation
+## Installation
 ```
 $ git clone git@github.com:dvklopfenstein/timetracker.git
 $ cd timetracker
 $ pip install .
 ```
 
-# Other timetrackers
+## Other timetrackers
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
-* 5 start [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
+* 6 stars [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
 * https://atimelogger.pro/ csv files
 * [List of timetrackers in PyPi](https://pypi.org/search/?q=timetracker)
 * [web-based time tracking application](https://github.com/anuko/timetracker)
-* [Wage Labor record](https://pypi.org/project/wage-labor-record/)
+* [Wage Labor record](https://pypi.org/project/wage-labor-record/):
   * jupyter-timetracker - GUI too complex/too close to DB editing tools. No support for clients
   * tim CLI only, no idle time detection but uses hledger as a backend!
   * salary-timetracker CLI only, tracking bound to git repos, fixed hourly rate but hey it uses CSV files!

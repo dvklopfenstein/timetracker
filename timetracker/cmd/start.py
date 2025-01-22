@@ -26,7 +26,9 @@ def run_start(fmgr):
         fmgr.ini_workdir()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
-            print(f'Timetracker started {now.strftime("%a %I:%M %p")}: {now}')
+            print(f'Timetracker started '
+                  f'{now.strftime("%a %I:%M %p")}: {now} '
+                  f'for name({fmgr.name})')
             info(f'  WROTE: {fin_start}')
     # Informational message
     elif not fmgr.forced():

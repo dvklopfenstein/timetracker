@@ -13,12 +13,28 @@ Helps to track time spent on multiple projects, one repo at a time.
 * Quickly see elapsed time spent on the current task
 * No clicking and clicking and clicking on a GUI
 * Does not require the internet or any cloud-based services
+* Stop-timer data supports
+  * A required free-form descriptive message
+  * An optional `activity` or `type`
+  * Any number of tags
 
 # Quickstart
 ## 1) Initialize a `.timetracker/` directory
 ```
 $ trkr init
+Initialized empty timetracker directory: /DIR/.timetracker for name(dvk)
 ```
+## 2) Start the timer
+```
+$ trkr start
+Timetracker started Wed 03:19 PM: 2025-01-22 15:19:46.479951 for name(dvk)
+```
+## 3) Stop the timer
+```
+$ trkr stop -m 'Accomplished the planned task'
+Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
+```
+## 4) Reporting functions are coming...
 
 # Installation
 ```

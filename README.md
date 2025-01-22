@@ -1,15 +1,17 @@
 # Timetracker
 A minimal repo-based, command-line timetracker tool that stores data in csv files.
 
-Helps you track how much time you spend on multiple projects
+Helps to track time spent on multiple projects, one repo at a time.
 
 # Advantages
 * Freedom software (aka open-source)
 * Own your data
-* Can modify your data if you forget to log time
+* Human-readable ASCII data
+* Modify your data if you forget to log time
 * Quick to set up
 * Quickly see the current task being recorded
-* No clicking and clicking anc clicking on a complicated GUI
+* Quickly see elapsed time spent on the current task
+* No clicking and clicking and clicking on a GUI
 * Does not require the internet or any cloud-based services
 
 # Other timetrackers
@@ -28,3 +30,5 @@ Helps you track how much time you spend on multiple projects
   * tt-cli CLI only, no idle time detection, no support for clients
   * timetracker CLI only, no idle time detection, no support for clients
   * 1k stars [hamster comes pretty close but seems outdated/abandoned and a little bit too complex](https://github.com/projecthamster/hamster)
+
+Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

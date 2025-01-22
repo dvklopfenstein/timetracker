@@ -1,10 +1,15 @@
 """For building and installing TimeTracker"""
 
+__copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved'
+__author__ = "DV Klopfenstein, PhD"
+
+
 from os.path import join
 from setuptools import setup
 
 PACKAGES = [
     'timetracker',
+    'timetracker.cmd',
 ]
 
 PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
@@ -35,5 +40,8 @@ setup(
         'Topic :: Office/Business :: Financial :: Spreadsheet',
     ],
     url='http://github.com/dvklopfenstein/timetracking',
-    description="Command-line timetracker that stores data in csv files",
+    description="A minimal repo-based, command-line timetracker "
+                "that stores data in csv files",
 )
+
+# Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

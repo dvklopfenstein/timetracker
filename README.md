@@ -1,5 +1,5 @@
 # Timetracker
-A lightweight, repo-based, command-line time tracker that stores data in csv files.
+A lightweight, repo-based, login-based, command-line time tracker that stores data in csv files.
 
 Helps to track time spent on multiple projects, one repo at a time.
 
@@ -25,6 +25,7 @@ Helps to track time spent on multiple projects, one repo at a time.
 * Plans to support exporting data for import by external time-tracking viewers
 
 ## Quickstart
+The `name` used by this time tracker is determined by the `USER` environmental variable by default.
 ### 1) Initialize a `.timetracker/` directory
 ```
 $ trkr init

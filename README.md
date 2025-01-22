@@ -11,7 +11,7 @@ Helps to track time spent on multiple projects, one repo at a time.
 ## Advantages
 * Freedom software (aka open-source)
 * Own your data
-* Human-readable ASCII data
+* Human-readable ASCII data stored in csv files
 * Modify your data if you forget to log time
 * Quick to set up
 * Quickly see the current task being recorded
@@ -22,6 +22,7 @@ Helps to track time spent on multiple projects, one repo at a time.
   * A required free-form descriptive message
   * An optional `activity` or `type`
   * Any number of tags
+* Plans to support exporting data for import by external time-tracking viewers
 
 ## Quickstart
 ### 1) Initialize a `.timetracker/` directory

@@ -4,9 +4,11 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 ##from os import environ
+from os import makedirs
 from os.path import exists
 ##from os.path import isdir
 from os.path import join
+from os.path import abspath
 ##from os.path import isfile
 ##from os.path import expanduser
 ##from configparser import ConfigParser
@@ -30,6 +32,15 @@ class FileMgr:
     def get_workdir(self):
         """Get directory for timetracker information"""
         return self.tdir
+
+    def ini_workdir(self):
+        """Initialize timetracker working directory"""
+        dirtrk = self.get_workdir()
+        if not exists(dirtrk):
+            makedirs(dirtrk, exist_ok=True)
+            absdir = abspath(dirtrk)
+            print(f'Initialized empty timetracker directory: {absdir} '
+                  f'for name({self.name})')
 
     def exists_workdir(self):
         """Test existance of timetracker working directory"""

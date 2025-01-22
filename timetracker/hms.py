@@ -29,7 +29,7 @@ def _rd_dt_startfile(fname):
     with open(fname, encoding='utf8') as ifstrm:
         for line in ifstrm:
             line = line.strip()
-            assert len(line) == 26 # "2025-01-22 04:05:00.086891"
+            assert len(line) == 26  # "2025-01-22 04:05:00.086891"
             return datetime.strptime(line, FMT)
     return None
 

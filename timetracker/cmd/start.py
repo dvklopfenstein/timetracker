@@ -3,7 +3,6 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-##from os import makedirs
 from os.path import exists
 ##from os.path import abspath
 ##from os.path import relpath
@@ -26,11 +25,13 @@ def run_start(fmgr):
         print(f'\n{hms} H:M:S; elapsed time for name({fmgr.name})')
     # Set/reset starting time, if applicable
     if not exists(fin_start) or fmgr.forced():
+        fmgr.ini_workdir()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
+            print(f'Timetracker started {now.strftime("%a %I:%M %p")}: {now}')
             info(f'  WROTE: {fin_start}')
     # Informational message
-    if not fmgr.forced():
+    elif not fmgr.forced():
         print('Use `--force` to reset start time to now')
     else:
         print(f'Reseting start time to now({now})')

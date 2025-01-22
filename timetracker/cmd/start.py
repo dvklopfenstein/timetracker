@@ -12,7 +12,6 @@ from logging import info
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
-from timetracker.hms import hms_from_startfile
 
 
 def run_start(fmgr):
@@ -20,9 +19,7 @@ def run_start(fmgr):
     now = datetime.now()
     fin_start = fmgr.get_filename_start()
     # Print elapsed time, if timer was started
-    if exists(fin_start):
-        hms = hms_from_startfile(fin_start)
-        print(f'\n{hms} H:M:S; elapsed time for name({fmgr.name})')
+    fmgr.prt_elapsed()
     # Set/reset starting time, if applicable
     if not exists(fin_start) or fmgr.forced():
         fmgr.ini_workdir()
@@ -32,7 +29,8 @@ def run_start(fmgr):
             info(f'  WROTE: {fin_start}')
     # Informational message
     elif not fmgr.forced():
-        print('Use `--force` to reset start time to now')
+        print('DO `trkr stop -m "task description"` to stop tracking this time unit')
+        print('Do `trkr start --force`              to reset start time to now')
     else:
         print(f'Reseting start time to now({now})')
 

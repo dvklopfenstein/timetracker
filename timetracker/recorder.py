@@ -17,7 +17,7 @@ class Recorder:
 
     datpat = '%Y-%m-%d %H:%M:%S.%f'
 
-    def __init__(self, csv_filename, startfile='.timetracker_start'):
+    def __init__(self, csv_filename, startfile='.timetracker_starttime'):
         self.csv = csv_filename
         self.startfile = startfile
 

@@ -12,12 +12,13 @@ from timetracker.filemgr import FileMgr
 from timetracker.cli import Cli
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
 from timetracker.msgs import prt_started
 
 fncs = {
     'init': run_init,
     'start': run_start,
-    #'stop': run_stop,
+    'stop': run_stop,
 }
 
 

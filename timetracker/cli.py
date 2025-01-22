@@ -61,15 +61,21 @@ class Cli:
         return parser
 
     def _add_subparser_start(self, subparsers):
-        parser = subparsers.add_parser(name='start',
-            help='Start timetracking')
+        parser = subparsers.add_parser(name='start', help='Start timetracking')
         parser.add_argument('-f', '--force', action='store_true',
             help='Force over-writing of start time')
         return parser
 
     def _add_subparser_stop(self, subparsers):
-        parser = subparsers.add_parser(name='stop',
-            help='Stop timetracking')
+        parser = subparsers.add_parser(name='stop', help='Stop timetracking')
+        parser.add_argument('-m', '--message', required=True,
+            help='Message describing the work done in the time unit')
+        parser.add_argument('--activity', default='',
+            help='Activity for time unit')
+        parser.add_argument('-t', '--tags', nargs='*',
+            help='Tags for this time unit')
+        parser.add_argument('-k', '--keepstart', action='store_true', default=False,
+            help='Resetting the timer is the normal behavior; Keep the start time this time')
         return parser
 
 

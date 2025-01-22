@@ -1,29 +1,64 @@
-"""Command line interface (CLI) for timetracking"""
+"""Connect all parts of the timetracker"""
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from timetracker.cfg import Cfg
+from os.path import exists
+##from os.path import join
+from logging import error
+##import subprocess
+from timetracker.filemgr import FileMgr
+##from timetracker.cfg import Cfg
 from timetracker.cli import Cli
-from timetracker.init import run_init
-#from timetracker.recorder import Recorder
+from timetracker.cmd.init import run_init
+from timetracker.cmd.start import run_start
 
 fncs = {
     'init': run_init,
-    #'start': run_start,
+    'start': run_start,
     #'stop': run_stop,
 }
 
 
 def main():
-    """Command line interface (CLI) for timetracking"""
-    cfg = Cfg()
-    ini = cfg.get_cfgfile()
-    print(f'CONF({ini})')
-    cli = Cli(ini)
-    args = cli.get_args()
-    fncs[args.command](**vars(args))
-    #rec = Recorder()
+    """Connect all parts of the timetracker"""
+    obj = TimeTracker()
+    obj.run()
+
+
+class TimeTracker:
+    """Connect all parts of the timetracker"""
+
+    def __init__(self):
+        #self.cfg = Cfg()
+        self.cli = Cli()
+        self.args = self.cli.get_args()
+        self.fmgr = FileMgr(**vars(self.args))
+
+    def run(self):
+        """Run timetracker"""
+        if self.args.command is not None:
+            fncs[self.args.command](self.fmgr)
+        else:
+            self._cmd_none()
+
+    def _cmd_none(self):
+        if not self.fmgr.exists_workdir():
+            self._msg_init()
+            return
+        # Check for start time
+        #cmd = 'find ./.timetracker'
+        #print(f'DVK CMD: {cmd}')
+        #subprocess.run(cmd.split())
+        start_file = self.fmgr.get_filename_start()
+        if not exists(start_file):
+            print('Run `trkr start` to begin timetracking')
+            return
+
+    def _msg_init(self):
+        self.cli.parser.print_help()
+        print('')
+        error('Run `trkr init` to initialize local timetracker')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

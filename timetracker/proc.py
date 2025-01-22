@@ -12,7 +12,7 @@ def get_gitusername():
     if which('git') is not None:
         cmd = 'git config user.name'
         ##print(f'CMD: {cmd}')
-        rsp = run(cmd.split(), capture_output=True)
+        rsp = run(cmd.split(), capture_output=True, check=False)
         if rsp.returncode == 0 and rsp.stderr == b'':
             name = rsp.stdout.decode('utf-8').strip()
             ##print(f'({name})')

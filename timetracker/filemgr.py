@@ -39,7 +39,7 @@ class FileMgr:
         """Get the file storing the start time a person"""
         return join(self.tdir, f'start_{self.name}.txt')
 
-    def force(self):
+    def forced(self):
         """Return the value of force"""
         return self.kws.get('force', False)
 

@@ -19,9 +19,6 @@ PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
 def get_long_description():
     """Return the contents of the README.md as a string"""
     dir_cur = abspath(dirname(__file__))
-    # python3
-    #with open(join(dir_cur, 'README.md'), encoding='utf-8') as ifstrm:
-    # python3 or python2
     with open(join(dir_cur, 'README.md'), 'rb') as ifstrm:
         return ifstrm.read().decode("UTF-8")
 
@@ -30,7 +27,9 @@ CONSOLE_SCRIPTS = [
 ]
 
 setup(
-    name='timetracker',
+    # The name of the project on PyPi
+    name='timetracker-csv',
+    # https://peps.python.org/pep-0440/
     version='0.1a1',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',

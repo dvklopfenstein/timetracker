@@ -44,6 +44,11 @@ Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
 ### 4) Reporting functions are coming...
 
 ## Installation
+Install with pip:
+```
+$ pip install timetracker-csv
+```
+Or install from source:
 ```
 $ git clone git@github.com:dvklopfenstein/timetracker.git
 $ cd timetracker

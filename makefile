@@ -41,7 +41,7 @@ build:
 # python3 -m pip install --upgrade timetracker
 upload:
 	#twine upload dist/* --verbose
-	twine upload dist/* --repository timetracker --verbose
+	twine upload dist/* --repository timetracker-csv --verbose
 
 
 # -----------------------------------------------------------------------------

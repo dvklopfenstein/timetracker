@@ -12,6 +12,7 @@ from os.path import abspath
 ##from os.path import isfile
 ##from os.path import expanduser
 ##from configparser import ConfigParser
+from timetracker.hms import hms_from_startfile
 
 
 class FileMgr:
@@ -53,6 +54,15 @@ class FileMgr:
     def forced(self):
         """Return the value of force"""
         return self.kws.get('force', False)
+
+    def prt_elapsed(self):
+        """Print elapsed time if timer is started"""
+        fin_start = self.get_filename_start()
+        # Print elapsed time, if timer was started
+        if exists(fin_start):
+            hms = hms_from_startfile(fin_start)
+            print(f'\nTimer is running -- {hms} H:M:S; '
+                  f'elapsed time for name({self.name})')
 
     ##def workdir_exists(self):
     ##    return isdir(self.get_dirname_work())

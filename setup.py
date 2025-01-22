@@ -16,12 +16,12 @@ PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
 print(PACKAGE_DIRS)
 
 CONSOLE_SCRIPTS = [
-    'trkr=timetracker.cli:main',
+    'trkr=timetracker.trkr:main',
 ]
 
 setup(
     name='timetracker',
-    version='0.0.1-tp.1',
+    version='0.1a1',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',
     packages=PACKAGES,

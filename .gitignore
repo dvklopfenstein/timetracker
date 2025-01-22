@@ -3,6 +3,7 @@
 test_timetracker.csv
 /build/
 /timetracker.egg-info/
+.timetracker/
 
 # Python
 __pycache__

@@ -21,7 +21,7 @@ CONSOLE_SCRIPTS = [
 
 setup(
     name='timetracker',
-    version='0.0.1',
+    version='0.0.1-tp.1',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',
     packages=PACKAGES,

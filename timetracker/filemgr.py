@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 ##from os import environ
 from os import makedirs
+from os import remove
 from os.path import exists
 ##from os.path import isdir
 from os.path import join
@@ -51,9 +52,15 @@ class FileMgr:
         """Get the file storing the start time a person"""
         return join(self.tdir, f'start_{self.name}.txt')
 
-    def forced(self):
-        """Return the value of force"""
-        return self.kws.get('force', False)
+    def rm_starttime(self):
+        """Remove the starttime file, thus resetting the timer"""
+        fstart = self.get_filename_start()
+        if exists(fstart):
+            remove(fstart)
+
+    def get_filename_csv(self):
+        """Get the file storing the start time a person"""
+        return join(self.tdir, f'timetracker_{self.name}.csv')
 
     def prt_elapsed(self):
         """Print elapsed time if timer is started"""
@@ -63,6 +70,31 @@ class FileMgr:
             hms = hms_from_startfile(fin_start)
             print(f'\nTimer is running -- {hms} H:M:S; '
                   f'elapsed time for name({self.name})')
+
+    # Keyword args for the "start" command
+    def forced(self):
+        """Return the value of force"""
+        return self.kws.get('force', False)
+
+    # Keyword args for the "stop" command
+    def get_message(self):
+        """Get the stop-timer message"""
+        return self.kws['message']
+
+    def get_activity(self):
+        """Get the stop-timer activity"""
+        return self.kws['activity']
+
+    def str_tags(self):
+        """Get the stop-timer tags"""
+        tags = self.kws['tags']
+        if not tags:
+            return ''
+        return ';'.join(tags)
+
+    def get_keepstart(self):
+        """When stopping a time unit, keep the start time-it is usually reset"""
+        return self.kws['keepstart']
 
     ##def workdir_exists(self):
     ##    return isdir(self.get_dirname_work())

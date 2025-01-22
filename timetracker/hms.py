@@ -14,9 +14,8 @@ FMT = '%Y-%m-%d %H:%M:%S.%f'
 
 def hms_from_startfile(fname):
     """Get the elapsed time starting from time in a starttime file"""
-    dtstart = _rd_dt_startfile(fname)
-    assert dtstart is not None
-    return datetime.now() - dtstart
+    dtstart = read_startfile(fname)
+    return datetime.now() - dtstart if dtstart is not None else None
 
 ##def str_hms_dts(dt0, dt1):
 ##    pass
@@ -24,7 +23,7 @@ def hms_from_startfile(fname):
 ##def str_hms_tic(tic):
 ##    return str(timedelta(seconds=default_timer()-tic))
 
-def _rd_dt_startfile(fname):
+def read_startfile(fname):
     """Get datetime from a starttime file"""
     with open(fname, encoding='utf8') as ifstrm:
         for line in ifstrm:

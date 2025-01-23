@@ -2,7 +2,7 @@
 .timetracker_start
 test_timetracker.csv
 /build/
-/timetracker.egg-info/
+/timetracker_csv.egg-info/
 .timetracker/
 /dist/
 

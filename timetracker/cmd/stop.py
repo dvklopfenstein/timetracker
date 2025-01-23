@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from os.path import exists
 from logging import error
 from datetime import datetime
+##from timeit import default_timer
 from timetracker.hms import read_startfile
 
 
@@ -20,7 +21,28 @@ def run_stop(fmgr):
     # Append the timetracker file with this time unit
     fcsv = fmgr.get_filename_csv()
     if not exists(fcsv):
-        _wr_csvhdrs(fcsv)
+        _wr_csvlong_hdrs(fcsv)
+    _wr_csvlong_data(fcsv, fmgr, dta)
+    if not fmgr.get_keepstart():
+        fmgr.rm_starttime()
+    else:
+        print('NOT restarting the timer because `--keepstart` invoked')
+
+def _wr_csv_data(fcsv, fmgr, dta):
+    with open(fcsv, 'a', encoding='utf8') as ostrm:
+        ##toc = default_timer()
+        dtz = datetime.now()
+        delta = dtz - dta
+        print(f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
+              f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
+              f'{delta},',
+              f'{fmgr.get_message()},'
+              f'{fmgr.get_activity()},'
+              f'{fmgr.str_tags()}',
+              file=ostrm)
+        print(f'Elapsed H:M:S={delta} appended to {fcsv}')
+
+def _wr_csvlong_data(fcsv, fmgr, dta):
     with open(fcsv, 'a', encoding='utf8') as ostrm:
         dtz = datetime.now()
         delta = dtz - dta
@@ -32,13 +54,21 @@ def run_stop(fmgr):
               f'{fmgr.str_tags()}',
               file=ostrm)
         print(f'Elapsed H:M:S={delta} appended to {fcsv}')
-    if not fmgr.get_keepstart():
-        fmgr.rm_starttime()
-    else:
-        print('NOT restarting the timer because `--keepstart` invoked')
 
+def _wr_csv_hdrs(fcsv):
+    # aTimeLogger columns: Activity From To Notes
+    with open(fcsv, 'w', encoding='utf8') as prt:
+        print(
+            'startsecs,'
+            'stopsecs,'
+            # Info
+            'message,',
+            'activity,',
+            'tags',
+            file=prt,
+        )
 
-def _wr_csvhdrs(fcsv):
+def _wr_csvlong_hdrs(fcsv):
     # aTimeLogger columns: Activity From To Notes
     with open(fcsv, 'w', encoding='utf8') as prt:
         print(

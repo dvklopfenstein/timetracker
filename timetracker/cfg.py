@@ -1,4 +1,10 @@
-"""Configuration manager for timetracking"""
+"""Configuration manager for timetracking.
+
+Uses https://github.com/python-poetry/tomlkit,
+but will switch to tomllib in builtin to standard Python (starting 3.11)
+in a version supported by cygwin, conda, and venv.
+
+"""
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"

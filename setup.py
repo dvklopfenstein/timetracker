@@ -26,6 +26,10 @@ CONSOLE_SCRIPTS = [
     'trkr=timetracker.trkr:main',
 ]
 
+REQUIRES = [
+    'tomlkit',
+]
+
 setup(
     # The name of the project on PyPi
     name='timetracker-csv',
@@ -53,6 +57,7 @@ setup(
                 "that stores data in csv files",
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
+    install_requires=REQUIRES,
 )
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

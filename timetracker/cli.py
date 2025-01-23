@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from os import environ
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
+from argparse import SUPPRESS
 
 
 class Cli:
@@ -62,8 +63,9 @@ class Cli:
 
     def _add_subparser_start(self, subparsers):
         parser = subparsers.add_parser(name='start', help='Start timetracking')
+        # Test feature: Force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
-            help='Force over-writing of start time')
+            help=SUPPRESS)
         return parser
 
     def _add_subparser_stop(self, subparsers):

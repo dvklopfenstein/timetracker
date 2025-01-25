@@ -77,7 +77,8 @@ class Cli:
         parser.add_argument('-t', '--tags', nargs='*',
             help='Tags for this time unit')
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
-            help='Resetting the timer is the normal behavior; Keep the start time this time')
+            #help='Resetting the timer is the normal behavior; Keep the start time this time')
+            help=SUPPRESS)
         return parser
 
 

@@ -50,7 +50,7 @@ class TimeTracker:
         # Check for start time
         start_file = self.fmgr.get_filename_start()
         if not exists(start_file):
-            print('Run `trkr start` to begin timetracking '
+            print('Run `trk start` to begin timetracking '
                   f'for extant name({self.fmgr.name})')
         else:
             self.fmgr.prt_elapsed()
@@ -60,7 +60,7 @@ class TimeTracker:
     def _msg_init(self):
         self.cli.parser.print_help()
         print('')
-        error('Run `trkr init` to initialize local timetracker')
+        error('Run `trk init` to initialize local timetracker')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

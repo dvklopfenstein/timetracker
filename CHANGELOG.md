@@ -9,6 +9,7 @@
 # Details
 
 ## Unreleased
+* CHANGED: Executable name from `trkr` to the shorter `trk`
 
 ## Release 2025-01-22 v0.1a2
 * ADD: Install with `pip install timetracker-csv`

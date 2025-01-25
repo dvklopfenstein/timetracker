@@ -28,17 +28,17 @@ Helps to track time spent on multiple projects, one repo at a time.
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
 ### 1) Initialize a `.timetracker/` directory
 ```
-$ trkr init
+$ trk init
 Initialized empty timetracker directory: /DIR/.timetracker for name(dvk)
 ```
 ### 2) Start the timer
 ```
-$ trkr start
+$ trk start
 Timetracker started Wed 03:19 PM: 2025-01-22 15:19:46.479951 for name(dvk)
 ```
 ### 3) Stop the timer
 ```
-$ trkr stop -m 'Accomplished the planned task'
+$ trk stop -m 'Accomplished the planned task'
 Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
 ```
 ### 4) Reporting functions are coming...

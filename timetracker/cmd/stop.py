@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
+from os.path import relpath
 from logging import error
 from datetime import datetime
 ##from timeit import default_timer
@@ -53,7 +54,7 @@ def _wr_csvlong_data(fcsv, fmgr, dta):
               f'{fmgr.get_activity()},'
               f'{fmgr.str_tags()}',
               file=ostrm)
-        print(f'Elapsed H:M:S={delta} appended to {fcsv}')
+        print(f'Elapsed H:M:S={delta} appended to {relpath(fcsv)}')
 
 def _wr_csv_hdrs(fcsv):
     # aTimeLogger columns: Activity From To Notes

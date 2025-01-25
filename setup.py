@@ -23,7 +23,7 @@ def get_long_description():
         return ifstrm.read().decode("UTF-8")
 
 CONSOLE_SCRIPTS = [
-    'trkr=timetracker.trkr:main',
+    'trk=timetracker.trk:main',
 ]
 
 REQUIRES = [

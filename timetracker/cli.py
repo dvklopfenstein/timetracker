@@ -11,15 +11,16 @@ from argparse import SUPPRESS
 
 class Cli:
     """Command line interface (CLI) for timetracking"""
-    # pylint: disable=too-few-public-methods
 
-    defaults = {
-        'init': './.timetracker',
-    }
-
-    def __init__(self, cfgfile=None):
-        self.cfgfile = cfgfile
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.defaults = self._init_defaults()
         self.parser = self._init_parsers()
+
+    def _init_defaults(self):
+        return {
+            'directory': self.cfg.DIR,  #'./.timetracker',
+        }
 
     def get_args_cli(self):
         """Get arguments for ScriptFrame"""
@@ -34,18 +35,18 @@ class Cli:
         return args
 
     def _init_parsers(self):
-        parser = self._init_parser()
+        parser = self._init_parser_top()
         self._add_subparsers(parser)
         return parser
 
-    def _init_parser(self):
+    def _init_parser_top(self):
         parser = ArgumentParser(
             prog='timetracker',
             description="Track your time in git-managed repos",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        parser.add_argument('directory', nargs='?',
-            default=self.defaults['init'],
+        parser.add_argument('-d', '--directory',
+            default=self.defaults['directory'],
             help='Directory to hold timetracking data')
         parser.add_argument('-n', '--name',
             default=environ.get('USER', 'me'),
@@ -56,8 +57,7 @@ class Cli:
 
     def _add_subparsers(self, parser):
         # Subparsers
-        subparsers = parser.add_subparsers(dest='command',
-            help='timetracker subcommand help')
+        subparsers = parser.add_subparsers(dest='command', help='timetracker subcommand help')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
         self._add_subparser_stop(subparsers)

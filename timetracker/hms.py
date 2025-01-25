@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 ##from datetime import timedelta
+from os.path import exists
 from datetime import datetime
 ##from timeit import default_timer
 
@@ -25,11 +26,12 @@ def hms_from_startfile(fname):
 
 def read_startfile(fname):
     """Get datetime from a starttime file"""
-    with open(fname, encoding='utf8') as ifstrm:
-        for line in ifstrm:
-            line = line.strip()
-            assert len(line) == 26  # "2025-01-22 04:05:00.086891"
-            return datetime.strptime(line, FMT)
+    if exists(fname):
+        with open(fname, encoding='utf8') as ifstrm:
+            for line in ifstrm:
+                line = line.strip()
+                assert len(line) == 26  # "2025-01-22 04:05:00.086891"
+                return datetime.strptime(line, FMT)
     return None
 
 

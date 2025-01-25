@@ -5,12 +5,12 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from logging import error
-from logging import INFO
+from logging import DEBUG
 from logging import basicConfig
 ##from logging import Formatter
 ##from logging import StreamHandler
 from timetracker.filemgr import FileMgr
-##from timetracker.cfg import Cfg
+from timetracker.cfg import Cfg
 from timetracker.cli import Cli
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
@@ -35,11 +35,11 @@ class TimeTracker:
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        #self.cfg = Cfg()
-        self.cli = Cli()
+        cfg = Cfg()
+        self.cli = Cli(cfg)
         self.args = self.cli.get_args_cli()
         self.fmgr = FileMgr(**vars(self.args))
-        basicConfig(level=INFO)
+        basicConfig(level=DEBUG)
 
     def run(self):
         """Run timetracker"""
@@ -68,11 +68,11 @@ class TimeTracker:
         error('Run `trk init` to initialize local timetracker')
 
     def _init_logging(self):
-        return basicConfig(level=INFO, format='')
+        return basicConfig(level=DEBUG, format='')
         #logger = getLogger()
         #logger.handlers = []
         #handler = StreamHandler()
-        #hander.setLevel(INFO)
+        #hander.setLevel(DEBUG)
         #formtr = Formatter('')
         #handler = StreamHandler()
         #handler.setFormatter(

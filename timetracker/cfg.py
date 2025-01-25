@@ -49,7 +49,6 @@ class Cfg:
         doc["title"] = "TimeTracker"
 
         # [csv]
-        # directory = "./.timetracker"
         # format = "timetracker_dvklo.csv"
         csv_section = table()
         csv_format = self.CSVPAT

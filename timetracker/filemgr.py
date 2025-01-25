@@ -20,12 +20,6 @@ class FileMgr:
     """File manager"""
     # pylint: disable=too-few-public-methods
 
-    ##def __init__(self):
-    ##    self.tdir = '.timetracker'
-    ##    self.cfgfile = self._init_cfgname()
-    ##    print(f'INITFILE: {self.cfgfile}')
-    ##    self.name = environ.get('USER')
-
     def __init__(self, **kws):
         self.tdir = kws['directory']
         self.name = kws['name']

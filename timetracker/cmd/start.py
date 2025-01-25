@@ -7,7 +7,7 @@ from os.path import exists
 ##from os.path import abspath
 ##from os.path import relpath
 ##from os.path import join
-from logging import info
+from logging import debug
 
 ##from timeit import default_timer
 ##$from datetime import timedelta
@@ -27,10 +27,11 @@ def run_start(fmgr):
         fmgr.ini_workdir()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
-            print(f'Timetracker started '
-                  f'{now.strftime("%a %I:%M %p")}: {now} '
-                  f'for name({fmgr.name})')
-            info(f'  WROTE: {fin_start}')
+            if not fmgr.get('quiet'):
+                print(f'Timetracker started '
+                      f'{now.strftime("%a %I:%M %p")}: {now} '
+                      f'for name({fmgr.name})')
+            debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not forced:
         prt_started()

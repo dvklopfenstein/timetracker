@@ -24,7 +24,7 @@ class Cli:
     def get_args(self):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args()
-        ##print(f'DVK ARGS: {args}')
+        print(f'TIMETRACKER ARGS: {args}')
         return args
 
     def _init_parsers(self):
@@ -42,8 +42,10 @@ class Cli:
             default=self.defaults['init'],
             help='Directory to hold timetracking data')
         parser.add_argument('-n', '--name',
-            default=environ.get('USER', 'person1'),
-            help='Name for timetracking')
+            default=environ.get('USER', 'me'),
+            help="A person's alias for timetracking")
+        parser.add_argument('-q', '--quiet', action='store_true',
+            help='Only print error and warning messages; all other output will be suppressed.')
         return parser
 
     def _add_subparsers(self, parser):

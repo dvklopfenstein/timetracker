@@ -25,13 +25,17 @@ class Cfg:
     # pylint: disable=too-few-public-methods
 
     DIR = './.timetracker'
-    CSVPAT = 'timetracker_USER.csv'
+    CSVPAT = 'timetracker_PROJECT_USER.csv'
 
-    def __init__(self):
+    def __init__(self, name=None):
         self.cfg_global = self._init_cfgglobal()
         self.cfg_local = self._init_cfglocal()
-        self.name = environ.get('USER')
+        self.name = environ.get('USER') if name is not None else name
         self.doc = self._init_localdoc()
+
+    def str_cfg(self):
+        """Return string containing configuration file contents"""
+        return dumps(self.doc)
 
     def wr_cfg(self, fname):
         """Write config file"""

@@ -64,6 +64,9 @@ clean_build:
 clean_pycache:
 	find . -type d -name __pycache__ | xargs rm -rf
 
+cltt:
+	rm -rf .timetracker/
+
 clean:
 	make clean_build
 	make clean_pycache

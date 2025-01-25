@@ -31,6 +31,16 @@ class FileMgr:
         self.name = kws['name']
         self.kws = kws
 
+    def get(self, key):
+        """Get a argument value.
+        Given:
+            forced:   `start` test feature
+            message:  `stop`  required message upon printing a stop time
+            activity: `stop`  activity written into csv
+            activity: `stop`  test feature; keep start time instead of resetting
+        """
+        return self.kws.get(key)
+
     def get_workdir(self):
         """Get directory for timetracker information"""
         return self.tdir
@@ -41,8 +51,9 @@ class FileMgr:
         if not exists(dirtrk):
             makedirs(dirtrk, exist_ok=True)
             absdir = abspath(dirtrk)
-            print(f'Initialized empty timetracker directory: {absdir} '
-                  f'for name({self.name})')
+            if not self.kws.get('quiet'):
+                print(f'Initialized empty timetracker directory: {absdir} '
+                      f'for name({self.name})')
 
     def exists_workdir(self):
         """Test existance of timetracker working directory"""
@@ -71,30 +82,12 @@ class FileMgr:
             print(f'\nTimer is running -- {hms} H:M:S; '
                   f'elapsed time for name({self.name})')
 
-    # Keyword args for the "start" command
-    def forced(self):
-        """Return the value of force"""
-        return self.kws.get('force', False)
-
-    # Keyword args for the "stop" command
-    def get_message(self):
-        """Get the stop-timer message"""
-        return self.kws['message']
-
-    def get_activity(self):
-        """Get the stop-timer activity"""
-        return self.kws['activity']
-
     def str_tags(self):
         """Get the stop-timer tags"""
         tags = self.kws['tags']
         if not tags:
             return ''
         return ';'.join(tags)
-
-    def get_keepstart(self):
-        """When stopping a time unit, keep the start time-it is usually reset"""
-        return self.kws['keepstart']
 
     ##def workdir_exists(self):
     ##    return isdir(self.get_dirname_work())

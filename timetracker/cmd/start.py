@@ -22,7 +22,8 @@ def run_start(fmgr):
     # Print elapsed time, if timer was started
     fmgr.prt_elapsed()
     # Set/reset starting time, if applicable
-    if not exists(fin_start) or fmgr.forced():
+    forced = fmgr.get('forced')
+    if not exists(fin_start) or forced:
         fmgr.ini_workdir()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
@@ -31,7 +32,7 @@ def run_start(fmgr):
                   f'for name({fmgr.name})')
             info(f'  WROTE: {fin_start}')
     # Informational message
-    elif not fmgr.forced():
+    elif not forced:
         prt_started()
     else:
         print(f'Reseting start time to now({now})')

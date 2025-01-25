@@ -24,7 +24,7 @@ def run_stop(fmgr):
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
     _wr_csvlong_data(fcsv, fmgr, dta)
-    if not fmgr.get_keepstart():
+    if not fmgr.get("keepstart"):
         fmgr.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
@@ -37,8 +37,8 @@ def _wr_csv_data(fcsv, fmgr, dta):
         print(f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
               f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
               f'{delta},',
-              f'{fmgr.get_message()},'
-              f'{fmgr.get_activity()},'
+              f'{fmgr.get("message")},'
+              f'{fmgr.get("activity")},'
               f'{fmgr.str_tags()}',
               file=ostrm)
         print(f'Elapsed H:M:S={delta} appended to {fcsv}')
@@ -50,8 +50,8 @@ def _wr_csvlong_data(fcsv, fmgr, dta):
         print(f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
               f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
               f'{delta},',
-              f'{fmgr.get_message()},'
-              f'{fmgr.get_activity()},'
+              f'{fmgr.get("message")},'
+              f'{fmgr.get("activity")},'
               f'{fmgr.str_tags()}',
               file=ostrm)
         print(f'Elapsed H:M:S={delta} appended to {relpath(fcsv)}')

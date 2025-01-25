@@ -21,9 +21,15 @@ class Cli:
         self.cfgfile = cfgfile
         self.parser = self._init_parsers()
 
-    def get_args(self):
+    def get_args_cli(self):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args()
+        print(f'TIMETRACKER ARGS: {args}')
+        return args
+
+    def get_args_test(self, arglist):
+        """Get arguments for ScriptFrame"""
+        args = self.parser.parse_args(arglist)
         print(f'TIMETRACKER ARGS: {args}')
         return args
 

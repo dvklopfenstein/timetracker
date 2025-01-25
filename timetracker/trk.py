@@ -37,7 +37,7 @@ class TimeTracker:
     def __init__(self):
         #self.cfg = Cfg()
         self.cli = Cli()
-        self.args = self.cli.get_args()
+        self.args = self.cli.get_args_cli()
         self.fmgr = FileMgr(**vars(self.args))
         basicConfig(level=INFO)
 

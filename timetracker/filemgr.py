@@ -20,7 +20,8 @@ class FileMgr:
     """File manager"""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, **kws):
+    def __init__(self, cfg, **kws):
+        self.cfg = cfg
         self.tdir = kws['directory']
         self.name = kws['name']
         self.kws = kws

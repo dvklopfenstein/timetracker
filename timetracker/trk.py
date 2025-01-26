@@ -7,8 +7,6 @@ from os.path import exists
 from logging import error
 from logging import DEBUG
 from logging import basicConfig
-##from logging import Formatter
-##from logging import StreamHandler
 from timetracker.filemgr import FileMgr
 from timetracker.cfg import Cfg
 from timetracker.cli import Cli
@@ -26,6 +24,7 @@ fncs = {
 
 def main():
     """Connect all parts of the timetracker"""
+    basicConfig(level=DEBUG)
     obj = TimeTracker()
     obj.run()
 
@@ -38,8 +37,7 @@ class TimeTracker:
         cfg = Cfg()
         self.cli = Cli(cfg)
         self.args = self.cli.get_args_cli()
-        self.fmgr = FileMgr(**vars(self.args))
-        basicConfig(level=DEBUG)
+        self.fmgr = FileMgr(cfg, **vars(self.args))
 
     def run(self):
         """Run timetracker"""
@@ -61,21 +59,10 @@ class TimeTracker:
             self.fmgr.prt_elapsed()
             prt_started()
 
-
     def _msg_init(self):
         self.cli.parser.print_help()
         print('')
         error('Run `trk init` to initialize local timetracker')
-
-    def _init_logging(self):
-        return basicConfig(level=DEBUG, format='')
-        #logger = getLogger()
-        #logger.handlers = []
-        #handler = StreamHandler()
-        #hander.setLevel(DEBUG)
-        #formtr = Formatter('')
-        #handler = StreamHandler()
-        #handler.setFormatter(
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

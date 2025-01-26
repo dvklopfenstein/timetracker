@@ -18,11 +18,6 @@ pylint:
 	tmp_pylint
 
 # -----------------------------------------------------------------------------
-install_docs:
-	pip install .docs
-
-
-# -----------------------------------------------------------------------------
 # 1) Increase the version number:
 vim_ver:
 	vim -p timetracker/__init__.py setup.py CHANGELOG.md

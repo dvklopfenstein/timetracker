@@ -3,7 +3,9 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import environ
+from os.path import normpath
+from os.path import relpath
+from logging import debug
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
@@ -14,24 +16,25 @@ class Cli:
 
     def __init__(self, cfg):
         self.cfg = cfg
-        self.defaults = self._init_defaults()
         self.parser = self._init_parsers()
-
-    def _init_defaults(self):
-        return {
-            'directory': self.cfg.DIR,  #'./.timetracker',
-        }
 
     def get_args_cli(self):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args()
-        print(f'TIMETRACKER ARGS: {args}')
+        self._adjust_args(args)
+        debug(f'TIMETRACKER ARGS: {args}')
         return args
 
     def get_args_test(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
+        self._adjust_args(args)
         print(f'TIMETRACKER ARGS: {args}')
+        return args
+
+    def _adjust_args(self, args):
+        self.cfg.update_csvfilename(args.csv)
+        print(self.cfg.str_cfg())
         return args
 
     def _init_parsers(self):
@@ -42,17 +45,18 @@ class Cli:
     def _init_parser_top(self):
         parser = ArgumentParser(
             prog='timetracker',
-            description="Track your time in git-managed repos",
+            description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        parser.add_argument('-d', '--directory',
-            default=self.defaults['directory'],
-            help='Directory to hold timetracking data')
-        parser.add_argument('-n', '--name',
-            default=environ.get('USER', 'me'),
+        cfg = self.cfg
+        parser.add_argument('-d', metavar='DIRECTORY', dest='directory', default=cfg.DIR,
+            help='Directory to hold timetracking infrastructure')
+        parser.add_argument('-n', '--name', default=cfg.name,
             help="A person's alias for timetracking")
+        parser.add_argument('-p', metavar='PROJECT', dest='project', default=cfg.project,
+            help="The name of the project to be time tracked")
         parser.add_argument('-q', '--quiet', action='store_true',
-            help='Only print error and warning messages; all other output will be suppressed.')
+            help='Only print error and warning messages; information will be suppressed.')
         return parser
 
     def _add_subparsers(self, parser):
@@ -67,6 +71,8 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
+        parser.add_argument('--csv', default=normpath(relpath(self.cfg.get_filename_csv())),
+            help='Name of csv file where start and stop times are recorded')
         return parser
 
     def _add_subparser_start(self, subparsers):

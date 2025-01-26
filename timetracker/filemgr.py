@@ -47,8 +47,7 @@ class FileMgr:
             makedirs(dirtrk, exist_ok=True)
             absdir = abspath(dirtrk)
             if not self.kws.get('quiet'):
-                print(f'Initialized empty timetracker directory: {absdir} '
-                      f'for name({self.name})')
+                print(f'Initialized empty timetracker directory: {absdir}')
 
     def exists_workdir(self):
         """Test existance of timetracker working directory"""
@@ -63,10 +62,6 @@ class FileMgr:
         fstart = self.get_filename_start()
         if exists(fstart):
             remove(fstart)
-
-    def get_filename_csv(self):
-        """Get the file storing the start time a person"""
-        return join(self.tdir, f'timetracker_{self.name}.csv')
 
     def prt_elapsed(self):
         """Print elapsed time if timer is started"""

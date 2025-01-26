@@ -30,29 +30,41 @@ class Cfg:
     # pylint: disable=too-few-public-methods
 
     DIR = './.timetracker'
-    CSVPAT = 'timetracker_PROJECT_USER.csv'
+    CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    def __init__(self, name=None):
+    def __init__(self):
         self.cfg_global = expanduser('~/.timetrackerconfig')
-        self.cfg_local = expanduser(join(self.DIR, 'config'))
         self.project = basename(getcwd())
-        self.name = environ.get('USER') if name is None else name
-        self.csv_dir = self.DIR
-        self.csv_name = self.CSVPAT.replace('PROJECT', self.project).replace('USER', self.name)
+        self.name = environ.get('USER', 'researcher')
+        self.work_dir = abspath(self.DIR)
+        self.dir_csv = '.'
+        ##self.csv_name = join(
+        ##    self.DIR,
+        ##    self.CSVPAT.replace('PROJECT', self.project)
         self.docloc = self._init_localdoc()
         debug(f'CFG LOCAL  CONFIG({self.cfg_global})')
-        debug(f'CFG GLOBAL CONFIG({self.cfg_local})')
+        debug(f'CFG GLOBAL CONFIG({self.get_filename_cfglocal()})')
         debug(f'CFG PROJECT: {self.project}')
         debug(f'CFG NAME:    {self.name}')
 
-    def update_csvfilename(self, fname):
+    def get_filename_cfglocal(self):
+        """Get the full filename of the local config file"""
+        return join(self.work_dir, 'config')
+
+    def get_filename_start(self):
+        """Get the file storing the start time a person"""
+        return join(self.work_dir, f'start_{self.project}_{self.name}.txt')
+
+    def update_init(self, project, csvdir):
         """Update the csv filename for storing time data"""
-        fname = self._replace_homepath(fname)
-        self.docloc['csv']['filename'] = fname
+        self.project = project
+        self.dir_csv = self._replace_homepath(csvdir)
+        self.docloc['project'] = project
+        self.docloc['csv']['filename'] = self._get_loc_filename()
 
     def get_filename_csv(self):
         """Get the csv filename where start and stop information is stored"""
-        return abspath(join(self.csv_dir, self.csv_name))
+        return self.docloc['csv']['filename']
 
     def str_cfg(self):
         """Return string containing configuration file contents"""
@@ -60,9 +72,10 @@ class Cfg:
 
     def wr_cfglocal(self):
         """Write config file"""
-        with open(self.cfg_local, 'w', encoding='utf8') as ostrm:
+        fname = self.get_filename_cfglocal()
+        with open(fname, 'w', encoding='utf8') as ostrm:
             print(dumps(self.docloc), file=ostrm, end='')
-            debug(f'  WROTE: {self.cfg_local}')
+            debug(f'  WROTE: {fname}')
 
     def _replace_homepath(self, fname):
         fname = normpath(fname)
@@ -72,18 +85,21 @@ class Cfg:
         debug(f'UPDATE HOME:  {home_str}')
         return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
+    def _get_loc_filename(self):
+        return join(normpath(relpath(self.dir_csv)),
+                    self.CSVPAT.replace('PROJECT', self.project))
+
     def _init_localdoc(self):
         doc = document()
-        doc.add(comment("TimeTracker config file"))
+        doc.add(comment("TimeTracker configuration file"))
         doc.add(nl())
-        doc["title"] = "TimeTracker"
+        doc["project"] = self.project
 
         # [csv]
         # format = "timetracker_dvklo.csv"
         csv_section = table()
         #csvdir.comment("Directory where the csv file is stored")
-        csv_section.add("filename", normpath(relpath(self.get_filename_csv())))
-        ##csv_section["csv_dir"].comment('Directory for the local config file')
+        csv_section.add("filename", self._get_loc_filename())
         ##
         ### Adding the table to the document
         doc.add("csv", csv_section)

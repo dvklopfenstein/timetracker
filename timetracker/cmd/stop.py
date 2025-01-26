@@ -20,7 +20,7 @@ def run_stop(fmgr):
         return
 
     # Append the timetracker file with this time unit
-    fcsv = fmgr.get_filename_csv()
+    fcsv = fmgr.cfg.get_filename_csv()
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
     _wr_csvlong_data(fcsv, fmgr, dta)

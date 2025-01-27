@@ -18,7 +18,13 @@ pylint:
 	tmp_pylint
 
 init:
-	trk start --csvdir ~/timetrackers/projs/; cat .timetracker/config; find .timetracker
+	trk init --csvdir ~/timetrackers/projs/
+	make show
+	
+show:
+	cat .timetracker/config
+	find .timetracker
+	find ~/timetrackers/projs
 
 
 # -----------------------------------------------------------------------------

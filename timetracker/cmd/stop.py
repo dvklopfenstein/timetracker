@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from os.path import relpath
+from logging import debug
 from logging import error
 from datetime import datetime
 ##from timeit import default_timer
@@ -14,6 +15,7 @@ from timetracker.hms import read_startfile
 def run_stop(fmgr):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
+    debug('RUNNING COMMAND STOP')
     dta = read_startfile(fmgr.cfg.get_filename_start())
     if dta is None:
         error('NOT WRITING ELAPSED TIME; Do `trkr start` to begin tracking time')

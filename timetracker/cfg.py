@@ -18,7 +18,9 @@ from os.path import join
 from os.path import abspath
 from os.path import relpath
 from os.path import normpath
+from os.path import dirname
 from logging import debug
+from logging import warning
 from tomlkit import comment
 from tomlkit import document
 from tomlkit import nl
@@ -57,7 +59,7 @@ class Cfg:
         """Get the file storing the start time a person"""
         return join(self.work_dir, f'start_{self.project}_{self.name}.txt')
 
-    def update_init(self, project, csvdir):
+    def update_localini(self, project, csvdir):
         """Update the csv filename for storing time data"""
         self.project = project
         self.dir_csv = self._replace_homepath(csvdir)
@@ -68,6 +70,12 @@ class Cfg:
         """Get the csv filename where start and stop information is stored"""
         return self.docloc['csv']['filename']
 
+    def _get_filename_abs(self, fname):
+        return normpath(abspath(expanduser(fname)))
+
+    def _get_dirname_abs(self, fname):
+        return dirname(self._get_filename_abs(fname))
+
     def str_cfg(self):
         """Return string containing configuration file contents"""
         return dumps(self.docloc)
@@ -75,9 +83,17 @@ class Cfg:
     def wr_cfglocal(self):
         """Write config file"""
         fname = self.get_filename_cfglocal()
+        self._chk_exists_dir(self._get_dirname_abs(self.docloc['csv']['filename']))
         with open(fname, 'w', encoding='utf8') as ostrm:
             print(dumps(self.docloc), file=ostrm, end='')
             debug(f'  WROTE: {fname}')
+
+    def _chk_exists_dir(self, dname):
+        debug(f'CFG DIR: exists({int(exists(dname))}) {dname}')
+        if exists(dname):
+            return True
+        warning(f'Directory does not exist: {dname}')
+        return False
 
     def _replace_homepath(self, fname):
         fname = normpath(fname)

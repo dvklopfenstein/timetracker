@@ -35,6 +35,7 @@ class TimeTracker:
 
     def __init__(self):
         cfg = Cfg()
+        self.cfg = cfg
         self.cli = Cli(cfg)
         self.args = self.cli.get_args_cli()
         self.fmgr = FileMgr(cfg, **vars(self.args))
@@ -51,7 +52,7 @@ class TimeTracker:
             self._msg_init()
             return
         # Check for start time
-        start_file = self.fmgr.cfg.get_filename_start()
+        start_file = self.cfg.get_filename_start()
         if not exists(start_file):
             print('Run `trk start` to begin timetracking')
         else:

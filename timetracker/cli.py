@@ -36,8 +36,9 @@ class Cli:
     def _adjust_args(self, args):
         debug(f'ARGV: {argv}')
         if args.command == 'init':
-            self.cfg.update_init(args.project, args.csvdir)
-            debug(self.cfg.str_cfg())
+            # pylint: disable=fixme
+            # TODO: CHeck if cvs.directory is being changed
+            pass
         return args
 
     def _init_parsers(self):

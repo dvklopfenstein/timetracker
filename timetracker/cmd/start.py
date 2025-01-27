@@ -17,6 +17,7 @@ from timetracker.msgs import prt_started
 
 def run_start(fmgr):
     """Initialize timetracking on a project"""
+    debug('RUNNING COMMAND START')
     now = datetime.now()
     fin_start = fmgr.cfg.get_filename_start()
     # Print elapsed time, if timer was started

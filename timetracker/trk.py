@@ -24,7 +24,7 @@ fncs = {
 
 def main():
     """Connect all parts of the timetracker"""
-    basicConfig(level=DEBUG)
+    ##basicConfig(level=DEBUG)
     obj = TimeTracker()
     obj.run()
 

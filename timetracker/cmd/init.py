@@ -8,7 +8,7 @@ from logging import debug
 
 def run_init(fmgr):
     """Initialize timetracking on a project"""
-    debug('RUNNING COMMAND INIT')
+    debug('INIT: RUNNING COMMAND INIT')
     cfg = fmgr.cfg
     args = fmgr.kws
     # pylint: disable=fixme

@@ -26,6 +26,7 @@ from tomlkit import document
 from tomlkit import nl
 from tomlkit import table
 from tomlkit import dumps
+from tomlkit import parse
 
 
 class Cfg:
@@ -51,6 +52,37 @@ class Cfg:
         debug(f'CFG PROJECT: {self.project}')
         debug(f'CFG NAME:    {self.name}')
 
+    def read_filename_csv(self):
+        """Read the local cfg to get the csv filename for storing time data"""
+        doc = self._parse_local_cfg()
+        assert doc is not None
+        fpat = normpath(abspath(expanduser(doc['csv']['filename'])))
+        return self._replace_envvar(fpat) if '$' in fpat else fpat
+
+    def _replace_envvar(self, fpat):
+        pta = fpat.find('$')
+        assert pta != -1
+        pt1 = pta + 1
+        ptb = fpat.find('$', pt1)
+        envkey = fpat[pt1:ptb]
+        envval = environ.get(envkey)
+        ##debug(f'CFG FNAME: {fpat}')
+        ##debug(f'CFG {pta}')
+        ##debug(f'CFG {ptb}')
+        ##debug(f'CFG ENV:   {envkey} = {envval}')
+        return fpat[:pta] + envval + fpat[ptb+1:]
+
+    def _parse_local_cfg(self):
+        cfgtxt = self._read_local_cfg()
+        ##debug(f'CFG: LOCALCFG({cfgtxt})')
+        return parse(cfgtxt) if cfgtxt is not None else None
+
+    def _read_local_cfg(self):
+        fin = self.get_filename_cfglocal()
+        with open(fin, encoding='utf8') as ifstrm:
+            return ''.join(ifstrm.readlines())
+        return None
+
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
         return join(self.work_dir, 'config')
@@ -64,11 +96,15 @@ class Cfg:
         self.project = project
         self.dir_csv = self._replace_homepath(csvdir)
         self.docloc['project'] = project
-        self.docloc['csv']['filename'] = self._get_loc_filename()
+        fcsv = self._get_loc_filename()
+        self.docloc['csv']['filename'] = fcsv
+        debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
 
     def get_filename_csv(self):
         """Get the csv filename where start and stop information is stored"""
-        return self.docloc['csv']['filename']
+        fcsv = self.docloc['csv']['filename']
+        debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
+        return fcsv
 
     def _get_filename_abs(self, fname):
         return normpath(abspath(expanduser(fname)))

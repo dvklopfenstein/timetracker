@@ -20,6 +20,12 @@ pylint:
 init:
 	trk init --csvdir ~/timetrackers/projs/
 	make show
+
+stop:
+	trk stop -m test
+	find .timetracker
+	grep filename .timetracker/config
+	find ~/timetrackers/projs
 	
 show:
 	cat .timetracker/config

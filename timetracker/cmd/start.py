@@ -18,7 +18,7 @@ from timetracker.msgs import prt_started
 def run_start(fmgr):
     """Initialize timetracking on a project"""
     now = datetime.now()
-    fin_start = fmgr.get_filename_start()
+    fin_start = fmgr.cfg.get_filename_start()
     # Print elapsed time, if timer was started
     fmgr.prt_elapsed()
     # Set/reset starting time, if applicable
@@ -43,7 +43,7 @@ def run_start(fmgr):
     #if not exists(dirtrk):
     #    makedirs(dirtrk, exist_ok=True)
     #    absdir = abspath(dirtrk)
-    #    print(f'Initialized empty timetracker directory: {absdir}')
+    #    print(f'Initialized timetracker directory: {absdir}')
     #    fout_cfg = join(absdir, 'config')
     #    with open(fout_cfg, 'w', encoding='utf8') as ostrm:
     #        print('', file=ostrm)

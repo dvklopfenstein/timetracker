@@ -14,7 +14,7 @@ from timetracker.hms import read_startfile
 def run_stop(fmgr):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    dta = read_startfile(fmgr.get_filename_start())
+    dta = read_startfile(fmgr.cfg.get_filename_start())
     if dta is None:
         error('NOT WRITING ELAPSED TIME; Do `trkr start` to begin tracking time')
         return

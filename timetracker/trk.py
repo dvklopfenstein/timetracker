@@ -51,7 +51,7 @@ class TimeTracker:
             self._msg_init()
             return
         # Check for start time
-        start_file = self.fmgr.get_filename_start()
+        start_file = self.fmgr.cfg.get_filename_start()
         if not exists(start_file):
             print('Run `trk start` to begin timetracking')
         else:

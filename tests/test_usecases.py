@@ -23,6 +23,7 @@ def test_cfg():
 
 def test_basic():
     """Test the basic timetracker flow"""
+    _trk_init_help()
     _trk_init()
     _trk_start()
     _trk_stop()
@@ -59,6 +60,14 @@ def _trk_init(mainargs=None):
     if not mainargs:
         mainargs = []
     nta = _get_nttrkr(mainargs + ['init'])
+    assert nta.args.command == 'init'
+    return nta
+
+def _trk_init_help(mainargs=None):
+    """`$ trk init"""
+    if not mainargs:
+        mainargs = []
+    nta = _get_nttrkr(mainargs + 'init --help'.split())
     assert nta.args.command == 'init'
     return nta
 

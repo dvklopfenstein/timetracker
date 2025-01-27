@@ -11,6 +11,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
 from os import getcwd
+from os.path import exists
 from os.path import basename
 from os.path import expanduser
 from os.path import join
@@ -42,8 +43,9 @@ class Cfg:
         ##    self.DIR,
         ##    self.CSVPAT.replace('PROJECT', self.project)
         self.docloc = self._init_localdoc()
-        debug(f'CFG LOCAL  CONFIG({self.cfg_global})')
-        debug(f'CFG GLOBAL CONFIG({self.get_filename_cfglocal()})')
+        cfgloc = self.get_filename_cfglocal()
+        debug(f'CFG LOCAL  CONFIG: exists({int(exists(self.cfg_global))}) -- {self.cfg_global}')
+        debug(f'CFG GLOBAL CONFIG: exists({int(exists(cfgloc))}) -- {cfgloc}')
         debug(f'CFG PROJECT: {self.project}')
         debug(f'CFG NAME:    {self.name}')
 

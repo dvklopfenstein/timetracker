@@ -3,16 +3,10 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-##from os import environ
 from os import makedirs
 from os import remove
 from os.path import exists
-##from os.path import isdir
-from os.path import join
 from os.path import abspath
-##from os.path import isfile
-##from os.path import expanduser
-##from configparser import ConfigParser
 from timetracker.hms import hms_from_startfile
 
 
@@ -47,30 +41,31 @@ class FileMgr:
             makedirs(dirtrk, exist_ok=True)
             absdir = abspath(dirtrk)
             if not self.kws.get('quiet'):
-                print(f'Initialized empty timetracker directory: {absdir}')
+                print(f'Initialized timetracker directory: {absdir}')
 
     def exists_workdir(self):
         """Test existance of timetracker working directory"""
         return exists(self.tdir)
 
-    def get_filename_start(self):
-        """Get the file storing the start time a person"""
-        return join(self.tdir, f'start_{self.name}.txt')
+    ####def get_filename_start(self):
+    ####    """Get the file storing the start time a person"""
+    ####    return join(self.tdir, f'start_{self.name}.txt')
 
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""
-        fstart = self.get_filename_start()
+        fstart = self.cfg.get_filename_start()
         if exists(fstart):
             remove(fstart)
 
     def prt_elapsed(self):
         """Print elapsed time if timer is started"""
-        fin_start = self.get_filename_start()
+        fin_start = self.cfg.get_filename_start()
         # Print elapsed time, if timer was started
         if exists(fin_start):
             hms = hms_from_startfile(fin_start)
-            print(f'\nTimer is running -- {hms} H:M:S; '
-                  f'elapsed time for name({self.name})')
+            print(f'\nTimer running: {hms} H:M:S '
+                  f'elapsed time for name({self.name}) '
+                  f'project({self.cfg.project})')
 
     def str_tags(self):
         """Get the stop-timer tags"""
@@ -84,10 +79,6 @@ class FileMgr:
 
     ##def get_dirname_work(self):
     ##    return join('.', self.tdir)
-
-    ##def get_filename_start(self):
-    ##    """Get the filename where the start time is written"""
-    ##    return join(self.get_dirname_work(), f'start_time_{self.name}.txt')
 
     ##def __str__(self):
     ##    return (

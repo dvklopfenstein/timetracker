@@ -47,10 +47,6 @@ class FileMgr:
         """Test existance of timetracker working directory"""
         return exists(self.tdir)
 
-    ####def get_filename_start(self):
-    ####    """Get the file storing the start time a person"""
-    ####    return join(self.tdir, f'start_{self.name}.txt')
-
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""
         fstart = self.cfg.get_filename_start()

@@ -17,6 +17,10 @@ pylint:
 	chmod 755 tmp_pylint
 	tmp_pylint
 
+init:
+	trk start --csvdir ~/timetrackers/projs/; cat .timetracker/config; find .timetracker
+
+
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:
 vim_ver:

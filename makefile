@@ -28,9 +28,9 @@ stop:
 	find ~/timetrackers/projs
 	
 show:
-	cat .timetracker/config
-	find .timetracker
 	find ~/timetrackers/projs
+	find .timetracker/
+	cat .timetracker/config
 
 
 # -----------------------------------------------------------------------------

@@ -17,9 +17,20 @@ pylint:
 	chmod 755 tmp_pylint
 	tmp_pylint
 
-# -----------------------------------------------------------------------------
-install_docs:
-	pip install .docs
+init:
+	trk init --csvdir ~/timetrackers/projs/
+	make show
+
+stop:
+	trk stop -m test
+	find .timetracker
+	grep filename .timetracker/config
+	find ~/timetrackers/projs
+	
+show:
+	cat .timetracker/config
+	find .timetracker
+	find ~/timetrackers/projs
 
 
 # -----------------------------------------------------------------------------

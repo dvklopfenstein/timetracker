@@ -5,7 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 ##from os.path import abspath
-##from os.path import relpath
+from os.path import relpath
 ##from os.path import join
 from logging import debug
 
@@ -17,8 +17,10 @@ from timetracker.msgs import prt_started
 
 def run_start(fmgr):
     """Initialize timetracking on a project"""
+    debug('START: RUNNING COMMAND START')
     now = datetime.now()
-    fin_start = fmgr.get_filename_start()
+    fin_start = fmgr.cfg.get_filename_start()
+    debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     # Print elapsed time, if timer was started
     fmgr.prt_elapsed()
     # Set/reset starting time, if applicable
@@ -37,13 +39,14 @@ def run_start(fmgr):
         prt_started()
     else:
         print(f'Reseting start time to now({now})')
+    debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
 
 
     #dirtrk = kws['directory']
     #if not exists(dirtrk):
     #    makedirs(dirtrk, exist_ok=True)
     #    absdir = abspath(dirtrk)
-    #    print(f'Initialized empty timetracker directory: {absdir}')
+    #    print(f'Initialized timetracker directory: {absdir}')
     #    fout_cfg = join(absdir, 'config')
     #    with open(fout_cfg, 'w', encoding='utf8') as ostrm:
     #        print('', file=ostrm)

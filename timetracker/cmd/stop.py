@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from os.path import relpath
+from logging import debug
 from logging import error
 from datetime import datetime
 ##from timeit import default_timer
@@ -14,13 +15,20 @@ from timetracker.hms import read_startfile
 def run_stop(fmgr):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    dta = read_startfile(fmgr.get_filename_start())
+    debug('STOP: RUNNING COMMAND STOP')
+    cfgobj = fmgr.cfg
+
+    fstart = cfgobj.get_filename_start()
+    debug(f'STOP: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
+    fcsv = cfgobj.read_filename_csv()
+    debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
+
+    dta = read_startfile(fstart)
     if dta is None:
         error('NOT WRITING ELAPSED TIME; Do `trkr start` to begin tracking time')
         return
 
     # Append the timetracker file with this time unit
-    fcsv = fmgr.get_filename_csv()
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
     _wr_csvlong_data(fcsv, fmgr, dta)

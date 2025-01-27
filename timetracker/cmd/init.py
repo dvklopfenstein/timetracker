@@ -3,21 +3,20 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from logging import debug
+
 
 def run_init(fmgr):
     """Initialize timetracking on a project"""
+    debug('INIT: RUNNING COMMAND INIT')
+    cfg = fmgr.cfg
+    args = fmgr.kws
+    # pylint: disable=fixme
+    # TODO: Check if cfg exists and needs to be updated
+    cfg.update_localini(args['project'], args['csvdir'])
+    debug(cfg.str_cfg())
     fmgr.ini_workdir()
-    ##fout_cfg = join(absdir, 'config')
-    ##with open(fout_cfg, 'w', encoding='utf8') as ostrm:
-    ##    print('', file=ostrm)
-
-
-##class CmdInit:
-##    """Initialize a timetracker project"""
-##    # pylint: disable=too-few-public-methods
-##
-##    def __init__(self, cfgfile):
-##        self.cfgfile = cfgfile
+    cfg.wr_cfglocal()
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

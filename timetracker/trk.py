@@ -8,7 +8,7 @@ from logging import error
 ##from logging import DEBUG
 ##from logging import basicConfig
 from timetracker.filemgr import FileMgr
-from timetracker.cfg import Cfg
+from timetracker.cfg.cfg import Cfg
 from timetracker.cli import Cli
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start

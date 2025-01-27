@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Test the TimeTracker configuration"""
 
+from sys import argv
 from os import environ
 ##from os import getcwd
 from collections import namedtuple
 from datetime import timedelta
 from timeit import default_timer
-from timetracker.cfg import Cfg
+from timetracker.cfg.cfg import Cfg
 from timetracker.cli import Cli
 from timetracker.filemgr import FileMgr
 
@@ -90,9 +91,10 @@ def _trk():
 def _get_nttrkr(arglist):
     cfg = Cfg()
     cli = Cli(cfg)
+    print(f'DDDDDDDDDDDDDDDDDDD {argv}')
     args = cli.get_args_test(arglist)
     print(f'TEST ARGS: {args}')
-    fmgr = FileMgr(**vars(args))
+    fmgr = FileMgr(cfg, **vars(args))
     nto = namedtuple('TestTrkr', 'args fmgr')
     return nto(args=args, fmgr=fmgr)
 

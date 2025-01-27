@@ -20,7 +20,7 @@ def run_stop(fmgr):
 
     fstart = cfgobj.get_filename_start()
     debug(f'STOP: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
-    fcsv = cfgobj.read_filename_csv()
+    fcsv = cfgobj.get_filename_csv()
     debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
 
     dta = read_startfile(fstart)

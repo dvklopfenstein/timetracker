@@ -33,7 +33,6 @@ from timetracker.cfg.utils import replace_homepath
 
 class Cfg:
     """Configuration parser for timetracking"""
-    # pylint: disable=too-few-public-methods
 
     DIR = './.timetracker'
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
@@ -54,23 +53,12 @@ class Cfg:
         debug(f'CFG PROJECT: {self.project}')
         debug(f'CFG NAME:    {self.name}')
 
-    def read_filename_csv(self):
+    def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
         doc = self._parse_local_cfg()
         assert doc is not None
         fpat = normpath(abspath(expanduser(doc['csv']['filename'])))
         return replace_envvar(fpat) if '$' in fpat else fpat
-
-    def _parse_local_cfg(self):
-        cfgtxt = self._read_local_cfg()
-        ##debug(f'CFG: LOCALCFG({cfgtxt})')
-        return parse(cfgtxt) if cfgtxt is not None else None
-
-    def _read_local_cfg(self):
-        fin = self.get_filename_cfglocal()
-        with open(fin, encoding='utf8') as ifstrm:
-            return ''.join(ifstrm.readlines())
-        return None
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
@@ -79,6 +67,7 @@ class Cfg:
     def get_filename_start(self):
         """Get the file storing the start time a person"""
         return join(self.work_dir, f'start_{self.project}_{self.name}.txt')
+
 
     def update_localini(self, project, csvdir):
         """Update the csv filename for storing time data"""
@@ -89,12 +78,6 @@ class Cfg:
         self.docloc['csv']['filename'] = fcsv
         debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
 
-    def get_filename_csv(self):
-        """Get the csv filename where start and stop information is stored"""
-        fcsv = self.docloc['csv']['filename']
-        debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
-        return fcsv
-
     def str_cfg(self):
         """Return string containing configuration file contents"""
         return dumps(self.docloc)
@@ -104,8 +87,20 @@ class Cfg:
         fname = self.get_filename_cfglocal()
         chk_isdir(get_dirname_abs(self.docloc['csv']['filename']))
         with open(fname, 'w', encoding='utf8') as ostrm:
-            print(dumps(self.docloc), file=ostrm, end='')
+            print(self.str_cfg(), file=ostrm, end='')
             debug(f'  WROTE: {fname}')
+
+    #-------------------------------------------------------------
+    def _parse_local_cfg(self):
+        cfgtxt = self._read_local_cfg()
+        ##debug(f'CFG: LOCALCFG({cfgtxt})')
+        return parse(cfgtxt) if cfgtxt is not None else None
+
+    def _read_local_cfg(self):
+        fin = self.get_filename_cfglocal()
+        with open(fin, encoding='utf8') as ifstrm:
+            return ''.join(ifstrm.readlines())
+        return None
 
     def _get_loc_filename(self):
         return join(normpath(relpath(self.dir_csv)),
@@ -125,8 +120,12 @@ class Cfg:
         ##
         ### Adding the table to the document
         doc.add("csv", csv_section)
-
         return doc
 
+    ##def _get_filename_csv(self):
+    ##    """Get the csv filename where start and stop information is stored"""
+    ##    fcsv = self.docloc['csv']['filename']
+    ##    debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
+    ##    return fcsv
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

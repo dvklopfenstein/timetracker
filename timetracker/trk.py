@@ -5,8 +5,8 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from logging import error
-from logging import DEBUG
-from logging import basicConfig
+##from logging import DEBUG
+##from logging import basicConfig
 from timetracker.filemgr import FileMgr
 from timetracker.cfg import Cfg
 from timetracker.cli import Cli

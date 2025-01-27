@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-01-27 v0.1a3**](#release-2025-01-27-v01a3) Added local config; enables researcher to set csv location
 * [**Release 2025-01-22 v0.1a2**](#release-2025-01-22-v01a2) Install with `pip install timetracker-csv`
 * [**Release 2025-01-22 v0.1a1**](#release-2025-01-22-v01a1) Initial implementation of cmds: init, start, and stop
 
@@ -9,8 +10,12 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-01-27 v0.1a3
 * CHANGED: Executable name from `trkr` to the shorter `trk`
 * ADD: Configuration parser
+* ADD: Cfg parser is written upon init, with --csvdir setting csv file location
+* ADD: Cfg parser is read upon `trkr stop -m msg`; time written to csv file in researcher-specied location
 
 ## Release 2025-01-22 v0.1a2
 * ADD: Install with `pip install timetracker-csv`
@@ -27,4 +32,3 @@ because pip does not currently support
   * `init`  -- Currently creates the local .timetracker/ directory
   * `start` -- Starts the timer
   * `stop`  -- Stops the timer; Records in a timetracker csv
-  

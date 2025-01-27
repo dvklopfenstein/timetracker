@@ -4,12 +4,14 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import argv
+from sys import exit as sys_exit
 from os.path import normpath
 from os.path import relpath
 from logging import debug
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
+from timetracker import __version__
 
 
 class Cli:
@@ -24,6 +26,9 @@ class Cli:
         args = self.parser.parse_args()
         self._adjust_args(args)
         debug(f'TIMETRACKER ARGS: {args}')
+        if args.version:
+            print(f'trk {__version__}')
+            sys_exit()
         return args
 
     def get_args_test(self, arglist):
@@ -31,6 +36,9 @@ class Cli:
         args = self.parser.parse_args(arglist)
         self._adjust_args(args)
         print(f'TIMETRACKER ARGS: {args}')
+        if args.version:
+            print(f'trk {__version__}')
+            sys_exit()
         return args
 
     def _adjust_args(self, args):
@@ -59,6 +67,8 @@ class Cli:
             help="A person's alias for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')
+        parser.add_argument('--version', action='store_true',
+            help='Print the timetracker version')
         return parser
 
     def _add_subparsers(self, parser):

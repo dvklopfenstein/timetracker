@@ -1,7 +1,7 @@
 # Timetracker-csv
 Track time spent on multiple projects, one repo at a time.
 
-A lightweight, repo-based, researcher name-based, command-line time tracker that stores data in csv files.
+A lightweight, repo-based, researcher name-based, command-line time tracker that stores data in csv spreadsheets.
 ![Work in progress](/doc/work_in_progress.png)
 
 

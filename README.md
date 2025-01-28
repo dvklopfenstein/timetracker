@@ -2,6 +2,7 @@
 Track time spent on multiple projects, one repo at a time.
 
 A lightweight, repo-based, researcher name-based, command-line time tracker that stores data in csv files.
+![Work in progress](/doc/work_in_progress.png)
 
 
 * [Advantages](#advantages)

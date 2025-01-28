@@ -12,7 +12,18 @@ from os.path import normpath
 from os.path import dirname
 from logging import debug
 from logging import warning
+from tomlkit import parse
 
+def parse_cfg(fin, desc=''):
+    """Read a config file and load it into a TOML document"""
+    cfgtxt = _read_local_cfg(fin)
+    debug(f'{desc}({cfgtxt})')
+    return parse(cfgtxt) if cfgtxt is not None else None
+
+def _read_local_cfg(fin):
+    with open(fin, encoding='utf8') as ifstrm:
+        return ''.join(ifstrm.readlines())
+    return None
 
 def replace_envvar(fpat):
     """Replace '$USER$' with the value of the envvar-works with any envvar"""
@@ -36,10 +47,10 @@ def get_dirname_abs(fname):
     """Get the absolute directory name"""
     return dirname(get_filename_abs(fname))
 
-def chk_isdir(dname):
+def chk_isdir(dname, prefix=''):
     """Check that a file or directory exists"""
-    debug(f'CFG DIR: exists({int(exists(dname))}) {dname}')
-    debug(f'CFG DIR:  isdir({int(isdir(dname))}) {dname}')
+    debug(f'{prefix}: exists({int(exists(dname))}) {dname}')
+    debug(f'{prefix}:  isdir({int(isdir(dname))}) {dname}')
     if isdir(dname):
         return True
     warning(f'Directory does not exist: {dname}')

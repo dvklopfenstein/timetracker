@@ -10,6 +10,7 @@ from timeit import default_timer
 from timetracker.cfg.cfg import Cfg
 from timetracker.cli import Cli
 from timetracker.filemgr import FileMgr
+from timetracker.cfg.cfg_global import CfgGlobal
 
 # pylint: disable=fixme
 
@@ -93,8 +94,9 @@ def _get_nttrkr(arglist):
     cli = Cli(cfg)
     print(f'DDDDDDDDDDDDDDDDDDD {argv}')
     args = cli.get_args_test(arglist)
+    cfg_global = CfgGlobal()
     print(f'TEST ARGS: {args}')
-    fmgr = FileMgr(cfg, **vars(args))
+    fmgr = FileMgr(cfg, cfg_global, **vars(args))
     nto = namedtuple('TestTrkr', 'args fmgr')
     return nto(args=args, fmgr=fmgr)
 

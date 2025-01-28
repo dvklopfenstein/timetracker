@@ -32,6 +32,8 @@ show:
 	find .timetracker/
 	cat .timetracker/config
 
+.pylintrc:
+	pylint --generate-rcfile > .pylintrc
 
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:

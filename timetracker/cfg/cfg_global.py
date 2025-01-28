@@ -55,6 +55,7 @@ class CfgGlobal:
 
     @staticmethod
     def _new_docglobal():
+        # pylint: disable=duplicate-code
         doc = document()
         doc.add(comment("TimeTracker global configuration file"))
         doc.add(nl())

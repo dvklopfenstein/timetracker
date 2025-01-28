@@ -10,6 +10,7 @@
 # Details
 
 ## Unreleased
+* ADD: `--version` arg
 
 ## Release 2025-01-27 v0.1a3
 * CHANGED: Executable name from `trkr` to the shorter `trk`

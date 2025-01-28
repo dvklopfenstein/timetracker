@@ -12,6 +12,7 @@ from setuptools import setup
 PACKAGES = [
     'timetracker',
     'timetracker.cmd',
+    'timetracker.cfg',
 ]
 
 PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}

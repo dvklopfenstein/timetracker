@@ -5,10 +5,11 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from logging import error
-##from logging import DEBUG
-##from logging import basicConfig
+from logging import DEBUG
+from logging import basicConfig
 from timetracker.filemgr import FileMgr
-from timetracker.cfg import Cfg
+from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cli import Cli
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
@@ -24,7 +25,7 @@ fncs = {
 
 def main():
     """Connect all parts of the timetracker"""
-    ##basicConfig(level=DEBUG)
+    basicConfig(level=DEBUG)
     obj = TimeTracker()
     obj.run()
 
@@ -34,11 +35,12 @@ class TimeTracker:
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        cfg = Cfg()
-        self.cfg = cfg
-        self.cli = Cli(cfg)
+        cfg_global = CfgGlobal()
+        cfg_local = Cfg()
+        self.cfg_local = cfg_local
+        self.cli = Cli(cfg_local)
         self.args = self.cli.get_args_cli()
-        self.fmgr = FileMgr(cfg, **vars(self.args))
+        self.fmgr = FileMgr(cfg_local, cfg_global, **vars(self.args))
 
     def run(self):
         """Run timetracker"""
@@ -52,7 +54,7 @@ class TimeTracker:
             self._msg_init()
             return
         # Check for start time
-        start_file = self.cfg.get_filename_start()
+        start_file = self.cfg_local.get_filename_start()
         if not exists(start_file):
             print('Run `trk start` to begin timetracking')
         else:

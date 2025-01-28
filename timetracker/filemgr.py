@@ -14,10 +14,11 @@ class FileMgr:
     """File manager"""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, cfg, **kws):
-        self.cfg = cfg
+    def __init__(self, cfg_local, cfg_global, **kws):
+        self.cfg = cfg_local
+        self.cfg_global = cfg_global
         self.tdir = kws['directory']
-        self.name = kws['name']
+        self.name = kws['name']      # From Reasearcher's USER envvar
         self.kws = kws
 
     def get(self, key):

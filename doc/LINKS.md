@@ -9,3 +9,6 @@
 
 # Formats
 * [timeclock](https://hledger.org/1.41/hledger.html#timeclock)
+
+# Papers
+* [College students' time management: Correlations with academic performance and stress](https://psycnet.apa.org/record/1991-13852-001)

@@ -28,10 +28,12 @@ stop:
 	find ~/timetrackers/projs
 	
 show:
-	cat .timetracker/config
-	find .timetracker
 	find ~/timetrackers/projs
+	find .timetracker/
+	cat .timetracker/config
 
+.pylintrc:
+	pylint --generate-rcfile > .pylintrc
 
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:

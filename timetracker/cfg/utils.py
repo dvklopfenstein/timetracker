@@ -16,8 +16,9 @@ from tomlkit import parse
 
 def parse_cfg(fin, desc=''):
     """Read a config file and load it into a TOML document"""
+    # pylint: disable=unused-argument
     cfgtxt = _read_local_cfg(fin)
-    debug(f'{desc}({cfgtxt})')
+    ##debug(f'{desc}({cfgtxt})')
     return parse(cfgtxt) if cfgtxt is not None else None
 
 def _read_local_cfg(fin):

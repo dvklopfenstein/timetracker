@@ -16,11 +16,11 @@ def run_stop(fmgr):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug('STOP: RUNNING COMMAND STOP')
-    cfgobj = fmgr.cfg
+    cfgproj = fmgr.cfg
 
-    fstart = cfgobj.get_filename_start()
+    fstart = cfgproj.get_filename_start()
     debug(f'STOP: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
-    fcsv = cfgobj.get_filename_csv()
+    fcsv = cfgproj.get_filename_csv()
     debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
 
     dta = read_startfile(fstart)
@@ -33,7 +33,7 @@ def run_stop(fmgr):
         _wr_csvlong_hdrs(fcsv)
     _wr_csvlong_data(fcsv, fmgr, dta)
     if not fmgr.get("keepstart"):
-        fmgr.rm_starttime()
+        cfgproj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
 

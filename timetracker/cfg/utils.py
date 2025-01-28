@@ -66,5 +66,27 @@ def replace_homepath(fname):
     debug(f'UPDATE HOME:  {home_str}')
     return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
+def get_cfgdir(cfgdir):
+    """Get a global configuration directory which exists"""
+    if cfgdir == '~':
+        return expanduser(cfgdir)
+    if exists(cfgdir):
+        return cfgdir
+    absdir = abspath(cfgdir)
+    if exists(absdir):
+        return absdir
+    ## pylint: disable=fixme
+    ## TODO: Accomodate alternamte directories
+    #if absdir[-12:] == '.timetracker':
+    #    ret = absdir[:-12]
+    #    if exists(ret):
+    #        return ret
+    if hasattr(environ, cfgdir):
+        ret = environ[cfgdir]
+        if exists(ret):
+            return ret
+        raise RuntimeError(f'NO DIRECTORY IN ENVVAR {cfgdir}: {cfgdir}')
+    raise RuntimeError(f'UNKNOWN DIRECTORY FOR CONFIGURATION: {cfgdir}')
+
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

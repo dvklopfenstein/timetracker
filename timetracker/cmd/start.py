@@ -19,14 +19,20 @@ def run_start(fmgr):
     """Initialize timetracking on a project"""
     debug('START: RUNNING COMMAND START')
     now = datetime.now()
-    fin_start = fmgr.cfg.get_filename_start()
+    cfg_local = fmgr.cfg
+    args = fmgr.kws
+    fin_start = cfg_local.get_filename_start()
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     # Print elapsed time, if timer was started
-    fmgr.prt_elapsed()
+    cfg_local.prt_elapsed()
     # Set/reset starting time, if applicable
     forced = fmgr.get('forced')
     if not exists(fin_start) or forced:
-        fmgr.ini_workdir()
+        cfg_local.mk_workdir()
+        cfg_local_fname = cfg_local.get_filename_cfglocal()
+        if not exists(cfg_local_fname):
+            cfg_local.update_localini(args.get('project'), args.get('csvdir'))
+            cfg_local.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
             if not fmgr.get('quiet'):

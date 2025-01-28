@@ -3,11 +3,9 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import environ
 ##from os import getcwd
 from os.path import exists
 ##from os.path import basename
-from os.path import expanduser
 from os.path import join
 from os.path import abspath
 ##from os.path import relpath
@@ -23,13 +21,14 @@ from tomlkit import dumps
 ##from timetracker.cfg.utils import chk_isdir
 ##from timetracker.cfg.utils import replace_homepath
 from timetracker.cfg.utils import parse_cfg
+from timetracker.cfg.utils import get_cfgdir
 
 
 class CfgGlobal:
     """Global configuration parser for timetracking"""
 
     def __init__(self, cfgdir='~', basename='.timetrackerconfig'):
-        self.cfgdir = normpath(abspath(self._init_cfgdir(cfgdir)))
+        self.cfgdir = normpath(abspath(get_cfgdir(cfgdir)))
         self.fname = join(self.cfgdir, basename)
         debug(f'CFG GLOBAL CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')
         self.docini = self._init_docglobal()
@@ -63,18 +62,6 @@ class CfgGlobal:
         doc.add(nl())
         doc["projects"] = []
         return doc
-
-    def _init_cfgdir(self, cfgdir):
-        if cfgdir == '~':
-            return expanduser(cfgdir)
-        if exists(cfgdir):
-            return cfgdir
-        if hasattr(environ, cfgdir):
-            ret = environ[cfgdir]
-            if exists(ret):
-                return ret
-            raise RuntimeError(f'NO DIRECTORY IN ENVVAR {cfgdir}: {cfgdir}')
-        raise RuntimeError(f'UNKNOWN DIRECTORY FOR GLOBAL CONFIGURATION: {cfgdir}')
 
     #def _init_fname(self):
     #    pass

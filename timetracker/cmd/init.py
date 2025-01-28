@@ -13,7 +13,7 @@ def run_init(fmgr):
     cfg_local = fmgr.cfg
     args = fmgr.kws
     # 1. INITIALIZE A LOCAL .timetracker PROJECT DIRECTORY
-    fmgr.ini_workdir()
+    cfg_local.mk_workdir(args['quiet'])
     # pylint: disable=fixme
     # TODO: Check if cfg exists and needs to be updated
     cfg_local.update_localini(args['project'], args['csvdir'])

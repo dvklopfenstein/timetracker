@@ -62,10 +62,11 @@ class CfgProj:
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
         fcfg = self.get_filename_cfglocal()
-        doc = parse_cfg(fcfg, "CFG LOCAL")
-        assert doc is not None
-        fpat = normpath(abspath(expanduser(doc['csv']['filename'])))
-        return replace_envvar(fpat) if '$' in fpat else fpat
+        doc = TOMLFile(fcfg).read() if exists(fcfg) else None
+        if doc is not None:
+            fpat = normpath(abspath(expanduser(doc['csv']['filename'])))
+            return replace_envvar(fpat) if '$' in fpat else fpat
+        return None
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""

@@ -84,6 +84,7 @@ class Cli:
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
         self._add_subparser_stop(subparsers)
+        self._add_subparser_csvupdate(subparsers)
 
     def _add_subparser_init(self, subparsers):
         parser = subparsers.add_parser(name='init',
@@ -116,6 +117,18 @@ class Cli:
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
         return parser
+
+    def _add_subparser_csvupdate(self, subparsers):
+        parser = subparsers.add_parser(name='csvupdate',
+            help='Update values in csv columns containing weekday, am/pm, and duration',
+            formatter_class=ArgumentDefaultsHelpFormatter,
+        )
+        parser.add_argument('-f', '--force', action='store_true',
+            help='Over-write the csv indicated in the project `config` by `filename`')
+        parser.add_argument('-i', '--input', metavar='file.csv',
+            help='Specify an input csv file')
+        parser.add_argument('-o', '--output', metavar='file.csv', default='updated.csv',
+            help='Specify an output csv file')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -34,7 +34,7 @@ from timetracker.cfg.utils import get_dirname_abs
 from timetracker.hms import hms_from_startfile
 
 
-class Cfg:
+class CfgProj:
     """Configuration parser for timetracking"""
 
     DIR = './.timetracker'
@@ -111,8 +111,9 @@ class Cfg:
             remove(fstart)
 
     def mk_workdir(self, quiet=False):
-        """Initialize `.timetracker/` local working directory"""
+        """Initialize `.timetracker/` project working directory"""
         workdir = self.workdir
+        debug(f'mk_workdir({workdir})')
         if not exists(workdir):
             makedirs(workdir, exist_ok=True)
             absdir = abspath(workdir)

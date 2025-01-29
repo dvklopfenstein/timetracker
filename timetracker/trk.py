@@ -8,7 +8,7 @@ from logging import error
 from logging import DEBUG
 from logging import basicConfig
 from timetracker.filemgr import FileMgr
-from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.cfg import CfgProj
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cli import Cli
 from timetracker.cmd.init import run_init
@@ -25,7 +25,7 @@ fncs = {
 
 def main():
     """Connect all parts of the timetracker"""
-    basicConfig(level=DEBUG)
+    ##basicConfig(level=DEBUG)
     obj = TimeTracker()
     obj.run()
 
@@ -36,7 +36,7 @@ class TimeTracker:
 
     def __init__(self):
         cfg_global = CfgGlobal()
-        cfg_local = Cfg()
+        cfg_local = CfgProj()
         self.cfg_local = cfg_local
         self.cli = Cli(cfg_local)
         self.args = self.cli.get_args_cli()

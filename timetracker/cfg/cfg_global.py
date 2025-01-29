@@ -31,11 +31,11 @@ class CfgGlobal:
         self.cfgdir = normpath(abspath(get_cfgdir(cfgdir)))
         self.fname = join(self.cfgdir, basename)
         debug(f'CFG GLOBAL CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')
-        self.docini = self._init_docglobal()
+        self.doc = self._init_docglobal()
 
     def str_cfg(self):
         """Return string containing configuration file contents"""
-        return dumps(self.docini)
+        return dumps(self.doc)
 
     def rd_cfg(self):
         """Read a global cfg file; return a doc obj"""
@@ -43,11 +43,29 @@ class CfgGlobal:
 
     def wr_cfg(self):
         """Write config file"""
-        projects = self.docini['projects']
+        projects = self.doc['projects']
         debug(f'CFG WRITING GLOBAL PROJECTS: {projects}')
         with open(self.fname, 'w', encoding='utf8') as ostrm:
             print(self.str_cfg(), file=ostrm, end='')
-            debug(f'  WROTE: {self.fname}')
+            debug(f'  WROTE: {self.fname}; PROJECTS: ')
+
+    def add_proj(self, project, cfgfilename):
+        """Add a project to the global config file, if it is not already present"""
+        doc = self.rd_cfg()
+        if self._noproj(doc, project, cfgfilename):
+            debug('HHHHHHHHHHHH')
+            doc['projects'].append((project, cfgfilename))
+            self.doc = doc
+
+
+    def _noproj(self, doc, projnew, projcfgname):
+        """Test if the project is missing from the global config file"""
+        for projname, cfgname in doc['projects']:
+            if projname == projnew:
+                if cfgname == projcfgname:
+                    return False
+                raise RuntimeError('PROJECT({projname}) {projcfgname} != {cfgname}')
+        return True
 
     def _init_docglobal(self):
         if not exists(self.fname):

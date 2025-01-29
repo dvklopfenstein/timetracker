@@ -32,7 +32,7 @@ The `name` used by this time tracker is determined by the `USER` environmental v
 ### 1) Initialize a `.timetracker/` directory
 ```
 $ trk init
-Initialized empty timetracker directory: /DIR/.timetracker for name(dvk)
+Initialized empty timetracker directory: /PROJDIR/.timetracker for name(dvk)
 ```
 ### 2) Start the timer
 ```

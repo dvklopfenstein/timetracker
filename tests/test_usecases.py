@@ -7,7 +7,7 @@ from os import environ
 from collections import namedtuple
 from datetime import timedelta
 from timeit import default_timer
-from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.cfg import CfgProj
 from timetracker.cli import Cli
 from timetracker.filemgr import FileMgr
 from timetracker.cfg.cfg_global import CfgGlobal
@@ -84,13 +84,13 @@ def _trk():
     nta = _get_nttrkr([])
     # TODO: Check that help message was printed
     # TODO: Check: Run `trk init` to initialize local timetracker
-    assert nta.args.directory == Cfg.DIR
+    assert nta.args.directory == CfgProj.DIR
     assert nta.args.name == environ['USER']
     assert not nta.args.quiet
     assert nta.args.command is None
 
 def _get_nttrkr(arglist):
-    cfg = Cfg()
+    cfg = CfgProj()
     cli = Cli(cfg)
     print(f'DDDDDDDDDDDDDDDDDDD {argv}')
     args = cli.get_args_test(arglist)

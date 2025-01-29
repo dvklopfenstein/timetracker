@@ -35,7 +35,7 @@ class CfgGlobal:
     def __init__(self, dirhome='~', basename='.timetrackerconfig'):
         self.dirhome = normpath(abspath(get_dirhome(dirhome)))
         self.fname = join(self.dirhome, basename)
-        debug(f'CFGGLOBAL CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')
+        debug(f'CFGGLOBAL  CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')
         self.doc = self._init_docglobal()
 
     def str_cfg(self):
@@ -59,6 +59,7 @@ class CfgGlobal:
         doc = self.rd_cfg()
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):
+            fnamecfg_proj = cfgfilename
             if has_homedir(self.dirhome, cfgfilename):
                 ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
                 fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
@@ -92,7 +93,13 @@ class CfgGlobal:
                 if cfgname == projcfgname:
                     # Project is already in the global config file
                     return False
-                raise RuntimeError('PROJECT({projname}) {projcfgname} != {cfgname}')
+                raise RuntimeError(f'ERROR: Project({projname}) config filename '
+                                    'is already set to:\n'
+                                   f'        {cfgname}.\n'
+                                    '    Not over-writing with:\n'
+                                   f'        {projcfgname}\n'
+                                   f'    In {self.fname}\n'
+                                    '    Use arg, `--project` to create a unique project name')
         # Project is not in global config file
         return True
 

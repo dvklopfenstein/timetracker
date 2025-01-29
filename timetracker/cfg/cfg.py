@@ -1,4 +1,4 @@
-"""Configuration parser for timetracking.
+"""Local project configuration parser for timetracking.
 
 Uses https://github.com/python-poetry/tomlkit,
 but will switch to tomllib in builtin to standard Python (starting 3.11)
@@ -36,7 +36,7 @@ from timetracker.hms import hms_from_startfile
 
 
 class CfgProj:
-    """Configuration parser for timetracking"""
+    """Local project configuration parser for timetracking"""
 
     DIR = './.timetracker'
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'

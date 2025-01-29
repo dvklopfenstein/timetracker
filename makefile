@@ -17,17 +17,29 @@ pylint:
 	chmod 755 tmp_pylint
 	tmp_pylint
 
+DIRTRK = ./.trkr
+PROJ = trk
 init:
-	trk init --csvdir ~/timetrackers/projs/
-	make show
+	rm -rf $(DIRTRK)
+	trk --directory $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
+	find $(DIRTRK)
+
+start:
+	trk -d $(DIRTRK) start
+	find $(DIRTRK)
 
 stop:
-	trk stop -m test
-	find .timetracker
-	grep filename .timetracker/config
-	find ~/timetrackers/projs
+	trk -d $(DIRTRK) stop -m "\"$(MSG)\""
+	find $(DIRTRK)
+	grep filename $(DIRTRK)/config
+	find ~/timetrackers/ -type f -name \*.csv
 	
 show:
+	# Test .timetracker dir
+	find ~/timetrackers/projs
+	find .timetracker/
+	cat .timetracker/config
+	# Actual dir for tracking time spent on this project
 	find ~/timetrackers/projs
 	find .timetracker/
 	cat .timetracker/config
@@ -87,7 +99,8 @@ clean:
 	rm -f .timetracker_start
 	rm -f timetracker_timetracker_*.csv
 	rm -f tmp_pylint
+	rm -f .timetracker_starttime
 
 clobber:
-	make clean
 	rm -rf .timetracker/
+	make clean

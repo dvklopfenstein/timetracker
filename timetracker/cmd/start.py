@@ -13,6 +13,7 @@ from logging import debug
 ##$from datetime import timedelta
 from datetime import datetime
 from timetracker.msgs import prt_started
+from timetracker.cfg.cfg_global import CfgGlobal
 
 
 def run_start(fmgr):
@@ -33,6 +34,9 @@ def run_start(fmgr):
         if not exists(cfg_local_fname):
             cfg_local.update_localini(args.get('project'), args.get('csvdir'))
             cfg_local.wr_cfg()
+            cfg_global = CfgGlobal()
+            cfg_global.add_proj(cfg_local.project, cfg_local.get_filename_cfglocal())
+            cfg_global.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
             if not fmgr.get('quiet'):

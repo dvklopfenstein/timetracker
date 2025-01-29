@@ -22,6 +22,8 @@ def run_init(fmgr):
     cfg_local.wr_cfg()
     # 3. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig
     cfg_global = CfgGlobal()
+    cfg_global.add_proj(cfg_local.project, cfg_local.get_filename_cfglocal())
+    cfg_global.wr_cfg()
     assert cfg_global
     ##cfg_global.write_update(args['project'], cfg_local.get_filename_cfglocal)
 

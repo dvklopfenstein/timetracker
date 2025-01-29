@@ -52,19 +52,26 @@ def test_cfgbase_temp():
         _find(tmp_home)
         print(f'{sep}5) Create a local cfg object for the apples project')
         name = 'tester'
+        exp_projs = []
         for proj, projdir in proj2wdir.items():
             print(f'{sep}ADD PROJECT({proj}): {projdir}')
             workdir = join(projdir, '.timetracker')
+            exp_projs.append([proj, join(workdir, 'config')])
+            # INIT LOCAL PROJECT CONFIG
             cfgloc = CfgProj(workdir, proj, name)
             assert cfgloc.workdir == workdir
             assert cfgloc.project == proj
             assert cfgloc.name == name
             cfgloc.mk_workdir()
             cfgloc.wr_cfg()
+            # cat project/.timetracker/config
             fname_proj = cfgloc.get_filename_cfglocal()
             debug(f'PROJ CFG: {fname_proj}')
             _run(f'cat {fname_proj}')
+            # ADD PROJECT TO GLOBAL CONFIG AND WRITE
             cfgtop.add_proj(proj, fname_proj)
+            assert cfgtop.doc["projects"].unwrap() == exp_projs, (f'EXP({exp_projs})\n'
+                'ACT({cfgtop.doc["projects"].unwrap()})')
             cfgtop.wr_cfg()
             _run(f'cat {cfgtop.fname}')
             _find(workdir)

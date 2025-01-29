@@ -16,6 +16,8 @@ from tomlkit import document
 from tomlkit import nl
 ##from tomlkit import table
 from tomlkit import dumps
+from tomlkit import array
+from tomlkit.toml_file import TOMLFile
 ##from timetracker.cfg.utils import replace_envvar
 ##from timetracker.cfg.utils import get_dirname_abs
 ##from timetracker.cfg.utils import chk_isdir
@@ -39,22 +41,20 @@ class CfgGlobal:
 
     def rd_cfg(self):
         """Read a global cfg file; return a doc obj"""
-        return parse_cfg(self.fname)
+        return TOMLFile(self.fname).read()
 
     def wr_cfg(self):
         """Write config file"""
         projects = self.doc['projects']
         debug(f'CFG WRITING GLOBAL PROJECTS: {projects}')
-        with open(self.fname, 'w', encoding='utf8') as ostrm:
-            print(self.str_cfg(), file=ostrm, end='')
-            debug(f'  WROTE: {self.fname}; PROJECTS: ')
+        TOMLFile(self.fname).write(self.doc)
+        debug(f'  WROTE: {self.fname}; PROJECTS: ')
 
     def add_proj(self, project, cfgfilename):
         """Add a project to the global config file, if it is not already present"""
         doc = self.rd_cfg()
         if self._noproj(doc, project, cfgfilename):
-            debug('HHHHHHHHHHHH')
-            doc['projects'].append((project, cfgfilename))
+            doc['projects'].add_line((project, cfgfilename))
             self.doc = doc
 
 
@@ -78,7 +78,9 @@ class CfgGlobal:
         doc = document()
         doc.add(comment("TimeTracker global configuration file"))
         doc.add(nl())
-        doc["projects"] = []
+        arr = array()
+        arr.multiline(True)
+        doc["projects"] = arr
         return doc
 
     #def _init_fname(self):

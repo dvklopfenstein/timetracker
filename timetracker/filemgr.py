@@ -3,11 +3,7 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import makedirs
-from os import remove
 from os.path import exists
-from os.path import abspath
-from timetracker.hms import hms_from_startfile
 
 
 class FileMgr:
@@ -31,38 +27,9 @@ class FileMgr:
         """
         return self.kws.get(key)
 
-    def get_workdir(self):
-        """Get directory for timetracker information"""
-        return self.tdir
-
-    def ini_workdir(self):
-        """Initialize timetracker working directory"""
-        dirtrk = self.get_workdir()
-        if not exists(dirtrk):
-            makedirs(dirtrk, exist_ok=True)
-            absdir = abspath(dirtrk)
-            if not self.kws.get('quiet'):
-                print(f'Initialized timetracker directory: {absdir}')
-
     def exists_workdir(self):
         """Test existance of timetracker working directory"""
         return exists(self.tdir)
-
-    def rm_starttime(self):
-        """Remove the starttime file, thus resetting the timer"""
-        fstart = self.cfg.get_filename_start()
-        if exists(fstart):
-            remove(fstart)
-
-    def prt_elapsed(self):
-        """Print elapsed time if timer is started"""
-        fin_start = self.cfg.get_filename_start()
-        # Print elapsed time, if timer was started
-        if exists(fin_start):
-            hms = hms_from_startfile(fin_start)
-            print(f'\nTimer running: {hms} H:M:S '
-                  f'elapsed time for name({self.name}) '
-                  f'project({self.cfg.project})')
 
     def str_tags(self):
         """Get the stop-timer tags"""

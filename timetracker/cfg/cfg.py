@@ -9,8 +9,10 @@ in a version supported by cygwin, conda, and venv.
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from os import remove
 from os import environ
 from os import getcwd
+from os import makedirs
 from os.path import exists
 from os.path import basename
 from os.path import expanduser
@@ -24,23 +26,25 @@ from tomlkit import document
 from tomlkit import nl
 from tomlkit import table
 from tomlkit import dumps
+from tomlkit.toml_file import TOMLFile
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.utils import replace_homepath
 from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
+from timetracker.hms import hms_from_startfile
 
 
-class Cfg:
+class CfgProj:
     """Configuration parser for timetracking"""
 
     DIR = './.timetracker'
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    def __init__(self):
-        self.project = basename(getcwd())
-        self.name = environ.get('USER', 'researcher')
-        self.work_dir = abspath(self.DIR)
+    def __init__(self, workdir=None, project=None, name=None):
+        self.workdir = normpath(abspath(self.DIR if workdir is None else workdir))
+        self.project = basename(getcwd()) if project is None else project
+        self.name = environ.get('USER', 'researcher') if name is None else name
         self.dir_csv = '.'
         ##self.csv_name = join(
         ##    self.DIR,
@@ -53,7 +57,7 @@ class Cfg:
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
-        return normpath(abspath(join(self.work_dir, 'config')))
+        return normpath(abspath(join(self.workdir, 'config')))
 
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
@@ -65,22 +69,25 @@ class Cfg:
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""
-        return join(self.work_dir, f'start_{self.project}_{self.name}.txt')
+        return join(self.workdir, f'start_{self.project}_{self.name}.txt')
 
     def wr_cfg(self):
         """Write config file"""
         fname = self.get_filename_cfglocal()
         chk_isdir(get_dirname_abs(self.doc['csv']['filename']))
-        with open(fname, 'w', encoding='utf8') as ostrm:
-            print(self.str_cfg(), file=ostrm, end='')
-            debug(f'  WROTE: {fname}')
+        TOMLFile(fname).write(self.doc)
+        ####with open(fname, 'w', encoding='utf8') as ostrm:
+        ####    print(self.str_cfg(), file=ostrm, end='')
+        debug(f'  WROTE: {fname}')
         return dumps(self.doc)
 
     def update_localini(self, project, csvdir):
         """Update the csv filename for storing time data"""
-        self.project = project
-        self.dir_csv = replace_homepath(csvdir)
-        self.doc['project'] = project
+        if project is not None:
+            self.project = project
+        if csvdir is not None:
+            self.dir_csv = replace_homepath(csvdir)
+        self.doc['project'] = self.project
         fcsv = self._get_loc_filename()
         self.doc['csv']['filename'] = fcsv
         debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
@@ -88,6 +95,32 @@ class Cfg:
     def str_cfg(self):
         """Return string containing configuration file contents"""
         return dumps(self.doc)
+
+    def prt_elapsed(self):
+        """Print elapsed time if timer is started"""
+        fin_start = self.get_filename_start()
+        # Print elapsed time, if timer was started
+        if exists(fin_start):
+            hms = hms_from_startfile(fin_start)
+            print(f'\nTimer running: {hms} H:M:S '
+                  f'elapsed time for name({self.name}) '
+                  f'project({self.project})')
+
+    def rm_starttime(self):
+        """Remove the starttime file, thus resetting the timer"""
+        fstart = self.get_filename_start()
+        if exists(fstart):
+            remove(fstart)
+
+    def mk_workdir(self, quiet=False):
+        """Initialize `.timetracker/` project working directory"""
+        workdir = self.workdir
+        debug(f'mk_workdir({workdir})')
+        if not exists(workdir):
+            makedirs(workdir, exist_ok=True)
+            absdir = abspath(workdir)
+            if not quiet:
+                print(f'Initialized timetracker directory: {absdir}')
 
     #-------------------------------------------------------------
     def _get_loc_filename(self):

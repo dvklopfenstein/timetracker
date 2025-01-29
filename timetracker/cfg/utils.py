@@ -7,9 +7,11 @@ from os import environ
 from os.path import isdir
 from os.path import exists
 from os.path import expanduser
+from os.path import relpath
 from os.path import abspath
 from os.path import normpath
 from os.path import dirname
+from os.path import join
 ##from os.path import commonpath
 from os.path import commonprefix
 from logging import debug
@@ -28,16 +30,23 @@ def _read_local_cfg(fin):
         return ''.join(ifstrm.readlines())
     return None
 
+def get_relpath_adj(projdir, dirhome):
+    """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
+    if has_homedir(dirhome, projdir):
+        return join('~', relpath(projdir, dirhome))
+    return projdir
+
 def has_homedir(homedir, projdir):
     """Checks to see if `projdir` has a root of `rootdir`"""
     homedir = abspath(homedir)
-    debug(f'has_homedir      homedir {homedir}')
-    debug(f'has_homedir      projdir {projdir}')
-    debug(f'has_homedir  has_homedir {has_homedir(homedir, projdir)}')
+    ##debug(f'has_homedir      homedir {homedir}')
+    ##debug(f'has_homedir      projdir {projdir}')
     #if commonpath([homedir]) == commonpath([homedir, abspath(projdir)]):
     if homedir == commonprefix([homedir, abspath(projdir)]):
         # `projdir` is under `homedir`
+        ##debug('has_homedir  has_homedir True')
         return True
+    ##debug('has_homedir  has_homedir False')
     return False
 
 def replace_envvar(fpat):

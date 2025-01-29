@@ -26,6 +26,7 @@ from tomlkit import document
 from tomlkit import nl
 from tomlkit import table
 from tomlkit import dumps
+from tomlkit.toml_file import TOMLFile
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.utils import replace_homepath
 from timetracker.cfg.utils import parse_cfg
@@ -74,9 +75,10 @@ class CfgProj:
         """Write config file"""
         fname = self.get_filename_cfglocal()
         chk_isdir(get_dirname_abs(self.doc['csv']['filename']))
-        with open(fname, 'w', encoding='utf8') as ostrm:
-            print(self.str_cfg(), file=ostrm, end='')
-            debug(f'  WROTE: {fname}')
+        TOMLFile(fname).write(self.doc)
+        ####with open(fname, 'w', encoding='utf8') as ostrm:
+        ####    print(self.str_cfg(), file=ostrm, end='')
+        debug(f'  WROTE: {fname}')
         return dumps(self.doc)
 
     def update_localini(self, project, csvdir):

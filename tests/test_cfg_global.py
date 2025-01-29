@@ -19,6 +19,7 @@ from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg import CfgProj
+from timetracker.cfg.utils import get_relpath_adj
 #from timetracker.cli import Cli
 #from timetracker.filemgr import FileMgr
 #from timetracker.cfg.cfg_global import CfgGlobal
@@ -61,7 +62,10 @@ def test_cfgbase_temp():
         for proj, projdir in proj2wdir.items():
             print(f'{sep}ADD PROJECT({proj}): {projdir}')
             workdir = join(projdir, '.timetracker')
-            exp_projs.append([proj, join(workdir, 'config')])
+            # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
+            cfgname_proj = join(workdir, 'config')
+            # EXP: apples '~/proj/apples/.timetracker/config'
+            exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmp_home)])
             # INIT LOCAL PROJECT CONFIG
             cfgloc = CfgProj(workdir, proj, name)
             assert cfgloc.workdir == workdir
@@ -70,13 +74,15 @@ def test_cfgbase_temp():
             cfgloc.mk_workdir()
             cfgloc.wr_cfg()
             # cat project/.timetracker/config
-            fname_proj = cfgloc.get_filename_cfglocal()
-            debug(f'PROJ CFG: {fname_proj}')
-            _run(f'cat {fname_proj}')
+            fnamecfg_proj = cfgloc.get_filename_cfglocal()
+            debug(f'PROJ CFG: {fnamecfg_proj}')
+            _run(f'cat {fnamecfg_proj}')
             # ADD PROJECT TO GLOBAL CONFIG AND WRITE
-            cfgtop.add_proj(proj, fname_proj)
-            assert cfgtop.doc["projects"].unwrap() == exp_projs, (f'EXP({exp_projs})\n'
-                'ACT({cfgtop.doc["projects"].unwrap()})')
+            cfgtop.add_proj(proj, fnamecfg_proj)
+            assert cfgtop.doc["projects"].unwrap() == exp_projs, (
+                'UNEXPECTED PROJS:\n'
+                f'EXP({exp_projs})\n'
+                f'ACT({cfgtop.doc["projects"].unwrap()})')
             cfgtop.wr_cfg()
             _run(f'cat {cfgtop.fname}')
             _find(workdir)

@@ -45,6 +45,11 @@ def test_cfgbase_temp():
         cfgtop.wr_cfg()
         print(f'{sep}3) READ THE EMPTY GLOBAL CONFIGURATION FILE')
         doc = cfgtop.rd_cfg()
+        assert doc is not None
+        # pylint: disable=unsubscriptable-object
+        assert doc['projects'] == cfgtop.doc['projects']
+        #debug(f"XXXXX {doc['projects']}")
+        #debug(f"YYYYY {cfgtop.doc['projects']}")
         assert doc['projects'] == cfgtop.doc['projects']
         _run(f'cat {cfgtop.fname}')
         print(f'{sep}4) Create local project directories')
@@ -78,13 +83,13 @@ def test_cfgbase_temp():
 
 
 
-def test_cfgdir():
+def test_dirhome():
     """Test the TimeTracker global configuration"""
     cfg = CfgGlobal()
     assert dirname(cfg.fname) == expanduser('~')
 
     with TemporaryDirectory() as tmp_home:
-        cfg = CfgGlobal(cfgdir=tmp_home.name)
+        cfg = CfgGlobal(dirhome=tmp_home.name)
         assert dirname(cfg.fname) == tmp_home.name
         tmp_home.cleanup()
 
@@ -105,6 +110,6 @@ def _find(home):
     debug(run(f'find {home}'.split(), capture_output=True, text=True, check=True).stdout)
 
 if __name__ == '__main__':
-    #test_cfgdir()
+    #test_dirhome()
     #test_cfgbase_home()
     test_cfgbase_temp()

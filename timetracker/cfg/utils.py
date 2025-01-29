@@ -10,6 +10,8 @@ from os.path import expanduser
 from os.path import abspath
 from os.path import normpath
 from os.path import dirname
+##from os.path import commonpath
+from os.path import commonprefix
 from logging import debug
 from logging import warning
 from tomlkit import parse
@@ -25,6 +27,18 @@ def _read_local_cfg(fin):
     with open(fin, encoding='utf8') as ifstrm:
         return ''.join(ifstrm.readlines())
     return None
+
+def has_homedir(homedir, projdir):
+    """Checks to see if `projdir` has a root of `rootdir`"""
+    homedir = abspath(homedir)
+    debug(f'has_homedir      homedir {homedir}')
+    debug(f'has_homedir      projdir {projdir}')
+    debug(f'has_homedir  has_homedir {has_homedir(homedir, projdir)}')
+    #if commonpath([homedir]) == commonpath([homedir, abspath(projdir)]):
+    if homedir == commonprefix([homedir, abspath(projdir)]):
+        # `projdir` is under `homedir`
+        return True
+    return False
 
 def replace_envvar(fpat):
     """Replace '$USER$' with the value of the envvar-works with any envvar"""
@@ -66,13 +80,13 @@ def replace_homepath(fname):
     debug(f'UPDATE HOME:  {home_str}')
     return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
-def get_cfgdir(cfgdir):
+def get_dirhome(dirhome):
     """Get a global configuration directory which exists"""
-    if cfgdir == '~':
-        return expanduser(cfgdir)
-    if exists(cfgdir):
-        return cfgdir
-    absdir = abspath(cfgdir)
+    if dirhome == '~':
+        return expanduser(dirhome)
+    if exists(dirhome):
+        return dirhome
+    absdir = abspath(dirhome)
     if exists(absdir):
         return absdir
     ## pylint: disable=fixme
@@ -81,12 +95,12 @@ def get_cfgdir(cfgdir):
     #    ret = absdir[:-12]
     #    if exists(ret):
     #        return ret
-    if hasattr(environ, cfgdir):
-        ret = environ[cfgdir]
+    if hasattr(environ, dirhome):
+        ret = environ[dirhome]
         if exists(ret):
             return ret
-        raise RuntimeError(f'NO DIRECTORY IN ENVVAR {cfgdir}: {cfgdir}')
-    raise RuntimeError(f'UNKNOWN DIRECTORY FOR CONFIGURATION: {cfgdir}')
+        raise RuntimeError(f'NO DIRECTORY IN ENVVAR {dirhome}: {dirhome}')
+    raise RuntimeError(f'UNKNOWN DIRECTORY FOR CONFIGURATION: {dirhome}')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

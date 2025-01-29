@@ -17,9 +17,12 @@ from timetracker import __version__
 class Cli:
     """Command line interface (CLI) for timetracking"""
 
-    def __init__(self, cfg):
-        self.cfg = cfg
+    def __init__(self, cfg_proj):
+        self.cfg_proj = cfg_proj
         self.parser = self._init_parsers()
+        self.argv_tests = {
+            'directory': set(['-d', '--directory']),
+        }
 
     def get_args_cli(self):
         """Get arguments for ScriptFrame"""
@@ -42,13 +45,17 @@ class Cli:
         return args
 
     def _adjust_args(self, args):
+        """Replace config default values with researcher-specified values"""
         debug(f'ARGV: {argv}')
-        if args.command == 'init':
-            # pylint: disable=fixme
-            # TODO: CHeck if cvs.directory is being changed
-            pass
+        argv_set = set(argv)
+        # If researcher set a proj dir other than ./timetracker, use it
+        if not argv_set.isdisjoint(self.argv_tests['directory']):
+            self.cfg_proj.workdir = args.directory
+        # pylint: disable=fixme
+        # TODO: CHeck if cvs.directory is being changed
         return args
 
+    # -------------------------------------------------------------------------------
     def _init_parsers(self):
         parser = self._init_parser_top()
         self._add_subparsers(parser)
@@ -60,9 +67,9 @@ class Cli:
             description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        cfg = self.cfg
-        parser.add_argument('-d', metavar='DIRECTORY', dest='directory', default=cfg.DIR,
-            help='Directory that holds the local config file')
+        cfg = self.cfg_proj
+        parser.add_argument('-d', '--directory', default=cfg.DIR,
+            help='Directory that holds the local project config file')
         parser.add_argument('-n', '--name', default=cfg.name,
             help="A person's alias for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
@@ -83,10 +90,10 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        cfg = self.cfg
+        cfg = self.cfg_proj
         parser.add_argument('--csvdir', default=normpath(relpath(cfg.dir_csv)),
             help='Directory for csv files storing start and stop times')
-        parser.add_argument('-p', metavar='PROJECT', dest='project', default=cfg.project,
+        parser.add_argument('-p', '--project', default=cfg.project,
             help="The name of the project to be time tracked")
         return parser
 

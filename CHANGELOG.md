@@ -11,6 +11,8 @@
 
 ## Unreleased
 * ADD: Global cfg parser
+* ADD: Now can specify a local project working dir other than `./.timetracker` using `-d` or `--directory`
+* ADD: `trk init --project PROJECT` for a researcher-specified project name
 * ADD: If global cfgfilename is a parent of project cfgfilename,
        write `~/pathtoproj/.timetracker/config' in global cfg
 * ADD: Logo to README.md; Currently is `work under progress`

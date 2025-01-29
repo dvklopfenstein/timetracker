@@ -1,9 +1,13 @@
 # Project files
-.timetracker_start
+.timetracker/
 test_timetracker.csv
+
+# Temporary test files
+.timetracker_start
+
+# Build files
 /build/
 /timetracker_csv.egg-info/
-.timetracker/
 /dist/
 
 # Python

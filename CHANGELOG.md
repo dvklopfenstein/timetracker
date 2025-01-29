@@ -10,13 +10,17 @@
 # Details
 
 ## Unreleased
+* ADD: Global cfg parser
+* ADD: If global cfgfilename is a parent of project cfgfilename,
+       write `~/pathtoproj/.timetracker/config' in global cfg
+* ADD: Logo to README.md; Currently is `work under progress`
 * ADD: `--version` arg
 
 ## Release 2025-01-27 v0.1a3
 * CHANGED: Executable name from `trkr` to the shorter `trk`
-* ADD: Configuration parser
-* ADD: Cfg parser is written upon init, with --csvdir setting csv file location
-* ADD: Cfg parser is read upon `trkr stop -m msg`; time written to csv file in researcher-specied location
+* ADD: Local project Configuration parser
+* ADD: Local project cfg parser is written upon init, with --csvdir setting csv file location
+* ADD: Local project cfg parser is read upon `trkr stop -m msg`; time written to csv file in researcher-specied location
 
 ## Release 2025-01-22 v0.1a2
 * ADD: Install with `pip install timetracker-csv`

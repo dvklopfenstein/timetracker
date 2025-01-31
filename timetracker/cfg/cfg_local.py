@@ -29,7 +29,7 @@ from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.utils import replace_homepath
-from timetracker.cfg.utils import parse_cfg
+##from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
 from timetracker.hms import hms_from_startfile

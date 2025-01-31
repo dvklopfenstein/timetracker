@@ -41,6 +41,9 @@ def run_csvupdate(fmgr):
 def update_csv(fin_csv, fout_csv):
     """Update weekday, AM/PM, & duration using start_datetime and stop_datetime"""
     debug(f'update_csv(fin={fin_csv}, fout={fout_csv})')
+    # pylint: disable=fixme
+    # pylint: disable=unused-variable
+    # TODO: Finish implementing
     with open(fout_csv, 'w', newline='', encoding='utf8') as ofstrm:
         with open(fin_csv, newline='', encoding='utf8') as ifstrm:
             ##csvreader = DictReader(ifstrm)

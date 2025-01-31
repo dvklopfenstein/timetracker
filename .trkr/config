@@ -1,0 +1,6 @@
+# TimeTracker project configuration file
+
+project = "trk"
+
+[csv]
+filename = "~/timetrackers/timetracker_trk_$USER$.csv"

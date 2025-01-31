@@ -83,8 +83,28 @@ class Cli:
         subparsers = parser.add_subparsers(dest='command', help='timetracker subcommand help')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
+        self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
         self._add_subparser_csvupdate(subparsers)
+        self._add_subparser_files(subparsers)
+
+    # -------------------------------------------------------------------------------
+    def _add_subparser_restart(self, subparsers):
+        # pylint: disable=fixme
+        # TODO: add a command that restarts the timers using the last csv time entry
+        #   * Add --verbose to print which files are edited and the csv message
+        #   * re-write the start file
+        #   * remove the last csv entry
+        pass
+
+    def _add_subparser_files(self, subparsers):
+        # pylint: disable=fixme
+        # TODO: add a command that lists timetracker files:
+        #  * csv file
+        #  * start file, if it exists (--verbose)
+        #  * local cfg file
+        #  * global cfg file
+        pass
 
     def _add_subparser_init(self, subparsers):
         parser = subparsers.add_parser(name='init',

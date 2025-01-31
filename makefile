@@ -54,6 +54,12 @@ show:
 	find .timetracker/
 	cat .timetracker/config
 
+files:
+	@grep \.csv $(DIRTRK)/config
+	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
+	find $(DIRTRK)
+	find .timetracker
+
 .pylintrc:
 	pylint --generate-rcfile > .pylintrc
 
@@ -84,13 +90,13 @@ upload:
 	twine upload dist/* --repository timetracker-csv --verbose
 
 
-# -----------------------------------------------------------------------------
 upgrade:
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install --upgrade setuptools
 	$(PYTHON) -m pip install --upgrade wheel
 	$(PYTHON) -m pip install --upgrade twine
 
+# -----------------------------------------------------------------------------
 clean_build:
 	rm -rf build/
 	rm -rf timetracker_csv.egg-info/

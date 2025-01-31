@@ -28,11 +28,21 @@ start:
 	trk -d $(DIRTRK) start
 	find $(DIRTRK)
 
+# Test that researcher passed a stop message using MSG="This is my stop message"
+# https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
 stop:
+	@if [ -n "$$MSG" ]; then \
+	  make _stop; \
+	else  \
+	  echo '$@ MESSAGE FATAL: USAGE: make stop MSG="Describe activities in timeblock"'; \
+		false ; \
+	fi
+
+_stop:
 	trk -d $(DIRTRK) stop -m "\"$(MSG)\""
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
-	find ~/timetrackers/ -type f -name \*.csv
+	#find ~/timetrackers/ -type f -name \*.csv
 	
 show:
 	# Test .timetracker dir

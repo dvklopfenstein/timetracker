@@ -68,9 +68,9 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
         cfg = self.cfg_proj
-        parser.add_argument('-d', '--directory', default=cfg.DIR,
+        parser.add_argument('-d', '--directory', metavar='DIR', default=cfg.DIR,
             help='Directory that holds the local project config file')
-        parser.add_argument('-n', '--name', default=cfg.name,
+        parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=cfg.name,
             help="A person's alias for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')

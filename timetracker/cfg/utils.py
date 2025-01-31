@@ -32,12 +32,14 @@ def _read_local_cfg(fin):
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
-    if has_homedir(dirhome, projdir):
+    if has_homedir(abspath(dirhome), projdir):
         return join('~', relpath(projdir, dirhome))
     return projdir
 
 def has_homedir(homedir, projdir):
     """Checks to see if `projdir` has a root of `rootdir`"""
+    assert homedir == abspath(homedir)
+    assert projdir == abspath(projdir)
     homedir = abspath(homedir)
     ##debug(f'has_homedir      homedir {homedir}')
     ##debug(f'has_homedir      projdir {projdir}')
@@ -82,6 +84,8 @@ def chk_isdir(dname, prefix=''):
 
 def replace_homepath(fname):
     """Replace '~' with the expanded filepath"""
+    # pylint: disable=fixme
+    # TODO: use commonprefix
     fname = normpath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
@@ -110,6 +114,14 @@ def get_dirhome(dirhome):
             return ret
         raise RuntimeError(f'NO DIRECTORY IN ENVVAR {dirhome}: {dirhome}')
     raise RuntimeError(f'UNKNOWN DIRECTORY FOR CONFIGURATION: {dirhome}')
+
+def get_shortest_name(filename):
+    """Return the shortest filename"""
+    fabs = normpath(abspath(filename))
+    # pylint: disable=fixme
+    # TODO: use commonprefix
+    frel = normpath(relpath(filename))
+    return fabs if len(fabs) < len(frel) else frel
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -60,7 +60,7 @@ class CfgGlobal:
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):
             fnamecfg_proj = cfgfilename
-            if has_homedir(self.dirhome, cfgfilename):
+            if has_homedir(self.dirhome, abspath(cfgfilename)):
                 ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
                 fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
                 debug(f'OOOOOOOOOO {fnamecfg_proj}')
@@ -78,7 +78,7 @@ class CfgGlobal:
             ##pdir = relpath(abspath(projdir), truehome)
             ##pdir = relpath(abspath(projdir), dirhome)
             ##if pdir[:2] != '..':
-            if has_homedir(self.dirhome, projdir):
+            if has_homedir(self.dirhome, abspath(projdir)):
                 ##pdir = join('~', pdir)
                 pdir = join('~', relpath(abspath(projdir), dirhome))
                 doc_cur['projects'][idx] = [projname, pdir]

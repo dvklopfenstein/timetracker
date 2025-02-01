@@ -42,7 +42,7 @@ def run_start(fmgr):
             if not fmgr.get('quiet'):
                 print(f'Timetracker started '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
-                      f'for project {cfgproj.project}, ID {cfgproj.name}')
+                      f"for project '{cfgproj.project}' ID={cfgproj.name}")
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not forced:

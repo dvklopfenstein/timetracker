@@ -104,8 +104,7 @@ class CfgProj:
         if exists(fin_start):
             hms = hms_from_startfile(fin_start)
             print(f'\nTimer running: {hms} H:M:S '
-                  f'elapsed time for name({self.name}) '
-                  f'project({self.project})')
+                  f"elapsed time for '{self.project}' ID={self.name}")
 
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""

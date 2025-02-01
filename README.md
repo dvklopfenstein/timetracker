@@ -81,4 +81,6 @@ $ pip install .
   * timetracker CLI only, no idle time detection, no support for clients
   * 1k stars [hamster comes pretty close but seems outdated/abandoned and a little bit too complex](https://github.com/projecthamster/hamster)
 
+[pages](http:/dvklopfenstein.github.io/timetracker)
+
 Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

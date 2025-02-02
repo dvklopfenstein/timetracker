@@ -27,7 +27,7 @@ def run_start(fmgr):
     # Print elapsed time, if timer was started
     cfgproj.prt_elapsed()
     # Set/reset starting time, if applicable
-    forced = fmgr.get('forced')
+    forced = args.get('forced')
     if not exists(fin_start) or forced:
         cfgproj.mk_workdir()
         cfgproj_fname = cfgproj.get_filename_cfglocal()
@@ -35,11 +35,12 @@ def run_start(fmgr):
             cfgproj.update_localini(args.get('project'), args.get('csvdir'))
             cfgproj.wr_cfg()
             cfg_global = CfgGlobal()
-            cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfglocal())
-            cfg_global.wr_cfg()
+            chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfglocal())
+            if chgd:
+                cfg_global.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
-            if not fmgr.get('quiet'):
+            if not args.get('quiet'):
                 print(f'Timetracker started '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
                       f"for project '{cfgproj.project}' ID={cfgproj.name}")
@@ -52,11 +53,11 @@ def run_start(fmgr):
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
 
 
-    #dirtrk = kws['directory']
+    #dirtrk = kws['trksubdir']
     #if not exists(dirtrk):
     #    makedirs(dirtrk, exist_ok=True)
     #    absdir = abspath(dirtrk)
-    #    print(f'Initialized timetracker directory: {absdir}')
+    #    print(f'Initialized timetracker trksubdir: {absdir}')
     #    fout_cfg = join(absdir, 'config')
     #    with open(fout_cfg, 'w', encoding='utf8') as ostrm:
     #        print('', file=ostrm)

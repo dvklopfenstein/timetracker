@@ -6,9 +6,9 @@ __author__ = "DV Klopfenstein, PhD"
 from os.path import exists
 from logging import error
 
-from logging import basicConfig
-from logging import DEBUG
-##from logging import INFO
+#from logging import basicConfig
+#from logging import DEBUG
+###from logging import INFO
 
 from timetracker.filemgr import FileMgr
 from timetracker.cfg.cfg_global import CfgGlobal
@@ -30,7 +30,7 @@ fncs = {
 
 def main():
     """Connect all parts of the timetracker"""
-    basicConfig(level=DEBUG)
+    #basicConfig(level=DEBUG)
     obj = TimeTracker()
     obj.run()
 

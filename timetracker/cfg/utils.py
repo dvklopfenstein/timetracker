@@ -12,11 +12,26 @@ from os.path import abspath
 from os.path import normpath
 from os.path import dirname
 from os.path import join
+from os.path import ismount
 ##from os.path import commonpath
 from os.path import commonprefix
 from logging import debug
 from logging import warning
 from tomlkit import parse
+
+
+def finddirtrk(path, trksubdir):
+    """Walk up dirs until find .timetracker/ proj dir or mount dir"""
+    path = abspath(path)
+    trkdir = join(path, trksubdir)
+    if exists(trkdir):
+        return trkdir, True
+    while not ismount(path):
+        trkdir = join(path, trksubdir)
+        if exists(trkdir):
+            return trkdir, True
+        path = dirname(path)
+    return path, False
 
 def parse_cfg(fin, desc=''):
     """Read a config file and load it into a TOML document"""
@@ -67,7 +82,7 @@ def replace_envvar(fpat):
 
 def get_filename_abs(fname):
     """Get the absolute filename"""
-    return normpath(abspath(expanduser(fname)))
+    return abspath(expanduser(fname))
 
 def get_dirname_abs(fname):
     """Get the absolute directory name"""
@@ -117,7 +132,7 @@ def get_dirhome(dirhome):
 
 def get_shortest_name(filename):
     """Return the shortest filename"""
-    fabs = normpath(abspath(filename))
+    fabs = abspath(filename)
     # pylint: disable=fixme
     # TODO: use commonprefix
     frel = normpath(relpath(filename))

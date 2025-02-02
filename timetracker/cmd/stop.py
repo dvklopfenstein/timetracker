@@ -18,6 +18,7 @@ def run_stop(fmgr):
     # Get the starting time, if the timer is running
     debug('STOP: RUNNING COMMAND STOP')
     cfgproj = fmgr.cfg
+    args = fmgr.kws
 
     # Get the elapsed time
     dta = cfgproj.read_starttime()
@@ -33,13 +34,30 @@ def run_stop(fmgr):
     # Append the timetracker file with this time unit
     fcsv = cfgproj.get_filename_csv()
     _msg_csv(fcsv)
+    # Print header into csv, if needed
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
-    _wr_csvlong_data(fcsv, fmgr, dta)
-    if not fmgr.get("keepstart"):
+    # Print time information into csv
+    dtz = datetime.now()
+    delta = dtz - dta
+    csvline = _strcsv_timerstopped(
+        dta, dtz, delta,
+        args['message'],
+        args['activity'],
+        _str_tags(args['tags']))
+    _wr_csvlong_data(fcsv, csvline)
+    if not args['quiet']:
+        print(f'Timer stopped; Elapsed H:M:S={delta} '
+              f'appended to {get_shortest_name(fcsv)}')
+    # Remove the starttime file
+    if not args["keepstart"]:
         cfgproj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
+
+def _str_tags(tags):
+    """Get the stop-timer tags"""
+    return ';'.join(tags) if tags else ''
 
 def _msg_csv(fcsv):
     if fcsv:
@@ -67,22 +85,19 @@ def _wr_csvlong_hdrs(fcsv):
             file=prt,
         )
 
-def _wr_csvlong_data(fcsv, fmgr, dta):
+def _wr_csvlong_data(fcsv, csvline):
     with open(fcsv, 'a', encoding='utf8') as ostrm:
-        dtz = datetime.now()
-        delta = dtz - dta
-        print(f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
-              f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
-              f'{delta},'
-              f'{fmgr.get("message")},'
-              f'{fmgr.get("activity")},'
-              f'{fmgr.str_tags()}',
-              file=ostrm)
-        if not fmgr.get('quiet'):
-            # pylint: disable=fixme
-            # TODO: Get shortest version of name
-            print(f'Timer stopped; Elapsed H:M:S={delta} appended to '
-                  f'{get_shortest_name(fcsv)}')
+        print(csvline, file=ostrm)
+
+def _strcsv_timerstopped(dta, dtz, delta, message, activity, tags):
+    # pylint: disable=too-many-arguments
+    return (f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
+            f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
+            f'{delta},'
+            f'{message},'
+            f'{activity},'
+            f'{tags}')
+
 
 def _wr_csv_hdrs(fcsv):
     # aTimeLogger columns: Activity From To Notes

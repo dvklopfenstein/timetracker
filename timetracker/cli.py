@@ -21,7 +21,7 @@ class Cli:
         self.cfg_proj = cfg_proj
         self.parser = self._init_parsers()
         self.argv_tests = {
-            'directory': set(['-d', '--directory']),
+            'trksubdir': set(['--trksubdir']),
         }
 
     def get_args_cli(self):
@@ -48,11 +48,9 @@ class Cli:
         """Replace config default values with researcher-specified values"""
         debug(f'ARGV: {argv}')
         argv_set = set(argv)
-        # If researcher set a proj dir other than ./timetracker, use it
-        if not argv_set.isdisjoint(self.argv_tests['directory']):
-            self.cfg_proj.workdir = args.directory
-        # pylint: disable=fixme
-        # TODO: CHeck if cvs.directory is being changed
+        # If a test set a proj dir other than ./timetracker, use it
+        if not argv_set.isdisjoint(self.argv_tests['trksubdir']):
+            self.cfg_proj.workdir = args.trksubdir
         return args
 
     # -------------------------------------------------------------------------------
@@ -68,7 +66,7 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
         cfg = self.cfg_proj
-        parser.add_argument('-d', '--directory', metavar='DIR', default=cfg.DIR,
+        parser.add_argument('--trksubdir', metavar='DIR', default=cfg.DIR,
             # Directory that holds the local project config file
             help=SUPPRESS)
         parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=cfg.name,

@@ -44,7 +44,7 @@ class CfgProj:
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
     def __init__(self, workdir=None, project=None, name=None):
-        self.workdir = normpath(abspath(self.DIR if workdir is None else workdir))
+        self.workdir = abspath(self.DIR if workdir is None else normpath(workdir))
         self.project = basename(getcwd()) if project is None else project
         self.name = environ.get('USER', 'researcher') if name is None else name
         self.dir_csv = '.'
@@ -59,14 +59,14 @@ class CfgProj:
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
-        return normpath(abspath(join(self.workdir, 'config')))
+        return abspath(join(self.workdir, 'config'))
 
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
         fcfg = self.get_filename_cfglocal()
         doc = TOMLFile(fcfg).read() if exists(fcfg) else None
         if doc is not None:
-            fpat = normpath(abspath(expanduser(doc['csv']['filename'])))
+            fpat = abspath(expanduser(doc['csv']['filename']))
             return replace_envvar(fpat) if '$' in fpat else fpat
         return None
 
@@ -133,8 +133,8 @@ class CfgProj:
 
     #-------------------------------------------------------------
     def _get_loc_filename(self):
-        return join(normpath(relpath(self.dir_csv)),
-                    self.CSVPAT.replace('PROJECT', self.project))
+        return normpath(join(relpath(self.dir_csv),
+                             self.CSVPAT.replace('PROJECT', self.project)))
 
     def _init_docglobal(self):
         doc = document()

@@ -19,11 +19,11 @@ pylint:
 DIRTRK = ./.trkr
 PROJ = trk
 trk:
-	trk --directory $(DIRTRK)
+	trk --trksubdir $(DIRTRK)
 
 init:
 	rm -rf $(DIRTRK)
-	trk --directory $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
+	trk --trksubdir $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
 	find $(DIRTRK)
 
 start:

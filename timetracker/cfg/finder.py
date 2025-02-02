@@ -3,23 +3,23 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import environ
-from os import getcwd
+#from os import environ
+#from os import getcwd
 from os.path import exists
 from os.path import abspath
 from os.path import dirname
 from os.path import join
 from os.path import ismount
-from os.path import basename
-
-
-def get_username(name=None):
-    """Get the default username"""
-    if name is None:
-        return environ.get('USER', 'researcher')
-    if name in environ:
-        return environ[name]
-    return name
+#from os.path import basename
+#
+#
+#def get_username(name=None):
+#    """Get the default username"""
+#    if name is None:
+#        return environ.get('USER', 'researcher')
+#    if name in environ:
+#        return environ[name]
+#    return name
 
 def get_project(project=None):
     """Get the default project name"""

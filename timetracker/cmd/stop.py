@@ -90,7 +90,7 @@ def _wr_csvlong_data(fcsv, csvline):
         print(csvline, file=ostrm)
 
 def _strcsv_timerstopped(dta, dtz, delta, message, activity, tags):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=unknown-option-value,too-many-arguments, too-many-positional-arguments
     return (f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
             f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
             f'{delta},'

@@ -80,7 +80,7 @@ def _trk():
     args = _get_nttrkr([])
     # TODO: Check that help message was printed
     # TODO: Check: Run `trk init` to initialize local timetracker
-    assert args.trksubdir == CfgProj.DIR
+    assert args.trksubdir == CfgProj.DIRTRK
     assert args.name == environ['USER']
     assert not args.quiet
     assert args.command is None

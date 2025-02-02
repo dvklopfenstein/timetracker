@@ -10,7 +10,6 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os import remove
-from os import environ
 from os import getcwd
 from os import makedirs
 from os.path import exists
@@ -32,24 +31,26 @@ from timetracker.cfg.utils import replace_homepath
 ##from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
+from timetracker.cfg.utils import get_username
 from timetracker.hms import hms_from_startfile
 from timetracker.hms import read_starttime as hms_read_starttime
-#from timetracker.msgs import str_trkrepo_not
 
 
 class CfgProj:
     """Local project configuration parser for timetracking"""
 
-    DIR = './.timetracker'
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
+    DIRTRK = '.timetracker'
+    DIRCSV = '.'
 
     def __init__(self, workdir=None, project=None, name=None):
-        self.workdir = abspath(self.DIR if workdir is None else normpath(workdir))
+        self.trksubdir = self.DIRTRK if workdir is None else basename(workdir)
+        self.workdir = abspath(self.DIRTRK) if workdir is None else normpath(workdir)
         self.project = basename(getcwd()) if project is None else project
-        self.name = environ.get('USER', 'researcher') if name is None else name
+        self.name = get_username(name)
         self.dir_csv = '.'
         ##self.csv_name = join(
-        ##    self.DIR,
+        ##    self.DIRTRK,
         ##    self.CSVPAT.replace('PROJECT', self.project)
         self.doc = self._init_doclocal()
         cfgloc = self.get_filename_cfglocal()

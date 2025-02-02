@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
+from os import getcwd
 from os.path import isdir
 from os.path import exists
 from os.path import expanduser
@@ -13,12 +14,29 @@ from os.path import normpath
 from os.path import dirname
 from os.path import join
 from os.path import ismount
+from os.path import basename
 ##from os.path import commonpath
 from os.path import commonprefix
 from logging import debug
 from logging import warning
 from tomlkit import parse
 
+def get_username(name=None):
+    """Get the default username"""
+    if name is None:
+        return environ.get('USER', 'researcher')
+    if name in environ:
+        return environ[name]
+    return name
+
+def get_project(project=None):
+    """Get the default project name"""
+    return basename(getcwd()) if project is None else project
+
+def get_abspathtrk(path, trksubdir):
+    """Get .timetracker/ proj dir up parent path, if exists"""
+    trkabsdir, found = finddirtrk(path, trksubdir)
+    return trkabsdir if found else None
 
 def finddirtrk(path, trksubdir):
     """Walk up dirs until find .timetracker/ proj dir or mount dir"""

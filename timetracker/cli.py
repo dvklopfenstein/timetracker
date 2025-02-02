@@ -12,6 +12,9 @@ from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
+from timetracker.cfg.cfg_local import CfgProj
+from timetracker.cfg.utils import get_username
+from timetracker.cfg.utils import get_project
 
 
 class Cli:
@@ -19,6 +22,7 @@ class Cli:
 
     def __init__(self, cfg_proj):
         self.cfg_proj = cfg_proj
+        #self.dirtrk = get_abspathtrk(CfgProj.DIRTRK)
         self.parser = self._init_parsers()
         self.argv_tests = {
             'trksubdir': set(['--trksubdir']),
@@ -65,11 +69,11 @@ class Cli:
             description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        cfg = self.cfg_proj
-        parser.add_argument('--trksubdir', metavar='DIR', default=cfg.DIR,
+        # DEFAULTS: DIRTRK name
+        parser.add_argument('--trksubdir', metavar='DIR', default=CfgProj.DIRTRK,
             # Directory that holds the local project config file
             help=SUPPRESS)
-        parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=cfg.name,
+        parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=get_username(),
             help="A person's alias or username for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')
@@ -110,10 +114,10 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        cfg = self.cfg_proj
-        parser.add_argument('--csvdir', default=normpath(relpath(cfg.dir_csv)),
+        # DEFAULTS: dir_csv project
+        parser.add_argument('--csvdir', default=normpath(relpath(CfgProj.DIRCSV)),
             help='Directory for csv files storing start and stop times')
-        parser.add_argument('-p', '--project', default=cfg.project,
+        parser.add_argument('-p', '--project', default=get_project(project=None),
             help="The name of the project to be time tracked")
         return parser
 

@@ -23,7 +23,7 @@ from timetracker.cfg.utils import get_relpath_adj
 #from timetracker.cli import Cli
 #from timetracker.cfg.cfg_global import CfgGlobal
 
-basicConfig(level=DEBUG)
+#basicConfig(level=DEBUG)
 
 
 def test_cfgbase_home():
@@ -33,7 +33,7 @@ def test_cfgbase_home():
     assert cfg.doc['projects'] == []
     #system(f'cat {cfg.fname}')
 
-def test_cfgbase_temp():
+def test_cfgbase_temp(trksubdir='.timetracker'):
     """Test cfg flow"""
     sep = f'{"-"*80}\n'
     print(f'{sep}1) INITIALIZE "HOME" DIRECTORY')
@@ -60,13 +60,14 @@ def test_cfgbase_temp():
         exp_projs = []
         for proj, projdir in proj2wdir.items():
             print(f'{sep}ADD PROJECT({proj}): {projdir}')
-            workdir = join(projdir, '.timetracker')
+            workdir = join(projdir, trksubdir)
             # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
             cfgname_proj = join(workdir, 'config')
             # EXP: apples '~/proj/apples/.timetracker/config'
             exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmp_home)])
             # INIT LOCAL PROJECT CONFIG
             cfgloc = CfgProj(workdir, proj, name)
+            assert cfgloc.trksubdir == trksubdir
             assert cfgloc.workdir == workdir
             assert cfgloc.project == proj
             assert cfgloc.name == name

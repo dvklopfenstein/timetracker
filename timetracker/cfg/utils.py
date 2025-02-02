@@ -16,20 +16,22 @@ from os.path import join
 from os.path import commonprefix
 from logging import debug
 from logging import warning
-from tomlkit import parse
+
+from tomlkit.toml_file import TOMLFile
 
 
-def parse_cfg(fin, desc=''):
+def parse_cfglocal(fin_cfglocal):
     """Read a config file and load it into a TOML document"""
-    # pylint: disable=unused-argument
-    cfgtxt = _read_local_cfg(fin)
-    ##debug(f'{desc}({cfgtxt})')
-    return parse(cfgtxt) if cfgtxt is not None else None
-
-def _read_local_cfg(fin):
-    with open(fin, encoding='utf8') as ifstrm:
-        return ''.join(ifstrm.readlines())
+    doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+    if doc is not None:
+        fpat = abspath(expanduser(doc['csv']['filename']))
+        return replace_envvar(fpat) if '$' in fpat else fpat
     return None
+
+####def _read_local_cfg(fin):
+####    with open(fin, encoding='utf8') as ifstrm:
+####        return ''.join(ifstrm.readlines())
+####    return None
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""

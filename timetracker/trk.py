@@ -9,6 +9,7 @@ from os.path import exists
 
 #from logging import basicConfig
 #from logging import DEBUG
+from logging import debug
 ###from logging import INFO
 
 from timetracker.cfg.cfg_local  import CfgProj
@@ -45,18 +46,20 @@ class TimeTracker:
     def __init__(self):
         cfg_local = CfgProj()
         self.cfg_local = cfg_local
-        self.cli = Cli(cfg_local)
-        self.args = self.cli.get_args_cli()
+        self.cli = Cli()
+        ##self.args = self.cli.get_args_cli()
+        self.args = self.cli.args
 
     def run(self):
         """Run timetracker"""
+        debug(f'TIMETRACKER ARGS: {self.args}')
         if self.args.command is not None:
-            fncs[self.args.command](self.cfg_local, vars(self.args))
+            fncs[self.args.command](self.cfg_local, self.args)
         else:
             self._cmd_none()
 
     def _cmd_none(self):
-        if not exists(self.args['trksubdir']):
+        if not exists(self.args.trksubdir):
             self._msg_init()
             return
         # Check for start time

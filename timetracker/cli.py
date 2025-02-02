@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import argv
 from sys import exit as sys_exit
+from os import getcwd
 from os.path import normpath
 from os.path import relpath
 from logging import debug
@@ -12,21 +13,22 @@ from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
-from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.finder import get_username
-from timetracker.cfg.finder import get_project
+from timetracker.cfg.finder import CfgFinder
 
 
 class Cli:
     """Command line interface (CLI) for timetracking"""
 
-    def __init__(self, cfg_proj):
-        self.cfg_proj = cfg_proj
-        #self.dirtrk = get_abspathtrk(CfgProj.DIRTRK)
-        self.parser = self._init_parsers()
-        self.argv_tests = {
-            'trksubdir': set(['--trksubdir']),
-        }
+    ARGV_TESTS = {
+        'trksubdir': set(['--trksubdir']),
+    }
+
+    def __init__(self):
+        self.finder = CfgFinder(getcwd(), self._init_trksubdir())
+        debug(self.finder)
+        self.parser = self.init_parser_top('timetracker')
+        self.args = self.parser.parse_args()
 
     def get_args_cli(self):
         """Get arguments for ScriptFrame"""
@@ -48,41 +50,55 @@ class Cli:
             sys_exit()
         return args
 
+    def _init_trksubdir(self):
+        found = False
+        for arg in argv:
+            if found:
+                debug('TTTTTTTTTTTTTTTTTTT', arg)
+                return arg
+            if arg == '--trksubdir':
+                found = True
+        return None
+
+
     def _adjust_args(self, args):
         """Replace config default values with researcher-specified values"""
         debug(f'ARGV: {argv}')
-        argv_set = set(argv)
+        #argv_set = set(argv)
         # If a test set a proj dir other than ./timetracker, use it
-        if not argv_set.isdisjoint(self.argv_tests['trksubdir']):
-            self.cfg_proj.workdir = args.trksubdir
+        ####if not argv_set.isdisjoint(self.ARGV_TESTS['trksubdir']):
+        ####    print('XXXXXXXXXXXXXXXXXXX', self.finder.trksubdir)
+        ####    print('XXXXXXXXXXXXXXXXXXX', args.trksubdir)
+        ####    self.cfg_proj.workdir = args.trksubdir
         return args
 
     # -------------------------------------------------------------------------------
-    def _init_parsers(self):
-        parser = self._init_parser_top()
-        self._add_subparsers(parser)
-        return parser
+    ####def _init_parsers(self):
+    ####    parser = self._init_parser_top()
+    ####    self._add_subparsers(parser)
+    ####    return parser
 
-    def _init_parser_top(self):
+    def init_parser_top(self, progname):
+        """Create the top-level parser"""
         parser = ArgumentParser(
-            prog='timetracker',
+            prog=progname,
             description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        # DEFAULTS: DIRTRK name
-        parser.add_argument('--trksubdir', metavar='DIR', default=CfgProj.DIRTRK,
+        parser.add_argument('--trksubdir', metavar='DIR', default=self.finder.trksubdir,
             # Directory that holds the local project config file
-            help=SUPPRESS)
+            help='Directory that holds the local project config file')
+            #help=SUPPRESS)
         parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=get_username(),
             help="A person's alias or username for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')
         parser.add_argument('--version', action='store_true',
             help='Print the timetracker version')
+        self._add_subparsers(parser)
         return parser
 
     def _add_subparsers(self, parser):
-        # Subparsers
         subparsers = parser.add_subparsers(dest='command', help='timetracker subcommand help')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
@@ -90,6 +106,7 @@ class Cli:
         self._add_subparser_stop(subparsers)
         self._add_subparser_csvupdate(subparsers)
         ##self._add_subparser_files(subparsers)
+        ##return parser
 
     # -------------------------------------------------------------------------------
     def _add_subparser_restart(self, subparsers):
@@ -111,24 +128,24 @@ class Cli:
 
     def _add_subparser_init(self, subparsers):
         parser = subparsers.add_parser(name='init',
-            help='Initialize the .timetracking directory',
-            formatter_class=ArgumentDefaultsHelpFormatter,
-        )
+            help='Initialize the .timetracking directory')
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=normpath(relpath(CfgProj.DIRCSV)),
+        parser.add_argument('--csvdir', default=normpath(relpath(CfgFinder.DIRCSV)),
             help='Directory for csv files storing start and stop times')
-        parser.add_argument('-p', '--project', default=get_project(project=None),
+        parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")
         return parser
 
-    def _add_subparser_start(self, subparsers):
+    @staticmethod
+    def _add_subparser_start(subparsers):
         parser = subparsers.add_parser(name='start', help='Start timetracking')
         # Test feature: Force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
             help=SUPPRESS)
         return parser
 
-    def _add_subparser_stop(self, subparsers):
+    @staticmethod
+    def _add_subparser_stop(subparsers):
         parser = subparsers.add_parser(name='stop', help='Stop timetracking')
         parser.add_argument('-m', '--message', required=True,
             help='Message describing the work done in the time unit')
@@ -141,11 +158,10 @@ class Cli:
             help=SUPPRESS)
         return parser
 
-    def _add_subparser_csvupdate(self, subparsers):
+    @staticmethod
+    def _add_subparser_csvupdate(subparsers):
         parser = subparsers.add_parser(name='csvupdate',
-            help='Update values in csv columns containing weekday, am/pm, and duration',
-            formatter_class=ArgumentDefaultsHelpFormatter,
-        )
+            help='Update values in csv columns containing weekday, am/pm, and duration')
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',

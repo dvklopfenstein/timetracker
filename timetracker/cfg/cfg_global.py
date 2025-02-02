@@ -11,6 +11,7 @@ from os.path import join
 from os.path import abspath
 from os.path import relpath
 from logging import debug
+
 from tomlkit import comment
 from tomlkit import document
 from tomlkit import nl
@@ -18,11 +19,11 @@ from tomlkit import nl
 from tomlkit import dumps
 from tomlkit import array
 from tomlkit.toml_file import TOMLFile
+
 ##from timetracker.cfg.utils import replace_envvar
 ##from timetracker.cfg.utils import get_dirname_abs
 ##from timetracker.cfg.utils import chk_isdir
 ##from timetracker.cfg.utils import replace_homepath
-from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_relpath_adj
@@ -106,9 +107,9 @@ class CfgGlobal:
         return True
 
     def _init_docglobal(self):
-        if not exists(self.fname):
-            return self._new_docglobal()
-        return parse_cfg(self.fname, 'CFG GLOBAL')
+        if exists(self.fname):
+            return TOMLFile(self.fname).read()
+        return self._new_docglobal()
 
     @staticmethod
     def _new_docglobal():

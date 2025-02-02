@@ -11,9 +11,9 @@ def cli_run_init(cfglocal, args):
     """initialize timetracking on a project"""
     run_init(
         cfglocal,
-        args['project'],
-        args['csvdir'],
-        args['quiet'])
+        args.project,
+        args.csvdir,
+        args.quiet)
 
 def run_init(cfglocal, projectname, csvdir, quiet):
     """initialize timetracking on a project"""

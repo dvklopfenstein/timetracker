@@ -14,23 +14,25 @@ from os import getcwd
 from os import makedirs
 from os.path import exists
 from os.path import basename
-from os.path import expanduser
 from os.path import join
 from os.path import abspath
 from os.path import relpath
 from os.path import normpath
 from logging import debug
+
 from tomlkit import comment
 from tomlkit import document
 from tomlkit import nl
 from tomlkit import table
 from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
-from timetracker.cfg.utils import replace_envvar
+
 from timetracker.cfg.utils import replace_homepath
 ##from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
+from timetracker.cfg.utils import parse_cfglocal
+
 from timetracker.cfg.finder import get_username
 from timetracker.hms import hms_from_startfile
 from timetracker.hms import read_starttime as hms_read_starttime
@@ -65,11 +67,7 @@ class CfgProj:
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
         fcfg = self.get_filename_cfglocal()
-        doc = TOMLFile(fcfg).read() if exists(fcfg) else None
-        if doc is not None:
-            fpat = abspath(expanduser(doc['csv']['filename']))
-            return replace_envvar(fpat) if '$' in fpat else fpat
-        return None
+        return parse_cfglocal(fcfg)
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""

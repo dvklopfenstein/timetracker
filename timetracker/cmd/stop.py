@@ -49,15 +49,15 @@ def run_stop(cfglocal, args):
     delta = dtz - dta
     csvline = _strcsv_timerstopped(
         dta, dtz, delta,
-        args['message'],
-        args['activity'],
-        _str_tags(args['tags']))
+        args.message,
+        args.activity,
+        _str_tags(args.tags))
     _wr_csvlong_data(fcsv, csvline)
-    if not args['quiet']:
+    if not args.quiet:
         print(f'Timer stopped; Elapsed H:M:S={delta} '
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
-    if not args["keepstart"]:
+    if not args.keepstart:
         cfglocal.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
@@ -127,11 +127,11 @@ def _wr_csv_data(fcsv, args, dta):
         print(f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
               f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
               f'{delta},'
-              f'{args.get("message")},'
-              f'{args.get("activity")},'
-              f'{args.str_tags()}',
+              f'{args.message},'
+              f'{args.activity},'
+              f'{_str_tags(args.tags)}',
               file=ostrm)
-        if not args.get('quiet'):
+        if not args.quiet:
             print(f'Timer stopped; Elapsed H:M:S={delta} appended to {fcsv}')
 
 

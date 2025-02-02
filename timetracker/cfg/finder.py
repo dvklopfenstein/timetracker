@@ -3,27 +3,53 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-#from os import environ
-#from os import getcwd
+from os import environ
 from os.path import exists
 from os.path import abspath
 from os.path import dirname
 from os.path import join
 from os.path import ismount
-#from os.path import basename
-#
-#
-#def get_username(name=None):
-#    """Get the default username"""
-#    if name is None:
-#        return environ.get('USER', 'researcher')
-#    if name in environ:
-#        return environ[name]
-#    return name
+from os.path import basename
+from os.path import normpath
 
-def get_project(project=None):
-    """Get the default project name"""
-    return basename(getcwd()) if project is None else project
+
+class CfgFinder:
+    """Functionality to find the local project config, if one exists"""
+
+    DIRTRK = '.timetracker'
+    DIRCSV = '.'
+
+    def __init__(self, dircur, trksubdir=None):
+        self.dircur = dircur
+        self.trksubdir = trksubdir if trksubdir is not None else self.DIRTRK
+        # Existing directory (ex: ./timetracker) or None if dir not exist
+        self.dirtrk = get_abspathtrk(dircur, self.trksubdir)
+        self.project = self._init_project()
+
+    def get_dirtrk(self):
+        """Get the project directory that is or will be tracked"""
+        return self.dirtrk if self.dirtrk is not None else join(self.dircur)
+
+    def __str__(self):
+        return ('CfgFinder('
+                f'project={self.project}, '
+                f'dirtrk={self.dirtrk}, '
+                f'dircur={self.dircur})')
+
+    def _init_project(self):
+        if self.dirtrk is not None:
+            return basename(dirname(self.dirtrk))
+        return basename(self.dircur)
+
+
+def get_username(name=None):
+    """Get the default username"""
+    if name is None:
+        return environ.get('USER', 'researcher')
+    if name in environ:
+        return environ[name]
+    return name
+
 
 def get_abspathtrk(path, trksubdir):
     """Get .timetracker/ proj dir by searching up parent path"""
@@ -35,13 +61,14 @@ def finddirtrk(path, trksubdir):
     path = abspath(path)
     trkdir = join(path, trksubdir)
     if exists(trkdir):
-        return trkdir, True
+        return normpath(trkdir), True
     while not ismount(path):
+        #debug(f'PATHWALK: {path}')
         trkdir = join(path, trksubdir)
         if exists(trkdir):
-            return trkdir, True
+            return normpath(trkdir), True
         path = dirname(path)
-    return path, False
+    return normpath(path), False
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

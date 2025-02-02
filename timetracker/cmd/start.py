@@ -34,12 +34,12 @@ def run_start(cfglocal, args):
     # Print elapsed time, if timer was started
     cfglocal.prt_elapsed()
     # Set/reset starting time, if applicable
-    forced = args.get('forced')
+    forced = args.force
     if not exists(fin_start) or forced:
         cfglocal.mk_workdir()
         cfglocal_fname = cfglocal.get_filename_cfglocal()
         if not exists(cfglocal_fname):
-            cfglocal.update_localini(args.get('project'), args.get('csvdir'))
+            cfglocal.update_localini(args.project, args.csvdir)
             cfglocal.wr_cfg()
             cfg_global = CfgGlobal()
             chgd = cfg_global.add_proj(cfglocal.project, cfglocal.get_filename_cfglocal())
@@ -47,7 +47,7 @@ def run_start(cfglocal, args):
                 cfg_global.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
-            if not args.get('quiet'):
+            if not args.quiet:
                 print(f'Timetracker started '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
                       f"for project '{cfglocal.project}' ID={cfglocal.name}")

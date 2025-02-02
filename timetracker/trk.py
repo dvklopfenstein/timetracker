@@ -44,9 +44,9 @@ class TimeTracker:
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        cfg_local = CfgProj()
-        self.cfg_local = cfg_local
         self.cli = Cli()
+        self.cfg_local = CfgProj()
+        self.cfg_local.workdir = self.cli.finder.get_dirtrk()
         ##self.args = self.cli.get_args_cli()
         self.args = self.cli.args
 

@@ -109,7 +109,8 @@ clean:
 	make clean_pycache
 	rm -f test_timetracker.csv
 	rm -f .timetracker_start
-	rm -f timetracker_timetracker_*.csv
+	rm -f timetracker_*.csv
+	rm -f updated.csv
 	rm -f tmp_pylint
 	rm -f .timetracker_starttime
 

@@ -94,7 +94,8 @@ upload:
 	#twine upload dist/* --verbose
 	twine upload dist/* --repository timetracker-csv --verbose
 
-
+# https://stackoverflow.com/questions/5667884/how-to-squash-commits-in-git-after-they-have-been-pushed
+# https://stackoverflow.com/questions/35979642/what-is-git-tag-how-to-create-tags-how-to-checkout-git-remote-tags
 upgrade:
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install --upgrade setuptools

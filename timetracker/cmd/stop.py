@@ -10,7 +10,6 @@ from logging import debug
 from logging import error
 from datetime import datetime
 ##from timeit import default_timer
-from timetracker.hms import read_startfile
 from timetracker.cfg.utils import get_shortest_name
 
 
@@ -21,9 +20,7 @@ def run_stop(fmgr):
     cfgproj = fmgr.cfg
 
     # Get the elapsed time
-    fstart = cfgproj.get_filename_start()
-    debug(f'STOP: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
-    dta = read_startfile(fstart)
+    dta = cfgproj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file

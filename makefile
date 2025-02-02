@@ -6,7 +6,6 @@ install:
 
 py:
 	find tests timetracker bin -name \*.py
-	find .timetracker -type f
 
 .PHONY: c
 c:

@@ -13,7 +13,7 @@ from csv import reader
 ##from csv import DictReader
 ##from csv import writer
 ##from timeit import default_timer
-##from timetracker.hms import read_startfile
+##from timetracker.hms import read_starttime
 from timetracker.hms import FMT
 
 

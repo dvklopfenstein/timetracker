@@ -33,6 +33,8 @@ from timetracker.cfg.utils import replace_homepath
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
 from timetracker.hms import hms_from_startfile
+from timetracker.hms import read_starttime as hms_read_starttime
+#from timetracker.msgs import str_trkrepo_not
 
 
 class CfgProj:
@@ -70,7 +72,14 @@ class CfgProj:
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""
-        return join(self.workdir, f'start_{self.project}_{self.name}.txt')
+        fstart = join(self.workdir, f'start_{self.project}_{self.name}.txt')
+        debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
+        return fstart
+
+    def read_starttime(self):
+        """Read the start time file"""
+        fname = self.get_filename_start()
+        return hms_read_starttime(fname)
 
     def wr_cfg(self):
         """Write config file"""

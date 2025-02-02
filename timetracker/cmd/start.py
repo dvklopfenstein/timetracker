@@ -12,7 +12,7 @@ from logging import debug
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
-from timetracker.msgs import prt_started
+from timetracker.msgs import str_started
 from timetracker.cfg.cfg_global import CfgGlobal
 
 
@@ -46,7 +46,7 @@ def run_start(fmgr):
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not forced:
-        prt_started()
+        print(str_started())
     else:
         print(f'Reseting start time to now({now})')
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')

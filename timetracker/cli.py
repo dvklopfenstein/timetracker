@@ -69,7 +69,8 @@ class Cli:
         )
         cfg = self.cfg_proj
         parser.add_argument('-d', '--directory', metavar='DIR', default=cfg.DIR,
-            help='Directory that holds the local project config file')
+            # Directory that holds the local project config file
+            help=SUPPRESS)
         parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=cfg.name,
             help="A person's alias for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',

@@ -31,7 +31,7 @@ from timetracker.cfg.utils import replace_homepath
 ##from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
-from timetracker.cfg.utils import get_username
+from timetracker.cfg.finder import get_username
 from timetracker.hms import hms_from_startfile
 from timetracker.hms import read_starttime as hms_read_starttime
 

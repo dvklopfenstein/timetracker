@@ -13,8 +13,8 @@ from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
 from timetracker.cfg.cfg_local import CfgProj
-from timetracker.cfg.utils import get_username
-from timetracker.cfg.utils import get_project
+from timetracker.cfg.finder import get_username
+from timetracker.cfg.finder import get_project
 
 
 class Cli:

@@ -10,7 +10,6 @@ from os.path import exists
 from os.path import join
 from os.path import abspath
 from os.path import relpath
-from os.path import normpath
 from logging import debug
 from tomlkit import comment
 from tomlkit import document
@@ -33,7 +32,7 @@ class CfgGlobal:
     """Global configuration parser for timetracking"""
 
     def __init__(self, dirhome='~', basename='.timetrackerconfig'):
-        self.dirhome = normpath(abspath(get_dirhome(dirhome)))
+        self.dirhome = abspath(get_dirhome(dirhome))
         self.fname = join(self.dirhome, basename)
         debug(f'CFGGLOBAL  CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')
         self.doc = self._init_docglobal()
@@ -48,9 +47,7 @@ class CfgGlobal:
 
     def wr_cfg(self):
         """Write config file"""
-        projects = self.doc['projects'].as_string()
         docprt = self._get_docprt()
-        debug(f'CFGGLOBAL WRITING GLOBAL PROJECTS: {projects}')
         TOMLFile(self.fname).write(docprt)
         debug(f'CFGGLOBAL  WROTE: {self.fname}; PROJECTS: ')
 
@@ -60,7 +57,7 @@ class CfgGlobal:
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):
             fnamecfg_proj = cfgfilename
-            if has_homedir(self.dirhome, cfgfilename):
+            if has_homedir(self.dirhome, abspath(cfgfilename)):
                 ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
                 fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
                 debug(f'OOOOOOOOOO {fnamecfg_proj}')
@@ -69,6 +66,11 @@ class CfgGlobal:
                 self.doc = doc
             else:
                 self.doc['projects'].add_line((project, fnamecfg_proj))
+            debug(f"PROJECT {project} ADD GLOBAL PROJECTS: {self.doc['projects'].as_string()}")
+            return True
+        # pylint: disable=unsubscriptable-object
+        debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
+        return False
 
     def _get_docprt(self):
         doc_cur = self.doc.copy()
@@ -78,7 +80,7 @@ class CfgGlobal:
             ##pdir = relpath(abspath(projdir), truehome)
             ##pdir = relpath(abspath(projdir), dirhome)
             ##if pdir[:2] != '..':
-            if has_homedir(self.dirhome, projdir):
+            if has_homedir(self.dirhome, abspath(projdir)):
                 ##pdir = join('~', pdir)
                 pdir = join('~', relpath(abspath(projdir), dirhome))
                 doc_cur['projects'][idx] = [projname, pdir]

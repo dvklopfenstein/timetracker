@@ -13,30 +13,19 @@ class FileMgr:
     def __init__(self, cfg_local, cfg_global, **kws):
         self.cfg = cfg_local
         self.cfg_global = cfg_global
-        self.tdir = kws['directory']
         self.name = kws['name']      # From Reasearcher's USER envvar
         self.kws = kws
 
-    def get(self, key):
-        """Get a argument value.
-        Given:
-            forced:   `start` test feature
-            message:  `stop`  required message upon printing a stop time
-            activity: `stop`  activity written into csv
-            activity: `stop`  test feature; keep start time instead of resetting
-        """
-        return self.kws.get(key)
-
     def exists_workdir(self):
         """Test existance of timetracker working directory"""
-        return exists(self.tdir)
+        return exists(self.kws['trksubdir'])
 
-    def str_tags(self):
-        """Get the stop-timer tags"""
-        tags = self.kws['tags']
-        if not tags:
-            return ''
-        return ';'.join(tags)
+    ##def str_tags(self):
+    ##    """Get the stop-timer tags"""
+    ##    tags = self.kws['tags']
+    ##    if not tags:
+    ##        return ''
+    ##    return ';'.join(tags)
 
     ##def workdir_exists(self):
     ##    return isdir(self.get_dirname_work())

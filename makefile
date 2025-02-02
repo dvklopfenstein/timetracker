@@ -6,7 +6,6 @@ install:
 
 py:
 	find tests timetracker bin -name \*.py
-	find .timetracker -type f
 
 .PHONY: c
 c:
@@ -19,20 +18,36 @@ pylint:
 
 DIRTRK = ./.trkr
 PROJ = trk
+trk:
+	trk --trksubdir $(DIRTRK)
+
 init:
 	rm -rf $(DIRTRK)
-	trk --directory $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
+	trk --trksubdir $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
 	find $(DIRTRK)
 
 start:
 	trk -d $(DIRTRK) start
 	find $(DIRTRK)
+	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
 
+# Test that researcher passed a stop message using MSG="This is my stop message"
+# https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
 stop:
+	find $(DIRTRK)
+	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
+	@if [ -n "$$MSG" ]; then \
+	  make _stop; \
+	else  \
+	  echo '$@ MESSAGE FATAL: USAGE: make stop MSG="Describe activities in timeblock"'; \
+		false ; \
+	fi
+
+_stop:
 	trk -d $(DIRTRK) stop -m "\"$(MSG)\""
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
-	find ~/timetrackers/ -type f -name \*.csv
+	#find ~/timetrackers/ -type f -name \*.csv
 	
 show:
 	# Test .timetracker dir
@@ -43,6 +58,12 @@ show:
 	find ~/timetrackers/projs
 	find .timetracker/
 	cat .timetracker/config
+
+files:
+	@grep \.csv $(DIRTRK)/config
+	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
+	find $(DIRTRK)
+	find .timetracker
 
 .pylintrc:
 	pylint --generate-rcfile > .pylintrc
@@ -73,14 +94,15 @@ upload:
 	#twine upload dist/* --verbose
 	twine upload dist/* --repository timetracker-csv --verbose
 
-
-# -----------------------------------------------------------------------------
+# https://stackoverflow.com/questions/5667884/how-to-squash-commits-in-git-after-they-have-been-pushed
+# https://stackoverflow.com/questions/35979642/what-is-git-tag-how-to-create-tags-how-to-checkout-git-remote-tags
 upgrade:
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install --upgrade setuptools
 	$(PYTHON) -m pip install --upgrade wheel
 	$(PYTHON) -m pip install --upgrade twine
 
+# -----------------------------------------------------------------------------
 clean_build:
 	rm -rf build/
 	rm -rf timetracker_csv.egg-info/

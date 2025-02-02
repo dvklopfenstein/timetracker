@@ -29,10 +29,12 @@ from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.utils import replace_homepath
-from timetracker.cfg.utils import parse_cfg
+##from timetracker.cfg.utils import parse_cfg
 from timetracker.cfg.utils import chk_isdir
 from timetracker.cfg.utils import get_dirname_abs
 from timetracker.hms import hms_from_startfile
+from timetracker.hms import read_starttime as hms_read_starttime
+#from timetracker.msgs import str_trkrepo_not
 
 
 class CfgProj:
@@ -42,7 +44,7 @@ class CfgProj:
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
     def __init__(self, workdir=None, project=None, name=None):
-        self.workdir = normpath(abspath(self.DIR if workdir is None else workdir))
+        self.workdir = abspath(self.DIR if workdir is None else normpath(workdir))
         self.project = basename(getcwd()) if project is None else project
         self.name = environ.get('USER', 'researcher') if name is None else name
         self.dir_csv = '.'
@@ -57,19 +59,27 @@ class CfgProj:
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
-        return normpath(abspath(join(self.workdir, 'config')))
+        return abspath(join(self.workdir, 'config'))
 
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
         fcfg = self.get_filename_cfglocal()
-        doc = parse_cfg(fcfg, "CFG LOCAL")
-        assert doc is not None
-        fpat = normpath(abspath(expanduser(doc['csv']['filename'])))
-        return replace_envvar(fpat) if '$' in fpat else fpat
+        doc = TOMLFile(fcfg).read() if exists(fcfg) else None
+        if doc is not None:
+            fpat = abspath(expanduser(doc['csv']['filename']))
+            return replace_envvar(fpat) if '$' in fpat else fpat
+        return None
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""
-        return join(self.workdir, f'start_{self.project}_{self.name}.txt')
+        fstart = join(self.workdir, f'start_{self.project}_{self.name}.txt')
+        debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
+        return fstart
+
+    def read_starttime(self):
+        """Read the start time file"""
+        fname = self.get_filename_start()
+        return hms_read_starttime(fname)
 
     def wr_cfg(self):
         """Write config file"""
@@ -103,8 +113,7 @@ class CfgProj:
         if exists(fin_start):
             hms = hms_from_startfile(fin_start)
             print(f'\nTimer running: {hms} H:M:S '
-                  f'elapsed time for name({self.name}) '
-                  f'project({self.project})')
+                  f"elapsed time for '{self.project}' ID={self.name}")
 
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""
@@ -124,8 +133,8 @@ class CfgProj:
 
     #-------------------------------------------------------------
     def _get_loc_filename(self):
-        return join(normpath(relpath(self.dir_csv)),
-                    self.CSVPAT.replace('PROJECT', self.project))
+        return normpath(join(relpath(self.dir_csv),
+                             self.CSVPAT.replace('PROJECT', self.project)))
 
     def _init_docglobal(self):
         doc = document()

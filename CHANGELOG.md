@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-02-02 v0.1a4**](#release-2025-02-02-v01a4) Added global config file
 * [**Release 2025-01-27 v0.1a3**](#release-2025-01-27-v01a3) Added local config; enables researcher to set csv location
 * [**Release 2025-01-22 v0.1a2**](#release-2025-01-22-v01a2) Install with `pip install timetracker-csv`
 * [**Release 2025-01-22 v0.1a1**](#release-2025-01-22-v01a1) Initial implementation of cmds: init, start, and stop
@@ -10,13 +11,15 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-02-02 v0.1a4
 * ADD: Global cfg parser
-* ADD: Now can specify a local project working dir other than `./.timetracker` using `-d` or `--directory`
-* ADD: `trk init --project PROJECT` for a researcher-specified project name
+* ADD: `--version` arg
+* ADD: `trk init --project PROJECT` for a researcher-specified project username
 * ADD: If global cfgfilename is a parent of project cfgfilename,
        write `~/pathtoproj/.timetracker/config' in global cfg
 * ADD: Logo to README.md; Currently is `work under progress`
-* ADD: `--version` arg
+* ADD: Now can specify a local project test working dir other than `./.timetracker` using `-d` or `--trksubdir`
 
 ## Release 2025-01-27 v0.1a3
 * CHANGED: Executable name from `trkr` to the shorter `trk`

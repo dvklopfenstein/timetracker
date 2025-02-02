@@ -12,7 +12,7 @@ from logging import debug
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
-from timetracker.msgs import prt_started
+from timetracker.msgs import str_started
 from timetracker.cfg.cfg_global import CfgGlobal
 
 
@@ -20,43 +20,44 @@ def run_start(fmgr):
     """Initialize timetracking on a project"""
     debug('START: RUNNING COMMAND START')
     now = datetime.now()
-    cfg_local = fmgr.cfg
+    cfgproj = fmgr.cfg
     args = fmgr.kws
-    fin_start = cfg_local.get_filename_start()
+    fin_start = cfgproj.get_filename_start()
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     # Print elapsed time, if timer was started
-    cfg_local.prt_elapsed()
+    cfgproj.prt_elapsed()
     # Set/reset starting time, if applicable
-    forced = fmgr.get('forced')
+    forced = args.get('forced')
     if not exists(fin_start) or forced:
-        cfg_local.mk_workdir()
-        cfg_local_fname = cfg_local.get_filename_cfglocal()
-        if not exists(cfg_local_fname):
-            cfg_local.update_localini(args.get('project'), args.get('csvdir'))
-            cfg_local.wr_cfg()
+        cfgproj.mk_workdir()
+        cfgproj_fname = cfgproj.get_filename_cfglocal()
+        if not exists(cfgproj_fname):
+            cfgproj.update_localini(args.get('project'), args.get('csvdir'))
+            cfgproj.wr_cfg()
             cfg_global = CfgGlobal()
-            cfg_global.add_proj(cfg_local.project, cfg_local.get_filename_cfglocal())
-            cfg_global.wr_cfg()
+            chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfglocal())
+            if chgd:
+                cfg_global.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
-            if not fmgr.get('quiet'):
+            if not args.get('quiet'):
                 print(f'Timetracker started '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
-                      f'for name({fmgr.name})')
+                      f"for project '{cfgproj.project}' ID={cfgproj.name}")
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not forced:
-        prt_started()
+        print(str_started())
     else:
         print(f'Reseting start time to now({now})')
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
 
 
-    #dirtrk = kws['directory']
+    #dirtrk = kws['trksubdir']
     #if not exists(dirtrk):
     #    makedirs(dirtrk, exist_ok=True)
     #    absdir = abspath(dirtrk)
-    #    print(f'Initialized timetracker directory: {absdir}')
+    #    print(f'Initialized timetracker trksubdir: {absdir}')
     #    fout_cfg = join(absdir, 'config')
     #    with open(fout_cfg, 'w', encoding='utf8') as ostrm:
     #        print('', file=ostrm)

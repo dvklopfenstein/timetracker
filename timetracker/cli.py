@@ -21,7 +21,7 @@ class Cli:
         self.cfg_proj = cfg_proj
         self.parser = self._init_parsers()
         self.argv_tests = {
-            'directory': set(['-d', '--directory']),
+            'trksubdir': set(['--trksubdir']),
         }
 
     def get_args_cli(self):
@@ -48,11 +48,9 @@ class Cli:
         """Replace config default values with researcher-specified values"""
         debug(f'ARGV: {argv}')
         argv_set = set(argv)
-        # If researcher set a proj dir other than ./timetracker, use it
-        if not argv_set.isdisjoint(self.argv_tests['directory']):
-            self.cfg_proj.workdir = args.directory
-        # pylint: disable=fixme
-        # TODO: CHeck if cvs.directory is being changed
+        # If a test set a proj dir other than ./timetracker, use it
+        if not argv_set.isdisjoint(self.argv_tests['trksubdir']):
+            self.cfg_proj.workdir = args.trksubdir
         return args
 
     # -------------------------------------------------------------------------------
@@ -68,9 +66,10 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
         cfg = self.cfg_proj
-        parser.add_argument('-d', '--directory', default=cfg.DIR,
-            help='Directory that holds the local project config file')
-        parser.add_argument('-n', '--name', default=cfg.name,
+        parser.add_argument('--trksubdir', metavar='DIR', default=cfg.DIR,
+            # Directory that holds the local project config file
+            help=SUPPRESS)
+        parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=cfg.name,
             help="A person's alias for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')
@@ -83,7 +82,28 @@ class Cli:
         subparsers = parser.add_subparsers(dest='command', help='timetracker subcommand help')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
+        self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
+        ##self._add_subparser_csvupdate(subparsers)
+        ##self._add_subparser_files(subparsers)
+
+    # -------------------------------------------------------------------------------
+    def _add_subparser_restart(self, subparsers):
+        # pylint: disable=fixme
+        # TODO: add a command that restarts the timers using the last csv time entry
+        #   * Add --verbose to print which files are edited and the csv message
+        #   * re-write the start file
+        #   * remove the last csv entry
+        pass
+
+    def _add_subparser_files(self, subparsers):
+        # pylint: disable=fixme
+        # TODO: add a command that lists timetracker files:
+        #  * csv file
+        #  * start file, if it exists (--verbose)
+        #  * local cfg file
+        #  * global cfg file
+        pass
 
     def _add_subparser_init(self, subparsers):
         parser = subparsers.add_parser(name='init',
@@ -116,6 +136,18 @@ class Cli:
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
         return parser
+
+    def _add_subparser_csvupdate(self, subparsers):
+        parser = subparsers.add_parser(name='csvupdate',
+            help='Update values in csv columns containing weekday, am/pm, and duration',
+            formatter_class=ArgumentDefaultsHelpFormatter,
+        )
+        parser.add_argument('-f', '--force', action='store_true',
+            help='Over-write the csv indicated in the project `config` by `filename`')
+        parser.add_argument('-i', '--input', metavar='file.csv',
+            help='Specify an input csv file')
+        parser.add_argument('-o', '--output', metavar='file.csv', default='updated.csv',
+            help='Specify an output csv file')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

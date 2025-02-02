@@ -20,11 +20,12 @@ def run_init(fmgr):
     debug(cfg_local.str_cfg())
     # 2. WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
     cfg_local.wr_cfg()
-    # 3. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig
+    # 3. TODO: add `start_timetracker_*.txt` to the .gitignore if this is a git-managed repo
+    # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
     cfg_global = CfgGlobal()
-    cfg_global.add_proj(cfg_local.project, cfg_local.get_filename_cfglocal())
-    cfg_global.wr_cfg()
-    assert cfg_global
+    chgd = cfg_global.add_proj(cfg_local.project, cfg_local.get_filename_cfglocal())
+    if chgd:
+        cfg_global.wr_cfg()
     ##cfg_global.write_update(args['project'], cfg_local.get_filename_cfglocal)
 
 

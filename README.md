@@ -1,7 +1,10 @@
 # Timetracker-csv
-Track time spent on multiple projects, one repo at a time.
+Claim your power. Track your time on your terms.
 
-A lightweight, repo-based, researcher name-based, command-line time tracker that stores data in csv spreadsheets.
+Track time spent on multiple projects, one repo at a time from the CLI.
+
+Timetracker-csv is a lightweight, repo-based, researcher username-based,
+command-line time tracker that stores data in csv spreadsheets.
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/work_in_progress.png" alt="work in progress" width="500"/></p>
 
@@ -10,6 +13,7 @@ A lightweight, repo-based, researcher name-based, command-line time tracker that
 * [Quickstart](#quickstart)
 * [Installation](#installation)
 * [Other time-trackers](#other-timetrackers)
+* [Documentation](docs/index.md)
 
 ## Advantages
 * Freedom software (aka open-source)
@@ -76,5 +80,7 @@ $ pip install .
   * tt-cli CLI only, no idle time detection, no support for clients
   * timetracker CLI only, no idle time detection, no support for clients
   * 1k stars [hamster comes pretty close but seems outdated/abandoned and a little bit too complex](https://github.com/projecthamster/hamster)
+
+[pages](http:/dvklopfenstein.github.io/timetracker)
 
 Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

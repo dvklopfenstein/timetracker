@@ -1,6 +1,7 @@
 # Project files
 .timetracker/
 test_timetracker.csv
+start_timetracker_*.txt
 
 # Temporary test files
 .timetracker_start

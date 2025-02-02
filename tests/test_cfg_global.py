@@ -21,7 +21,6 @@ from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.utils import get_relpath_adj
 #from timetracker.cli import Cli
-#from timetracker.filemgr import FileMgr
 #from timetracker.cfg.cfg_global import CfgGlobal
 
 basicConfig(level=DEBUG)

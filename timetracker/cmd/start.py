@@ -16,26 +16,33 @@ from timetracker.msgs import str_started
 from timetracker.cfg.cfg_global import CfgGlobal
 
 
-def run_start(fmgr):
+def cli_run_start(cfglocal, args):
+    """Initialize timetracking on a project"""
+    run_start(
+        cfglocal,
+        args)
+        #args['project'],
+        #args['csvdir'],
+        #args['quiet'])
+
+def run_start(cfglocal, args):
     """Initialize timetracking on a project"""
     debug('START: RUNNING COMMAND START')
     now = datetime.now()
-    cfgproj = fmgr.cfg
-    args = fmgr.kws
-    fin_start = cfgproj.get_filename_start()
+    fin_start = cfglocal.get_filename_start()
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     # Print elapsed time, if timer was started
-    cfgproj.prt_elapsed()
+    cfglocal.prt_elapsed()
     # Set/reset starting time, if applicable
     forced = args.get('forced')
     if not exists(fin_start) or forced:
-        cfgproj.mk_workdir()
-        cfgproj_fname = cfgproj.get_filename_cfglocal()
-        if not exists(cfgproj_fname):
-            cfgproj.update_localini(args.get('project'), args.get('csvdir'))
-            cfgproj.wr_cfg()
+        cfglocal.mk_workdir()
+        cfglocal_fname = cfglocal.get_filename_cfglocal()
+        if not exists(cfglocal_fname):
+            cfglocal.update_localini(args.get('project'), args.get('csvdir'))
+            cfglocal.wr_cfg()
             cfg_global = CfgGlobal()
-            chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfglocal())
+            chgd = cfg_global.add_proj(cfglocal.project, cfglocal.get_filename_cfglocal())
             if chgd:
                 cfg_global.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
@@ -43,7 +50,7 @@ def run_start(fmgr):
             if not args.get('quiet'):
                 print(f'Timetracker started '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
-                      f"for project '{cfgproj.project}' ID={cfgproj.name}")
+                      f"for project '{cfglocal.project}' ID={cfglocal.name}")
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not forced:

@@ -13,15 +13,22 @@ from datetime import datetime
 from timetracker.cfg.utils import get_shortest_name
 
 
-def run_stop(fmgr):
+def cli_run_stop(cfglocal, args):
+    """Stop the timer and record this time unit"""
+    run_stop(
+        cfglocal,
+        args)
+        #args['project'],
+        #args['csvdir'],
+        #args['quiet'])
+
+def run_stop(cfglocal, args):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug('STOP: RUNNING COMMAND STOP')
-    cfgproj = fmgr.cfg
-    args = fmgr.kws
 
     # Get the elapsed time
-    dta = cfgproj.read_starttime()
+    dta = cfglocal.read_starttime()
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -32,7 +39,7 @@ def run_stop(fmgr):
         return
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv()
+    fcsv = cfglocal.get_filename_csv()
     _msg_csv(fcsv)
     # Print header into csv, if needed
     if not exists(fcsv):
@@ -51,7 +58,7 @@ def run_stop(fmgr):
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
     if not args["keepstart"]:
-        cfgproj.rm_starttime()
+        cfglocal.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
 
@@ -112,7 +119,7 @@ def _wr_csv_hdrs(fcsv):
             file=prt,
         )
 
-def _wr_csv_data(fcsv, fmgr, dta):
+def _wr_csv_data(fcsv, args, dta):
     with open(fcsv, 'a', encoding='utf8') as ostrm:
         ##toc = default_timer()
         dtz = datetime.now()
@@ -120,11 +127,11 @@ def _wr_csv_data(fcsv, fmgr, dta):
         print(f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
               f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
               f'{delta},'
-              f'{fmgr.get("message")},'
-              f'{fmgr.get("activity")},'
-              f'{fmgr.str_tags()}',
+              f'{args.get("message")},'
+              f'{args.get("activity")},'
+              f'{args.str_tags()}',
               file=ostrm)
-        if not fmgr.get('quiet'):
+        if not args.get('quiet'):
             print(f'Timer stopped; Elapsed H:M:S={delta} appended to {fcsv}')
 
 

@@ -17,18 +17,25 @@ from csv import reader
 from timetracker.hms import FMT
 
 
-def run_csvupdate(fmgr):
+def cli_run_csvupdate(cfglocal, args):
+    """Stop the timer and record this time unit"""
+    run_csvupdate(
+        cfglocal,
+        args)
+        #args['project'],
+        #args['csvdir'],
+        #args['quiet'])
+
+def run_csvupdate(cfglocal, args):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug('CSVUPDATE: RUNNING COMMAND CSVUPDATE')
-    cfgproj = fmgr.cfg
-    args = fmgr.kws
 
     if args['input'] is not None:
         update_csv(args['input'], args['output'])
         sys_exit()
 
-    fcsv = cfgproj.get_filename_csv()
+    fcsv = cfglocal.get_filename_csv()
     if fcsv is not None and exists(fcsv):
         debug(f'CSVUPDATE: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
         update_csv(fcsv, args['output'])

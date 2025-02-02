@@ -27,9 +27,9 @@ init:
 	find $(DIRTRK)
 
 start:
-	trk -d $(DIRTRK) start
+	trk --trksubdir $(DIRTRK) start
 	find $(DIRTRK)
-	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
+	@grep -Hw --color filename $(DIRTRK)/config
 
 # Test that researcher passed a stop message using MSG="This is my stop message"
 # https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
@@ -44,23 +44,13 @@ stop:
 	fi
 
 _stop:
-	trk -d $(DIRTRK) stop -m "\"$(MSG)\""
+	trk --trksubdir $(DIRTRK) stop -m "\"$(MSG)\""
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv
 	
-show:
-	# Test .timetracker dir
-	find ~/timetrackers/projs
-	find .timetracker/
-	cat .timetracker/config
-	# Actual dir for tracking time spent on this project
-	find ~/timetrackers/projs
-	find .timetracker/
-	cat .timetracker/config
-
 files:
-	@grep \.csv $(DIRTRK)/config
+	@grep -nH --color filename $(DIRTRK)/config
 	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
 	find $(DIRTRK)
 	find .timetracker

@@ -3,14 +3,10 @@
 
 from sys import argv
 from os import environ
-##from os import getcwd
-from collections import namedtuple
 from datetime import timedelta
 from timeit import default_timer
-from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cli import Cli
-from timetracker.filemgr import FileMgr
 
 # pylint: disable=fixme
 
@@ -32,73 +28,70 @@ def test_basic():
 
 def test_dir():
     """Test the basic timetracker flow"""
-    mainargs = '-d .tt'.split()
-    nta = _trk_init(mainargs)
-    assert nta.args.trksubdir == '.tt'
-    nta = _trk_start(mainargs)
-    assert nta.args.trksubdir == '.tt'
-    nta = _trk_stop(mainargs)
-    assert nta.args.trksubdir == '.tt'
+    mainargs = '--trksubdir .tt'.split()
+    args = _trk_init(mainargs)
+    assert args.trksubdir == '.tt'
+    args = _trk_start(mainargs)
+    assert args.trksubdir == '.tt'
+    args = _trk_stop(mainargs)
+    assert args.trksubdir == '.tt'
 
 # ------------------------------------------------------------
 def _trk_stop(mainargs=None):
     """`$ trk stop -m 'Test stopping the timer'"""
     if not mainargs:
         mainargs = []
-    nta = _get_nttrkr(mainargs + ['stop', '-m', 'Test stopping the timer'])
-    assert nta.args.command == 'stop'
-    return nta
+    args = _get_nttrkr(mainargs + ['stop', '-m', 'Test stopping the timer'])
+    assert args.command == 'stop'
+    return args
 
 def _trk_start(mainargs=None):
     """`$ trk start"""
     if not mainargs:
         mainargs = []
-    nta = _get_nttrkr(mainargs + ['start'])
-    assert nta.args.command == 'start'
-    return nta
+    args = _get_nttrkr(mainargs + ['start'])
+    assert args.command == 'start'
+    return args
 
 def _trk_init(mainargs=None):
     """`$ trk init"""
     if not mainargs:
         mainargs = []
-    nta = _get_nttrkr(mainargs + ['init'])
-    assert nta.args.command == 'init'
-    return nta
+    args = _get_nttrkr(mainargs + ['init'])
+    assert args.command == 'init'
+    return args
 
 def _trk_init_help(mainargs=None):
     """`$ trk init"""
     if not mainargs:
         mainargs = []
-    nta = _get_nttrkr(mainargs + 'init --help'.split())
-    assert nta.args.command == 'init'
-    return nta
+    args = _get_nttrkr(mainargs + 'init --help'.split())
+    assert args.command == 'init'
+    return args
 
 def _trk_help():
     """`$ trk --help`"""
-    nta = _get_nttrkr(['--help'])
-    assert nta
+    args = _get_nttrkr(['--help'])
+    assert args
     # TODO: Check that help message was printed
 
 def _trk():
     """`$ trk"""
-    nta = _get_nttrkr([])
+    args = _get_nttrkr([])
     # TODO: Check that help message was printed
     # TODO: Check: Run `trk init` to initialize local timetracker
-    assert nta.args.trksubdir == CfgProj.DIR
-    assert nta.args.name == environ['USER']
-    assert not nta.args.quiet
-    assert nta.args.command is None
+    assert args.trksubdir == CfgProj.DIR
+    assert args.name == environ['USER']
+    assert not args.quiet
+    assert args.command is None
 
 def _get_nttrkr(arglist):
     cfg = CfgProj()
     cli = Cli(cfg)
     print(f'DDDDDDDDDDDDDDDDDDD {argv}')
     args = cli.get_args_test(arglist)
-    cfg_global = CfgGlobal()
     print(f'TEST ARGS: {args}')
-    fmgr = FileMgr(cfg, cfg_global, **vars(args))
-    nto = namedtuple('TestTrkr', 'args fmgr')
-    return nto(args=args, fmgr=fmgr)
+    return args
 
 if __name__ == '__main__':
     #test_cfg()

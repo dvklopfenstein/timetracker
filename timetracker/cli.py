@@ -70,7 +70,7 @@ class Cli:
             # Directory that holds the local project config file
             help=SUPPRESS)
         parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=cfg.name,
-            help="A person's alias for timetracking")
+            help="A person's alias or username for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')
         parser.add_argument('--version', action='store_true',
@@ -84,7 +84,7 @@ class Cli:
         self._add_subparser_start(subparsers)
         self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
-        ##self._add_subparser_csvupdate(subparsers)
+        self._add_subparser_csvupdate(subparsers)
         ##self._add_subparser_files(subparsers)
 
     # -------------------------------------------------------------------------------

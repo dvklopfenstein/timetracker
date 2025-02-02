@@ -13,8 +13,8 @@ from subprocess import run
 #from collections import namedtuple
 #from datetime import timedelta
 #from timeit import default_timer
-from logging import basicConfig
-from logging import DEBUG
+#from logging import basicConfig
+#from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_global import CfgGlobal

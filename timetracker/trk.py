@@ -3,8 +3,9 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from os import getcwd
 from os.path import exists
-from logging import error
+#from logging import error
 
 #from logging import basicConfig
 #from logging import DEBUG
@@ -68,8 +69,8 @@ class TimeTracker:
 
     def _msg_init(self):
         self.cli.parser.print_help()
-        print('')
-        error('Run `trk init` to initialize local timetracker')
+        print('\nRun `trk init` to initialize time-tracking '
+              f'for the project in {getcwd()}')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

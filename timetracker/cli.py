@@ -84,8 +84,8 @@ class Cli:
         self._add_subparser_start(subparsers)
         self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
-        self._add_subparser_csvupdate(subparsers)
-        self._add_subparser_files(subparsers)
+        ##self._add_subparser_csvupdate(subparsers)
+        ##self._add_subparser_files(subparsers)
 
     # -------------------------------------------------------------------------------
     def _add_subparser_restart(self, subparsers):

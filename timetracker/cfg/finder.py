@@ -28,7 +28,7 @@ class CfgFinder:
 
     def get_dirtrk(self):
         """Get the project directory that is or will be tracked"""
-        return self.dirtrk if self.dirtrk is not None else join(self.dircur)
+        return self.dirtrk if self.dirtrk is not None else normpath(self.dircur)
 
     def __str__(self):
         return ('CfgFinder('

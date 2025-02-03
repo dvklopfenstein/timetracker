@@ -12,11 +12,15 @@ def str_started():
 
 def str_notrkrepo(trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""
-    return f'fatal: not a trk repository (or any of the parent directories): {trkdir}'
+    return f'fatal: not a Trk repository (or any of the parent directories): {trkdir}'
 
 def str_notrkrepo_mount(mountname, trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""
-    return f'fatal: not a trk repository (or any parent up to mount point {mountname}): {trkdir}'
+    return f'fatal: not a Trk repository (or any parent up to mount point {mountname}): {trkdir}'
+
+def str_init_empty_proj(cfglocal):
+    """Message upon initializing an empyt timetracking project"""
+    return f'Initialized empty Trk repository in {cfglocal.get_filename_cfglocal()}'
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

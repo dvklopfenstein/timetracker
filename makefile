@@ -7,14 +7,6 @@ install:
 py:
 	find tests timetracker bin -name \*.py
 
-.PHONY: c
-c:
-	cat .timetracker/start_dvklo.txt
-
-pylint:
-	git diff --name-only | perl -ne 'if (/(\S+\.py)/) {printf "echo $$1\npylint -r no %s\n", $$1}' | tee tmp_pylint
-	chmod 755 tmp_pylint
-	tmp_pylint
 
 DIRTRK = ./.trkr
 PROJ = trk
@@ -55,8 +47,6 @@ files:
 	find $(DIRTRK)
 	find .timetracker
 
-.pylintrc:
-	pylint --generate-rcfile > .pylintrc
 
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:
@@ -111,7 +101,6 @@ clean:
 	rm -f .timetracker_start
 	rm -f timetracker_*.csv
 	rm -f updated.csv
-	rm -f tmp_pylint
 	rm -f .timetracker_starttime
 
 clobber:

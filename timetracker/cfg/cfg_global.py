@@ -50,7 +50,7 @@ class CfgGlobal:
         """Write config file"""
         docprt = self._get_docprt()
         TOMLFile(self.fname).write(docprt)
-        debug(f'CFGGLOBAL  WROTE: {self.fname}; PROJECTS: ')
+        debug(f'CFGGLOBAL  WROTE: {self.fname}')
 
     def add_proj(self, project, cfgfilename):
         """Add a project to the global config file, if it is not already present"""

@@ -22,6 +22,8 @@ from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.utils import get_relpath_adj
 #from timetracker.cli import Cli
 #from timetracker.cfg.cfg_global import CfgGlobal
+from tests.mkprojs import mkdirs
+from tests.mkprojs import findhome
 
 #basicConfig(level=DEBUG)
 
@@ -53,8 +55,8 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
         assert doc['projects'] == cfgtop.doc['projects']
         _run(f'cat {cfgtop.fname}')
         print(f'{sep}4) Create local project directories')
-        proj2wdir = _mk_dirs(tmp_home)
-        _find(tmp_home)
+        proj2wdir = mkdirs(tmp_home)
+        findhome(tmp_home)
         print(f'{sep}5) Create a local cfg object for the apples project')
         name = 'tester'
         exp_projs = []
@@ -85,7 +87,7 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
                 f'ACT({cfgtop.doc["projects"].unwrap()})')
             cfgtop.wr_cfg()
             _run(f'cat {cfgtop.fname}')
-            _find(workdir)
+            findhome(workdir)
 
 
 
@@ -99,21 +101,9 @@ def test_dirhome():
         assert dirname(cfg.fname) == tmp_home.name
         tmp_home.cleanup()
 
-def _mk_dirs(tmp_home):
-    projs = {
-        'apples'      : join(tmp_home, 'proj/apples'),
-        'blueberries' : join(tmp_home, 'proj/blueberries'),
-        'cacao'       : join(tmp_home, 'proj/cacao'),
-    }
-    for pdir in projs.values():
-        makedirs(pdir)
-    return projs
-
 def _run(cmd):
     debug(run(cmd.split(), capture_output=True, text=True, check=True).stdout)
 
-def _find(home):
-    debug(run(f'find {home}'.split(), capture_output=True, text=True, check=True).stdout)
 
 if __name__ == '__main__':
     #test_dirhome()

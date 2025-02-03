@@ -10,6 +10,8 @@ from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.cfg.finder import CfgFinder
+from tests.mkprojs import mkdirs
+from tests.mkprojs import findhome
 
 
 basicConfig(level=DEBUG)
@@ -20,8 +22,8 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
     """Test cfg flow"""
     print(f'{SEP1}1) INITIALIZE "HOME" DIRECTORY')
     with TemporaryDirectory() as tmp_home:
-        proj2wdir = _mk_dirs(tmp_home)
-        _find(tmp_home)
+        proj2wdir = mkdirs(tmp_home)
+        findhome(tmp_home)
 
         # Test finder when current directory is NOT time-tracked
         _test_tracked0(proj2wdir, trksubdir)
@@ -70,20 +72,6 @@ def _test_tracked1(proj2wdir, trksubdir):
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk, str(finder)
 
-
-def _mk_dirs(tmp_home):
-    projs = {
-        'apples'      : join(tmp_home, 'proj/apples'),
-        'blueberries' : join(tmp_home, 'proj/blueberries'),
-        'cacao'       : join(tmp_home, 'proj/cacao'),
-    }
-    for pdir in projs.values():
-        dirdoc = join(pdir, 'doc')
-        makedirs(dirdoc)
-    return projs
-
-def _find(home):
-    debug(run(f'find {home}'.split(), capture_output=True, text=True, check=True).stdout)
 
 if __name__ == '__main__':
     #test_dirhome()

@@ -1,5 +1,5 @@
 # Timetracker-csv
-Claim your power. Track your time on your terms.
+Claim your power. Track time on your terms.
 
 Track time spent on multiple projects, one repo at a time from the CLI.
 

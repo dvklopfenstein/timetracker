@@ -128,7 +128,8 @@ class Cli:
 
     def _add_subparser_init(self, subparsers):
         parser = subparsers.add_parser(name='init',
-            help='Initialize the .timetracking directory')
+            help='Initialize the .timetracking directory',
+            formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
         parser.add_argument('--csvdir', default=normpath(relpath(CfgFinder.DIRCSV)),
             help='Directory for csv files storing start and stop times')
@@ -146,7 +147,9 @@ class Cli:
 
     @staticmethod
     def _add_subparser_stop(subparsers):
-        parser = subparsers.add_parser(name='stop', help='Stop timetracking')
+        parser = subparsers.add_parser(name='stop',
+            help='Stop timetracking',
+            formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-m', '--message', required=True,
             help='Message describing the work done in the time unit')
         parser.add_argument('--activity', default='',
@@ -161,7 +164,8 @@ class Cli:
     @staticmethod
     def _add_subparser_csvupdate(subparsers):
         parser = subparsers.add_parser(name='csvupdate',
-            help='Update values in csv columns containing weekday, am/pm, and duration')
+            help='Update values in csv columns containing weekday, am/pm, and duration',
+            formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',

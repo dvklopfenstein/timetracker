@@ -3,17 +3,19 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from sys import exit as sys_exit
 from os.path import exists
-##from os.path import abspath
+#from os.path import abspath
 from os.path import relpath
-##from os.path import join
+from os.path import dirname
 from logging import debug
 
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
 from timetracker.msgs import str_started
-from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.msgs import str_notrkrepo
+##from timetracker.cfg.cfg_global import CfgGlobal
 
 
 def cli_run_start(cfglocal, args):
@@ -31,20 +33,25 @@ def run_start(cfglocal, args):
     now = datetime.now()
     fin_start = cfglocal.get_filename_start()
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
+    # Is this project tracked?
+    cfglocal_fname = cfglocal.get_filename_cfglocal()
+    #debug(f'FFFFFFFFFFFFFFFFFF {getcwd()}')
+    #debug(f'FFFFFFFFFFFFFFFFFF {cfglocal_fname}')
+    if not exists(cfglocal_fname):
+        print(str_notrkrepo(dirname(dirname(cfglocal_fname))))
+        sys_exit()
     # Print elapsed time, if timer was started
     cfglocal.prt_elapsed()
     # Set/reset starting time, if applicable
     forced = args.force
     if not exists(fin_start) or forced:
-        cfglocal.mk_workdir()
-        cfglocal_fname = cfglocal.get_filename_cfglocal()
-        if not exists(cfglocal_fname):
-            cfglocal.update_localini(args.project, args.csvdir)
-            cfglocal.wr_cfg()
-            cfg_global = CfgGlobal()
-            chgd = cfg_global.add_proj(cfglocal.project, cfglocal.get_filename_cfglocal())
-            if chgd:
-                cfg_global.wr_cfg()
+        #cfglocal.mk_workdir()
+        #cfglocal.update_localini(args.project, args.csvdir)
+        #cfglocal.wr_cfg()
+        #cfg_global = CfgGlobal()
+        #chgd = cfg_global.add_proj(cfglocal.project, cfglocal.get_filename_cfglocal())
+        #if chgd:
+        #    cfg_global.wr_cfg()
         with open(fin_start, 'w', encoding='utf8') as prt:
             prt.write(f'{now}')
             if not args.quiet:

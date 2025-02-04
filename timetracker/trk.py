@@ -54,6 +54,7 @@ class TimeTracker:
         """Run timetracker"""
         debug(f'TIMETRACKER ARGS: {self.args}')
         if self.args.command is not None:
+            ##self.cfg_local = CfgProj()
             fncs[self.args.command](self.cfg_local, self.args)
         else:
             self._cmd_none()

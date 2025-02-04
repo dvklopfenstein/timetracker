@@ -9,6 +9,11 @@ from timetracker.cli import Cli
 
 # pylint: disable=fixme
 
+# TODO:
+# trk
+# trk start
+# exp: Please init timer
+
 def test_cfg():
     """Test the TimeTracker configuration"""
 

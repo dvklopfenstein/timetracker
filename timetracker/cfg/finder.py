@@ -12,24 +12,28 @@ from os.path import ismount
 from os.path import basename
 from os.path import normpath
 from logging import debug
+from timetracker.consts import DIRTRK
 
 
 class CfgFinder:
     """Functionality to find the local project config, if one exists"""
 
-    DIRTRK = '.timetracker'
-    DIRCSV = '.'
-
     def __init__(self, dircur, trksubdir=None):
         self.dircur = dircur
-        self.trksubdir = trksubdir if trksubdir is not None else self.DIRTRK
+        self.trksubdir = trksubdir if trksubdir is not None else DIRTRK
         # Existing directory (ex: ./timetracker) or None if dir not exist
         self.dirtrk = get_abspathtrk(dircur, self.trksubdir)
         self.project = self._init_project()
 
     def get_dirtrk(self):
         """Get the project directory that is or will be tracked"""
-        return self.dirtrk if self.dirtrk is not None else normpath(self.dircur)
+        if self.dirtrk is not None:
+            return self.dirtrk
+        return normpath(join(self.dircur, self.trksubdir))
+
+    def get_cfgfilename(self):
+        """Get the local (aka project) config full filename"""
+        return join(self.get_dirtrk(), 'config')
 
     def __str__(self):
         return ('CfgFinder('
@@ -56,7 +60,7 @@ def get_username(name=None):
 
 def get_abspathtrk(path, trksubdir):
     """Get .timetracker/ proj dir by searching up parent path"""
-    debug(f'CfgFinder CCCCCCCCCCCCCCCCCCCCCCCCCC path       {path}')
+    ##debug(f'CfgFinder path       {path}')
     trkabsdir, found = finddirtrk(path, trksubdir)
     return trkabsdir if found else None
 
@@ -65,10 +69,10 @@ def finddirtrk(path, trksubdir):
     path = abspath(path)
     trkdir = join(path, trksubdir)
     if exists(trkdir):
-        debug(f'CfgFinder FFFFFFFFFFFFFFFFFFFFFFFFFF path       {path}')
+        ##debug(f'CfgFinder path       {path}')
         return normpath(trkdir), True
     while not ismount(path):
-        #debug(f'PATHWALK: {path}')
+        ##debug(f'PATHWALK: {path}')
         trkdir = join(path, trksubdir)
         if exists(trkdir):
             return normpath(trkdir), True

@@ -86,10 +86,11 @@ def chk_isdir(dname, prefix=''):
     return False
 
 def replace_homepath(fname):
-    """Replace '~' with the expanded filepath"""
+    """Replace expanded home dir with '~' if using '~' is shorter"""
     # pylint: disable=fixme
     # TODO: use commonprefix
-    fname = normpath(fname)
+    #fname = normpath(fname)
+    fname = abspath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
     debug(f'UPDATE FNAME: {fname}')

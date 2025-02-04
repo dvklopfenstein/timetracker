@@ -3,4 +3,4 @@
 project = "trk"
 
 [csv]
-filename = "~/timetrackers/timetracker_trk_$USER$.csv"
+filename = "../../../../../../../home/dvklo/timetrackers/timetracker_trk_$USER$.csv"

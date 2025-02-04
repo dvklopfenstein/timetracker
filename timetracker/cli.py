@@ -9,13 +9,34 @@ from os import getcwd
 from os.path import normpath
 from os.path import relpath
 from logging import debug
+#from logging import DEBUG
+#from logging import basicConfig
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
 from timetracker.cfg.finder import get_username
 from timetracker.cfg.finder import CfgFinder
+from timetracker.consts import DIRCSV
 
+from timetracker.cmd.none      import cli_run_none
+from timetracker.cmd.init      import cli_run_init
+from timetracker.cmd.start     import cli_run_start
+from timetracker.cmd.stop      import cli_run_stop
+from timetracker.cmd.csvupdate import cli_run_csvupdate
+
+def main():
+    """Connect all parts of the timetracker"""
+    #basicConfig(level=DEBUG)
+    obj = Cli()
+    obj.run()
+
+fncs = {
+    'init'     : cli_run_init,
+    'start'    : cli_run_start,
+    'stop'     : cli_run_stop,
+    'csvupdate': cli_run_csvupdate,
+}
 
 class Cli:
     """Command line interface (CLI) for timetracking"""
@@ -29,6 +50,17 @@ class Cli:
         debug(self.finder)
         self.parser = self.init_parser_top('timetracker')
         self.args = self.parser.parse_args()
+
+    def run(self):
+        """Run timetracker"""
+        filename_cfgproj = self.finder.get_cfgfilename()
+        debug(f'Cli RUNNNNNNNNNNNNNNNNNN ARGS: {self.args}')
+        debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
+        debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {filename_cfgproj}')
+        if self.args.command is not None:
+            fncs[self.args.command](filename_cfgproj, self.args)
+        else:
+            cli_run_none(filename_cfgproj, self.args)
 
     def get_args_cli(self):
         """Get arguments for ScriptFrame"""
@@ -69,7 +101,6 @@ class Cli:
         ####if not argv_set.isdisjoint(self.ARGV_TESTS['trksubdir']):
         ####    print('XXXXXXXXXXXXXXXXXXX', self.finder.trksubdir)
         ####    print('XXXXXXXXXXXXXXXXXXX', args.trksubdir)
-        ####    self.cfg_proj.workdir = args.trksubdir
         return args
 
     # -------------------------------------------------------------------------------
@@ -131,7 +162,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=normpath(relpath(CfgFinder.DIRCSV)),
+        parser.add_argument('--csvdir', default=normpath(relpath(DIRCSV)),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")

@@ -6,6 +6,8 @@ from os.path import dirname
 from os.path import expanduser
 from subprocess import run
 from logging import debug
+from logging import DEBUG
+from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
@@ -13,7 +15,7 @@ from timetracker.cfg.utils import get_relpath_adj
 from tests.mkprojs import mkdirs
 from tests.mkprojs import findhome
 
-#basicConfig(level=DEBUG)
+basicConfig(level=DEBUG)
 
 
 def test_cfgbase_home():
@@ -56,13 +58,15 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
             # EXP: apples '~/proj/apples/.timetracker/config'
             exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmp_home)])
             # INIT LOCAL PROJECT CONFIG
-            cfgloc = CfgProj(workdir, proj, name)
-            assert cfgloc.trksubdir == trksubdir
-            assert cfgloc.workdir == workdir
+            cfgloc = CfgProj(cfgname_proj, project=proj, name=name)
+            assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'
+                                                   f'ACT({cfgloc.trksubdir})\n'
+                                                   f'{cfgloc}')
+            assert cfgloc.dircfg == workdir
             assert cfgloc.project == proj
             assert cfgloc.name == name
-            cfgloc.mk_workdir()
-            cfgloc.wr_cfg()
+            cfgloc.mk_dircfg()
+            cfgloc.wr_cfg_new()
             # cat project/.timetracker/config
             fnamecfg_proj = cfgloc.get_filename_cfglocal()
             debug(f'PROJ CFG: {fnamecfg_proj}')

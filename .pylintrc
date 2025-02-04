@@ -515,7 +515,7 @@ ignore-docstrings=yes
 
 # Imports are removed from the similarity computation
 # no: prevents false positive for duplicate-code
-ignore-imports=no
+ignore-imports=yes
 
 # Signatures are removed from the similarity computation
 ignore-signatures=yes

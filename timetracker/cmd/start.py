@@ -4,7 +4,6 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
-from os import getcwd
 from os.path import exists
 #from os.path import abspath
 from os.path import relpath

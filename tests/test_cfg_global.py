@@ -1,27 +1,15 @@
 #!/usr/bin/env python3
 """Test the TimeTracker global configuration"""
 
-#from sys import argv
-#from os import environ
-###from os import getcwd
-from os import makedirs
-##from os.path import exists
 from os.path import join
 from os.path import dirname
 from os.path import expanduser
 from subprocess import run
-#from collections import namedtuple
-#from datetime import timedelta
-#from timeit import default_timer
-#from logging import basicConfig
-#from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.utils import get_relpath_adj
-#from timetracker.cli import Cli
-#from timetracker.cfg.cfg_global import CfgGlobal
 from tests.mkprojs import mkdirs
 from tests.mkprojs import findhome
 

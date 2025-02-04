@@ -54,7 +54,7 @@ class Cli:
         found = False
         for arg in argv:
             if found:
-                debug('TTTTTTTTTTTTTTTTTTT', arg)
+                debug(f'Cli FOUND: argv --trksubdir {arg}')
                 return arg
             if arg == '--trksubdir':
                 found = True

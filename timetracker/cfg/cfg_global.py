@@ -96,6 +96,8 @@ class CfgGlobal:
                 if cfgname == projcfgname:
                     # Project is already in the global config file
                     return False
+                debug(f'OLD cfgname: {cfgname}')
+                debug(f'NEW cfgname: {projcfgname}')
                 raise RuntimeError(f'ERROR: Project({projname}) config filename '
                                     'is already set to:\n'
                                    f'        {cfgname}.\n'

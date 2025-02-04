@@ -11,6 +11,7 @@ from os.path import join
 from os.path import ismount
 from os.path import basename
 from os.path import normpath
+from logging import debug
 
 
 class CfgFinder:
@@ -37,6 +38,8 @@ class CfgFinder:
                 f'dircur={self.dircur})')
 
     def _init_project(self):
+        debug('PPPPPPPPPPPPPPPPPPPPPPPPPP self.dirtrk', self.dirtrk)
+        debug('PPPPPPPPPPPPPPPPPPPPPPPPPP CURRENT DIR', self.dircur)
         if self.dirtrk is not None:
             return basename(dirname(self.dirtrk))
         return basename(self.dircur)
@@ -53,6 +56,7 @@ def get_username(name=None):
 
 def get_abspathtrk(path, trksubdir):
     """Get .timetracker/ proj dir by searching up parent path"""
+    debug('CCCCCCCCCCCCCCCCCCCCCCCCCC path       ', path)
     trkabsdir, found = finddirtrk(path, trksubdir)
     return trkabsdir if found else None
 
@@ -61,6 +65,7 @@ def finddirtrk(path, trksubdir):
     path = abspath(path)
     trkdir = join(path, trksubdir)
     if exists(trkdir):
+        debug('FFFFFFFFFFFFFFFFFFFFFFFFFF path       ', path)
         return normpath(trkdir), True
     while not ismount(path):
         #debug(f'PATHWALK: {path}')

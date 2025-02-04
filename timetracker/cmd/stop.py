@@ -34,7 +34,7 @@ def run_stop(cfglocal, args):
         # TODO: Check for local .timetracker/config file
         # TODO: Add project
         error('NOT WRITING ELAPSED TIME; '
-              'Do `trkr start` to begin tracking time '
+              'Do `trk start` to begin tracking time '
               'for project, TODO')
         return
 

@@ -18,6 +18,9 @@ def cli_run_init(cfglocal, args):
 def run_init(cfglocal, projectname, csvdir, quiet):
     """initialize timetracking on a project"""
     debug('INIT: RUNNING COMMAND INIT')
+    debug(f'INIT: cfglocal:    {cfglocal}')
+    debug(f'INIT: projectname: {projectname}')
+    debug(f'INIT: csvdir:      {csvdir}')
     # 1. INITIALIZE LOCAL .timetracker PROJECT DIRECTORY
     cfglocal.mk_workdir(quiet)
     # pylint: disable=fixme

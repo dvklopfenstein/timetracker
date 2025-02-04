@@ -7,8 +7,8 @@ from os import getcwd
 from os.path import exists
 #from logging import error
 
-#from logging import basicConfig
-#from logging import DEBUG
+from logging import basicConfig
+from logging import DEBUG
 from logging import debug
 ###from logging import INFO
 
@@ -30,7 +30,7 @@ fncs = {
 
 def main():
     """Connect all parts of the timetracker"""
-    #basicConfig(level=DEBUG)
+    basicConfig(level=DEBUG)
     obj = TimeTracker()
     obj.run()
 

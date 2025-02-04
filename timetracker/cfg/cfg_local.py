@@ -46,19 +46,26 @@ class CfgProj:
     DIRCSV = '.'
 
     def __init__(self, workdir=None, project=None, name=None):
+        debug(f'CfgProj args workdir {workdir}')
+        debug(f'CfgProj args project {project}')
+        debug(f'CfgProj args name    {name}')
         self.trksubdir = self.DIRTRK if workdir is None else basename(workdir)
         self.workdir = abspath(self.DIRTRK) if workdir is None else normpath(workdir)
         self.project = basename(getcwd()) if project is None else project
         self.name = get_username(name)
+        debug(f'CfgProj set  trksdir {self.trksubdir}')
+        debug(f'CfgProj set  workdir {self.workdir}')
+        debug(f'CfgProj set  project {self.project}')
+        debug(f'CfgProj set  name    {self.name}')
         self.dir_csv = '.'
         ##self.csv_name = join(
         ##    self.DIRTRK,
         ##    self.CSVPAT.replace('PROJECT', self.project)
         self.doc = self._init_doclocal()
         cfgloc = self.get_filename_cfglocal()
-        debug(f'CFG LOCAL  CONFIG: exists({int(exists(cfgloc))}) -- {cfgloc}')
-        debug(f'CFG PROJECT: {self.project}')
-        debug(f'CFG NAME:    {self.name}')
+        debug(f'CfgProj LOCAL  CONFIG: exists({int(exists(cfgloc))}) -- {cfgloc}')
+        debug(f'CfgProj PROJECT: {self.project}')
+        debug(f'CfgProj NAME:    {self.name}')
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
@@ -87,7 +94,7 @@ class CfgProj:
         TOMLFile(fname).write(self.doc)
         ####with open(fname, 'w', encoding='utf8') as ostrm:
         ####    print(self.str_cfg(), file=ostrm, end='')
-        debug(f'  WROTE: {fname}')
+        debug(f'  WROTE:    {fname}')
         return dumps(self.doc)
 
     def update_localini(self, project, csvdir):

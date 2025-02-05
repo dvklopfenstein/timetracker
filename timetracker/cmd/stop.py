@@ -9,6 +9,7 @@ from os.path import relpath
 #from logging import info
 from logging import debug
 from logging import error
+from collections import namedtuple
 from datetime import datetime
 ##from timeit import default_timer
 from timetracker.cfg.cfg_local  import CfgProj
@@ -18,18 +19,15 @@ from timetracker.msgs import str_init
 
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
+    nto = namedtuple("CsvFields", "message activity tags")
     run_stop(
         fnamecfg,
-        args.message,
-        args.activity,
-        args.tags,
+        nto._make([args.message, args.activity, args.tags]),
         args.quiet,
         args.keepstart)
 
-def run_stop(fnamecfg, message, activity, tags, quiet=False, keepstart=False):
+def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
     """Stop the timer and record this time unit"""
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-positional-arguments
     # Get the starting time, if the timer is running
     debug('STOP: RUNNING COMMAND STOP')
     if not exists(fnamecfg):
@@ -58,9 +56,9 @@ def run_stop(fnamecfg, message, activity, tags, quiet=False, keepstart=False):
     delta = dtz - dta
     csvline = _strcsv_timerstopped(
         dta, dtz, delta,
-        message,
-        activity,
-        _str_tags(tags))
+        csvfields.message,
+        csvfields.activity,
+        _str_tags(csvfields.tags))
     _wr_csvlong_data(fcsv, csvline)
     if not quiet:
         print(f'Timer stopped; Elapsed H:M:S={delta} '

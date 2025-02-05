@@ -29,6 +29,7 @@ def cli_run_stop(fnamecfg, args):
 def run_stop(fnamecfg, message, activity, tags, quiet=False, keepstart=False):
     """Stop the timer and record this time unit"""
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     # Get the starting time, if the timer is running
     debug('STOP: RUNNING COMMAND STOP')
     if not exists(fnamecfg):

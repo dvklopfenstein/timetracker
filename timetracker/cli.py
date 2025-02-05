@@ -9,13 +9,13 @@ from os import getcwd
 from os.path import normpath
 from os.path import relpath
 from logging import debug
-#from logging import DEBUG
-#from logging import basicConfig
+
+
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
-from timetracker.cfg.finder import get_username
+from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.consts import DIRCSV
 
@@ -25,9 +25,11 @@ from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
 from timetracker.cmd.csvupdate import cli_run_csvupdate
 
+
 def main():
     """Connect all parts of the timetracker"""
-    #basicConfig(level=DEBUG)
+    #from logging import basicConfig, DEBUG
+    #logging.basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -57,6 +59,7 @@ class Cli:
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN ARGS: {self.args}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {filename_cfgproj}')
+        debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {self.finder.get_desc()}')
         if self.args.command is not None:
             fncs[self.args.command](filename_cfgproj, self.args)
         else:

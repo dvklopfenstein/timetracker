@@ -12,7 +12,9 @@ from os.path import ismount
 from os.path import basename
 from os.path import normpath
 from logging import debug
+from logging import error
 from timetracker.consts import DIRTRK
+from timetracker.cfg.cfg_local import CfgProj
 
 
 class CfgFinder:
@@ -38,6 +40,17 @@ class CfgFinder:
         """Get the local (aka project) config full filename"""
         return join(self.get_dirtrk(), 'config')
 
+    def get_csvfilename(self):
+        """Get the csv filename pointed to in the .timetracker/config file"""
+        fname = self.get_cfgfilename()
+        if exists(fname):
+            cfg = CfgProj(fname)
+            csvname = cfg.get_filename_csv()
+            debug(f'CCCCCCCCCCCCCCCCSSSSSSSSSSSSSSSVVVVVVVVVVVVVVV: {csvname}')
+            return csvname
+        error(f'Cannot get csv filename; project configuration file does not exist: {fname}')
+        return None
+
     def get_desc(self):
         """Get a description of the state of a CfgFinder instance"""
         return (f'CfgFinder project:    {self.project}\n'
@@ -53,14 +66,6 @@ class CfgFinder:
             return basename(dirname(self.dirtrk))
         return basename(self.dircur)
 
-
-def get_username(name=None):
-    """Get the default username"""
-    if name is None:
-        return environ.get('USER', 'researcher')
-    if name in environ:
-        return environ[name]
-    return name
 
 
 def get_abspathtrk(path, trksubdir):

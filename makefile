@@ -104,6 +104,7 @@ clean:
 	rm -f timetracker_*.csv
 	rm -f updated.csv
 	rm -f .timetracker_starttime
+	rm -rf tmp; mkdir tmp;
 
 clobber:
 	rm -rf .timetracker/

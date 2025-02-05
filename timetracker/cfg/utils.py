@@ -10,9 +10,9 @@ from os.path import expanduser
 from os.path import relpath
 from os.path import abspath
 from os.path import normpath
-from os.path import dirname
+#from os.path import dirname
 from os.path import join
-from os.path import isabs
+#from os.path import isabs
 ##from os.path import commonpath
 from os.path import commonprefix
 from subprocess import run

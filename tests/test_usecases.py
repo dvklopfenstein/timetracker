@@ -12,7 +12,7 @@
 
 def test_usecases():
     """Test Timetracker use cases"""
-    pass
+    # pylint: disable=line-too-long
     # make clobber
 
     # trk
@@ -25,7 +25,7 @@ def test_usecases():
     # Initialized timetracker directory:
 
     # trk init
-    # Trk repository already initialized: 
+    # Trk repository already initialized:
 
     # trk start
     # Timetracker started Wed 03:21 PM: 2025-02-05 15:21:36.452917 for project 'timetracker' ID=username

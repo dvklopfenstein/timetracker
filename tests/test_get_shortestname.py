@@ -5,14 +5,14 @@
 #from os.path import exists
 #from os.path import join
 from logging import basicConfig
-from logging import DEBUG
+#from logging import DEBUG
 from logging import debug
 #from tempfile import TemporaryDirectory
 #from tests.mkprojs import mkdirs
 #from tests.mkprojs import findhome
-from subprocess import run
-from collections import namedtuple
-from timetracker.cfg.utils import get_shortest_name
+#from subprocess import run
+#from collections import namedtuple
+#from timetracker.cfg.utils import get_shortest_name
 
 
 #basicConfig(level=DEBUG)
@@ -23,7 +23,7 @@ SEP = f'\n{"="*80}\n'
 def test_get_shortestname():
     """Test the get_shortest_name function"""
     debug(f'{SEP}RUNNING TEST')
-    print(f'TEST PASSED')
+    print('TEST PASSED')
 
 if __name__ == '__main__':
     test_get_shortestname()

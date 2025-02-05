@@ -9,7 +9,7 @@
 #from tempfile import TemporaryDirectory
 #from tests.mkprojs import mkdirs
 #from tests.mkprojs import findhome
-from subprocess import run
+#from subprocess import run
 from collections import namedtuple
 from timetracker.cmd.stop import run_stop
 

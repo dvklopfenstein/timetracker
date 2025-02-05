@@ -4,7 +4,7 @@
 from os import environ
 from datetime import timedelta
 from timeit import default_timer
-from timetracker.cfg.finder import CfgFinder
+from timetracker.consts import DIRTRK
 from timetracker.cli import Cli
 
 # pylint: disable=fixme
@@ -84,7 +84,7 @@ def _trk():
     args = _parse_args([])
     # TODO: Check that help message was printed
     # TODO: Check: Run `trk init` to initialize local timetracker
-    assert args.trksubdir == CfgFinder.DIRTRK
+    assert args.trksubdir == DIRTRK
     assert args.name == environ['USER']
     assert not args.quiet
     assert args.command is None

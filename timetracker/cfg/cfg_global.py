@@ -4,8 +4,9 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 ##from os import getcwd
+from os import environ
 from os.path import exists
-##from os.path import expanduser
+from os.path import expanduser
 ##from os.path import basename
 from os.path import join
 from os.path import abspath
@@ -21,18 +22,21 @@ from tomlkit import array
 from tomlkit.toml_file import TOMLFile
 
 ##from timetracker.cfg.utils import replace_envvar
-##from timetracker.cfg.utils import get_dirname_abs
-##from timetracker.cfg.utils import chk_isdir
 ##from timetracker.cfg.utils import replace_homepath
 from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_relpath_adj
 
+FILENAME_GLOBALCFG = '.timetrackerconfig'
+
+def get_dirhome_globalcfg():
+    """Get the home directory, where the global configuration will be stored"""
+    return expanduser('~') if 'TIMETRACKERCONF' not in environ else environ['TIMETRACKERCONF']
 
 class CfgGlobal:
     """Global configuration parser for timetracking"""
 
-    def __init__(self, dirhome='~', basename='.timetrackerconfig'):
+    def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
         self.dirhome = abspath(get_dirhome(dirhome))
         self.fname = join(self.dirhome, basename)
         debug(f'CFGGLOBAL  CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')

@@ -10,15 +10,28 @@ from os.path import expanduser
 from os.path import relpath
 from os.path import abspath
 from os.path import normpath
-from os.path import dirname
+#from os.path import dirname
 from os.path import join
+#from os.path import isabs
 ##from os.path import commonpath
 from os.path import commonprefix
+from subprocess import run
 from logging import debug
 from logging import warning
 
 from tomlkit.toml_file import TOMLFile
 
+def get_username(name=None):
+    """Get the default username"""
+    if name is None:
+        return environ.get('USER', 'researcher')
+    if name in environ:
+        return environ[name]
+    return name
+
+def run_cmd(cmd):
+    """Run a command with output to stdout"""
+    return run(cmd.split(), capture_output=True, text=True, check=True).stdout
 
 def parse_cfglocal(fin_cfglocal):
     """Read a config file and load it into a TOML document"""
@@ -72,14 +85,14 @@ def get_filename_abs(fname):
     """Get the absolute filename"""
     return abspath(expanduser(fname))
 
-def get_dirname_abs(fname):
-    """Get the absolute directory name"""
-    return dirname(get_filename_abs(fname))
+##def get_dirname_abs(fname):
+##    """Get the absolute directory name"""
+##    return dirname(get_filename_abs(fname))
 
 def chk_isdir(dname, prefix=''):
     """Check that a file or directory exists"""
-    debug(f'{prefix}: exists({int(exists(dname))}) {dname}')
-    debug(f'{prefix}:  isdir({int(isdir(dname))}) {dname}')
+    debug(f'{prefix}: INFO exists({int(exists(dname))}) {dname}')
+    debug(f'{prefix}: INFO  isdir({int(isdir(dname))}) {dname}')
     if isdir(dname):
         return True
     warning(f'Directory does not exist: {dname}')
@@ -93,8 +106,8 @@ def replace_homepath(fname):
     fname = abspath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
-    debug(f'UPDATE FNAME: {fname}')
-    debug(f'UPDATE HOME:  {home_str}')
+    debug(f'replace_homepath UPDATE FNAME: {fname}')
+    debug(f'replace_homepath UPDATE HOME:  {home_str}')
     return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
 def get_dirhome(dirhome):

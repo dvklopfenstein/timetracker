@@ -1,16 +1,15 @@
 [project]
 name = "timetracker-csv"
-version = "0.1a6"
-authors = [
-  { name="DV Klopfenstein, PhD", email="dvklopfenstein@protonmail.com" },
+version = "0.1a8"
+dynamic = [
+    "dependencies",
+    "scripts",
+    "classifiers",
+    "authors",
+    "readme",
+    "description",
 ]
-description = "Track your time on your own terms"
-readme = "README.md"
-requires-python = ">=3.6"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
-]
+
 
 [project.urls]
 Homepage = "https://github.com/dvklopfenstein/timetracker"

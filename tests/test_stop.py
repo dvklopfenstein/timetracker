@@ -7,8 +7,8 @@
 #from logging import basicConfig
 #from logging import DEBUG
 #from tempfile import TemporaryDirectory
-#from tests.mkprojs import mkdirs
-#from tests.mkprojs import findhome
+#from tests.pkgtttest.mkprojs import mkdirs
+#from tests.pkgtttest.mkprojs import findhome
 #from subprocess import run
 from collections import namedtuple
 from timetracker.cmd.stop import run_stop
@@ -31,7 +31,7 @@ def test_stop():
     # 0 1
     # 1 0
     # 1 1
-    run_stop(filename_config, csvfields, quiet, keepstart)
+    run_stop(filename_config, csvfields, quiet=quiet, keepstart=keepstart)
 
 if __name__ == '__main__':
     test_stop()

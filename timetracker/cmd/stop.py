@@ -23,10 +23,11 @@ def cli_run_stop(fnamecfg, args):
     run_stop(
         fnamecfg,
         nto._make([args.message, args.activity, args.tags]),
-        args.quiet,
-        args.keepstart)
+        quiet=args.quiet,
+        keepstart=args.keepstart)
 
-def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
+#def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
+def run_stop(fnamecfg, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug('STOP: RUNNING COMMAND STOP')
@@ -60,11 +61,11 @@ def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
         csvfields.activity,
         _str_tags(csvfields.tags))
     _wr_csvlong_data(fcsv, csvline)
-    if not quiet:
+    if not kwargs['quiet']:
         print(f'Timer stopped; Elapsed H:M:S={delta} '
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
-    if not keepstart:
+    if not kwargs['keepstart']:
         cfgproj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')

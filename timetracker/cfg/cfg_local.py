@@ -31,13 +31,13 @@ from tomlkit.toml_file import TOMLFile
 from timetracker.consts import DIRTRK
 from timetracker.consts import DIRCSV
 
-from timetracker.cfg.utils import replace_homepath
+##from timetracker.cfg.utils import replace_homepath
 ##from timetracker.cfg.utils import parse_cfg
-from timetracker.cfg.utils import chk_isdir
-from timetracker.cfg.utils import get_dirname_abs
+##from timetracker.cfg.utils import chk_isdir
+##from timetracker.cfg.utils import get_dirname_abs
 from timetracker.cfg.utils import parse_cfglocal
 
-from timetracker.cfg.finder import get_username
+from timetracker.cfg.utils import get_username
 from timetracker.hms import hms_from_startfile
 from timetracker.hms import read_starttime as hms_read_starttime
 
@@ -100,13 +100,15 @@ class CfgProj:
 
     def _wr_cfg(self, fname, doc):
         """Write config file"""
-        chk_isdir(get_dirname_abs(doc['csv']['filename']))
+        ##chk_isdir(get_dirname_abs(doc['csv']['filename']), "doc['csv']['filename']")
+        debug(doc.as_string())
         TOMLFile(fname).write(doc)
         # Use `~`, if it makes the path shorter
-        fcsv = replace_homepath(doc['csv']['filename'])
-        doc['csv']['filename'] = fcsv
-        debug(f'  CSV:      {fcsv}')
-        debug(f'  WROTE:    {fname}')
+        ##fcsv = replace_homepath(doc['csv']['filename'])
+        ##doc['csv']['filename'] = fcsv
+        fcsv = doc['csv']['filename']
+        debug(f'CfgProj _wr_cfg(...)  CSV:      {fcsv}')
+        debug(f'CfgProj _wr_cfg(...)  WROTE:    {fname}')
 
     ####def update_localini(self, project, csvdir):
     ####    """Update the csv filename for storing time data"""
@@ -184,10 +186,5 @@ class CfgProj:
         doc.add("csv", csv_section)
         return doc
 
-    ##def _get_filename_csv(self):
-    ##    """Get the csv filename where start and stop information is stored"""
-    ##    fcsv = self.doc['csv']['filename']
-    ##    debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
-    ##    return fcsv
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

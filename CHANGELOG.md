@@ -2,7 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* [**Release 2025-02-05 v0.1a5**](#release-2025-02-05-v01a5) Added DOI for citing
+* [**Release 2025-02-05 v0.1a6**](#release-2025-02-05-v01a6) Added DOI for citing
 * [**Release 2025-02-02 v0.1a4**](#release-2025-02-02-v01a4) Added global config file
 * [**Release 2025-01-27 v0.1a3**](#release-2025-01-27-v01a3) Added local config; enables researcher to set csv location
 * [**Release 2025-01-22 v0.1a2**](#release-2025-01-22-v01a2) Install with `pip install timetracker-csv`
@@ -13,9 +13,10 @@
 
 ## Unreleased
 
-## Release 2025-02-05 v0.1a5
+## Release 2025-02-05 v0.1a6
 * ADD: Zenodo citation and CITATION.cff file
 * ADD: Finder, which finds a timetracker config file in the current or parent dirs
+* ADD: pyproject.toml file
 * CHANGE: Streamline architecture
 
 ## Release 2025-02-02 v0.1a4

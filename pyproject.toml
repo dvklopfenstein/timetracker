@@ -11,8 +11,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-license = "AGPL3"
-license-files = ["LICENSE"]
 
 [project.urls]
 Homepage = "https://github.com/dvklopfenstein/timetracker"

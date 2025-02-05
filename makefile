@@ -7,14 +7,6 @@ install:
 py:
 	find tests timetracker bin -name \*.py
 
-.PHONY: c
-c:
-	cat .timetracker/start_dvklo.txt
-
-pylint:
-	git diff --name-only | perl -ne 'if (/(\S+\.py)/) {printf "echo $$1\npylint -r no %s\n", $$1}' | tee tmp_pylint
-	chmod 755 tmp_pylint
-	tmp_pylint
 
 DIRTRK = ./.trkr
 PROJ = trk
@@ -27,9 +19,9 @@ init:
 	find $(DIRTRK)
 
 start:
-	trk -d $(DIRTRK) start
+	trk --trksubdir $(DIRTRK) start
 	find $(DIRTRK)
-	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
+	@grep -Hw --color filename $(DIRTRK)/config
 
 # Test that researcher passed a stop message using MSG="This is my stop message"
 # https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
@@ -44,29 +36,17 @@ stop:
 	fi
 
 _stop:
-	trk -d $(DIRTRK) stop -m "\"$(MSG)\""
+	trk --trksubdir $(DIRTRK) stop -m "\"$(MSG)\""
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv
 	
-show:
-	# Test .timetracker dir
-	find ~/timetrackers/projs
-	find .timetracker/
-	cat .timetracker/config
-	# Actual dir for tracking time spent on this project
-	find ~/timetrackers/projs
-	find .timetracker/
-	cat .timetracker/config
-
 files:
-	@grep \.csv $(DIRTRK)/config
+	@grep -nH --color filename $(DIRTRK)/config
 	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
 	find $(DIRTRK)
 	find .timetracker
 
-.pylintrc:
-	pylint --generate-rcfile > .pylintrc
 
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:
@@ -119,8 +99,8 @@ clean:
 	make clean_pycache
 	rm -f test_timetracker.csv
 	rm -f .timetracker_start
-	rm -f timetracker_timetracker_*.csv
-	rm -f tmp_pylint
+	rm -f timetracker_*.csv
+	rm -f updated.csv
 	rm -f .timetracker_starttime
 
 clobber:

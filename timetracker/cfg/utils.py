@@ -12,38 +12,26 @@ from os.path import abspath
 from os.path import normpath
 from os.path import dirname
 from os.path import join
-from os.path import ismount
 ##from os.path import commonpath
 from os.path import commonprefix
 from logging import debug
 from logging import warning
-from tomlkit import parse
+
+from tomlkit.toml_file import TOMLFile
 
 
-def finddirtrk(path, trksubdir):
-    """Walk up dirs until find .timetracker/ proj dir or mount dir"""
-    path = abspath(path)
-    trkdir = join(path, trksubdir)
-    if exists(trkdir):
-        return trkdir, True
-    while not ismount(path):
-        trkdir = join(path, trksubdir)
-        if exists(trkdir):
-            return trkdir, True
-        path = dirname(path)
-    return path, False
-
-def parse_cfg(fin, desc=''):
+def parse_cfglocal(fin_cfglocal):
     """Read a config file and load it into a TOML document"""
-    # pylint: disable=unused-argument
-    cfgtxt = _read_local_cfg(fin)
-    ##debug(f'{desc}({cfgtxt})')
-    return parse(cfgtxt) if cfgtxt is not None else None
-
-def _read_local_cfg(fin):
-    with open(fin, encoding='utf8') as ifstrm:
-        return ''.join(ifstrm.readlines())
+    doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+    if doc is not None:
+        fpat = abspath(expanduser(doc['csv']['filename']))
+        return replace_envvar(fpat) if '$' in fpat else fpat
     return None
+
+####def _read_local_cfg(fin):
+####    with open(fin, encoding='utf8') as ifstrm:
+####        return ''.join(ifstrm.readlines())
+####    return None
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
@@ -98,10 +86,11 @@ def chk_isdir(dname, prefix=''):
     return False
 
 def replace_homepath(fname):
-    """Replace '~' with the expanded filepath"""
+    """Replace expanded home dir with '~' if using '~' is shorter"""
     # pylint: disable=fixme
     # TODO: use commonprefix
-    fname = normpath(fname)
+    #fname = normpath(fname)
+    fname = abspath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
     debug(f'UPDATE FNAME: {fname}')

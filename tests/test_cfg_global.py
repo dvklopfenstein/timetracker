@@ -1,28 +1,19 @@
 #!/usr/bin/env python3
 """Test the TimeTracker global configuration"""
 
-#from sys import argv
-#from os import environ
-###from os import getcwd
-from os import makedirs
-##from os.path import exists
 from os.path import join
 from os.path import dirname
 from os.path import expanduser
 from subprocess import run
-#from collections import namedtuple
-#from datetime import timedelta
-#from timeit import default_timer
-from logging import basicConfig
-from logging import DEBUG
 from logging import debug
+from logging import DEBUG
+from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.utils import get_relpath_adj
-#from timetracker.cli import Cli
-#from timetracker.filemgr import FileMgr
-#from timetracker.cfg.cfg_global import CfgGlobal
+from tests.mkprojs import mkdirs
+from tests.mkprojs import findhome
 
 basicConfig(level=DEBUG)
 
@@ -34,7 +25,7 @@ def test_cfgbase_home():
     assert cfg.doc['projects'] == []
     #system(f'cat {cfg.fname}')
 
-def test_cfgbase_temp():
+def test_cfgbase_temp(trksubdir='.timetracker'):
     """Test cfg flow"""
     sep = f'{"-"*80}\n'
     print(f'{sep}1) INITIALIZE "HOME" DIRECTORY')
@@ -54,25 +45,28 @@ def test_cfgbase_temp():
         assert doc['projects'] == cfgtop.doc['projects']
         _run(f'cat {cfgtop.fname}')
         print(f'{sep}4) Create local project directories')
-        proj2wdir = _mk_dirs(tmp_home)
-        _find(tmp_home)
+        proj2wdir = mkdirs(tmp_home)
+        findhome(tmp_home)
         print(f'{sep}5) Create a local cfg object for the apples project')
         name = 'tester'
         exp_projs = []
         for proj, projdir in proj2wdir.items():
             print(f'{sep}ADD PROJECT({proj}): {projdir}')
-            workdir = join(projdir, '.timetracker')
+            workdir = join(projdir, trksubdir)
             # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
             cfgname_proj = join(workdir, 'config')
             # EXP: apples '~/proj/apples/.timetracker/config'
             exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmp_home)])
             # INIT LOCAL PROJECT CONFIG
-            cfgloc = CfgProj(workdir, proj, name)
-            assert cfgloc.workdir == workdir
+            cfgloc = CfgProj(cfgname_proj, project=proj, name=name)
+            assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'
+                                                   f'ACT({cfgloc.trksubdir})\n'
+                                                   f'{cfgloc}')
+            assert cfgloc.dircfg == workdir
             assert cfgloc.project == proj
             assert cfgloc.name == name
-            cfgloc.mk_workdir()
-            cfgloc.wr_cfg()
+            cfgloc.mk_dircfg()
+            cfgloc.wr_cfg_new()
             # cat project/.timetracker/config
             fnamecfg_proj = cfgloc.get_filename_cfglocal()
             debug(f'PROJ CFG: {fnamecfg_proj}')
@@ -85,7 +79,7 @@ def test_cfgbase_temp():
                 f'ACT({cfgtop.doc["projects"].unwrap()})')
             cfgtop.wr_cfg()
             _run(f'cat {cfgtop.fname}')
-            _find(workdir)
+            findhome(workdir)
 
 
 
@@ -99,21 +93,9 @@ def test_dirhome():
         assert dirname(cfg.fname) == tmp_home.name
         tmp_home.cleanup()
 
-def _mk_dirs(tmp_home):
-    projs = {
-        'apples'      : join(tmp_home, 'proj/apples'),
-        'blueberries' : join(tmp_home, 'proj/blueberries'),
-        'cacao'       : join(tmp_home, 'proj/cacao'),
-    }
-    for pdir in projs.values():
-        makedirs(pdir)
-    return projs
-
 def _run(cmd):
     debug(run(cmd.split(), capture_output=True, text=True, check=True).stdout)
 
-def _find(home):
-    debug(run(f'find {home}'.split(), capture_output=True, text=True, check=True).stdout)
 
 if __name__ == '__main__':
     #test_dirhome()

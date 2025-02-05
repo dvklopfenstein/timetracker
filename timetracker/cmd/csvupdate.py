@@ -15,23 +15,33 @@ from csv import reader
 ##from timeit import default_timer
 ##from timetracker.hms import read_starttime
 from timetracker.hms import FMT
+from timetracker.msgs import str_init
+from timetracker.cfg.cfg_local  import CfgProj
 
+def cli_run_csvupdate(cfglocal, args):
+    """Stop the timer and record this time unit"""
+    run_csvupdate(
+        cfglocal,
+        args.input,
+        args.output)
 
-def run_csvupdate(fmgr):
+def run_csvupdate(fnamecfg, fin, fout):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug('CSVUPDATE: RUNNING COMMAND CSVUPDATE')
-    cfgproj = fmgr.cfg
-    args = fmgr.kws
+    if not exists(fnamecfg):
+        print(str_init())
+        sys_exit()
+    cfgproj = CfgProj(fnamecfg)
 
-    if args['input'] is not None:
-        update_csv(args['input'], args['output'])
+    if fin is not None:
+        update_csv(fin, fout)
         sys_exit()
 
     fcsv = cfgproj.get_filename_csv()
     if fcsv is not None and exists(fcsv):
         debug(f'CSVUPDATE: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
-        update_csv(fcsv, args['output'])
+        update_csv(fcsv, fout)
     elif fcsv is None:
         print('No project config file or csv file specified')
     elif not exists(fcsv):

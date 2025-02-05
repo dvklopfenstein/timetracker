@@ -3,31 +3,42 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from sys import exit as sys_exit
+from os.path import exists
+from os.path import dirname
 from logging import debug
 from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.cfg_local  import CfgProj
 
 
-def run_init(fmgr):
-    """Initialize timetracking on a project"""
+def cli_run_init(fnamecfg, args):
+    """initialize timetracking on a project"""
+    run_init(
+        fnamecfg,
+        args.csvdir,
+        args.project,
+        args.quiet)
+
+def run_init(fnamecfg, dircsv, project, quiet):
+    """initialize timetracking on a project"""
     debug('INIT: RUNNING COMMAND INIT')
-    cfg_local = fmgr.cfg
-    args = fmgr.kws
+    debug(f'INIT: fnamecfg:    {fnamecfg}')
+    debug(f'INIT: project:     {project}')
+    debug(f'INIT: dircsv:      {dircsv}')
+    if exists(fnamecfg):
+        print(f'Trk repository already initialized: {dirname(fnamecfg)}')
+        sys_exit()
+    cfgproj = CfgProj(fnamecfg, dircsv, project)
     # 1. INITIALIZE LOCAL .timetracker PROJECT DIRECTORY
-    cfg_local.mk_workdir(args['quiet'])
-    # pylint: disable=fixme
-    # TODO: Check if cfg exists and needs to be updated
-    cfg_local.update_localini(args['project'], args['csvdir'])
-    debug(cfg_local.str_cfg())
+    cfgproj.mk_dircfg(quiet)
     # 2. WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfg_local.wr_cfg()
+    cfgproj.wr_cfg_new()
     # 3. TODO: add `start_timetracker_*.txt` to the .gitignore if this is a git-managed repo
     # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
     cfg_global = CfgGlobal()
-    chgd = cfg_global.add_proj(cfg_local.project, cfg_local.get_filename_cfglocal())
+    chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfglocal())
     if chgd:
         cfg_global.wr_cfg()
-    ##cfg_global.write_update(args['project'], cfg_local.get_filename_cfglocal)
-
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

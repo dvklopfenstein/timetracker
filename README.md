@@ -1,5 +1,11 @@
 # Timetracker-csv
-Claim your power. Track your time on your terms.
+[![PyPI - Version](https://img.shields.io/pypi/v/timetracker-csv)](https://pypi.org/project/timetracker-csv)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg)](https://doi.org/10.5281/zenodo.14803225)
+![GitHub License](https://img.shields.io/github/license/dvklopfenstein/timetracker)
+
+
+
+Claim your power. Track your time on your own terms.
 
 Track time spent on multiple projects, one repo at a time from the CLI.
 

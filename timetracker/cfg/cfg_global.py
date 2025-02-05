@@ -28,11 +28,12 @@ from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_relpath_adj
 
+FILENAME_GLOBALCFG = '.timetrackerconfig'
 
 class CfgGlobal:
     """Global configuration parser for timetracking"""
 
-    def __init__(self, dirhome='~', basename='.timetrackerconfig'):
+    def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
         self.dirhome = abspath(get_dirhome(dirhome))
         self.fname = join(self.dirhome, basename)
         debug(f'CFGGLOBAL  CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')

@@ -8,8 +8,8 @@ from logging import basicConfig
 #from logging import DEBUG
 from logging import debug
 #from tempfile import TemporaryDirectory
-#from tests.mkprojs import mkdirs
-#from tests.mkprojs import findhome
+#from tests.pkgtttest.mkprojs import mkdirs
+#from tests.pkgtttest.mkprojs import findhome
 #from subprocess import run
 #from collections import namedtuple
 #from timetracker.cfg.utils import get_shortest_name

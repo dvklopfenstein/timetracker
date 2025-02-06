@@ -11,7 +11,7 @@ from os.path import expanduser
 from logging import basicConfig
 from logging import DEBUG
 from tempfile import TemporaryDirectory
-#from timetracker.cfg.finder import CfgFinder
+from timetracker.cfg.utils import get_abscsv
 from tests.pkgtttest.mkprojs import mk_projdirs_wcfgs
 from tests.pkgtttest.mkprojs import findhome
 #from tests.pkgtttest.cmpstr import str_get_dirtrk
@@ -51,12 +51,16 @@ def test_csvloc(trksubdir='.timetracker'):
         print(f'{relcsv:>15} {abscsv_messy:41} {abscsv_clean}')
 
     print(f"{SEP}Get csv relative to project dir, {absdirproj}")
-    for relcsv, abscsv_messy in zip(relcsvs, abscsvs):
+    for relcsv_orig, abscsv_messy in zip(relcsvs, abscsvs):
         relcsv_clean = relpath(abscsv_messy, absdirproj)
         if '~' in abscsv:
             relcsv_clean = expanduser(relcsv_clean)
-        print(f'{relcsv:>15} {abscsv_messy:41} {relcsv_clean:>24} {abspath(abscsv_messy)}')
+        print(f'{relcsv_orig:>15} {abscsv_messy:41} {relcsv_clean:>24} {abspath(abscsv_messy)}')
 
+    print(f"{SEP}Get csv relative to project dir, {absdirproj}")
+    for relcsv_orig in relcsvs:
+        relcsv_abs = get_abscsv(relcsv_orig, absdirproj)
+        print(f'{relcsv_orig:>15} {relcsv_abs}')
 
 
 if __name__ == '__main__':

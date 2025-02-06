@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
 from os.path import isdir
+from os.path import isabs
 from os.path import exists
 from os.path import expanduser
 from os.path import relpath
@@ -19,8 +20,15 @@ from subprocess import run
 from logging import debug
 from logging import warning
 
-def get_relcsv(filenamecsv, dirproj):
+def get_abscsv(filenamecsv, dirproj):
     """Get the path of the csv filename relative to dirproj"""
+    if isabs(filenamecsv):
+        debug(f'get_abscsv TRUE isabs({filenamecsv})')
+        return normpath(filenamecsv)
+    if filenamecsv[:1] == '~':
+        debug(f'get_abscsv TRUE ~')
+        filenamecsv = expanduser(filenamecsv)
+    return normpath(join(dirproj, filenamecsv))
 
 def get_username(name=None):
     """Get the default username"""

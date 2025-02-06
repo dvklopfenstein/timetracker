@@ -19,7 +19,8 @@ from subprocess import run
 from logging import debug
 from logging import warning
 
-from tomlkit.toml_file import TOMLFile
+def get_relcsv(filenamecsv, dirproj):
+    """Get the path of the csv filename relative to dirproj"""
 
 def get_username(name=None):
     """Get the default username"""
@@ -32,14 +33,6 @@ def get_username(name=None):
 def run_cmd(cmd):
     """Run a command with output to stdout"""
     return run(cmd.split(), capture_output=True, text=True, check=True).stdout
-
-def parse_cfglocal(fin_cfglocal):
-    """Read a config file and load it into a TOML document"""
-    doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
-    if doc is not None:
-        fpat = abspath(expanduser(doc['csv']['filename']))
-        return replace_envvar(fpat) if '$' in fpat else fpat
-    return None
 
 ####def _read_local_cfg(fin):
 ####    with open(fin, encoding='utf8') as ifstrm:

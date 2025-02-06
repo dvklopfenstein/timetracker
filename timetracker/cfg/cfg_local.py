@@ -35,7 +35,6 @@ from timetracker.consts import DIRCSV
 ##from timetracker.cfg.utils import parse_cfg
 ##from timetracker.cfg.utils import chk_isdir
 ##from timetracker.cfg.utils import get_dirname_abs
-from timetracker.cfg.utils import parse_cfglocal
 
 from timetracker.cfg.utils import get_username
 from timetracker.hms import hms_from_startfile
@@ -54,7 +53,8 @@ class CfgProj:
         debug(f'CfgProj args project  {project}')
         debug(f'CfgProj args name     {name}')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
-        self.dircfg = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
+        self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
+        self.dirproj = dirname(self.dircfg)
         self.project = basename(getcwd()) if project is None else project
         self.name = get_username(name) if name is None else name
         self.dircsv = DIRCSV if dircsv is None else dircsv
@@ -79,7 +79,7 @@ class CfgProj:
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
         fcfg = self.get_filename_cfglocal()
-        return parse_cfglocal(fcfg)
+        return self.parse_cfglocal(fcfg)
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""
@@ -109,6 +109,15 @@ class CfgProj:
         fcsv = doc['csv']['filename']
         debug(f'CfgProj _wr_cfg(...)  CSV:      {fcsv}')
         debug(f'CfgProj _wr_cfg(...)  WROTE:    {fname}')
+
+    @staticmethod
+    def parse_cfglocal(fin_cfglocal):
+        """Read a config file and load it into a TOML document"""
+        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        if doc is not None:
+            fpat = abspath(expanduser(doc['csv']['filename']))
+            return replace_envvar(fpat) if '$' in fpat else fpat
+        return None
 
     ####def update_localini(self, project, csvdir):
     ####    """Update the csv filename for storing time data"""
@@ -163,7 +172,8 @@ class CfgProj:
         return normpath(join(relpath(self.dircsv),
                              self.CSVPAT.replace('PROJECT', self.project)))
 
-    def _init_docglobal(self):
+    @staticmethod
+    def _init_docglobal():
         doc = document()
         doc.add(comment("TimeTracker global configuration file"))
         doc.add(nl())

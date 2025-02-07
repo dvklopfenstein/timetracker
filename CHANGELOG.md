@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* **Release 2025-02-07 v0.2a0** Added functionality for running in project subdirs
 * [**Release 2025-02-05 v0.1a8**](#release-2025-02-05-v01a8) Added DOI for citing
 * [**Release 2025-02-02 v0.1a4**](#release-2025-02-02-v01a4) Added global config file
 * [**Release 2025-01-27 v0.1a3**](#release-2025-01-27-v01a3) Added local config; enables researcher to set csv location

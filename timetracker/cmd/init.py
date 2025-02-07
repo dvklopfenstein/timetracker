@@ -55,7 +55,7 @@ def run_init_global(dirhome, cfgproj):
     """Initialize the global configuration file for a timetracking project"""
     # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
     cfg_global = CfgGlobal(dirhome)
-    chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfglocal())
+    chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfg())
     if chgd:
         cfg_global.wr_cfg()
     return cfg_global

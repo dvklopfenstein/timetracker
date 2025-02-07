@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from os.path import exists
 from os.path import relpath
+from os.path import dirname
 from logging import debug
 ##from logging import error
 from datetime import datetime
@@ -30,7 +31,7 @@ def run_csvupdate(fnamecfg, fin, fout):
     # Get the starting time, if the timer is running
     debug('CSVUPDATE: RUNNING COMMAND CSVUPDATE')
     if not exists(fnamecfg):
-        print(str_init())
+        print(str_init(dirname(fnamecfg)))
         sys_exit()
     cfgproj = CfgProj(fnamecfg)
 

@@ -6,8 +6,8 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import argv
 from sys import exit as sys_exit
 from os import getcwd
-from os.path import normpath
-from os.path import relpath
+#from os.path import normpath
+#from os.path import relpath
 from logging import debug
 
 
@@ -17,7 +17,6 @@ from argparse import SUPPRESS
 from timetracker import __version__
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
-from timetracker.consts import DIRCSV
 
 from timetracker.cmd.none      import cli_run_none
 from timetracker.cmd.init      import cli_run_init
@@ -29,7 +28,7 @@ from timetracker.cmd.csvupdate import cli_run_csvupdate
 def main():
     """Connect all parts of the timetracker"""
     #from logging import basicConfig, DEBUG
-    #logging.basicConfig(level=DEBUG)
+    #basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -165,7 +164,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=normpath(relpath(DIRCSV)),
+        parser.add_argument('--csvdir', default=self.finder.get_csvfilename(),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")
@@ -195,16 +194,17 @@ class Cli:
             help=SUPPRESS)
         return parser
 
-    @staticmethod
-    def _add_subparser_csvupdate(subparsers):
+    def _add_subparser_csvupdate(self, subparsers):
         parser = subparsers.add_parser(name='csvupdate',
             help='Update values in csv columns containing weekday, am/pm, and duration',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',
+            default=self.finder.get_csvfilename(),
             help='Specify an input csv file')
-        parser.add_argument('-o', '--output', metavar='file.csv', default='updated.csv',
+        parser.add_argument('-o', '--output', metavar='file.csv',
+            default='updated.csv',
             help='Specify an output csv file')
 
 

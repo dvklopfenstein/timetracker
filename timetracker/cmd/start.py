@@ -7,7 +7,7 @@ from sys import exit as sys_exit
 from os.path import exists
 #from os.path import abspath
 from os.path import relpath
-#from os.path import dirname
+from os.path import dirname
 from logging import debug
 
 ##from timeit import default_timer
@@ -33,7 +33,7 @@ def run_start(fnamecfg, force=False, quiet=False):
     debug('START: RUNNING COMMAND START')
     now = datetime.now()
     if not exists(fnamecfg):
-        print(str_init())
+        print(str_init(dirname(fnamecfg)))
         sys_exit()
     cfgproj = CfgProj(fnamecfg)
     fin_start = cfgproj.get_filename_start()

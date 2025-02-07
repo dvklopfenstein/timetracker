@@ -20,15 +20,30 @@ from subprocess import run
 from logging import debug
 from logging import warning
 
-def get_abscsv(filenamecsv, dirproj):
-    """Get the path of the csv filename relative to dirproj"""
-    if isabs(filenamecsv):
-        debug(f'get_abscsv TRUE isabs({filenamecsv})')
-        return normpath(filenamecsv)
-    if filenamecsv[:1] == '~':
-        debug(f'get_abscsv TRUE ~')
-        filenamecsv = expanduser(filenamecsv)
-    return normpath(join(dirproj, filenamecsv))
+def get_abspath(filename, dirproj):
+    """Get the path of the path filename relative to dirproj"""
+    if isabs(filename):
+        debug(f'get_abspath TRUE isabs({filename})')
+        return normpath(filename)
+    if filename[:1] == '~':
+        filename = expanduser(filename)
+    return normpath(join(dirproj, filename))
+
+def get_relpath(absfilename, dirproj):
+    """From a absolute path path, get a path relative to the timetracker proj"""
+    assert isabs(absfilename)
+    assert isabs(dirproj)
+    absfilename = normpath(absfilename)
+    if has_homedir(dirproj, absfilename):
+        #debug('HAS_PROJDIR')
+        return relpath(absfilename, dirproj)
+    diruser = expanduser('~')
+    if has_homedir(diruser, absfilename):
+        #debug('HAS_HOME (~) DIR')
+        #return f'~/{absfilename[abslen:]}'
+        return f'~/{absfilename[len(diruser)+1:]}'
+    return relpath(absfilename, dirproj)
+
 
 def get_username(name=None):
     """Get the default username"""

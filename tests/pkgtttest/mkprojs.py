@@ -7,6 +7,12 @@ from logging import debug
 
 from timetracker.cmd.init import run_init_test
 
+RELCSVS = [
+    "filename.csv",
+    "./filename.csv",
+    "../filename.csv",
+    "~/filename.csv",
+]
 
 def mkdirs(tmp_home):
     """Make sub-directories in a temporary directory for use in tests"""

@@ -9,6 +9,7 @@ from os.path import normpath
 from os.path import expanduser
 from logging import basicConfig
 from logging import DEBUG
+from tests.pkgtttest.mkprojs import RELCSVS
 
 
 basicConfig(level=DEBUG)
@@ -17,12 +18,13 @@ SEP = f'\n{"="*80}\n'
 
 def test_csvloc():
     """Test to explore how os.path works with relative & absolute paths"""
-    relcsvs = [
-        "filename.csv",
-        "./filename.csv",
-        "../filename.csv",
-        "~/filename.csv",
-    ]
+    #relcsvs = [
+    #    "filename.csv",
+    #    "./filename.csv",
+    #    "../filename.csv",
+    #    "~/filename.csv",
+    #]
+    relcsvs = RELCSVS
     print(f"{SEP}isabs on various relative filenames")
     for csv in relcsvs:
         assert not isabs(csv)

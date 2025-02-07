@@ -8,6 +8,7 @@ from logging import basicConfig
 from logging import DEBUG
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_relpath
+from tests.pkgtttest.mkprojs import RELCSVS
 
 
 basicConfig(level=DEBUG)
@@ -16,12 +17,13 @@ SEP = f'\n{"="*80}\n'
 
 def test_csvloc():
     """Test the TimeTracker project config dir finder"""
-    relcsvs = [
-        "filename.csv",
-        "./filename.csv",
-        "../filename.csv",
-        "~/filename.csv",
-    ]
+    #relcsvs = [
+    #    "filename.csv",
+    #    "./filename.csv",
+    #    "../filename.csv",
+    #    "~/filename.csv",
+    #]
+    relcsvs = RELCSVS
     print(f"{SEP}Test identifying relative paths")
     for csv in relcsvs:
         assert not isabs(csv)

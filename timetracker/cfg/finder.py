@@ -3,7 +3,6 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-#from os import environ
 from os.path import exists
 from os.path import abspath
 from os.path import dirname
@@ -12,7 +11,6 @@ from os.path import ismount
 from os.path import basename
 from os.path import normpath
 from logging import debug
-from logging import error
 from timetracker.consts import DIRTRK
 from timetracker.cfg.cfg_local import CfgProj
 
@@ -48,7 +46,6 @@ class CfgFinder:
             csvname = cfg.get_filename_csv()
             debug(f'CCCCCCCCCCCCCCCCSSSSSSSSSSSSSSSVVVVVVVVVVVVVVV: {csvname}')
             return csvname
-        error(f'Cannot get csv filename; project configuration file does not exist: {fname}')
         return None
 
     def get_desc(self):
@@ -64,7 +61,7 @@ class CfgFinder:
         debug(f'CfgFinder PPPPPPPPPPPPPPPPPPPPPPPPPP CURRENT DIR {self.dircur}')
         if self.dirtrk is not None:
             return basename(dirname(self.dirtrk))
-        return basename(self.dircur)
+        return basename(self.dirgit) if self.dircur is None else basename(self.dircur)
 
 
 

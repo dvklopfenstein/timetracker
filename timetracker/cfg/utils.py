@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
 from os.path import isdir
+from os.path import isabs
 from os.path import exists
 from os.path import expanduser
 from os.path import relpath
@@ -19,7 +20,30 @@ from subprocess import run
 from logging import debug
 from logging import warning
 
-from tomlkit.toml_file import TOMLFile
+def get_abspath(filename, dirproj):
+    """Get the path of the path filename relative to dirproj"""
+    if isabs(filename):
+        debug(f'get_abspath TRUE isabs({filename})')
+        return normpath(filename)
+    if filename[:1] == '~':
+        filename = expanduser(filename)
+    return normpath(join(dirproj, filename))
+
+def get_relpath(absfilename, dirproj):
+    """From a absolute path path, get a path relative to the timetracker proj"""
+    assert isabs(absfilename)
+    assert isabs(dirproj)
+    absfilename = normpath(absfilename)
+    if has_homedir(dirproj, absfilename):
+        #debug('HAS_PROJDIR')
+        return relpath(absfilename, dirproj)
+    diruser = expanduser('~')
+    if has_homedir(diruser, absfilename):
+        #debug('HAS_HOME (~) DIR')
+        #return f'~/{absfilename[abslen:]}'
+        return f'~/{absfilename[len(diruser)+1:]}'
+    return relpath(absfilename, dirproj)
+
 
 def get_username(name=None):
     """Get the default username"""
@@ -32,14 +56,6 @@ def get_username(name=None):
 def run_cmd(cmd):
     """Run a command with output to stdout"""
     return run(cmd.split(), capture_output=True, text=True, check=True).stdout
-
-def parse_cfglocal(fin_cfglocal):
-    """Read a config file and load it into a TOML document"""
-    doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
-    if doc is not None:
-        fpat = abspath(expanduser(doc['csv']['filename']))
-        return replace_envvar(fpat) if '$' in fpat else fpat
-    return None
 
 ####def _read_local_cfg(fin):
 ####    with open(fin, encoding='utf8') as ifstrm:

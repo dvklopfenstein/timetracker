@@ -7,6 +7,10 @@ install:
 py:
 	find tests timetracker bin -name \*.py
 
+DAYS=-1
+pn:
+	find tests timetracker bin -mtime $(DAYS) -name \*.py
+
 
 DIRTRK = ./.trkr
 PROJ = trk

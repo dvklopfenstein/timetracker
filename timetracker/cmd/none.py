@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
+from os.path import dirname
 from timetracker.msgs import str_started
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg_local import CfgProj
@@ -18,7 +19,7 @@ def cli_run_none(fcfgproj, args):
 def run_none(fcfgproj):
     """If no Timetracker command is run, print informative messages"""
     if not exists(fcfgproj):
-        print(str_init())
+        print(str_init(dirname(fcfgproj)))
         sys_exit()
     # Check for start time
     cfglocal = CfgProj(fcfgproj)

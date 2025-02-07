@@ -104,7 +104,7 @@ class CfgGlobal:
                 debug(f'NEW cfgname: {projcfgname}')
                 raise RuntimeError(f'ERROR: Project({projname}) config filename '
                                     'is already set to:\n'
-                                   f'        {cfgname}.\n'
+                                   f'        {cfgname}\n'
                                     '    Not over-writing with:\n'
                                    f'        {projcfgname}\n'
                                    f'    In {self.fname}\n'

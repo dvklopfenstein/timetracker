@@ -71,7 +71,7 @@ class Cli:
         debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
-            sys_exit()
+            sys_exit(0)
         return args
 
     def get_args_test(self, arglist):
@@ -81,7 +81,7 @@ class Cli:
         print(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
-            sys_exit()
+            sys_exit(0)
         return args
 
     def _init_trksubdir(self):

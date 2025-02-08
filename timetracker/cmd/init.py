@@ -43,7 +43,7 @@ def run_init_local(fnamecfg, dircsv, project, quiet=True):
     debug(f'INIT: dircsv:      {dircsv}')
     if exists(fnamecfg):
         print(f'Trk repository already initialized: {dirname(fnamecfg)}')
-        sys_exit()
+        sys_exit(0)
     cfgproj = CfgProj(fnamecfg, dircsv, project)
     # 1. INITIALIZE LOCAL .timetracker PROJECT DIRECTORY
     cfgproj.mk_dircfg(quiet)

@@ -54,15 +54,15 @@ class Recorder:
     def _wr_csvhdrs(self):
         # aTimeLogger columns: Activity From To Notes
         with open(self.csv, 'w', encoding='utf8') as prt:
-            prt.write('start_day',
+            prt.write('start_day,'
                       'start_datetime,'
                       'start_tic,'
-                      'stop_day',
+                      'stop_day,'
                       'stop_datetime,'
                       'stop_toc,'
                       'duration,'
-                      'tags',
-                      'type',
+                      'tags,'
+                      'type,'
                       'comment\n')
 
     def _rd_datetime(self):

@@ -46,11 +46,11 @@ class Cli:
         'trksubdir': set(['--trksubdir']),
     }
 
-    def __init__(self):
+    def __init__(self, args=None):
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
         debug(self.finder)
         self.parser = self.init_parser_top('timetracker')
-        self.args = self.parser.parse_args()
+        self.args = self._init_args_cli() if args is None else self._init_args_test(args)
 
     def run(self):
         """Run timetracker"""
@@ -64,7 +64,7 @@ class Cli:
         else:
             cli_run_none(filename_cfgproj, self.args)
 
-    def get_args_cli(self):
+    def _init_args_cli(self):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args()
         self._adjust_args(args)
@@ -74,7 +74,7 @@ class Cli:
             sys_exit(0)
         return args
 
-    def get_args_test(self, arglist):
+    def _init_args_test(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
         self._adjust_args(args)

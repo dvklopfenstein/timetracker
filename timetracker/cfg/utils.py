@@ -23,7 +23,7 @@ from logging import warning
 def get_abspath(filename, dirproj):
     """Get the path of the path filename relative to dirproj"""
     if isabs(filename):
-        debug(f'get_abspath TRUE isabs({filename})')
+        ####debug(f'get_abspath TRUE isabs({filename})')
         return normpath(filename)
     if filename[:1] == '~':
         filename = expanduser(filename)

@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 ##from os import getcwd
 from os import environ
+from os.path import isabs
 from os.path import exists
 from os.path import expanduser
 ##from os.path import basename
@@ -38,8 +39,8 @@ class CfgGlobal:
 
     def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
         self.dirhome = abspath(get_dirhome(dirhome))
-        self.fname = join(self.dirhome, basename)
-        debug(f'CFGGLOBAL  CONFIG: exists({int(exists(self.fname))}) -- {self.fname}')
+        self.filename = join(self.dirhome, basename)
+        debug(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- {self.filename}')
         self.doc = self._init_docglobal()
 
     def str_cfg(self):
@@ -48,16 +49,17 @@ class CfgGlobal:
 
     def rd_cfg(self):
         """Read a global cfg file; return a doc obj"""
-        return TOMLFile(self.fname).read() if exists(self.fname) else None
+        return TOMLFile(self.filename).read() if exists(self.filename) else None
 
     def wr_cfg(self):
         """Write config file"""
         docprt = self._get_docprt()
-        TOMLFile(self.fname).write(docprt)
-        debug(f'CFGGLOBAL  WROTE: {self.fname}')
+        TOMLFile(self.filename).write(docprt)
+        debug(f'CFGGLOBAL  WROTE: {self.filename}')
 
     def add_proj(self, project, cfgfilename):
         """Add a project to the global config file, if it is not already present"""
+        assert isabs(cfgfilename), f'CfgGlobal.add_proj(...) cfg NOT abspath: {cfgfilename}'
         doc = self.rd_cfg()
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):
@@ -107,14 +109,14 @@ class CfgGlobal:
                                    f'        {cfgname}\n'
                                     '    Not over-writing with:\n'
                                    f'        {projcfgname}\n'
-                                   f'    In {self.fname}\n'
+                                   f'    In {self.filename}\n'
                                     '    Use arg, `--project` to create a unique project name')
         # Project is not in global config file
         return True
 
     def _init_docglobal(self):
-        if exists(self.fname):
-            return TOMLFile(self.fname).read()
+        if exists(self.filename):
+            return TOMLFile(self.filename).read()
         return self._new_docglobal()
 
     @staticmethod

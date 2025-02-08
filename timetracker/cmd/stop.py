@@ -34,7 +34,8 @@ def run_stop(fnamecfg, csvfields, **kwargs):
     debug('STOP: RUNNING COMMAND STOP')
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
-        sys_exit()
+        sys_exit(0)
+        #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg)
     # Get the elapsed time
     dta = cfgproj.read_starttime()

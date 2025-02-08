@@ -32,12 +32,12 @@ def run_csvupdate(fnamecfg, fin, fout):
     debug('CSVUPDATE: RUNNING COMMAND CSVUPDATE')
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
-        sys_exit()
+        sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
 
     if fin is not None:
         update_csv(fin, fout)
-        sys_exit()
+        sys_exit(0)
 
     fcsv = cfgproj.get_filename_csv()
     if fcsv is not None and exists(fcsv):

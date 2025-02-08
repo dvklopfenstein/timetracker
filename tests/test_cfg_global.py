@@ -2,6 +2,7 @@
 """Test the TimeTracker global configuration"""
 
 from os.path import join
+from os.path import exists
 from os.path import dirname
 from os.path import expanduser
 from logging import debug
@@ -21,20 +22,21 @@ SEP = f'{"-"*80}\n'
 
 def test_cfgbase_home():
     """Test instantiating a default CfgGlobal"""
-    cfg = CfgGlobal()
-    assert cfg.fname == join(expanduser('~'), '.timetrackerconfig')
-    assert cfg.doc['projects'] == []
-    #system(f'cat {cfg.fname}')
+    with TemporaryDirectory() as tmphome:
+        cfg = CfgGlobal(tmphome)
+        assert cfg.filename == join(tmphome, '.timetrackerconfig')
+        assert cfg.doc['projects'] == []
+        assert not exists(cfg.filename)
 
-def test_cfgbase_temp(name='tester', trksubdir='.timetracker'):
+def test_cfgbase_temp(name='taster', trksubdir='.timetracker'):
     """Test cfg flow"""
     print(f'{SEP}1) INITIALIZE "HOME" DIRECTORY')
-    with TemporaryDirectory() as tmp_home:
-        cfgtop = get_cfgglobal_empty(tmp_home)
-        debug(run_cmd(f'cat {cfgtop.fname}'))
+    with TemporaryDirectory() as tmphome:
+        cfgtop = _get_cfgglobal_empty(tmphome)
+        debug(run_cmd(f'cat {cfgtop.filename}'))
         print(f'{SEP}2) Create local project directories')
-        proj2wdir = mkdirs(tmp_home)
-        findhome(tmp_home)
+        proj2wdir = mkdirs(tmphome)
+        findhome(tmphome)
         print(f'{SEP}3) Create a local cfg object for the apples project')
         exp_projs = []
         for proj, projdir in proj2wdir.items():
@@ -43,7 +45,7 @@ def test_cfgbase_temp(name='tester', trksubdir='.timetracker'):
             # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
             cfgname_proj = join(workdir, 'config')
             # EXP: apples '~/proj/apples/.timetracker/config'
-            exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmp_home)])
+            exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmphome)])
             # INIT LOCAL PROJECT CONFIG
             cfgloc = CfgProj(cfgname_proj, project=proj, name=name)
             assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'
@@ -55,48 +57,48 @@ def test_cfgbase_temp(name='tester', trksubdir='.timetracker'):
             cfgloc.mk_dircfg()
             cfgloc.wr_cfg_new()
             # cat project/.timetracker/config
-            fnamecfg_proj = cfgloc.get_filename_cfglocal()
-            debug(f'PROJ CFG: {fnamecfg_proj}')
-            debug(run_cmd(f'cat {fnamecfg_proj}'))
+            filenamecfg_proj = cfgloc.get_filename_cfg()
+            debug(f'PROJ CFG: {filenamecfg_proj}')
+            #debug(run_cmd(f'cat {filenamecfg_proj}'))
             # ADD PROJECT TO GLOBAL CONFIG AND WRITE
-            cfgtop.add_proj(proj, fnamecfg_proj)
+            cfgtop.add_proj(proj, filenamecfg_proj)
             assert cfgtop.doc["projects"].unwrap() == exp_projs, (
                 'UNEXPECTED PROJS:\n'
                 f'EXP({exp_projs})\n'
                 f'ACT({cfgtop.doc["projects"].unwrap()})')
             cfgtop.wr_cfg()
-            debug(run_cmd(f'cat {cfgtop.fname}'))
+            debug(run_cmd(f'cat {cfgtop.filename}'))
             findhome(workdir)
 
 
-def get_cfgglobal_empty(tmp_home, wrcfg=True):
-    """Get an empty Global Configuration file"""
-    cfgtop = CfgGlobal(tmp_home)
-    assert cfgtop.fname == join(tmp_home, '.timetrackerconfig'), f'{cfgtop.fname}'
+def _get_cfgglobal_empty(tmphome):
+    """Write and get an empty Global Configuration file/object"""
+    cfgtop = CfgGlobal(tmphome)
+    assert cfgtop.filename == join(tmphome, '.timetrackerconfig'), f'{cfgtop.filename}'
+    doc = cfgtop.rd_cfg()
+    assert doc is None
     assert cfgtop.doc['projects'] == []
-    if wrcfg:
-        cfgtop.wr_cfg()
-        doc = cfgtop.rd_cfg()
-        assert doc is not None
-        # pylint: disable=unsubscriptable-object
-        assert doc['projects'] == cfgtop.doc['projects']
-        #debug(f"XXXXX {doc['projects']}")
-        #debug(f"YYYYY {cfgtop.doc['projects']}")
-        assert doc['projects'] == cfgtop.doc['projects']
+    cfgtop.wr_cfg()
+    doc = cfgtop.rd_cfg()
+    assert doc is not None
+    # pylint: disable=unsubscriptable-object
+    assert doc['projects'] == cfgtop.doc['projects']
+    #debug(f"XXXXX {doc['projects']}")
+    #debug(f"YYYYY {cfgtop.doc['projects']}")
+    assert doc['projects'] == cfgtop.doc['projects']
     return cfgtop
 
 def test_dirhome():
     """Test the TimeTracker global configuration"""
     cfg = CfgGlobal()
-    assert dirname(cfg.fname) == expanduser('~')
+    assert dirname(cfg.filename) == expanduser('~')
 
-    with TemporaryDirectory() as tmp_home:
-        cfg = CfgGlobal(dirhome=tmp_home.name)
-        assert dirname(cfg.fname) == tmp_home.name
-        tmp_home.cleanup()
+    with TemporaryDirectory() as tmphome:
+        cfg = CfgGlobal(tmphome)
+        assert dirname(cfg.filename) == tmphome
 
 
 if __name__ == '__main__':
-    #test_dirhome()
-    #test_cfgbase_home()
+    test_cfgbase_home()
     test_cfgbase_temp()
+    test_dirhome()

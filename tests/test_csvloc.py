@@ -37,10 +37,10 @@ def test_csvloc():
     for absmessy, exp in zip(abscsvs_messy, _exp_abscsv_messy()):
         assert absmessy == exp, f'\nACT={absmessy}\nEXP={exp}'
 
-    test3(relcsvs, abscsvs_messy)
-    test4(relcsvs, absdirproj, abscsvs_messy)
+    _run_abspath(relcsvs, abscsvs_messy)
+    _run_relpath(relcsvs, absdirproj, abscsvs_messy)
 
-def test3(relcsvs, abscsvs_messy):
+def _run_abspath(relcsvs, abscsvs_messy):
     """Get csv abspath"""
     print("\n= TEST get_abspath(filenamecsv, dirproj) =======================================")
     for relcsv, abscsv_messy, abscsv_exp in zip(relcsvs, abscsvs_messy, _exp_abscsv_clean()):
@@ -50,7 +50,7 @@ def test3(relcsvs, abscsvs_messy):
         print(f'{relcsv:>15} {abscsv_messy:41} {abscsv_clean}')
         assert abscsv_clean == abscsv_exp, f'\nEXP: {abscsv_exp}\nACT: {abscsv_clean}'
 
-def test4(relcsvs, absdirproj, abscsvs_messy):
+def _run_relpath(relcsvs, absdirproj, abscsvs_messy):
     """Get csv relpath; relative to project directory """
     print("\n= TEST 4 =======================================================================")
     print(f"Get csv relative to project dir, {absdirproj}")

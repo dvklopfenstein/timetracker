@@ -20,7 +20,7 @@ def run_none(fcfgproj):
     """If no Timetracker command is run, print informative messages"""
     if not exists(fcfgproj):
         print(str_init(dirname(fcfgproj)))
-        sys_exit()
+        sys_exit(0)
     # Check for start time
     cfglocal = CfgProj(fcfgproj)
     start_file = cfglocal.get_filename_start()

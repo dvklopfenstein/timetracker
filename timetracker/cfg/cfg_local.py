@@ -15,7 +15,7 @@ from os.path import exists
 from os.path import basename
 from os.path import join
 from os.path import abspath
-from os.path import relpath
+##from os.path import relpath
 from os.path import dirname
 from os.path import normpath
 from logging import debug
@@ -51,24 +51,25 @@ class CfgProj:
 
     def __init__(self, filename=None, dircsv=None, project=None, name=None):
         self.filename = filename
-        debug(f'CfgProj args filename {filename}')
-        debug(f'CfgProj args project  {project}')
-        debug(f'CfgProj args name     {name}')
+        debug(f'CfgProj args {int(exists(filename))} filename {filename}')
+        debug(f'CfgProj args . project  {project}')
+        debug(f'CfgProj args . name     {name}')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
         self.project = basename(self.dirproj) if project is None else project
         self.name = get_username(name) if name is None else name
         self.dircsv = self._init_dircsv() if dircsv is None else dircsv
-        debug(f'CfgProj set  trksdir  {self.trksubdir}')
-        debug(f'CfgProj set  dircfg   {self.dircfg}')
-        debug(f'CfgProj set  project  {self.project}')
-        debug(f'CfgProj set  name     {self.name}')
-        debug(f'CfgProj set  dircsv   {self.dircsv}')
-        debug(f'CfgProj set  fname cfg   {self.get_filename_cfglocal()}')
-        debug(f'CfgProj set  fname cfg   {self.get_filename_cfg()}')
-        debug(f'CfgProj set  fname csv   {self.get_filename_csv()}')
-        debug(f'CfgProj set  fname start {self.get_filename_start()}')
+        debug(f'CfgProj  set . trksdir  {self.trksubdir}')
+        debug(f'CfgProj  set {int(exists(self.dircfg))} dircfg   {self.dircfg}')
+        debug(f'CfgProj  set . project  {self.project}')
+        debug(f'CfgProj  set . name     {self.name}')
+        debug(f'CfgProj  set {int(exists(self.dircsv))} dircsv   {self.dircsv}')
+        debug(f'CfgProj  set . fname cfg   {self.get_filename_cfglocal()}')
+        # pylint: disable=line-too-long
+        debug(f'CfgProj  set {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
+        debug(f'CfgProj  set {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}')
+        debug(f'CfgProj  set {int(exists(self.get_filename_start()))} fname start {self.get_filename_start()}')
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
@@ -89,18 +90,18 @@ class CfgProj:
         """Read the local cfg to get the csv filename for storing time data"""
         fcfg = self.get_filename_cfg()
         fcsv = self._read_csv_from_cfgfile(fcfg)
-        debug(f'CCCCCCCCCC dircsv: {fcfg}')
-        debug(f'CCCCCCCCCC dircsv: {fcsv}')
+        ####debug(f'CCCCCCCCCC dircsv: {fcfg}')
+        ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
         if fcsv is not None:
             return dirname(fcsv)
         dircsv = get_abspath(DIRCSV, self.dirproj)
-        debug(f'DDDDDDDDDD dircsv: {dircsv}')
+        ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
         return dircsv
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""
         fstart = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
+        ####debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
         return fstart
 
     def read_starttime(self):
@@ -185,8 +186,8 @@ class CfgProj:
 
     def _get_csv_absname(self):
         fcsv_orig = join(self.dircsv, self.CSVPAT.replace('PROJECT', self.project))
-        debug(f'BBBBBBBBBB {self.dircsv}')
-        debug(f'BBBBBBBBBB {fcsv_orig}')
+        ####debug(f'BBBBBBBBBB {self.dircsv}')
+        ####debug(f'BBBBBBBBBB {fcsv_orig}')
         return get_abspath(fcsv_orig, self.dirproj)
 
     def _get_csv_relname(self):

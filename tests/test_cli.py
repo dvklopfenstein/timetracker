@@ -4,6 +4,7 @@
 from os import environ
 from datetime import timedelta
 from timeit import default_timer
+from pytest import raises
 from timetracker.consts import DIRTRK
 from timetracker.cli import Cli
 
@@ -16,7 +17,6 @@ from timetracker.cli import Cli
 
 def test_cfg():
     """Test the TimeTracker configuration"""
-
     tic = default_timer()
     # `$ trk`
     _trk()
@@ -25,7 +25,9 @@ def test_cfg():
 
 def test_basic():
     """Test the basic timetracker flow"""
-    _trk_init_help()
+    with raises(SystemExit) as excinfo:
+        _trk_init_help()
+    assert excinfo.value.code == 0
     _trk_init()
     _trk_start()
     _trk_stop()
@@ -90,13 +92,12 @@ def _trk():
     assert args.command is None
 
 def _parse_args(arglist):
-    cli = Cli()
     print(f'RESEARCHER  ARGS: {arglist}')
-    args = cli.get_args_test(arglist)
-    print(f'TEST ARGS: {args}\n')
-    return args
+    cli = Cli(arglist)
+    print(f'TEST ARGS: {cli.args}\n')
+    return cli.args
 
 if __name__ == '__main__':
-    #test_cfg()
+    test_cfg()
     #test_basic()
-    test_dir()
+    #test_dir()

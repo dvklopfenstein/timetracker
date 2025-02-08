@@ -32,8 +32,9 @@ def test_csvloc():
     absdirproj = '/home/user/me/proj/apples'
     assert isabs(absdirproj)
 
-    print("\n= TEST get_abspath & get_relpath =================================================")
-    for cfgcsv_orig, abs_exp, rel_exp in zip(relcsvs, _exp_abscsv_clean(), _exp_relcsv_clean()):
+    print("\n= TEST get_abspath & get_relpath ==================")
+    files = zip(relcsvs, _exp_abscsv_clean(), _exp_relcsv_clean())
+    for cfgcsv_orig, abs_exp, rel_exp in files:
         cfgcsv_abs = get_abspath(cfgcsv_orig, absdirproj)
         assert cfgcsv_abs == abs_exp
         cfgcsv_rel = get_relpath(cfgcsv_abs, absdirproj)

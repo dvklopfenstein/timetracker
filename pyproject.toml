@@ -1,6 +1,6 @@
 [project]
 name = "timetracker-csv"
-version = "0.2a0"
+version = "0.2a1"
 dynamic = [
     "dependencies",
     "scripts",
@@ -10,7 +10,7 @@ dynamic = [
     "description",
 ]
 
-
 [project.urls]
 Homepage = "https://github.com/dvklopfenstein/timetracker"
 Issues = "https://github.com/dvklopfenstein/timetracker/issues"
+

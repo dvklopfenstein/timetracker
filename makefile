@@ -111,5 +111,6 @@ clean:
 	rm -rf tmp; mkdir tmp;
 
 clobber:
-	rm -rf .timetracker/
 	make clean
+	rm -rf .timetracker/
+	make timetracker_timetracker_dvklo.csv

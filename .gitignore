@@ -1,7 +1,10 @@
 # Project files
+*.bac
+my.mk
 .timetracker/
 test_timetracker.csv
 start_timetracker_*.txt
+timetracker_*.csv
 
 # Temporary test files
 .timetracker_start

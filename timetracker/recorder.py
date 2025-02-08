@@ -57,13 +57,10 @@ class Recorder:
             prt.write('start_day',
                       'start_datetime,'
                       'start_tic,'
-                      # Stop
                       'stop_day',
                       'stop_datetime,'
                       'stop_toc,'
-                      # Duration
                       'duration,'
-                      # Info
                       'tags',
                       'type',
                       'comment\n')

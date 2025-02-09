@@ -3,6 +3,7 @@
 
 from os import makedirs
 from os.path import exists
+from os.path import dirname
 from os.path import join
 from logging import basicConfig
 from logging import DEBUG
@@ -65,14 +66,18 @@ def _test_tracked0_git0(proj2wdir, trksubdir):
         assert finder.dirgit is None
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
         dircur = join(dirproj, 'doc')
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None, str(finder)
         assert finder.dirgit is None
-        assert finder.project == 'doc', f'PROJ EXP({proj}) != ACT({finder.project})'
-        assert finder.get_dirtrk() == join(dircur, trksubdir), f'{dircur}\n{str(finder)}'
+        assert finder.project == 'doc', f't0g0 PROJ EXP({proj}) != ACT({finder.project})'
+        assert finder.get_dirtrk() == join(dircur, trksubdir), f't0g0 {dircur}\n{str(finder)}'
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dircur, f't0g0 DIRCSV EXP({dirname(dirtrk_exp)}) != ACT({dircur})'
 
 def _test_tracked1_git0(proj2wdir, trksubdir):
     """Test Finder when proj/.timetracker directory exists"""
@@ -89,6 +94,8 @@ def _test_tracked1_git0(proj2wdir, trksubdir):
         assert finder.dirgit is None
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
         dircur = join(dirproj, 'doc')
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
@@ -97,6 +104,8 @@ def _test_tracked1_git0(proj2wdir, trksubdir):
         assert finder.dirgit is None
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, f"\nEXP: {dirtrk_exp}\nACT: {str(finder)}"
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
 def _test_tracked0_git1(proj2wdir, trksubdir):
     """Test Finder when proj/.timetracker directory does not exist"""
@@ -113,14 +122,18 @@ def _test_tracked0_git1(proj2wdir, trksubdir):
         assert finder.dirgit == dirgit_exp
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
         dircur = join(dirproj, 'doc')
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None, str(finder)
         assert finder.dirgit == dirgit_exp
-        assert finder.project == 'doc', f'PROJ EXP({proj}) != ACT({finder.project})'
+        assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
 def _test_tracked1_git1(proj2wdir, trksubdir):
     """Test Finder when proj/.timetracker directory does not exist"""
@@ -138,6 +151,8 @@ def _test_tracked1_git1(proj2wdir, trksubdir):
         assert finder.dirgit == dirgit_exp
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
         dircur = join(dirproj, 'doc')
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
@@ -146,6 +161,8 @@ def _test_tracked1_git1(proj2wdir, trksubdir):
         assert finder.dirgit == dirgit_exp
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, f"\nEXP: {dirproj}\nACT: {str(finder)}"
+        assert finder.get_csvfilename() is None
+        assert finder.get_dircsv() == dirname(dirtrk_exp)
 
 def _msg_exists(proj, dirproj, dirtrk, dirgit=None):
     print(f'{SEP2}{proj:11} PROJECT:     exists({int(exists(dirproj))}) {dirproj}')

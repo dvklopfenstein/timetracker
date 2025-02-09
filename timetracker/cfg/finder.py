@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
+from os.path import relpath
 from os.path import abspath
 from os.path import dirname
 from os.path import join
@@ -23,20 +24,24 @@ class CfgFinder:
         self.trksubdir = trksubdir if trksubdir is not None else DIRTRK
         # Existing directory (ex: ./timetracker) or None if dir not exist
         self.dirtrk = get_abspathtrk(dircur, self.trksubdir)
+        # Get the project tracking directory that is or will be tracked
         self.dirgit = get_abspathtrk(dircur, '.git')
+        self.dirtrk_pathname = self._init_dirtrk()
         self.project = self._init_project()
 
     def get_dirtrk(self):
-        """Get the project directory that is or will be tracked"""
-        if self.dirtrk is not None:
-            return self.dirtrk
-        if self.dirgit is not None:
-            return normpath(join(dirname(self.dirgit), self.trksubdir))
-        return normpath(join(self.dircur, self.trksubdir))
+        """Get the project tracking directory that is or will be tracked"""
+        return self.dirtrk_pathname
 
     def get_cfgfilename(self):
         """Get the local (aka project) config full filename"""
-        return join(self.get_dirtrk(), 'config')
+        return join(self.dirtrk_pathname, 'config')
+
+    def get_dircsv(self):
+        """Get the csv directory name"""
+        fname = self.get_cfgfilename()
+        cfg = CfgProj(fname)
+        return cfg.dircsv
 
     def get_csvfilename(self):
         """Get the csv filename pointed to in the .timetracker/config file"""
@@ -48,22 +53,34 @@ class CfgFinder:
             return csvname
         return None
 
+    def get_dirproj(self):
+        """Get the project directory"""
+        return dirname(self.dirtrk_pathname)
+
+    def get_dircur_rel(self):
+        """Get the current directory relative to the project directory"""
+        return relpath(self.dircur, self.get_dirproj())
+
     def get_desc(self):
         """Get a description of the state of a CfgFinder instance"""
-        return (f'CfgFinder project:    {self.project}\n'
+        return (f'CfgFinder project({self.project}) '
+                f'dircur({self.get_dircur_rel()})\n'
                 f'CfgFinder dircur:     {self.dircur}\n'
-                f'CfgFinder get_dirtrk: {self.get_dirtrk()}\n'
+                f'CfgFinder get_dirtrk: {self.dirtrk_pathname}\n'
                 f'CfgFinder dirtrk:     {self.dirtrk}\n'
                 f'CfgFinder dirgit:     {self.dirgit}')
 
     def _init_project(self):
-        debug(f'CfgFinder PPPPPPPPPPPPPPPPPPPPPPPPPP self.dirtrk {self.dirtrk}')
-        debug(f'CfgFinder PPPPPPPPPPPPPPPPPPPPPPPPPP CURRENT DIR {self.dircur}')
+        dirtrk = self.dirtrk_pathname if self.dirtrk is None else self.dirtrk
+        return basename(dirname(dirtrk))
+
+    def _init_dirtrk(self):
+        """Get the project tracking directory that is or will be tracked"""
         if self.dirtrk is not None:
-            return basename(dirname(self.dirtrk))
-        return basename(self.dirgit) if self.dircur is None else basename(self.dircur)
-
-
+            return self.dirtrk
+        if self.dirgit is not None:
+            return normpath(join(dirname(self.dirgit), self.trksubdir))
+        return normpath(join(self.dircur, self.trksubdir))
 
 def get_abspathtrk(path, trksubdir):
     """Get .timetracker/ proj dir by searching up parent path"""

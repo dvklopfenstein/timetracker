@@ -87,7 +87,7 @@ class CfgProj:
         return fcsv if fcsv is not None else replace_envvar(self._get_csv_absname())
 
     def _init_dircsv(self):
-        """Read the local cfg to get the csv filename for storing time data"""
+        """Read the project cfg to get the csv dir name for storing time data"""
         fcfg = self.get_filename_cfg()
         fcsv = self._read_csv_from_cfgfile(fcfg)
         ####debug(f'CCCCCCCCCC dircsv: {fcfg}')

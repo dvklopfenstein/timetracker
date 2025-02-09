@@ -164,7 +164,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=self.finder.get_csvfilename(),
+        parser.add_argument('--csvdir', default=self.finder.get_dircsv(),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")

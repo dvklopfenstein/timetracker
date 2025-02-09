@@ -63,7 +63,7 @@ def _test_tracked0_git0(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None
-        assert finder.dirgit is None
+        assert finder.get_dirgit() is None
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
         assert finder.get_csvfilename() is None
@@ -73,10 +73,11 @@ def _test_tracked0_git0(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None, str(finder)
-        assert finder.dirgit is None
+        assert finder.get_dirgit() is None
         assert finder.project == 'doc', f't0g0 PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == join(dircur, trksubdir), f't0g0 {dircur}\n{str(finder)}'
         assert finder.get_csvfilename() is None
+        # pylint: disable=line-too-long
         assert finder.get_dircsv() == dircur, f't0g0 DIRCSV EXP({dirname(dirtrk_exp)}) != ACT({dircur})'
 
 def _test_tracked1_git0(proj2wdir, trksubdir):
@@ -91,7 +92,7 @@ def _test_tracked1_git0(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
-        assert finder.dirgit is None
+        assert finder.get_dirgit() is None
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp
         assert finder.get_csvfilename() is None
@@ -101,7 +102,7 @@ def _test_tracked1_git0(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
-        assert finder.dirgit is None
+        assert finder.get_dirgit() is None
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, f"\nEXP: {dirtrk_exp}\nACT: {str(finder)}"
         assert finder.get_csvfilename() is None
@@ -119,7 +120,8 @@ def _test_tracked0_git1(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None
-        assert finder.dirgit == dirgit_exp
+        # pylint: disable=line-too-long
+        assert finder.get_dirgit() == dirgit_exp, f'GIT EXP({dirgit_exp}) ACT({finder.get_dirgit()})'
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
         assert finder.get_csvfilename() is None
@@ -129,7 +131,7 @@ def _test_tracked0_git1(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None, str(finder)
-        assert finder.dirgit == dirgit_exp
+        assert finder.get_dirgit() == dirgit_exp
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
         assert finder.get_csvfilename() is None
@@ -148,7 +150,7 @@ def _test_tracked1_git1(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
-        assert finder.dirgit == dirgit_exp
+        assert finder.get_dirgit() == dirgit_exp
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp
         assert finder.get_csvfilename() is None
@@ -158,7 +160,7 @@ def _test_tracked1_git1(proj2wdir, trksubdir):
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
         print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
-        assert finder.dirgit == dirgit_exp
+        assert finder.get_dirgit() == dirgit_exp
         assert finder.project == proj, f'PROJ EXP({proj}) != ACT({finder.project})'
         assert finder.get_dirtrk() == dirtrk_exp, f"\nEXP: {dirproj}\nACT: {str(finder)}"
         assert finder.get_csvfilename() is None

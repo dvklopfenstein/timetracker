@@ -25,13 +25,16 @@ class CfgFinder:
         # Existing directory (ex: ./timetracker) or None if dir not exist
         self.dirtrk = get_abspathtrk(dircur, self.trksubdir)
         # Get the project tracking directory that is or will be tracked
-        self.dirgit = get_abspathtrk(dircur, '.git')
         self.dirtrk_pathname = self._init_dirtrk()
         self.project = self._init_project()
 
     def get_dirtrk(self):
         """Get the project tracking directory that is or will be tracked"""
         return self.dirtrk_pathname
+
+    def get_dirgit(self):
+        """Get the .git directory if it is the current dir or any parents"""
+        return get_abspathtrk(self.dircur, '.git')
 
     def get_cfgfilename(self):
         """Get the local (aka project) config full filename"""
@@ -63,12 +66,13 @@ class CfgFinder:
 
     def get_desc(self):
         """Get a description of the state of a CfgFinder instance"""
+        dirgit = self.get_dirgit()
         return (f'CfgFinder project({self.project}) '
                 f'dircur({self.get_dircur_rel()})\n'
                 f'CfgFinder dircur:     {self.dircur}\n'
                 f'CfgFinder get_dirtrk: {self.dirtrk_pathname}\n'
                 f'CfgFinder dirtrk:     {self.dirtrk}\n'
-                f'CfgFinder dirgit:     {self.dirgit}')
+                f'CfgFinder dirgit:     {dirgit}')
 
     def _init_project(self):
         dirtrk = self.dirtrk_pathname if self.dirtrk is None else self.dirtrk
@@ -78,8 +82,9 @@ class CfgFinder:
         """Get the project tracking directory that is or will be tracked"""
         if self.dirtrk is not None:
             return self.dirtrk
-        if self.dirgit is not None:
-            return normpath(join(dirname(self.dirgit), self.trksubdir))
+        dirgit = self.get_dirgit()
+        if dirgit is not None:
+            return normpath(join(dirname(dirgit), self.trksubdir))
         return normpath(join(self.dircur, self.trksubdir))
 
 def get_abspathtrk(path, trksubdir):

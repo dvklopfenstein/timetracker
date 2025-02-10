@@ -49,7 +49,7 @@ class CfgProj:
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    def __init__(self, filename=None, dircsv=None, project=None, name=None):
+    def __init__(self, filename, dircsv=None, project=None, name=None):
         self.filename = filename
         debug(f'CfgProj args {int(exists(filename))} filename {filename}')
         debug(f'CfgProj args . project  {project}')

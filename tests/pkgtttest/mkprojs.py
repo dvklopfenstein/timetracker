@@ -7,6 +7,7 @@ from subprocess import run
 from logging import debug
 from collections import namedtuple
 
+from timetracker.consts import DIRTRK
 from timetracker.cmd.init import run_init_test
 
 RELCSVS = [
@@ -36,18 +37,21 @@ def mk_projdirs(tmphome, project='apples', dirgit=False):
         makedirs(join(pdir, '.git'))
     return _get_expdirs(tmphome, project, dirgit)
 
-def _get_expdirs(tmphome, project='apples', dirgit=False):
+def _get_expdirs(tmphome, project='apples', dirgit=False, trksubdir=None):
     """Make a list of expected home, project, and git directories"""
-    nto = namedtuple("ExpDirs", "dirhome dirproj dirgit dirdoc")
+    nto = namedtuple("ExpDirs", "dirhome dirproj dirgit dirdoc cfglocfilename")
     dirproj = join(tmphome, 'proj', project)
+    if trksubdir is None:
+        trksubdir = DIRTRK
     ntexpdirs = nto(
         dirhome=tmphome,
         dirproj=dirproj,
+        cfglocfilename=join(dirproj, trksubdir, 'config'),
         dirgit=join(dirproj, '.git') if dirgit else None,
         dirdoc=join(dirproj, 'doc'))
     for key, expdir in ntexpdirs._asdict().items():
-        print(f'{key:7} {expdir}')
-        assert exists(expdir)
+        print(f'exists({int(exists(expdir)) if expdir is not None else "."}) '
+              f'{key:14} {expdir}')
     return ntexpdirs
 
 

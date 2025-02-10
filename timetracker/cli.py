@@ -105,6 +105,10 @@ class Cli:
         ####    print('XXXXXXXXXXXXXXXXXXX', args.trksubdir)
         return args
 
+    def _get_csvfilename_dflt(self):
+        """Get the default csv file name to display"""
+        return '.'
+
     # -------------------------------------------------------------------------------
     ####def _init_parsers(self):
     ####    parser = self._init_parser_top()
@@ -164,7 +168,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=self.finder.get_dircsv(),
+        parser.add_argument('--csvdir', default=self._get_csvfilename_dflt(),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")
@@ -201,7 +205,7 @@ class Cli:
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.finder.get_csvfilename(),
+            default=self._get_csvfilename_dflt(),
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.csv',
             default='updated.csv',

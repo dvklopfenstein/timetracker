@@ -11,6 +11,7 @@ from os.path import join
 from os.path import ismount
 from os.path import basename
 from os.path import normpath
+from os.path import realpath
 from logging import debug
 from timetracker.consts import DIRTRK
 from timetracker.cfg.cfg_local import CfgProj
@@ -26,6 +27,7 @@ class CfgFinder:
         self.dirtrk = get_abspathtrk(dircur, self.trksubdir)
         # Get the project tracking directory that is or will be tracked
         self.dirtrk_pathname = self._init_dirtrk()
+        self.dirproj = dirname(self.dirtrk_pathname)
         self.project = self._init_project()
 
     def get_dirtrk(self):
@@ -40,21 +42,28 @@ class CfgFinder:
         """Get the local (aka project) config full filename"""
         return join(self.dirtrk_pathname, 'config')
 
-    def get_dircsv(self):
-        """Get the csv directory name"""
-        fname = self.get_cfgfilename()
-        cfg = CfgProj(fname)
-        return cfg.dircsv
+    #def get_dircsv_default(self):
+    #    """Get the default csv directory for use in the cli help string"""
+    #    if realpath(self.dircur) == realpath(self.dirproj):
+    #        return '.'
+    #    print('aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+    #    return relpath(self.dircur, self.dirproj)
 
-    def get_csvfilename(self):
-        """Get the csv filename pointed to in the .timetracker/config file"""
-        fname = self.get_cfgfilename()
-        if exists(fname):
-            cfg = CfgProj(fname)
-            csvname = cfg.get_filename_csv()
-            debug(f'CCCCCCCCCCCCCCCCSSSSSSSSSSSSSSSVVVVVVVVVVVVVVV: {csvname}')
-            return csvname
-        return None
+    #def get_dircsv(self):
+    #    """Get the csv directory name"""
+    #    fname = self.get_cfgfilename()
+    #    cfg = CfgProj(fname)
+    #    return cfg.dircsv
+
+    #def get_csvfilename(self):
+    #    """Get the csv filename pointed to in the .timetracker/config file"""
+    #    fname = self.get_cfgfilename()
+    #    if exists(fname):
+    #        cfg = CfgProj(fname)
+    #        csvname = cfg.get_filename_csv()
+    #        debug(f'CCCCCCCCCCCCCCCCSSSSSSSSSSSSSSSVVVVVVVVVVVVVVV: {csvname}')
+    #        return csvname
+    #    return None
 
     def get_dirproj(self):
         """Get the project directory"""

@@ -60,20 +60,6 @@ class CfgProj:
         self.name = get_username(name) if name is None else name
         self.dircsv = self._init_dircsv() if dircsv is None else dircsv
 
-    def get_desc(self, note=' set'):
-        """Get a string describing the state of an instance of the CfgProj"""
-        return (
-            f'CfgProj {note} . trksdir  {self.trksubdir}\n'
-            f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
-            f'CfgProj {note} . name     {self.name}\n'
-            f'CfgProj {note} . project  {self.project}\n'
-            f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
-            f'CfgProj {note} . dircsv   {self.dircsv}\n'
-            f'CfgProj {note} . fname cfg   {self.get_filename_cfglocal()}\n'
-            # pylint: disable=line-too-long
-            f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
-            f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
-
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
         # TODO: Invocrrect in tmp trr start
@@ -93,43 +79,11 @@ class CfgProj:
         """Get a Starttime instance"""
         return Starttime(self.dircfg, self.project, self.name)
 
-    def _init_dircsv(self):
-        """Read the project cfg to get the csv dir name for storing time data"""
-        fcfg = self.get_filename_cfg()
-        fcsv = self._read_csv_from_cfgfile(fcfg)
-        ####debug(f'CCCCCCCCCC dircsv: {fcfg}')
-        ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
-        if fcsv is not None:
-            return dirname(fcsv)
-        dircsv = get_abspath(DIRCSV, self.dirproj)
-        ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
-        return dircsv
-
     def wr_cfg_new(self):
         """Write a new config file"""
         fname = self.get_filename_cfg()
         doc = self._get_doc_new()
         self._wr_cfg(fname, doc)
-
-    def _wr_cfg(self, fname, doc):
-        """Write config file"""
-        ##chk_isdir(get_dirname_abs(doc['csv']['filename']), "doc['csv']['filename']")
-        debug(doc.as_string())
-        TOMLFile(fname).write(doc)
-        # Use `~`, if it makes the path shorter
-        ##fcsv = replace_homepath(doc['csv']['filename'])
-        ##doc['csv']['filename'] = fcsv
-        fcsv = doc['csv']['filename']
-        debug(f'CfgProj _wr_cfg(...)  CSV:      {fcsv}')
-        debug(f'CfgProj _wr_cfg(...)  WROTE:    {fname}')
-
-    def _read_csv_from_cfgfile(self, fin_cfglocal):
-        """Read a config file and load it into a TOML document"""
-        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
-        if doc is not None:
-            fpat = get_abspath(doc['csv']['filename'], self.dirproj)
-            return replace_envvar(fpat) if '$' in fpat else fpat
-        return None
 
     def str_cfg(self):
         """Return string containing configuration file contents"""
@@ -146,13 +100,37 @@ class CfgProj:
                 print(f'Initialized timetracker directory: {absdir}')
 
     #-------------------------------------------------------------
-    def __str__(self):
-        return (
-        f'CfgProj set  trksdir {self.trksubdir}\n'
-        f'CfgProj set  dircfg  {self.dircfg}\n'
-        f'CfgProj set  project {self.project}\n'
-        f'CfgProj set  name    {self.name}\n'
-        f'CfgProj set  dircsv  {self.dircsv}')
+    def _read_csv_from_cfgfile(self, fin_cfglocal):
+        """Read a config file and load it into a TOML document"""
+        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        if doc is not None:
+            fpat = get_abspath(doc['csv']['filename'], self.dirproj)
+            return replace_envvar(fpat) if '$' in fpat else fpat
+        return None
+
+    def _wr_cfg(self, fname, doc):
+        """Write config file"""
+        ##chk_isdir(get_dirname_abs(doc['csv']['filename']), "doc['csv']['filename']")
+        debug(doc.as_string())
+        TOMLFile(fname).write(doc)
+        # Use `~`, if it makes the path shorter
+        ##fcsv = replace_homepath(doc['csv']['filename'])
+        ##doc['csv']['filename'] = fcsv
+        fcsv = doc['csv']['filename']
+        debug(f'CfgProj _wr_cfg(...)  CSV:      {fcsv}')
+        debug(f'CfgProj _wr_cfg(...)  WROTE:    {fname}')
+
+    def _init_dircsv(self):
+        """Read the project cfg to get the csv dir name for storing time data"""
+        fcfg = self.get_filename_cfg()
+        fcsv = self._read_csv_from_cfgfile(fcfg)
+        ####debug(f'CCCCCCCCCC dircsv: {fcfg}')
+        ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
+        if fcsv is not None:
+            return dirname(fcsv)
+        dircsv = get_abspath(DIRCSV, self.dirproj)
+        ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
+        return dircsv
 
     def _get_csv_absname(self):
         fcsv_orig = join(self.dircsv, self.CSVPAT.replace('PROJECT', self.project))
@@ -179,6 +157,21 @@ class CfgProj:
         ### Adding the table to the document
         doc.add("csv", csv_section)
         return doc
+
+    #-------------------------------------------------------------
+    def get_desc(self, note=' set'):
+        """Get a string describing the state of an instance of the CfgProj"""
+        return (
+            f'CfgProj {note} . trksdir  {self.trksubdir}\n'
+            f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
+            f'CfgProj {note} . name     {self.name}\n'
+            f'CfgProj {note} . project  {self.project}\n'
+            f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
+            f'CfgProj {note} . dircsv   {self.dircsv}\n'
+            f'CfgProj {note} . fname cfg   {self.get_filename_cfglocal()}\n'
+            # pylint: disable=line-too-long
+            f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
+            f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -60,16 +60,21 @@ class CfgProj:
         self.project = basename(self.dirproj) if project is None else project
         self.name = get_username(name) if name is None else name
         self.dircsv = self._init_dircsv() if dircsv is None else dircsv
-        debug(f'CfgProj  set . trksdir  {self.trksubdir}')
-        debug(f'CfgProj  set {int(exists(self.dircfg))} dircfg   {self.dircfg}')
-        debug(f'CfgProj  set . project  {self.project}')
-        debug(f'CfgProj  set . name     {self.name}')
-        debug(f'CfgProj  set {int(exists(self.dircsv))} dircsv   {self.dircsv}')
-        debug(f'CfgProj  set . fname cfg   {self.get_filename_cfglocal()}')
-        # pylint: disable=line-too-long
-        debug(f'CfgProj  set {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
-        debug(f'CfgProj  set {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}')
-        debug(f'CfgProj  set {int(exists(self.get_filename_start()))} fname start {self.get_filename_start()}')
+
+    def get_desc(self, note=' set'):
+        """Get a string describing the state of an instance of the CfgProj"""
+        return (
+            f'CfgProj {note} . trksdir  {self.trksubdir}\n'
+            f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
+            f'CfgProj {note} . name     {self.name}\n'
+            f'CfgProj {note} . project  {self.project}\n'
+            f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
+            f'CfgProj {note} . dircsv   {self.dircsv}\n'
+            f'CfgProj {note} . fname cfg   {self.get_filename_cfglocal()}\n'
+            # pylint: disable=line-too-long
+            f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
+            f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}\n'
+            f'CfgProj {note} {int(exists(self.get_filename_start()))} fname start {self.get_filename_start()}')
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
@@ -156,7 +161,7 @@ class CfgProj:
         # Print elapsed time, if timer was started
         if exists(fin_start):
             hms = hms_from_startfile(fin_start)
-            print(f'\nTimer running: {hms} H:M:S '
+            print(f'Timer running: {hms} H:M:S '
                   f"elapsed time for '{self.project}' ID={self.name}")
 
     def rm_starttime(self):

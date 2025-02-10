@@ -25,6 +25,7 @@ def cli_run_init(fnamecfg, args):
 def run_init(fnamecfg, dircsv, project, quiet=True):
     """Initialize timetracking on a project"""
     cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
+    debug(cfgproj.get_desc("new"))
     dirhome = get_dirhome_globalcfg()
     run_init_global(dirhome, cfgproj)
 

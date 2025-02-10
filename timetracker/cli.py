@@ -27,8 +27,8 @@ from timetracker.cmd.csvupdate import cli_run_csvupdate
 
 def main():
     """Connect all parts of the timetracker"""
-    #from logging import basicConfig, DEBUG
-    #basicConfig(level=DEBUG)
+    ##from logging import basicConfig, DEBUG
+    ##basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -48,9 +48,9 @@ class Cli:
 
     def __init__(self, args=None):
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
-        debug(self.finder)
         self.parser = self.init_parser_top('timetracker')
-        self.args = self._init_args_cli() if args is None else self._init_args_test(args)
+        ####self.args = self._init_args_cli() if args is None else self._init_args_test(args)
+        self.args = self._init_args(args)
 
     def run(self):
         """Run timetracker"""
@@ -64,21 +64,11 @@ class Cli:
         else:
             cli_run_none(filename_cfgproj, self.args)
 
-    def _init_args_cli(self):
-        """Get arguments for ScriptFrame"""
-        args = self.parser.parse_args()
-        self._adjust_args(args)
-        debug(f'TIMETRACKER ARGS: {args}')
-        if args.version:
-            print(f'trk {__version__}')
-            sys_exit(0)
-        return args
-
-    def _init_args_test(self, arglist):
+    def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
         self._adjust_args(args)
-        print(f'TIMETRACKER ARGS: {args}')
+        debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
@@ -107,7 +97,10 @@ class Cli:
 
     def _get_csvfilename_dflt(self):
         """Get the default csv file name to display"""
-        return '.'
+        return 'file.csv'
+        ##return self.finder.dirproj
+
+
 
     # -------------------------------------------------------------------------------
     ####def _init_parsers(self):
@@ -168,7 +161,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=self._get_csvfilename_dflt(),
+        parser.add_argument('--csvdir', default=self.finder.get_dircsv_default(),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")

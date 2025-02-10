@@ -38,7 +38,8 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg)
     # Get the elapsed time
-    dta = cfgproj.read_starttime()
+    start_obj = cfgproj.get_starttime_obj()
+    dta = start_obj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -68,7 +69,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
     if not kwargs['keepstart']:
-        cfgproj.rm_starttime()
+        start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
 

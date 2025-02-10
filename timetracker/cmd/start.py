@@ -36,14 +36,15 @@ def run_start(fnamecfg, force=False, quiet=False):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
-    fin_start = cfgproj.get_filename_start()
+    start_obj = cfgproj.get_starttime_obj()
+    fin_start = start_obj.get_filename_start()
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     # Is this project tracked?
     ###if not exists(cfgproj_fname):
     ###    print(str_notrkrepo(dirname(dirname(cfgproj_fname))))
     ###    sys_exit(0)
     # Print elapsed time, if timer was started
-    cfgproj.prt_elapsed()
+    start_obj.prt_elapsed()
     # Set/reset starting time, if applicable
     if not exists(fin_start) or force:
         #cfgproj.mk_workdir()

@@ -9,7 +9,7 @@ in a version supported by cygwin, conda, and venv.
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import remove
+##from os import remove
 from os import makedirs
 from os.path import exists
 from os.path import basename
@@ -35,12 +35,11 @@ from timetracker.consts import DIRCSV
 ##from timetracker.cfg.utils import chk_isdir
 ##from timetracker.cfg.utils import get_dirname_abs
 
+from timetracker.cfg.starttime import Starttime
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_relpath
 from timetracker.cfg.utils import replace_envvar
-from timetracker.hms import hms_from_startfile
-from timetracker.hms import read_starttime as hms_read_starttime
 
 # pylint: disable=fixme
 
@@ -73,8 +72,7 @@ class CfgProj:
             f'CfgProj {note} . fname cfg   {self.get_filename_cfglocal()}\n'
             # pylint: disable=line-too-long
             f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
-            f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}\n'
-            f'CfgProj {note} {int(exists(self.get_filename_start()))} fname start {self.get_filename_start()}')
+            f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
 
     def get_filename_cfglocal(self):
         """Get the full filename of the local config file"""
@@ -91,6 +89,10 @@ class CfgProj:
         fcsv = self._read_csv_from_cfgfile(fcfg)
         return fcsv if fcsv is not None else replace_envvar(self._get_csv_absname())
 
+    def get_starttime_obj(self):
+        """Get a Starttime instance"""
+        return Starttime(self.dircfg, self.project, self.name)
+
     def _init_dircsv(self):
         """Read the project cfg to get the csv dir name for storing time data"""
         fcfg = self.get_filename_cfg()
@@ -102,17 +104,6 @@ class CfgProj:
         dircsv = get_abspath(DIRCSV, self.dirproj)
         ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
         return dircsv
-
-    def get_filename_start(self):
-        """Get the file storing the start time a person"""
-        fstart = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        ####debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
-        return fstart
-
-    def read_starttime(self):
-        """Read the start time file"""
-        fname = self.get_filename_start()
-        return hms_read_starttime(fname)
 
     def wr_cfg_new(self):
         """Write a new config file"""
@@ -140,35 +131,9 @@ class CfgProj:
             return replace_envvar(fpat) if '$' in fpat else fpat
         return None
 
-    ####def update_localini(self, project, csvdir):
-    ####    """Update the csv filename for storing time data"""
-    ####    if project is not None:
-    ####        self.project = project
-    ####    if csvdir is not None:
-    ####        self.dircsv = replace_homepath(csvdir)
-    ####    self.doc['project'] = self.project
-    ####    fcsv = self._get_csv_relname()
-    ####    self.doc['csv']['filename'] = fcsv
-    ####    debug(f'CFG:  CSVFILE exists({int(exists(fcsv))}) {fcsv}')
-
     def str_cfg(self):
         """Return string containing configuration file contents"""
         return dumps(self._get_doc_new())
-
-    def prt_elapsed(self):
-        """Print elapsed time if timer is started"""
-        fin_start = self.get_filename_start()
-        # Print elapsed time, if timer was started
-        if exists(fin_start):
-            hms = hms_from_startfile(fin_start)
-            print(f'Timer running: {hms} H:M:S '
-                  f"elapsed time for '{self.project}' ID={self.name}")
-
-    def rm_starttime(self):
-        """Remove the starttime file, thus resetting the timer"""
-        fstart = self.get_filename_start()
-        if exists(fstart):
-            remove(fstart)
 
     def mk_dircfg(self, quiet=False):
         """Initialize `.timetracker/` project working directory"""
@@ -198,14 +163,6 @@ class CfgProj:
     def _get_csv_relname(self):
         fcsv_abs = self._get_csv_absname()
         return get_relpath(fcsv_abs, self.dirproj)
-
-    @staticmethod
-    def _init_docglobal():
-        doc = document()
-        doc.add(comment("TimeTracker global configuration file"))
-        doc.add(nl())
-        doc["projects"] = []
-        return doc
 
     def _get_doc_new(self):
         doc = document()

@@ -14,8 +14,7 @@ from csv import reader
 ##from csv import DictReader
 ##from csv import writer
 ##from timeit import default_timer
-##from timetracker.hms import read_starttime
-from timetracker.hms import FMT
+from timetracker.cfg.starttime import FMTDT
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg_local  import CfgProj
 
@@ -83,8 +82,8 @@ def update_csv(fin_csv, fout_csv):
         debug(f'WROTE: {fout_csv}')
 
 def _get_rowvals(row):
-    dta = datetime.strptime(row[2], FMT)
-    dtz = datetime.strptime(row[5], FMT)
+    dta = datetime.strptime(row[2], FMTDT)
+    dtz = datetime.strptime(row[5], FMTDT)
     delta = dtz - dta
     return (
         dta.strftime("%a"), # 0 updated

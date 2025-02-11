@@ -22,8 +22,8 @@ from timetracker.cmd.none      import cli_run_none
 from timetracker.cmd.init      import cli_run_init
 from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
-from timetracker.cmd.csvloc    import cli_run_csvloc
-from timetracker.cmd.csvupdate import cli_run_csvupdate
+#from timetracker.cmd.csvloc    import cli_run_csvloc
+#from timetracker.cmd.csvupdate import cli_run_csvupdate
 
 
 def main():
@@ -37,8 +37,8 @@ fncs = {
     'init'     : cli_run_init,
     'start'    : cli_run_start,
     'stop'     : cli_run_stop,
-    'csvloc'   : cli_run_csvloc,
-    'csvupdate': cli_run_csvupdate,
+    #'csvloc'   : cli_run_csvloc,
+    #'csvupdate': cli_run_csvupdate,
 }
 
 class Cli:
@@ -136,9 +136,9 @@ class Cli:
         subparsers = parser.add_subparsers(dest='command', help='timetracker subcommand help')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
-        self._add_subparser_restart(subparsers)
+        #self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
-        self._add_subparser_csvupdate(subparsers)
+        #self._add_subparser_csvupdate(subparsers)
         ##self._add_subparser_files(subparsers)
         ##return parser
 

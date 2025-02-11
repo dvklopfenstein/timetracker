@@ -24,6 +24,7 @@ def cli_run_stop(fnamecfg, args):
     run_stop(
         fnamecfg,
         nto._make([args.message, args.activity, args.tags]),
+        name=args.name,
         quiet=args.quiet,
         keepstart=args.keepstart)
 
@@ -38,7 +39,8 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg)
     # Get the elapsed time
-    start_obj = cfgproj.get_starttime_obj()
+    name = kwargs.get('name')
+    start_obj = cfgproj.get_starttime_obj(name)
     dta = start_obj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
@@ -50,7 +52,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         return
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv()
+    fcsv = cfgproj.get_filename_csv(name)
     _msg_csv(fcsv)
     # Print header into csv, if needed
     if not exists(fcsv):

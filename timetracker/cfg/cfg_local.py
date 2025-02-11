@@ -47,30 +47,34 @@ class CfgProj:
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    def __init__(self, filename, dircsv=None, project=None, username=None):
+    ####def __init__(self, filename, dircsv=None, project=None):
+    def __init__(self, filename, project=None):
         self.filename = filename
         debug(f'CfgProj args {int(exists(filename))} filename {filename}')
         debug(f'CfgProj args . project  {project}')
-        debug(f'CfgProj args . username {username}')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
         self.project = basename(self.dirproj) if project is None else project
-        self.username = get_username(username) if username is None else username
-        self.dircsv = self._init_dircsv() if dircsv is None else dircsv
+        ####self.dircsv = self._get_dircsv() if dircsv is None else dircsv
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""
         return join(self.dircfg, 'config')
 
-    def get_filename_csv(self):
+    def get_filename_csv(self, username=None):
         """Read the local cfg to get the csv filename for storing time data"""
-        fcsv = self._read_csv_from_cfgfile()
-        return fcsv if fcsv is not None else replace_envvar(self._get_csv_absname(), self.username)
+        username = get_username(username)
+        fcsv = self._read_csv_from_cfgfile(username)
+        if fcsv is not None:
+            return fcsv
+        return replace_envvar(self._get_dircsv_absname(), username)
 
-    def get_starttime_obj(self):
+    def get_starttime_obj(self, username=None):
         """Get a Starttime instance"""
-        return Starttime(self.dircfg, self.project, self.username)
+        username = get_username(username)
+        project = self._read_project_from_cfgfile()
+        return Starttime(self.dircfg, project, username)
 
     def write(self, force=False, quiet=False):
         """Write a new config file"""
@@ -101,13 +105,30 @@ class CfgProj:
             if not quiet:
                 print(f'Initialized timetracker directory: {absdir}')
 
-    def _read_csv_from_cfgfile(self):
+    def _read_project_from_cfgfile(self):
+        """Read a config file and load it into a TOML document"""
+        fin_cfglocal = self.get_filename_cfg()
+        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        if doc is not None:
+            return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
+        return None
+
+    def _read_csv_from_cfgfile(self, username):
         """Read a config file and load it into a TOML document"""
         fin_cfglocal = self.get_filename_cfg()
         doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj)
-            return replace_envvar(fpat, self.username) if '$' in fpat else fpat
+            ##fcsv_orig = join(dircsv, self.CSVPAT.replace('PROJECT', self.project))
+            return replace_envvar(fpat, username) if '$' in fpat else fpat
+        return None
+
+    def _read_csvdir_from_cfgfile(self):
+        """Read a config file and load it into a TOML document"""
+        fin_cfglocal = self.get_filename_cfg()
+        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        if doc is not None:
+            return get_abspath(dirname(doc['csv']['filename']), self.dirproj)
         return None
 
     def _wr_cfg(self, fname, doc):
@@ -122,9 +143,9 @@ class CfgProj:
         debug(f'CfgProj _wr_cfg(...)  CSV:      {fcsv}')
         debug(f'CfgProj _wr_cfg(...)  WROTE:    {fname}')
 
-    def _init_dircsv(self):
+    def _get_dircsv(self):
         """Read the project cfg to get the csv dir name for storing time data"""
-        fcsv = self._read_csv_from_cfgfile()
+        fcsv = self._read_csvdir_from_cfgfile()
         ####debug(f'CCCCCCCCCC dircsv: {fcfg}')
         ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
         if fcsv is not None:
@@ -133,14 +154,16 @@ class CfgProj:
         ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
         return dircsv
 
-    def _get_csv_absname(self):
-        fcsv_orig = join(self.dircsv, self.CSVPAT.replace('PROJECT', self.project))
-        ####debug(f'BBBBBBBBBB {self.dircsv}')
+    def _get_dircsv_absname(self):
+        dircsv = self._get_dircsv()
+        ####fcsv_orig = join(dircsv, self.CSVPAT.replace('PROJECT', self.project))
+        ####debug(f'BBBBBBBBBB {dircsv}')
         ####debug(f'BBBBBBBBBB {fcsv_orig}')
-        return get_abspath(fcsv_orig, self.dirproj)
+        ####return get_abspath(fcsv_orig, self.dirproj)
+        return get_abspath(dircsv, self.dirproj)
 
-    def _get_csv_relname(self):
-        fcsv_abs = self._get_csv_absname()
+    def _get_dircsv_relname(self):
+        fcsv_abs = self._get_dircsv_absname()
         return get_relpath(fcsv_abs, self.dirproj)
 
     def _get_doc_new(self):
@@ -153,7 +176,8 @@ class CfgProj:
         # format = "timetracker_dvklo.csv"
         csv_section = table()
         #csvdir.comment("Directory where the csv file is stored")
-        csv_section.add("filename", self._get_csv_relname())
+        csvpat = self.CSVPAT.replace('PROJECT', self.project)
+        csv_section.add("filename", join(self._get_dircsv_relname(), csvpat))
         ##
         ### Adding the table to the document
         doc.add("csv", csv_section)
@@ -162,14 +186,13 @@ class CfgProj:
     #-------------------------------------------------------------
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
+        # pylint: disable=line-too-long
+        #### f'CfgProj {note} . dircsv   {self.dircsv}\n'
         return (
             f'CfgProj {note} . trksdir  {self.trksubdir}\n'
             f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
-            f'CfgProj {note} . username {self.username}\n'
             f'CfgProj {note} . project  {self.project}\n'
             f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
-            f'CfgProj {note} . dircsv   {self.dircsv}\n'
-            # pylint: disable=line-too-long
             f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
             f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
 

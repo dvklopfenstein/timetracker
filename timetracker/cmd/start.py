@@ -23,12 +23,13 @@ def cli_run_start(fnamecfg, args):
     """Initialize timetracking on a project"""
     run_start(
         fnamecfg,
-        #args['project'],
+        args.name,
+        #args.project,
         #args['csvdir'],
         args.force,
         args.quiet)
 
-def run_start(fnamecfg, force=False, quiet=False):
+def run_start(fnamecfg, name=None, force=False, quiet=False):
     """Initialize timetracking on a project"""
     debug('START: RUNNING COMMAND START')
     now = datetime.now()
@@ -36,7 +37,7 @@ def run_start(fnamecfg, force=False, quiet=False):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
-    start_obj = cfgproj.get_starttime_obj()
+    start_obj = cfgproj.get_starttime_obj(name)
     fin_start = start_obj.get_filename_start()
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     # Is this project tracked?
@@ -59,7 +60,7 @@ def run_start(fnamecfg, force=False, quiet=False):
             if not quiet:
                 print(f'Timetracker {"started" if not force else "reset to"} '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
-                      f"for project '{cfgproj.project}' ID={cfgproj.username}")
+                      f"for project '{cfgproj.project}'")
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not force:

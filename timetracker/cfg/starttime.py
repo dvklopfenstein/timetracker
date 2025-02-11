@@ -4,7 +4,6 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os import remove
-from os import makedirs
 from os.path import exists
 from os.path import basename
 from os.path import join
@@ -30,19 +29,20 @@ class Starttime:
         debug(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}')
         debug(f'Starttime args . project  {project}')
         debug(f'Starttime args . name     {name}')
-        self.dircfg  = abspath(DIRTRK) if dircfg is None else normpath(dirname(dircfg))
+        self.dircfg  = abspath(DIRTRK) if dircfg is None else normpath(dircfg)
         self.project = basename(dirname(self.dircfg)) if project is None else project
         self.name = get_username(name) if name is None else name
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
         return (
-            f'CfgProj {note} {int(exists(self.get_filename_start()))} fname start {self.get_filename_start()}')
+            f'CfgProj {note} {int(exists(self.get_filename_start()))} '
+            f'fname start {self.get_filename_start()}')
 
     def get_filename_start(self):
         """Get the file storing the start time a person"""
         fstart = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        ####debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {relpath(fstart)}')
+        debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {fstart}')
         return fstart
 
     def read_starttime(self):

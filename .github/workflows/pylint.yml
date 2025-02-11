@@ -21,7 +21,7 @@ jobs:
         pip install --upgrade setuptools[core]
         pip install pylint
         pip install pytest
-    - name: Analysing the code with pylint
+    - name: Analyzing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
     - name: Run pytest

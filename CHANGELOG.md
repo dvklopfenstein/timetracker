@@ -18,6 +18,7 @@
 ## Unreleased
 
 ## Release 2025-02-11 v0.2a2
+* ADD Test for csv management
 * ADD Finder function, get_dircsv_default, for printing in CLI help messages
 * ADD csv-finding functionality
 * CHANGE Starttime to its own module

@@ -7,7 +7,7 @@ from sys import exit as sys_exit
 from os.path import exists
 from os.path import dirname
 from logging import debug
-from timetracker.cfg.cfg_global import CfgGlobal
+#from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_global import get_dirhome_globalcfg
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils  import run_cmd
@@ -26,11 +26,13 @@ def run_csvlocate(fnamecfg, dircsv, project, quiet=True):
     cfgproj = run_csvlocate_local(fnamecfg, dircsv, project, quiet)
     debug(cfgproj.get_desc("new"))
     dirhome = get_dirhome_globalcfg()
+    assert dirhome
 
 def run_csvlocate_test(fnamecfg, dircsv, project, dirhome):
     """Initialize timetracking on a test project"""
     cfgproj = run_csvlocate_local(fnamecfg, dircsv, project, False)
     debug(run_cmd(f'cat {fnamecfg}'))
+    assert dirhome
     return cfgproj
 
 def run_csvlocate_local(fnamecfg, dircsv, project, quiet=True):
@@ -42,9 +44,9 @@ def run_csvlocate_local(fnamecfg, dircsv, project, quiet=True):
     if exists(fnamecfg):
         print(f'Trk repository already initialized: {dirname(fnamecfg)}')
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg, dircsv, project)
+    cfgproj = CfgProj(fnamecfg, project)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfgproj.write()
+    cfgproj.write(quiet=quiet)
     return cfgproj
 
 

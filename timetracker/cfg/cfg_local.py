@@ -24,7 +24,6 @@ from tomlkit import comment
 from tomlkit import document
 from tomlkit import nl
 from tomlkit import table
-from tomlkit import dumps
 from tomlkit.toml_file import TOMLFile
 
 from timetracker.consts import DIRTRK
@@ -48,22 +47,17 @@ class CfgProj:
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    def __init__(self, filename, dircsv=None, project=None, name=None):
+    def __init__(self, filename, dircsv=None, project=None, username=None):
         self.filename = filename
         debug(f'CfgProj args {int(exists(filename))} filename {filename}')
         debug(f'CfgProj args . project  {project}')
-        debug(f'CfgProj args . name     {name}')
+        debug(f'CfgProj args . username {username}')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
         self.project = basename(self.dirproj) if project is None else project
-        self.name = get_username(name) if name is None else name
+        self.username = get_username(username) if username is None else username
         self.dircsv = self._init_dircsv() if dircsv is None else dircsv
-
-    def get_filename_cfglocal(self):
-        """Get the full filename of the local config file"""
-        # TODO: Invocrrect in tmp trr start
-        return get_relpath(self.get_filename_cfg(), self.dirproj)
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""
@@ -71,26 +65,34 @@ class CfgProj:
 
     def get_filename_csv(self):
         """Read the local cfg to get the csv filename for storing time data"""
-        fcfg = self.get_filename_cfg()
-        fcsv = self._read_csv_from_cfgfile(fcfg)
-        return fcsv if fcsv is not None else replace_envvar(self._get_csv_absname())
+        fcsv = self._read_csv_from_cfgfile()
+        return fcsv if fcsv is not None else replace_envvar(self._get_csv_absname(), self.username)
 
     def get_starttime_obj(self):
         """Get a Starttime instance"""
-        return Starttime(self.dircfg, self.project, self.name)
+        return Starttime(self.dircfg, self.project, self.username)
 
-    def wr_cfg_new(self):
+    def write(self, force=False, quiet=False):
         """Write a new config file"""
         fname = self.get_filename_cfg()
-        doc = self._get_doc_new()
-        self._wr_cfg(fname, doc)
+        self._mk_dircfg(quiet)
+        if not exists(fname):
+            doc = self._get_doc_new()
+            self._wr_cfg(fname, doc)
+        elif force:
+            doc = self._get_doc_new()
+            self._wr_cfg(fname, doc)
+            print(f'Overwrote {fname}')
+        else:
+            print(f'Use `force` to overwrite: {fname}')
 
-    def str_cfg(self):
-        """Return string containing configuration file contents"""
-        return dumps(self._get_doc_new())
+    ####def str_cfg(self):
+    ####    """Return string containing configuration file contents"""
+    ####    return dumps(self._get_doc_new())
 
-    def mk_dircfg(self, quiet=False):
-        """Initialize `.timetracker/` project working directory"""
+    #-------------------------------------------------------------
+    def _mk_dircfg(self, quiet=False):
+        """Makes a `.timetracker/` working directory, if needed; The project cfg is stored here"""
         dircfg = self.dircfg
         debug(f'mk_dircfg({dircfg})')
         if not exists(dircfg):
@@ -99,13 +101,13 @@ class CfgProj:
             if not quiet:
                 print(f'Initialized timetracker directory: {absdir}')
 
-    #-------------------------------------------------------------
-    def _read_csv_from_cfgfile(self, fin_cfglocal):
+    def _read_csv_from_cfgfile(self):
         """Read a config file and load it into a TOML document"""
+        fin_cfglocal = self.get_filename_cfg()
         doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj)
-            return replace_envvar(fpat) if '$' in fpat else fpat
+            return replace_envvar(fpat, self.username) if '$' in fpat else fpat
         return None
 
     def _wr_cfg(self, fname, doc):
@@ -122,8 +124,7 @@ class CfgProj:
 
     def _init_dircsv(self):
         """Read the project cfg to get the csv dir name for storing time data"""
-        fcfg = self.get_filename_cfg()
-        fcsv = self._read_csv_from_cfgfile(fcfg)
+        fcsv = self._read_csv_from_cfgfile()
         ####debug(f'CCCCCCCCCC dircsv: {fcfg}')
         ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
         if fcsv is not None:
@@ -164,11 +165,10 @@ class CfgProj:
         return (
             f'CfgProj {note} . trksdir  {self.trksubdir}\n'
             f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
-            f'CfgProj {note} . name     {self.name}\n'
+            f'CfgProj {note} . username {self.username}\n'
             f'CfgProj {note} . project  {self.project}\n'
             f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
             f'CfgProj {note} . dircsv   {self.dircsv}\n'
-            f'CfgProj {note} . fname cfg   {self.get_filename_cfglocal()}\n'
             # pylint: disable=line-too-long
             f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
             f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')

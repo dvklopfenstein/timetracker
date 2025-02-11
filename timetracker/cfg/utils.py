@@ -23,7 +23,6 @@ from logging import warning
 def get_abspath(filename, dirproj):
     """Get the path of the path filename relative to dirproj"""
     if isabs(filename):
-        ####debug(f'get_abspath TRUE isabs({filename})')
         return normpath(filename)
     if filename[:1] == '~':
         filename = expanduser(filename)
@@ -57,11 +56,6 @@ def run_cmd(cmd):
     """Run a command with output to stdout"""
     return run(cmd.split(), capture_output=True, text=True, check=True).stdout
 
-####def _read_local_cfg(fin):
-####    with open(fin, encoding='utf8') as ifstrm:
-####        return ''.join(ifstrm.readlines())
-####    return None
-
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
     if has_homedir(abspath(dirhome), projdir):
@@ -83,14 +77,14 @@ def has_homedir(homedir, projdir):
     ##debug('has_homedir  has_homedir False')
     return False
 
-def replace_envvar(fpat):
+def replace_envvar(fpat, username):
     """Replace '$USER$' with the value of the envvar-works with any envvar"""
     pta = fpat.find('$')
     assert pta != -1
     pt1 = pta + 1
     ptb = fpat.find('$', pt1)
     envkey = fpat[pt1:ptb]
-    envval = environ.get(envkey)
+    envval = username if envkey == 'USER' else environ.get(envkey)
     ##debug(f'CFG FNAME: {fpat}')
     ##debug(f'CFG {pta}')
     ##debug(f'CFG {ptb}')

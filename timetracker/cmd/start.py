@@ -59,7 +59,7 @@ def run_start(fnamecfg, force=False, quiet=False):
             if not quiet:
                 print(f'Timetracker {"started" if not force else "reset to"} '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
-                      f"for project '{cfgproj.project}' ID={cfgproj.name}")
+                      f"for project '{cfgproj.project}' ID={cfgproj.username}")
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not force:

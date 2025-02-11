@@ -17,12 +17,9 @@ from logging import debug
 from tomlkit import comment
 from tomlkit import document
 from tomlkit import nl
-##from tomlkit import table
-from tomlkit import dumps
 from tomlkit import array
 from tomlkit.toml_file import TOMLFile
 
-##from timetracker.cfg.utils import replace_envvar
 ##from timetracker.cfg.utils import replace_homepath
 from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
@@ -43,9 +40,9 @@ class CfgGlobal:
         debug(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- {self.filename}')
         self.doc = self._init_docglobal()
 
-    def str_cfg(self):
-        """Return string containing configuration file contents"""
-        return dumps(self.doc)
+    ####def str_cfg(self):
+    ####    """Return string containing configuration file contents"""
+    ####    return dumps(self.doc)
 
     def rd_cfg(self):
         """Read a global cfg file; return a doc obj"""

@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-02-11 v0.2a2**](#release-2025-02-05-v01a8) Began tests for csv management
 * **Release 2025-02-11 v0.2a2** Cleaned up tests; Added pytest to GitHub workflows upon push
 * **Release 2025-02-08 v0.2a1** Cleaned up tests; Added pytest to GitHub workflows upon push
 * **Release 2025-02-07 v0.2a0** Added functionality for running in project subdirs
@@ -15,6 +16,12 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-02-11 v0.2a2
+* ADD Finder function, get_dircsv_default, for printing in CLI help messages
+* ADD csv-finding functionality
+* CHANGE Starttime to its own module
+  * ADD CfgProj function to get Starttime instance
 
 ## Release 2025-02-05 v0.1a8
 * ADD: Zenodo citation and CITATION.cff file

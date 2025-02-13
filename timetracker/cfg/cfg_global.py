@@ -27,9 +27,6 @@ from timetracker.cfg.utils import get_relpath_adj
 
 FILENAME_GLOBALCFG = '.timetrackerconfig'
 
-def get_dirhome_globalcfg():
-    """Get the home directory, where the global configuration will be stored"""
-    return expanduser('~') if 'TIMETRACKERCONF' not in environ else environ['TIMETRACKERCONF']
 
 class CfgGlobal:
     """Global configuration parser for timetracking"""

@@ -39,7 +39,7 @@ def run_start(fnamecfg, name=None, force=False, quiet=False):
     cfgproj = CfgProj(fnamecfg)
     start_obj = cfgproj.get_starttime_obj(name)
     fin_start = start_obj.get_filename_start()
-    debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
+    debug(f'START: exists({int(exists(fin_start))}) FILENAME({fin_start})')
     # Is this project tracked?
     ###if not exists(cfgproj_fname):
     ###    print(str_notrkrepo(dirname(dirname(cfgproj_fname))))

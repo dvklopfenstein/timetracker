@@ -7,10 +7,10 @@ from sys import exit as sys_exit
 from os.path import exists
 from os.path import dirname
 from logging import debug
+from timetracker.cfg.utils import run_cmd
+from timetracker.cfg.utils import get_dirhome_globalcfg
 from timetracker.cfg.cfg_global import CfgGlobal
-from timetracker.cfg.cfg_global import get_dirhome_globalcfg
 from timetracker.cfg.cfg_local  import CfgProj
-from timetracker.cfg.utils  import run_cmd
 
 
 

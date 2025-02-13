@@ -50,7 +50,7 @@ def _get_expdirs(tmphome, project='apples', dirgit=False, trksubdir=None):
         dirgit=join(dirproj, '.git') if dirgit else None,
         dirdoc=join(dirproj, 'doc'))
     for key, expdir in ntexpdirs._asdict().items():
-        print(f'exists({int(exists(expdir)) if expdir is not None else "."}) '
+        debug(f'exists({int(exists(expdir)) if expdir is not None else "."}) '
               f'{key:14} {expdir}')
     return ntexpdirs
 
@@ -65,7 +65,11 @@ def mk_projdirs_wcfgs(tmp_home, project, trksubdir='.timetracker'):
 
 
 def findhome(home):
-    """Do a find on the given homedir"""
+    """Do a find on the given homedir and print using debug logging"""
+    debug(findhome_str(home))
+
+def findhome_str(home):
+    """Do a find on the given homedir and return results in a string"""
     cmd = f'find {home}'
-    debug(f'COMMAND: {cmd}\n'
-          f'{run(cmd.split(), capture_output=True, text=True, check=True).stdout}')
+    return (f'COMMAND: {cmd}\n'
+            f'{run(cmd.split(), capture_output=True, text=True, check=True).stdout}')

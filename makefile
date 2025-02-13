@@ -29,20 +29,20 @@ start:
 	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
 	find $(DIRTRK)
 
-# Test that researcher passed a stop message using MSG="This is my stop message"
+# Test that researcher passed a stop message using M="This is my stop message"
 # https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
 stop:
 	find $(DIRTRK)
 	@echo "~/timetrackers/timetracker_trk_$(USER).csv"
-	@if [ -n "$$MSG" ]; then \
+	@if [ -n "$$M" ]; then \
 	  make _stop; \
 	else  \
-	  echo '$@ MESSAGE FATAL: USAGE: make stop MSG="Describe activities in timeblock"'; \
+	  echo '$@ MESSAGE FATAL: USAGE: make stop M="Describe activities in timeblock"'; \
 		false ; \
 	fi
 
 _stop:
-	trk --trksubdir $(DIRTRK) stop -m "\"$(MSG)\""
+	trk --trksubdir $(DIRTRK) stop -m "\"$(M)\""
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv

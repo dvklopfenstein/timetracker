@@ -67,6 +67,7 @@ def run_start(fnamecfg, name=None, force=False, quiet=False):
     elif not force:
         print(str_started())
     debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
+    return fin_start
 
 
     #dirtrk = kws['trksubdir']

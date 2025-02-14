@@ -29,17 +29,18 @@ def mkdirs(tmp_home):
         makedirs(dirdoc)
     return projs
 
-def mk_projdirs(tmphome, project='apples', dirgit=False):
+def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
     """Make sub-directories in a temporary directory for use in tests"""
     pdir = join(tmphome, f'proj/{project}')
     makedirs(join(pdir, 'doc'))
     if dirgit:
         makedirs(join(pdir, '.git'))
-    return _get_expdirs(tmphome, project, dirgit)
+    return _get_expdirs(tmphome, project, dirgit, trksubdir)
 
-def _get_expdirs(tmphome, project='apples', dirgit=False, trksubdir=None):
+def _get_expdirs(tmphome, project, dirgit, trksubdir):
     """Make a list of expected home, project, and git directories"""
-    nto = namedtuple("ExpDirs", "dirhome dirproj dirgit dirdoc cfglocfilename")
+    nto = namedtuple("ExpDirs",
+                     "dirhome dirproj dirgit dirtrk dirdoc cfglocfilename")
     dirproj = join(tmphome, 'proj', project)
     if trksubdir is None:
         trksubdir = DIRTRK
@@ -48,11 +49,16 @@ def _get_expdirs(tmphome, project='apples', dirgit=False, trksubdir=None):
         dirproj=dirproj,
         cfglocfilename=join(dirproj, trksubdir, 'config'),
         dirgit=join(dirproj, '.git') if dirgit else None,
+        dirtrk=join(dirproj, trksubdir),
         dirdoc=join(dirproj, 'doc'))
+    prt_expdirs(ntexpdirs)
+    return ntexpdirs
+
+def prt_expdirs(ntexpdirs):
+    """Print the expected directories and files and if they exist"""
     for key, expdir in ntexpdirs._asdict().items():
         debug(f'exists({int(exists(expdir)) if expdir is not None else "."}) '
               f'{key:14} {expdir}')
-    return ntexpdirs
 
 
 def mk_projdirs_wcfgs(tmp_home, project, trksubdir='.timetracker'):

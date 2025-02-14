@@ -19,13 +19,14 @@ from timetracker.cmd.stop import run_stop
 from tests.pkgtttest.mkprojs import mk_projdirs
 from tests.pkgtttest.mkprojs import findhome
 from tests.pkgtttest.mkprojs import findhome_str
+from tests.pkgtttest.mkprojs import prt_expdirs
 
 
 basicConfig(level=DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
-def test_dircsv_default(project='pumpkin', name='carver'):
+def test_dircsv_default(project='pumpkin', username='carver'):
     """Test the TimeTracker project config dir finder"""
     #relcsvs = [
     #    "filename.csv",
@@ -40,21 +41,23 @@ def test_dircsv_default(project='pumpkin', name='carver'):
 
     dircsv = '.'
     with TemporaryDirectory() as tmphome:
-        ntdir = mk_projdirs(tmphome, project, dirgit=True)
-        finder = CfgFinder(ntdir.dirproj, trksubdir=None)
+        exp = mk_projdirs(tmphome, project, dirgit=True)
+        finder = CfgFinder(exp.dirproj, trksubdir=None)
         cfgname = finder.get_cfgfilename()
-        assert not exists(cfgname), findhome_str(ntdir.dirhome)
-        cfgp, cfgg = run_init_test(cfgname, dircsv, project, ntdir.dirhome)
+        assert not exists(cfgname), findhome_str(exp.dirhome)
+        cfgp, cfgg = run_init_test(cfgname, dircsv, project, exp.dirhome)
         assert cfgp
         findhome(tmphome)
-        assert exists(cfgname), findhome_str(ntdir.dirhome)
-        assert exists(cfgg.filename), findhome_str(ntdir.dirhome)
-        assert dirname(dirname(cfgname)) == ntdir.dirproj
-        assert dirname(cfgg.filename) == ntdir.dirhome
-        run_start(cfgname, name)
+        assert exists(cfgname), findhome_str(exp.dirhome)
+        assert exists(cfgg.filename), findhome_str(exp.dirhome)
+        assert dirname(dirname(cfgname)) == exp.dirproj
+        assert dirname(cfgg.filename) == exp.dirhome
+        fin_start = run_start(cfgname, username)
+        assert fin_start, 'TODO'
         run_stop(cfgname, get_ntcsv('stopping', activity=None, tags=None))
-    #    _run_proj_cur_same(relcsvs, ntdir.dirproj)
-    #    _run_proj_cur_diff(relcsvs, ntdir.dirdoc)
+        prt_expdirs(exp)
+    #    _run_proj_cur_same(relcsvs, exp.dirproj)
+    #    _run_proj_cur_diff(relcsvs, exp.dirdoc)
 
 #def _run_proj_cur_same(relcsvs, dircur, project):
 #    print("\n= TEST finder.get_dircsv_default() ================")

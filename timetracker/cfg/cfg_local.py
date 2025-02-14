@@ -71,6 +71,16 @@ class CfgProj:
             return fcsv
         return replace_envvar(self._get_dircsv_absname(), username)
 
+    def set_filename_csv(self, filename_str):
+        """Write the config file, replacing [csv][filename] value"""
+        filenamecfg = self.get_filename_cfg()
+        if exists(filenamecfg):
+            doc = TOMLFile(filenamecfg).read()
+            doc['csv']['filename'] = filename_str
+            self._wrcfg(filenamecfg, doc)
+            return
+        raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
+
     def get_starttime_obj(self, username=None):
         """Get a Starttime instance"""
         username = get_username(username)
@@ -106,18 +116,21 @@ class CfgProj:
             if not quiet:
                 print(f'Initialized timetracker directory: {absdir}')
 
-    def _read_project_from_cfgfile(self):
+    def _read_cfgfile(self):
         """Read a config file and load it into a TOML document"""
         fin_cfglocal = self.get_filename_cfg()
-        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+
+    def _read_project_from_cfgfile(self):
+        """Read a config file and load it into a TOML document"""
+        doc = self._read_cfgfile()
         if doc is not None:
             return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
         return None
 
     def _read_csv_from_cfgfile(self, username):
         """Read a config file and load it into a TOML document"""
-        fin_cfglocal = self.get_filename_cfg()
-        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        doc = self._read_cfgfile()
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj)
             ##fcsv_orig = join(dircsv, self.CSVPAT.replace('PROJECT', self.project))
@@ -126,8 +139,7 @@ class CfgProj:
 
     def _read_csvdir_from_cfgfile(self):
         """Read a config file and load it into a TOML document"""
-        fin_cfglocal = self.get_filename_cfg()
-        doc = TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        doc = self._read_cfgfile()
         if doc is not None:
             return get_abspath(dirname(doc['csv']['filename']), self.dirproj)
         return None

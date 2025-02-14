@@ -40,11 +40,14 @@ def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
 def _get_expdirs(tmphome, project, dirgit, trksubdir):
     """Make a list of expected home, project, and git directories"""
     nto = namedtuple("ExpDirs",
+                     "project trksubdir "
                      "dirhome dirproj dirgit dirtrk dirdoc cfglocfilename")
     dirproj = join(tmphome, 'proj', project)
     if trksubdir is None:
         trksubdir = DIRTRK
     ntexpdirs = nto(
+        project=project,
+        trksubdir=trksubdir,
         dirhome=tmphome,
         dirproj=dirproj,
         cfglocfilename=join(dirproj, trksubdir, 'config'),

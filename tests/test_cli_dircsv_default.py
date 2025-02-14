@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Test the TimeTracker project config dir finder"""
+"""Test the location of the csv file"""
+
 #from os.path import isabs
 from os.path import exists
 #from os.path import join
@@ -27,25 +28,23 @@ basicConfig(level=DEBUG)
 SEP = f'\n{"="*80}\n'
 
 def test_dircsv_default(project='pumpkin', username='carver'):
-    """Test the TimeTracker project config dir finder"""
-    #relcsvs = [
-    #    "filename.csv",
-    #    "./filename.csv",
-    #    "../filename.csv",
-    #    "~/filename.csv",
-    #]
-    #relcsvs = RELCSVS
+    """Test the location of the csv file"""
 
-    #cli = Cli(['init'])
-    #cli = Cli(['csvupdate'])
+    obj = Obj(project, username, dircur='dirproj', dirgit=True)
+    obj.run(dircsv="",   expcsv=f'proj/{project}/fname.csv')
+    obj.run(dircsv=".",  expcsv=f'proj/{project}/fname.csv')
+    obj.run(dircsv="..", expcsv='proj/fname.csv')
+    obj.run(dircsv="~",  expcsv='fname.csv')
 
     dircsv = '.'
+    curattr = 'dirproj'
     with TemporaryDirectory() as tmphome:
         exp = mk_projdirs(tmphome, project, dirgit=True)
-        finder = CfgFinder(exp.dirproj, trksubdir=None)
+        finder = CfgFinder(dircur=getattr(exp, curattr), trksubdir=None)
         cfgname = finder.get_cfgfilename()
         assert not exists(cfgname), findhome_str(exp.dirhome)
         cfgp, cfgg = run_init_test(cfgname, dircsv, project, exp.dirhome)
+        #cfgp.set_filename_csv(join(
         assert cfgp
         findhome(tmphome)
         assert exists(cfgname), findhome_str(exp.dirhome)
@@ -56,42 +55,19 @@ def test_dircsv_default(project='pumpkin', username='carver'):
         assert fin_start, 'TODO'
         run_stop(cfgname, get_ntcsv('stopping', activity=None, tags=None))
         prt_expdirs(exp)
-    #    _run_proj_cur_same(relcsvs, exp.dirproj)
-    #    _run_proj_cur_diff(relcsvs, exp.dirdoc)
 
-#def _run_proj_cur_same(relcsvs, dircur, project):
-#    print("\n= TEST finder.get_dircsv_default() ================")
-#    files = zip(relcsvs, _exp_abscsv_clean(project), _exp_relcsv_clean())
-#    for cfgcsv_orig, abs_exp, rel_exp in files:
-#        cli = Cli()
-#        dflt = cli._get_csvfilename_dflt()
-#        print(f'{dflt} {cfgcsv_orig:>17} {abs_exp:39} {rel_exp}')
-#        assert dflt == '.'
-#
-#def _run_proj_cur_diff(relcsvs, dircur):
-#    print("\n= TEST finder.get_dircsv_default() ================")
-#    files = zip(relcsvs, _exp_abscsv_clean(), _exp_relcsv_clean())
-#    for cfgcsv_orig, abs_exp, rel_exp in files:
-#        cli = Cli()
-#        dflt = cli._get_csvfilename_dflt()
-#        print(f'{dflt} {cfgcsv_orig:>17} {abs_exp:39} {rel_exp}')
-#        assert dflt == '.'
+class Obj:
+    """Test the location of the csv file"""
+    # pylint: disable=too-few-public-methods
 
+    def __init__(self, project, username, dircur, dirgit):
+        self.project = project
+        self.uname = username
+        self.dircurattr = dircur
+        self.dirgit = dirgit
 
-#def _exp_abscsv_clean(project):
-#    return [
-#        f'/home/user/me/proj/{project}/filename.csv',
-#        f'/home/user/me/proj/{project}/filename.csv',
-#        '/home/user/me/proj/filename.csv',
-#        join(expanduser("~"), 'filename.csv')]
-#
-#def _exp_relcsv_clean():
-#    return [
-#        'filename.csv',
-#        'filename.csv',
-#        '../filename.csv',
-#        '~/filename.csv']
-
+    def run(self, dircsv, expcsv):
+        """Run init w/dircsv, start, stop; Test location of csv"""
 
 if __name__ == '__main__':
     test_dircsv_default()

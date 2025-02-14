@@ -13,17 +13,27 @@ from logging import error
 from collections import namedtuple
 from datetime import datetime
 ##from timeit import default_timer
+from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.msgs import str_init
 
 
+NTCSV = namedtuple("CsvFields", "message activity tags")
+
+def get_ntcsv(message, activity=None, tags=None):
+    """Get a namedtuple with csv row information"""
+    return NTCSV(
+        message=message,
+        activity=activity if activity is not None else '',
+        tags=';'.join(tags) if tags is not None else '')
+
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
-    nto = namedtuple("CsvFields", "message activity tags")
     run_stop(
         fnamecfg,
-        nto._make([args.message, args.activity, args.tags]),
+        get_ntcsv(args.message, args.activity, args.tags),
+        name=args.name,
         quiet=args.quiet,
         keepstart=args.keepstart)
 
@@ -31,14 +41,16 @@ def cli_run_stop(fnamecfg, args):
 def run_stop(fnamecfg, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug('STOP: RUNNING COMMAND STOP')
+    debug(yellow('STOP: RUNNING COMMAND STOP'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
         #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg)
     # Get the elapsed time
-    dta = cfgproj.read_starttime()
+    name = kwargs.get('name')
+    start_obj = cfgproj.get_starttime_obj(name)
+    dta = start_obj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -49,7 +61,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         return
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv()
+    fcsv = cfgproj.get_filename_csv(name)
     _msg_csv(fcsv)
     # Print header into csv, if needed
     if not exists(fcsv):
@@ -61,20 +73,16 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         dta, dtz, delta,
         csvfields.message,
         csvfields.activity,
-        _str_tags(csvfields.tags))
+        csvfields.tags)
     _wr_csvlong_data(fcsv, csvline)
     if not kwargs['quiet']:
         print(f'Timer stopped; Elapsed H:M:S={delta} '
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
     if not kwargs['keepstart']:
-        cfgproj.rm_starttime()
+        start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
-
-def _str_tags(tags):
-    """Get the stop-timer tags"""
-    return ';'.join(tags) if tags else ''
 
 def _msg_csv(fcsv):
     if fcsv:

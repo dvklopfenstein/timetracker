@@ -14,20 +14,20 @@ from timetracker.cfg.cfg_local import CfgProj
 def cli_run_none(fcfgproj, args):
     """noneialize timetracking on a project"""
     # pylint: disable=unused-argument
-    run_none(fcfgproj)
+    run_none(fcfgproj, args.name)
 
-def run_none(fcfgproj):
+def run_none(fcfgproj, name=None):
     """If no Timetracker command is run, print informative messages"""
     if not exists(fcfgproj):
         print(str_init(dirname(fcfgproj)))
         sys_exit(0)
     # Check for start time
     cfglocal = CfgProj(fcfgproj)
-    start_file = cfglocal.get_filename_start()
-    if not exists(start_file):
+    start_obj = cfglocal.get_starttime_obj(name)
+    if not exists(start_obj.get_filename_start()):
         print('Run `trk start` to begin timetracking')
     else:
-        cfglocal.prt_elapsed()
+        start_obj.prt_elapsed()
         print(str_started())
 
 

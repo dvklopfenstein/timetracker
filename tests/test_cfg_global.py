@@ -28,7 +28,7 @@ def test_cfgbase_home():
         assert cfg.doc['projects'] == []
         assert not exists(cfg.filename)
 
-def test_cfgbase_temp(name='taster', trksubdir='.timetracker'):
+def test_cfgbase_temp(trksubdir='.timetracker'):
     """Test cfg flow"""
     print(f'{SEP}1) INITIALIZE "HOME" DIRECTORY')
     with TemporaryDirectory() as tmphome:
@@ -47,15 +47,13 @@ def test_cfgbase_temp(name='taster', trksubdir='.timetracker'):
             # EXP: apples '~/proj/apples/.timetracker/config'
             exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmphome)])
             # INIT LOCAL PROJECT CONFIG
-            cfgloc = CfgProj(cfgname_proj, project=proj, name=name)
+            cfgloc = CfgProj(cfgname_proj, project=proj)
             assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'
                                                    f'ACT({cfgloc.trksubdir})\n'
                                                    f'{cfgloc}')
             assert cfgloc.dircfg == workdir
             assert cfgloc.project == proj
-            assert cfgloc.name == name
-            cfgloc.mk_dircfg()
-            cfgloc.wr_cfg_new()
+            cfgloc.write()
             # cat project/.timetracker/config
             filenamecfg_proj = cfgloc.get_filename_cfg()
             debug(f'PROJ CFG: {filenamecfg_proj}')

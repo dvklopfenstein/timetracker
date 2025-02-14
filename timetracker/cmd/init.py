@@ -7,6 +7,7 @@ from sys import exit as sys_exit
 from os.path import exists
 from os.path import dirname
 from logging import debug
+from timetracker.utils import yellow
 from timetracker.cfg.utils import run_cmd
 from timetracker.cfg.utils import get_dirhome_globalcfg
 from timetracker.cfg.cfg_global import CfgGlobal
@@ -38,7 +39,7 @@ def run_init_test(fnamecfg, dircsv, project, dirhome):
 
 def run_init_local(fnamecfg, dircsv, project, quiet=True):
     """Initialize the local configuration file for a timetracking project"""
-    debug('INIT: RUNNING COMMAND INIT')
+    debug(yellow('INIT: RUNNING COMMAND INIT'))
     debug(f'INIT: fnamecfg:    {fnamecfg}')
     debug(f'INIT: project:     {project}')
     debug(f'INIT: dircsv:      {dircsv}')

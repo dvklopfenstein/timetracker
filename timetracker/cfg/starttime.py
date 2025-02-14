@@ -13,6 +13,7 @@ from os.path import normpath
 from datetime import datetime
 from logging import debug
 
+from timetracker.utils import orange
 from timetracker.consts import DIRTRK
 from timetracker.cfg.utils import get_username
 
@@ -26,7 +27,7 @@ class Starttime:
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
     def __init__(self, dircfg, project=None, name=None):
-        debug(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}')
+        debug(orange(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}'))
         debug(f'Starttime args . project  {project}')
         debug(f'Starttime args . name     {name}')
         self.dircfg  = abspath(DIRTRK) if dircfg is None else normpath(dircfg)

@@ -4,10 +4,10 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 ##from os import getcwd
-from os import environ
+##from os import environ
 from os.path import isabs
 from os.path import exists
-from os.path import expanduser
+##from os.path import expanduser
 ##from os.path import basename
 from os.path import join
 from os.path import abspath
@@ -21,6 +21,7 @@ from tomlkit import array
 from tomlkit.toml_file import TOMLFile
 
 ##from timetracker.cfg.utils import replace_homepath
+from timetracker.utils import ltblue
 from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_relpath_adj
@@ -34,7 +35,8 @@ class CfgGlobal:
     def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
         self.dirhome = abspath(get_dirhome(dirhome))
         self.filename = join(self.dirhome, basename)
-        debug(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- {self.filename}')
+        debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- '
+                   f'{self.filename}'))
         self.doc = self._init_docglobal()
 
     ####def str_cfg(self):

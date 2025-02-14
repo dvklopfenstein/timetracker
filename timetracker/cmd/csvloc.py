@@ -8,6 +8,7 @@ from os.path import exists
 from os.path import dirname
 from logging import debug
 #from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.utils import yellow
 from timetracker.cfg.utils import get_dirhome_globalcfg
 from timetracker.cfg.utils import run_cmd
 from timetracker.cfg.cfg_local import CfgProj
@@ -37,7 +38,7 @@ def run_csvlocate_test(fnamecfg, dircsv, project, dirhome):
 
 def run_csvlocate_local(fnamecfg, dircsv, project, quiet=True):
     """Initialize the local configuration file for a timetracking project"""
-    debug('CSVLOC: RUNNING COMMAND CSVLOC')
+    debug(yellow('CSVLOC: RUNNING COMMAND CSVLOC'))
     debug(f'CSVLOC: fnamecfg:    {fnamecfg}')
     debug(f'CSVLOC: project:     {project}')
     debug(f'CSVLOC: dircsv:      {dircsv}')

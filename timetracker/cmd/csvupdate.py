@@ -14,6 +14,7 @@ from csv import reader
 ##from csv import DictReader
 ##from csv import writer
 ##from timeit import default_timer
+from timetracker.utils import yellow
 from timetracker.cfg.starttime import FMTDT
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg_local  import CfgProj
@@ -32,7 +33,7 @@ def cli_run_csvupdate(cfglocal, args):
 def run_csvupdate(fnamecfg, project, name, fout):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug('CSVUPDATE: RUNNING COMMAND CSVUPDATE')
+    debug(yellow('CSVUPDATE: RUNNING COMMAND CSVUPDATE'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)

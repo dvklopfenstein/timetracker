@@ -16,6 +16,7 @@ from datetime import datetime
 from timetracker.msgs import str_started
 #from timetracker.msgs import str_notrkrepo
 from timetracker.msgs import str_init
+from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 
 
@@ -31,7 +32,7 @@ def cli_run_start(fnamecfg, args):
 
 def run_start(fnamecfg, name=None, force=False, quiet=False):
     """Initialize timetracking on a project"""
-    debug('START: RUNNING COMMAND START')
+    debug(yellow('START: RUNNING COMMAND START'))
     now = datetime.now()
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))

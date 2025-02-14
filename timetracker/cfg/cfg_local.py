@@ -35,6 +35,7 @@ from timetracker.consts import DIRCSV
 ##from timetracker.cfg.utils import get_dirname_abs
 
 from timetracker.cfg.starttime import Starttime
+from timetracker.utils import pink
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_relpath
@@ -50,7 +51,7 @@ class CfgProj:
     ####def __init__(self, filename, dircsv=None, project=None):
     def __init__(self, filename, project=None):
         self.filename = filename
-        debug(f'CfgProj args {int(exists(filename))} filename {filename}')
+        debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
         debug(f'CfgProj args . project  {project}')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))

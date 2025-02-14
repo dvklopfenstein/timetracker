@@ -12,6 +12,8 @@ from os.path import ismount
 from os.path import basename
 from os.path import normpath
 from os.path import realpath
+from logging import debug
+from timetracker.utils import white
 from timetracker.consts import DIRTRK
 
 
@@ -19,6 +21,7 @@ class CfgFinder:
     """Functionality to find the local project config, if one exists"""
 
     def __init__(self, dircur, trksubdir=None):
+        debug(white(f'CfgFinder dircur({dircur}) ({trksubdir})'))
         self.dircur = dircur
         self.trksubdir = trksubdir if trksubdir is not None else DIRTRK
         # Existing directory (ex: ./timetracker) or None if dir not exist

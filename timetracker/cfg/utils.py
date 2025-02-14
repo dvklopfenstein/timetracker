@@ -152,6 +152,8 @@ def get_shortest_name(filename):
 
 def get_dirhome_globalcfg(dirhome=None):
     """Get the home directory, where the global configuration will be stored"""
+    assert not dirhome
     return expanduser('~') if 'TIMETRACKERCONF' not in environ else environ['TIMETRACKERCONF']
+
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

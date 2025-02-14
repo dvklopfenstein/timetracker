@@ -2,9 +2,9 @@
 """Test the TimeTracker project config dir finder"""
 #from os.path import isabs
 from os.path import exists
-from os.path import join
+#from os.path import join
 from os.path import dirname
-from os.path import expanduser
+#from os.path import expanduser
 from logging import basicConfig
 from logging import DEBUG
 #from logging import debug
@@ -75,19 +75,19 @@ def test_dircsv_default(project='pumpkin', name='carver'):
 #        assert dflt == '.'
 
 
-def _exp_abscsv_clean(project):
-    return [
-        f'/home/user/me/proj/{project}/filename.csv',
-        f'/home/user/me/proj/{project}/filename.csv',
-        '/home/user/me/proj/filename.csv',
-        join(expanduser("~"), 'filename.csv')]
-
-def _exp_relcsv_clean():
-    return [
-        'filename.csv',
-        'filename.csv',
-        '../filename.csv',
-        '~/filename.csv']
+#def _exp_abscsv_clean(project):
+#    return [
+#        f'/home/user/me/proj/{project}/filename.csv',
+#        f'/home/user/me/proj/{project}/filename.csv',
+#        '/home/user/me/proj/filename.csv',
+#        join(expanduser("~"), 'filename.csv')]
+#
+#def _exp_relcsv_clean():
+#    return [
+#        'filename.csv',
+#        'filename.csv',
+#        '../filename.csv',
+#        '~/filename.csv']
 
 
 if __name__ == '__main__':

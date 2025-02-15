@@ -41,6 +41,7 @@ def cli_run_stop(fnamecfg, args):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
+    debug(yellow('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
     debug(yellow('STOP: RUNNING COMMAND STOP'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))

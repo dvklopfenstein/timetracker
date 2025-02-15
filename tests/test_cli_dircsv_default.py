@@ -31,20 +31,21 @@ basicConfig(level=DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
-def test_dircsv_default(project='pumpkin', username='carver'):
-    """Test the location of the csv file"""
-
+def test_dircsv_projdir(project='pumpkin', username='carver'):
+    """Test the location of the csv file when init from proj dir"""
     obj = Obj(project, username, dircur='dirproj', dirgit01=True)
     obj.run(dircsv="",   fcsv='fname.csv', expcsv=f'proj/{project}/fname.csv')
     obj.run(dircsv=".",  fcsv='fname.csv', expcsv=f'proj/{project}/fname.csv')
     obj.run(dircsv="..", fcsv='fname.csv', expcsv='proj/fname.csv')
     obj.run(dircsv="~",  fcsv='fname.csv', expcsv='fname.csv')
 
-    #obj = Obj(project, username, dircur='dirdoc', dirgit01=True)
-    #obj.run(dircsv="",   expcsv=f'proj/{project}/fname.csv')
-    #obj.run(dircsv=".",  expcsv=f'proj/{project}/fname.csv')
-    #obj.run(dircsv="..", expcsv='proj/fname.csv')
-    #obj.run(dircsv="~",  expcsv='fname.csv')
+def test_dircsv_projdoc(project='pumpkin', username='carver'):
+    """Test the location of the csv file when init from proj/doc dir"""
+    obj = Obj(project, username, dircur='dirdoc', dirgit01=True)
+    obj.run(dircsv="",   fcsv='fname.csv', expcsv=f'proj/{project}/fname.csv')
+    obj.run(dircsv=".",  fcsv='fname.csv', expcsv=f'proj/{project}/fname.csv')
+    obj.run(dircsv="..", fcsv='fname.csv', expcsv='proj/fname.csv')
+    obj.run(dircsv="~",  fcsv='fname.csv', expcsv='fname.csv')
 
 class Obj:
     """Test the location of the csv file"""
@@ -90,4 +91,5 @@ class Obj:
 
 
 if __name__ == '__main__':
-    test_dircsv_default()
+    #test_dircsv_projdir()
+    test_dircsv_projdoc()

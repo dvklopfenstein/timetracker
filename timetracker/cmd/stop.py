@@ -32,13 +32,13 @@ def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
     run_stop(
         fnamecfg,
+        args.name,
         get_ntcsv(args.message, args.activity, args.tags),
-        name=args.name,
         quiet=args.quiet,
         keepstart=args.keepstart)
 
 #def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
-def run_stop(fnamecfg, csvfields, **kwargs):
+def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('STOP: RUNNING COMMAND STOP'))
@@ -48,8 +48,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg)
     # Get the elapsed time
-    name = kwargs.get('name')
-    start_obj = cfgproj.get_starttime_obj(name)
+    start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
@@ -61,7 +60,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         return None
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv(name)
+    fcsv = cfgproj.get_filename_csv(uname)
     _msg_csv(fcsv)
     # Print header into csv, if needed
     if not exists(fcsv):
@@ -75,11 +74,11 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         csvfields.activity,
         csvfields.tags)
     _wr_csvlong_data(fcsv, csvline)
-    if not kwargs['quiet']:
+    if not kwargs.get('quiet', False):
         print(f'Timer stopped; Elapsed H:M:S={delta} '
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
-    if not kwargs['keepstart']:
+    if not kwargs.get('keepstart', False):
         start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')

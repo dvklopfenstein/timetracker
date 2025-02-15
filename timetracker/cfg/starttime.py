@@ -41,15 +41,20 @@ class Starttime:
             f'fname start {self.filename}')
 
     def read_starttime(self):
-        """Read the start time file"""
-        return _read_starttime(self.filename)
+        """Get datetime from a starttime file"""
+        if exists(self.filename):
+            with open(self.filename, encoding='utf8') as ifstrm:
+                for line in ifstrm:
+                    line = line.strip()
+                    assert len(line) == 26  # "2025-01-22 04:05:00.086891"
+                    return datetime.strptime(line, FMTDT)
+        return None
 
     def prt_elapsed(self):
         """Print elapsed time if timer is started"""
-        fin_start = self.filename
         # Print elapsed time, if timer was started
-        if exists(fin_start):
-            hms = hms_from_startfile(fin_start)
+        if exists(self.filename):
+            hms = self._hms_from_startfile()
             print(f'Timer running: {hms} H:M:S '
                   f"elapsed time for '{self.project}' ID={self.name}")
 
@@ -59,20 +64,10 @@ class Starttime:
         if exists(fstart):
             remove(fstart)
 
-def hms_from_startfile(fname):
-    """Get the elapsed time starting from time in a starttime file"""
-    dtstart = _read_starttime(fname)
-    return datetime.now() - dtstart if dtstart is not None else None
-
-def _read_starttime(fname):
-    """Get datetime from a starttime file"""
-    if exists(fname):
-        with open(fname, encoding='utf8') as ifstrm:
-            for line in ifstrm:
-                line = line.strip()
-                assert len(line) == 26  # "2025-01-22 04:05:00.086891"
-                return datetime.strptime(line, FMTDT)
-    return None
+    def _hms_from_startfile(self):
+        """Get the elapsed time starting from time in a starttime file"""
+        dtstart = self.read_starttime()
+        return datetime.now() - dtstart if dtstart is not None else None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

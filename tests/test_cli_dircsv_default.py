@@ -84,8 +84,9 @@ class Obj:
             assert exists(fin_start)
 
             # CMD: STOP
-            run_stop(cfgname, get_ntcsv('stopping', activity=None, tags=None))
+            run_stop(cfgname, self.uname, get_ntcsv('stopping', activity=None, tags=None))
             #prt_expdirs(exp)
+            assert not exists(fin_start), f'SHOULD NOT EXIST AFTER STOP: {fin_start}'
 
 
 if __name__ == '__main__':

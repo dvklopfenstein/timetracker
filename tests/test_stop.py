@@ -38,7 +38,7 @@ def test_stop():
     #    print(err)
     #print('TEST PASSED')
     with raises(SystemExit) as excinfo:
-        run_stop(filename_config, csvfields, quiet=quiet, keepstart=keepstart)
+        run_stop(filename_config, 'USER', csvfields, quiet=quiet, keepstart=keepstart)
     assert excinfo.value.code == 0
     print('TEST PASSED')
 

@@ -63,16 +63,16 @@ class CfgGlobal:
             if has_homedir(self.dirhome, abspath(cfgfilename)):
                 ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
                 fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
-                debug(f'OOOOOOOOOO {fnamecfg_proj}')
+                ##debug(f'OOOOOOOOOO {fnamecfg_proj}')
             if doc is not None:
                 doc['projects'].add_line((project, fnamecfg_proj))
                 self.doc = doc
             else:
                 self.doc['projects'].add_line((project, fnamecfg_proj))
-            debug(f"PROJECT {project} ADD GLOBAL PROJECTS: {self.doc['projects'].as_string()}")
+            ##debug(f"PROJECT {project} ADD GLOBAL PROJECTS: {self.doc['projects'].as_string()}")
             return True
         # pylint: disable=unsubscriptable-object
-        debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
+        ##debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
         return False
 
     def _get_docprt(self):

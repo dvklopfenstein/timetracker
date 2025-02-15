@@ -8,7 +8,7 @@ from os.path import exists
 from os.path import dirname
 from logging import debug
 from timetracker.utils import yellow
-from timetracker.cfg.utils import run_cmd
+#from timetracker.cfg.utils import run_cmd
 from timetracker.cfg.utils import get_dirhome_globalcfg
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local  import CfgProj
@@ -33,7 +33,7 @@ def run_init(fnamecfg, dircsv, project, quiet=True):
 def run_init_test(fnamecfg, dircsv, project, dirhome):
     """Initialize timetracking on a test project"""
     cfgproj = run_init_local(fnamecfg, dircsv, project, False)
-    debug(run_cmd(f'cat {fnamecfg}'))
+    ####debug(run_cmd(f'cat {fnamecfg}'))
     cfg_global = run_init_global(dirhome, cfgproj)
     return cfgproj, cfg_global
 
@@ -42,13 +42,13 @@ def run_init_local(fnamecfg, dircsv, project, quiet=True):
     debug(yellow('INIT: RUNNING COMMAND INIT'))
     debug(f'INIT: fnamecfg:    {fnamecfg}')
     debug(f'INIT: project:     {project}')
-    debug(f'INIT: dircsv:      {dircsv}')
+    debug(f'INIT: dircsv({dircsv})')
     if exists(fnamecfg):
         print(f'Trk repository already initialized: {dirname(fnamecfg)}')
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg, project)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfgproj.write(quiet)
+    cfgproj.write_file(dircsv=dircsv, quiet=quiet)
     return cfgproj
 
 def run_init_global(dirhome, cfgproj):

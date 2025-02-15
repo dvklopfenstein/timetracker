@@ -58,7 +58,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         error('NOT WRITING ELAPSED TIME; '
               'Do `trk start` to begin tracking time '
               'for project, TODO')
-        return
+        return None
 
     # Append the timetracker file with this time unit
     fcsv = cfgproj.get_filename_csv(name)
@@ -83,6 +83,7 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
+    return fcsv
 
 def _msg_csv(fcsv):
     if fcsv:

@@ -47,7 +47,7 @@ def run_csvlocate_local(fnamecfg, dircsv, project, quiet=True):
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg, project)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfgproj.write(quiet=quiet)
+    cfgproj.write_file(quiet=quiet)
     return cfgproj
 
 

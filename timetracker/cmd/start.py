@@ -6,7 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from os.path import exists
 #from os.path import abspath
-from os.path import relpath
+#from os.path import relpath
 from os.path import dirname
 from logging import debug
 
@@ -39,8 +39,7 @@ def run_start(fnamecfg, name=None, force=False, quiet=False):
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
     start_obj = cfgproj.get_starttime_obj(name)
-    fin_start = start_obj.get_filename_start()
-    debug(f'START: exists({int(exists(fin_start))}) FILENAME({fin_start})')
+    fin_start = start_obj.filename
     # Is this project tracked?
     ###if not exists(cfgproj_fname):
     ###    print(str_notrkrepo(dirname(dirname(cfgproj_fname))))
@@ -66,7 +65,6 @@ def run_start(fnamecfg, name=None, force=False, quiet=False):
     # Informational message
     elif not force:
         print(str_started())
-    debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
     return fin_start
 
 

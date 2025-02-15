@@ -24,6 +24,10 @@ def white(txt):
     """Return the text, colored orange"""
     return _color(txt, 15)
 
+def cyan(txt):
+    """Return the text, colored orange"""
+    return _color(txt, 14)
+
 def _color(txt, colornum):
     """Return the text, colorized"""
     return f"\x1b[48;5;0;38;5;{colornum};1;1m{txt:5}\x1b[0m"

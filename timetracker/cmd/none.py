@@ -24,7 +24,7 @@ def run_none(fcfgproj, name=None):
     # Check for start time
     cfglocal = CfgProj(fcfgproj)
     start_obj = cfglocal.get_starttime_obj(name)
-    if not exists(start_obj.get_filename_start()):
+    if not exists(start_obj.filename):
         print('Run `trk start` to begin timetracking')
     else:
         start_obj.prt_elapsed()

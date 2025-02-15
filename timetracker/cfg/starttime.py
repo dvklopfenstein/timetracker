@@ -24,36 +24,29 @@ FMTDT = '%Y-%m-%d %H:%M:%S.%f'
 class Starttime:
     """Local project configuration parser for timetracking"""
 
-    CSVPAT = 'timetracker_PROJECT_$USER$.csv'
-
     def __init__(self, dircfg, project=None, name=None):
-        debug(orange(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}'))
-        debug(f'Starttime args . project  {project}')
-        debug(f'Starttime args . name     {name}')
         self.dircfg  = abspath(DIRTRK) if dircfg is None else normpath(dircfg)
         self.project = basename(dirname(self.dircfg)) if project is None else project
         self.name = get_username(name) if name is None else name
+        self.filename = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
+        debug(orange(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}'))
+        debug(f'Starttime args . project  {project}')
+        debug(f'Starttime args . name     {name}')
+        debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
         return (
-            f'CfgProj {note} {int(exists(self.get_filename_start()))} '
-            f'fname start {self.get_filename_start()}')
-
-    def get_filename_start(self):
-        """Get the file storing the start time a person"""
-        fstart = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        debug(f'CFG LOCAL: STARTFILE exists({int(exists(fstart))}) {fstart}')
-        return fstart
+            f'CfgProj {note} {int(exists(self.filename))} '
+            f'fname start {self.filename}')
 
     def read_starttime(self):
         """Read the start time file"""
-        fname = self.get_filename_start()
-        return _read_starttime(fname)
+        return _read_starttime(self.filename)
 
     def prt_elapsed(self):
         """Print elapsed time if timer is started"""
-        fin_start = self.get_filename_start()
+        fin_start = self.filename
         # Print elapsed time, if timer was started
         if exists(fin_start):
             hms = hms_from_startfile(fin_start)
@@ -62,7 +55,7 @@ class Starttime:
 
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""
-        fstart = self.get_filename_start()
+        fstart = self.filename
         if exists(fstart):
             remove(fstart)
 

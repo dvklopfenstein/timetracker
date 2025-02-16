@@ -49,14 +49,17 @@ class CfgProj:
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
     ####def __init__(self, filename, dircsv=None, project=None):
-    def __init__(self, filename, project=None):
+    def __init__(self, filename, project=None, dirhome=None):
         self.filename = filename
         debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
+        if dirhome is not None:
+            debug(pink(f'CfgProj args {int(exists(dirhome))} dirhome  {dirhome}'))
         debug(f'CfgProj args . project({project})')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
         self.project = basename(self.dirproj) if project is None else project
+        self.dirhome = dirhome
         ####self.dircsv = self._get_dircsv() if dircsv is None else dircsv
 
     def get_filename_cfg(self):
@@ -135,7 +138,7 @@ class CfgProj:
         """Read a config file and load it into a TOML document"""
         doc = self.read_doc()
         if doc is not None:
-            fpat = get_abspath(doc['csv']['filename'], self.dirproj)
+            fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
             ##fcsv_orig = join(dircsv, self.CSVPAT.replace('PROJECT', self.project))
             fpat = fpat.replace('PROJECT', self.project)
             return replace_envvar(fpat, username) if '$' in fpat else fpat
@@ -145,7 +148,7 @@ class CfgProj:
         """Read a config file and load it into a TOML document"""
         doc = self.read_doc()
         if doc is not None:
-            return get_abspath(dirname(doc['csv']['filename']), self.dirproj)
+            return get_abspath(dirname(doc['csv']['filename']), self.dirproj, self.dirhome)
         return None
 
     def _wr_cfg(self, fname, doc):
@@ -166,7 +169,7 @@ class CfgProj:
         ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
         if fcsv is not None:
             return dirname(fcsv)
-        dircsv = get_abspath(DIRCSV, self.dirproj)
+        dircsv = get_abspath(DIRCSV, self.dirproj, self.dirhome)
         ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
         return dircsv
 
@@ -176,7 +179,7 @@ class CfgProj:
         ####debug(f'BBBBBBBBBB {dircsv}')
         ####debug(f'BBBBBBBBBB {fcsv_orig}')
         ####return get_abspath(fcsv_orig, self.dirproj)
-        return get_abspath(dircsv, self.dirproj)
+        return get_abspath(dircsv, self.dirproj, self.dirhome)
 
     def _get_dircsv_relname(self):
         fcsv_abs = self._get_dircsv_absname()

@@ -15,6 +15,7 @@ RELCSVS = [
     "./filename.csv",
     "../filename.csv",
     "~/filename.csv",
+    #"~user/filename.csv",
 ]
 
 def mkdirs(tmp_home):

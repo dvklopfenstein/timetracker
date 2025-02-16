@@ -62,12 +62,6 @@ class CfgFinder:
         assert not (self.dirtrk is None and self.dirgit is None)
         return self.dirproj
 
-    #def get_dircsv(self):
-    #    """Get the csv directory name"""
-    #    fname = self.get_cfgfilename()
-    #    cfg = CfgProj(fname)
-    #    return cfg.dircsv
-
     def get_dirproj(self):
         """Get the project directory"""
         return dirname(self.dirtrk_pathname)

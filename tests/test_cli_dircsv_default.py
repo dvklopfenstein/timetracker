@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Test the location of the csv file"""
 
-#from os.path import isabs
+from os.path import isabs
 from os.path import exists
 from os.path import join
 from os.path import dirname
@@ -71,23 +71,36 @@ class Obj:
             cfgp, cfgg = run_init_test(cfgname, dircsv, self.project, exp.dirhome)
             # pylint: disable=unsubscriptable-object
             assert cfgp.read_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
-            cfg_csv_filename = join(dircsv, fcsv)
-            cfgp.set_filename_csv(cfg_csv_filename)
-            assert cfgp.read_doc()['csv']['filename'] == join(dircsv, fcsv)
+            exp_cfg_csv_fname = join(dircsv, fcsv)
+            exp_cfg_csv_filename = _get_abscsv(exp.dirproj, dircsv, fcsv, tmphome)
+            cfgp.set_filename_csv(exp_cfg_csv_fname)
+            assert cfgp.read_doc()['csv']['filename'] == exp_cfg_csv_fname
             #findhome(tmphome)
             assert exists(cfgname), findhome_str(exp.dirhome)
             assert exists(cfgg.filename), findhome_str(exp.dirhome)
             assert dirname(dirname(cfgname)) == exp.dirproj
             assert dirname(cfgg.filename) == exp.dirhome
+            assert not exists(exp_cfg_csv_filename)
 
             # CMD: START
             fin_start = run_start(cfgname, self.uname)
             assert exists(fin_start)
+            assert not exists(exp_cfg_csv_filename)
 
             # CMD: STOP
-            run_stop(cfgname, self.uname, get_ntcsv('stopping', activity=None, tags=None))
+            run_stop(cfgname,
+                     self.uname,
+                     get_ntcsv('stopping', activity=None, tags=None),
+                     dirhome=tmphome)
+            assert isabs(exp_cfg_csv_filename), f'SHOULD BE ABSPATH: {exp_cfg_csv_filename}'
+            assert exists(exp_cfg_csv_filename), f'SHOULD EXIST: {exp_cfg_csv_filename}'
             #prt_expdirs(exp)
             assert not exists(fin_start), f'SHOULD NOT EXIST AFTER STOP: {fin_start}'
+
+def _get_abscsv(dirproj, dircsv, fcsv, tmphome):
+    if '~' not in dircsv:
+        return join(dirproj, dircsv, fcsv)
+    return join(dircsv.replace('~', tmphome), fcsv)
 
 
 if __name__ == '__main__':

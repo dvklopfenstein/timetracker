@@ -24,7 +24,7 @@ from tomlkit.toml_file import TOMLFile
 from timetracker.utils import ltblue
 from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
-from timetracker.cfg.utils import get_relpath_adj
+#from timetracker.cfg.utils import get_relpath_adj
 
 FILENAME_GLOBALCFG = '.timetrackerconfig'
 
@@ -60,10 +60,10 @@ class CfgGlobal:
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):
             fnamecfg_proj = cfgfilename
-            if has_homedir(self.dirhome, abspath(cfgfilename)):
-                ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
-                fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
-                ##debug(f'OOOOOOOOOO {fnamecfg_proj}')
+            ##if has_homedir(self.dirhome, abspath(cfgfilename)):
+            ##    ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
+            ##    ##fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
+            ##    ##debug(f'OOOOOOOOOO {fnamecfg_proj}')
             if doc is not None:
                 doc['projects'].add_line((project, fnamecfg_proj))
                 self.doc = doc

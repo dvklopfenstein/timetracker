@@ -5,7 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
-from os.path import relpath
+#from os.path import relpath
 from os.path import dirname
 #from logging import info
 from logging import debug
@@ -41,13 +41,12 @@ def cli_run_stop(fnamecfg, args):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'))
     debug(yellow('STOP: RUNNING COMMAND STOP'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
         #sys_exit(str_init(dirname(fnamecfg)))
-    cfgproj = CfgProj(fnamecfg)
+    cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
@@ -62,7 +61,10 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
 
     # Append the timetracker file with this time unit
     fcsv = cfgproj.get_filename_csv(uname)
-    _msg_csv(fcsv)
+    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    if not fcsv:
+        error('Not saving time interval; no csv filename was provided')
+    ####_msg_csv(fcsv)
     # Print header into csv, if needed
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
@@ -75,6 +77,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         csvfields.activity,
         csvfields.tags)
     _wr_csvlong_data(fcsv, csvline)
+
+    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     if not kwargs.get('quiet', False):
         print(f'Timer stopped; Elapsed H:M:S={delta} '
               f'appended to {get_shortest_name(fcsv)}')
@@ -85,11 +89,11 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         print('NOT restarting the timer because `--keepstart` invoked')
     return fcsv
 
-def _msg_csv(fcsv):
-    if fcsv:
-        debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
-    else:
-        error('Not saving time interval; no csv filename was provided')
+####def _msg_csv(fcsv):
+####    if fcsv:
+####        debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}')
+####    else:
+####        error('Not saving time interval; no csv filename was provided')
 
 def _wr_csvlong_hdrs(fcsv):
     # aTimeLogger columns: Activity From To Notes

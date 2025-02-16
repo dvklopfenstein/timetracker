@@ -11,7 +11,7 @@ from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
-from timetracker.cfg.utils import get_relpath_adj
+#from timetracker.cfg.utils import get_relpath_adj
 from timetracker.cfg.utils import run_cmd
 from tests.pkgtttest.mkprojs import mkdirs
 from tests.pkgtttest.mkprojs import findhome
@@ -45,7 +45,7 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
             # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
             cfgname_proj = join(workdir, 'config')
             # EXP: apples '~/proj/apples/.timetracker/config'
-            exp_projs.append([proj, get_relpath_adj(cfgname_proj, tmphome)])
+            exp_projs.append([proj, cfgname_proj])
             # INIT LOCAL PROJECT CONFIG
             cfgloc = CfgProj(cfgname_proj, project=proj)
             assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'

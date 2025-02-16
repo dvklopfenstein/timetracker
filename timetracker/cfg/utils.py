@@ -11,38 +11,43 @@ from os.path import expanduser
 from os.path import relpath
 from os.path import abspath
 from os.path import normpath
+#from os.path import split
+#from os.path import ismount
 #from os.path import dirname
 from os.path import join
-#from os.path import isabs
 ##from os.path import commonpath
 from os.path import commonprefix
 from subprocess import run
 from logging import debug
 from logging import warning
 
-def get_abspath(filename, dirproj):
-    """Get the path of the path filename relative to dirproj"""
-    if isabs(filename):
-        return normpath(filename)
-    if filename[:1] == '~':
-        filename = expanduser(filename)
-    return normpath(join(dirproj, filename))
+def get_abspath(fnam, dirproj, dirhome=None):
+    """Get the path of the path fnam relative to dirproj"""
+    if isabs(fnam):
+        return normpath(fnam)
+    if fnam == '':
+        return dirproj
+    if fnam[:1] == '~':
+        fnam = expanduser(fnam) if dirhome is None else abspath(fnam.replace('~', dirhome))
+    return normpath(join(dirproj, fnam))
 
-def get_relpath(absfilename, dirproj):
+def get_relpath(absfilename, dirproj, dirhome=None):
     """From a absolute path path, get a path relative to the timetracker proj"""
     assert isabs(absfilename)
     assert isabs(dirproj)
+    if dirhome is not None:
+        isabs(dirhome)
     absfilename = normpath(absfilename)
-    if has_homedir(dirproj, absfilename):
+    if has_homedir(absfilename, dirproj):
         #debug('HAS_PROJDIR')
         return relpath(absfilename, dirproj)
-    diruser = expanduser('~')
-    if has_homedir(diruser, absfilename):
-        #debug('HAS_HOME (~) DIR')
-        #return f'~/{absfilename[abslen:]}'
-        return f'~/{absfilename[len(diruser)+1:]}'
-    return relpath(absfilename, dirproj)
-
+    rpth = relpath(absfilename, dirproj)
+    diruser = expanduser('~') if dirhome is None else dirhome
+    if has_homedir(absfilename, diruser):
+        hpth = f'~/{absfilename[len(diruser)+1:]}'
+        #debug(f'EXAMINE HOMEDIR: {absfilename} {diruser} {hpth}')
+        return rpth if len(rpth) < len(hpth) else hpth
+    return rpth
 
 def get_username(name=None):
     """Get the default username"""
@@ -58,11 +63,11 @@ def run_cmd(cmd):
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
-    if has_homedir(abspath(dirhome), projdir):
+    if has_homedir(projdir, abspath(dirhome)):
         return join('~', relpath(projdir, dirhome))
     return projdir
 
-def has_homedir(homedir, projdir):
+def has_homedir(projdir, homedir):
     """Checks to see if `projdir` has a root of `rootdir`"""
     assert homedir == abspath(homedir)
     assert projdir == abspath(projdir)
@@ -94,10 +99,6 @@ def replace_envvar(fpat, username):
 def get_filename_abs(fname):
     """Get the absolute filename"""
     return abspath(expanduser(fname))
-
-##def get_dirname_abs(fname):
-##    """Get the absolute directory name"""
-##    return dirname(get_filename_abs(fname))
 
 def chk_isdir(dname, prefix=''):
     """Check that a file or directory exists"""

@@ -60,7 +60,6 @@ class Cli:
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN ARGS: {self.args}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {filename_cfgproj}')
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {self.finder.get_desc()}')
         if self.args.command is not None:
             fncs[self.args.command](filename_cfgproj, self.args)
         else:

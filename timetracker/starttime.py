@@ -16,6 +16,7 @@ from logging import debug
 from timetracker.utils import orange
 from timetracker.consts import DIRTRK
 from timetracker.cfg.utils import get_username
+from timetracker.msgs import str_started
 
 # 2025-01-21 17:09:47.035936
 FMTDT = '%Y-%m-%d %H:%M:%S.%f'
@@ -33,6 +34,14 @@ class Starttime:
         debug(f'Starttime args . project  {project}')
         debug(f'Starttime args . name     {name}')
         debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
+
+    def msg_fname01(self):
+        """Print message depending if timer is started or not"""
+        if not exists(self.filename):
+            print('Run `trk start` to begin timetracking')
+        else:
+            self.prt_elapsed()
+            print(str_started())
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""

@@ -6,7 +6,6 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from os.path import exists
 from os.path import dirname
-from timetracker.msgs import str_started
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg_local import CfgProj
 
@@ -23,12 +22,7 @@ def run_none(fcfgproj, name=None):
         sys_exit(0)
     # Check for start time
     cfglocal = CfgProj(fcfgproj)
-    start_obj = cfglocal.get_starttime_obj(name)
-    if not exists(start_obj.filename):
-        print('Run `trk start` to begin timetracking')
-    else:
-        start_obj.prt_elapsed()
-        print(str_started())
+    cfglocal.get_starttime_obj(name).msg_fname01()
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

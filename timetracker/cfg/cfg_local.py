@@ -34,7 +34,7 @@ from timetracker.consts import DIRCSV
 ##from timetracker.cfg.utils import chk_isdir
 ##from timetracker.cfg.utils import get_dirname_abs
 
-from timetracker.cfg.starttime import Starttime
+from timetracker.starttime import Starttime
 from timetracker.utils import pink
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath

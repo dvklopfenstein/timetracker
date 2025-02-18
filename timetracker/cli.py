@@ -22,14 +22,15 @@ from timetracker.cmd.none      import cli_run_none
 from timetracker.cmd.init      import cli_run_init
 from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
+from timetracker.cmd.time      import cli_run_time
 #from timetracker.cmd.csvloc    import cli_run_csvloc
 #from timetracker.cmd.csvupdate import cli_run_csvupdate
 
 
 def main():
     """Connect all parts of the timetracker"""
-    #from logging import basicConfig, DEBUG
-    #basicConfig(level=DEBUG)
+    from logging import basicConfig, DEBUG
+    basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -37,6 +38,7 @@ fncs = {
     'init'     : cli_run_init,
     'start'    : cli_run_start,
     'stop'     : cli_run_stop,
+    'time'     : cli_run_time,
     #'csvloc'   : cli_run_csvloc,
     #'csvupdate': cli_run_csvupdate,
 }
@@ -137,6 +139,7 @@ class Cli:
         self._add_subparser_start(subparsers)
         #self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
+        self._add_subparser_time(subparsers)
         #self._add_subparser_csvupdate(subparsers)
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -192,6 +195,11 @@ class Cli:
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
+        return parser
+
+    @staticmethod
+    def _add_subparser_time(subparsers):
+        parser = subparsers.add_parser(name='time', help='Report elapsed time')
         return parser
 
     def _add_subparser_csvupdate(self, subparsers):

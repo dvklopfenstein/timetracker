@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* **Release 2025-02-18 v0.2a5** Changed logo to a stopwatch
 * **Release 2025-02-18 v0.2a4** Added `trk time` command to report elapsed hours
 * [**Release 2025-02-15 v0.2a3**](#release-2025-02-15-v02a3) Implemented functionality & Wrote tests for csv management
 * **Release 2025-02-08 v0.2a1** Cleaned up tests; Added pytest to GitHub workflows upon push

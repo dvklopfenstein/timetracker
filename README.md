@@ -12,7 +12,7 @@ Track time spent on multiple projects, one repo at a time from the CLI.
 Timetracker-csv is a lightweight, repo-based, researcher username-based,
 command-line time tracker that stores data in csv spreadsheets.
 
-<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="500"/></p>
+<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="250"/></p>
 
 
 * [Advantages](#advantages)

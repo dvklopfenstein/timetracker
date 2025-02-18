@@ -12,7 +12,7 @@ Track time spent on multiple projects, one repo at a time from the CLI.
 Timetracker-csv is a lightweight, repo-based, researcher username-based,
 command-line time tracker that stores data in csv spreadsheets.
 
-<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/work_in_progress.png" alt="work in progress" width="500"/></p>
+<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="500"/></p>
 
 
 * [Advantages](#advantages)
@@ -57,7 +57,7 @@ Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
 ### 4) Reporting functions are coming...
 
 ## Installation
-Install with pip:
+Install with [timetracker-csv](https://pypi.org/project/timetracker-csv/) pip:
 ```
 $ pip install timetracker-csv
 ```

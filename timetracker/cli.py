@@ -29,8 +29,8 @@ from timetracker.cmd.time      import cli_run_time
 
 def main():
     """Connect all parts of the timetracker"""
-    from logging import basicConfig, DEBUG
-    basicConfig(level=DEBUG)
+    #from logging import basicConfig, DEBUG
+    #basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -200,6 +200,8 @@ class Cli:
     @staticmethod
     def _add_subparser_time(subparsers):
         parser = subparsers.add_parser(name='time', help='Report elapsed time')
+        parser.add_argument('-u', '--unit', choices=['hours'], default=None,
+            help='Report the elapsed time in hours')
         return parser
 
     def _add_subparser_csvupdate(self, subparsers):

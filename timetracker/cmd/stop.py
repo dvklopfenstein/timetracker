@@ -109,8 +109,8 @@ def _wr_csvlong_hdrs(fcsv):
             # Duration
             'duration,'
             # Info
-            'message,',
-            'activity,',
+            'message,'
+            'activity,'
             'tags',
             file=prt,
         )

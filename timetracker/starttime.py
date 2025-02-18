@@ -15,11 +15,11 @@ from logging import debug
 
 from timetracker.utils import orange
 from timetracker.consts import DIRTRK
+from timetracker.consts import FMTDT
 from timetracker.cfg.utils import get_username
 from timetracker.msgs import str_started
 
 # 2025-01-21 17:09:47.035936
-FMTDT = '%Y-%m-%d %H:%M:%S.%f'
 
 
 class Starttime:

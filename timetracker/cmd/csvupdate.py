@@ -15,7 +15,7 @@ from csv import reader
 ##from csv import writer
 ##from timeit import default_timer
 from timetracker.utils import yellow
-from timetracker.cfg.starttime import FMTDT
+from timetracker.consts import FMTDT
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg_local  import CfgProj
 

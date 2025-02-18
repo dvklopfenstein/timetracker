@@ -46,6 +46,9 @@ _stop:
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv
+
+time:
+	trk --trksubdir $(DIRTRK) time
 	
 files:
 	@grep -nH --color filename $(DIRTRK)/config

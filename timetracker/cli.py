@@ -22,7 +22,9 @@ from timetracker.cmd.none      import cli_run_none
 from timetracker.cmd.init      import cli_run_init
 from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
-from timetracker.cmd.csvupdate import cli_run_csvupdate
+from timetracker.cmd.time      import cli_run_time
+#from timetracker.cmd.csvloc    import cli_run_csvloc
+#from timetracker.cmd.csvupdate import cli_run_csvupdate
 
 
 def main():
@@ -36,7 +38,9 @@ fncs = {
     'init'     : cli_run_init,
     'start'    : cli_run_start,
     'stop'     : cli_run_stop,
-    'csvupdate': cli_run_csvupdate,
+    'time'     : cli_run_time,
+    #'csvloc'   : cli_run_csvloc,
+    #'csvupdate': cli_run_csvupdate,
 }
 
 class Cli:
@@ -48,9 +52,9 @@ class Cli:
 
     def __init__(self, args=None):
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
-        debug(self.finder)
         self.parser = self.init_parser_top('timetracker')
-        self.args = self._init_args_cli() if args is None else self._init_args_test(args)
+        ####self.args = self._init_args_cli() if args is None else self._init_args_test(args)
+        self.args = self._init_args(args)
 
     def run(self):
         """Run timetracker"""
@@ -58,27 +62,16 @@ class Cli:
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN ARGS: {self.args}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {filename_cfgproj}')
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {self.finder.get_desc()}')
         if self.args.command is not None:
             fncs[self.args.command](filename_cfgproj, self.args)
         else:
             cli_run_none(filename_cfgproj, self.args)
 
-    def _init_args_cli(self):
-        """Get arguments for ScriptFrame"""
-        args = self.parser.parse_args()
-        self._adjust_args(args)
-        debug(f'TIMETRACKER ARGS: {args}')
-        if args.version:
-            print(f'trk {__version__}')
-            sys_exit(0)
-        return args
-
-    def _init_args_test(self, arglist):
+    def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
         self._adjust_args(args)
-        print(f'TIMETRACKER ARGS: {args}')
+        debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
@@ -104,6 +97,15 @@ class Cli:
         ####    print('XXXXXXXXXXXXXXXXXXX', self.finder.trksubdir)
         ####    print('XXXXXXXXXXXXXXXXXXX', args.trksubdir)
         return args
+
+    def _get_dflt_csvdir(self):
+        """Get the default csv file directory to display in the help message"""
+        return self.finder.get_dircsv_default()
+
+    def _get_dflt_csvfilename(self):
+        """Get the default csv filename to display in the help message"""
+        return 'file.csv'
+        ##return self.finder.dirproj
 
     # -------------------------------------------------------------------------------
     ####def _init_parsers(self):
@@ -135,9 +137,10 @@ class Cli:
         subparsers = parser.add_subparsers(dest='command', help='timetracker subcommand help')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
-        self._add_subparser_restart(subparsers)
+        #self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
-        self._add_subparser_csvupdate(subparsers)
+        self._add_subparser_time(subparsers)
+        #self._add_subparser_csvupdate(subparsers)
         ##self._add_subparser_files(subparsers)
         ##return parser
 
@@ -164,7 +167,7 @@ class Cli:
             help='Initialize the .timetracking directory',
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
-        parser.add_argument('--csvdir', default=self.finder.get_csvfilename(),
+        parser.add_argument('--csvdir', default=self._get_dflt_csvdir(),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")
@@ -194,6 +197,13 @@ class Cli:
             help=SUPPRESS)
         return parser
 
+    @staticmethod
+    def _add_subparser_time(subparsers):
+        parser = subparsers.add_parser(name='time', help='Report elapsed time')
+        parser.add_argument('-u', '--unit', choices=['hours'], default=None,
+            help='Report the elapsed time in hours')
+        return parser
+
     def _add_subparser_csvupdate(self, subparsers):
         parser = subparsers.add_parser(name='csvupdate',
             help='Update values in csv columns containing weekday, am/pm, and duration',
@@ -201,7 +211,7 @@ class Cli:
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.finder.get_csvfilename(),
+            default=self._get_dflt_csvfilename(),
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.csv',
             default='updated.csv',

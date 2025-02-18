@@ -5,7 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
-from os.path import relpath
+#from os.path import relpath
 from os.path import dirname
 #from logging import info
 from logging import debug
@@ -13,32 +13,43 @@ from logging import error
 from collections import namedtuple
 from datetime import datetime
 ##from timeit import default_timer
+from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.msgs import str_init
 
 
+NTCSV = namedtuple("CsvFields", "message activity tags")
+
+def get_ntcsv(message, activity=None, tags=None):
+    """Get a namedtuple with csv row information"""
+    return NTCSV(
+        message=message,
+        activity=activity if activity is not None else '',
+        tags=';'.join(tags) if tags is not None else '')
+
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
-    nto = namedtuple("CsvFields", "message activity tags")
     run_stop(
         fnamecfg,
-        nto._make([args.message, args.activity, args.tags]),
+        args.name,
+        get_ntcsv(args.message, args.activity, args.tags),
         quiet=args.quiet,
         keepstart=args.keepstart)
 
 #def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
-def run_stop(fnamecfg, csvfields, **kwargs):
+def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug('STOP: RUNNING COMMAND STOP')
+    debug(yellow('STOP: RUNNING COMMAND STOP'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
         #sys_exit(str_init(dirname(fnamecfg)))
-    cfgproj = CfgProj(fnamecfg)
+    cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
     # Get the elapsed time
-    dta = cfgproj.read_starttime()
+    start_obj = cfgproj.get_starttime_obj(uname)
+    dta = start_obj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -46,11 +57,14 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         error('NOT WRITING ELAPSED TIME; '
               'Do `trk start` to begin tracking time '
               'for project, TODO')
-        return
+        return None
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv()
-    _msg_csv(fcsv)
+    fcsv = cfgproj.get_filename_csv(uname)
+    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    if not fcsv:
+        error('Not saving time interval; no csv filename was provided')
+    ####_msg_csv(fcsv)
     # Print header into csv, if needed
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
@@ -61,26 +75,25 @@ def run_stop(fnamecfg, csvfields, **kwargs):
         dta, dtz, delta,
         csvfields.message,
         csvfields.activity,
-        _str_tags(csvfields.tags))
+        csvfields.tags)
     _wr_csvlong_data(fcsv, csvline)
-    if not kwargs['quiet']:
+
+    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    if not kwargs.get('quiet', False):
         print(f'Timer stopped; Elapsed H:M:S={delta} '
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
-    if not kwargs['keepstart']:
-        cfgproj.rm_starttime()
+    if not kwargs.get('keepstart', False):
+        start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
+    return fcsv
 
-def _str_tags(tags):
-    """Get the stop-timer tags"""
-    return ';'.join(tags) if tags else ''
-
-def _msg_csv(fcsv):
-    if fcsv:
-        debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
-    else:
-        error('Not saving time interval; no csv filename was provided')
+####def _msg_csv(fcsv):
+####    if fcsv:
+####        debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}')
+####    else:
+####        error('Not saving time interval; no csv filename was provided')
 
 def _wr_csvlong_hdrs(fcsv):
     # aTimeLogger columns: Activity From To Notes
@@ -96,8 +109,8 @@ def _wr_csvlong_hdrs(fcsv):
             # Duration
             'duration,'
             # Info
-            'message,',
-            'activity,',
+            'message,'
+            'activity,'
             'tags',
             file=prt,
         )

@@ -6,7 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 def str_started():
     """Message to print when the timer is started"""
-    return 'Do `trk stop -m "task description"` to stop tracking this time unit'
+    return 'Do `trk stop -m "task description"` to stop tracking and record this time unit'
     ##Test feature
     ##print('    Do `trk start --force`              to reset start time to now')
 

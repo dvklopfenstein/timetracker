@@ -14,32 +14,33 @@ from csv import reader
 ##from csv import DictReader
 ##from csv import writer
 ##from timeit import default_timer
-##from timetracker.hms import read_starttime
-from timetracker.hms import FMT
+from timetracker.utils import yellow
+from timetracker.consts import FMTDT
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg_local  import CfgProj
 
 def cli_run_csvupdate(cfglocal, args):
     """Stop the timer and record this time unit"""
+    if args.input is not None and exists(args.input):
+        update_csv(args.input, args.output)
+        return
     run_csvupdate(
         cfglocal,
-        args.input,
+        args.project,
+        args.name,
         args.output)
 
-def run_csvupdate(fnamecfg, fin, fout):
+def run_csvupdate(fnamecfg, project, name, fout):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug('CSVUPDATE: RUNNING COMMAND CSVUPDATE')
+    debug(yellow('CSVUPDATE: RUNNING COMMAND CSVUPDATE'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
+    cfgproj = CfgProj(fnamecfg, project)
 
-    if fin is not None:
-        update_csv(fin, fout)
-        sys_exit(0)
 
-    fcsv = cfgproj.get_filename_csv()
+    fcsv = cfgproj.get_filename_csv(name)
     if fcsv is not None and exists(fcsv):
         debug(f'CSVUPDATE: CSVFILE   exists({int(exists(fcsv))}) {relpath(fcsv)}')
         update_csv(fcsv, fout)
@@ -83,8 +84,8 @@ def update_csv(fin_csv, fout_csv):
         debug(f'WROTE: {fout_csv}')
 
 def _get_rowvals(row):
-    dta = datetime.strptime(row[2], FMT)
-    dtz = datetime.strptime(row[5], FMT)
+    dta = datetime.strptime(row[2], FMTDT)
+    dtz = datetime.strptime(row[5], FMTDT)
     delta = dtz - dta
     return (
         dta.strftime("%a"), # 0 updated

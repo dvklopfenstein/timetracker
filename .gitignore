@@ -3,7 +3,7 @@
 my.mk
 .timetracker/
 test_timetracker.csv
-start_timetracker_*.txt
+start_t*_*.txt
 timetracker_*.csv
 
 # Temporary test files

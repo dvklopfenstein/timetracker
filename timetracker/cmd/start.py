@@ -6,7 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from os.path import exists
 #from os.path import abspath
-from os.path import relpath
+#from os.path import relpath
 from os.path import dirname
 from logging import debug
 
@@ -16,6 +16,7 @@ from datetime import datetime
 from timetracker.msgs import str_started
 #from timetracker.msgs import str_notrkrepo
 from timetracker.msgs import str_init
+from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 
 
@@ -23,27 +24,28 @@ def cli_run_start(fnamecfg, args):
     """Initialize timetracking on a project"""
     run_start(
         fnamecfg,
-        #args['project'],
+        args.name,
+        #args.project,
         #args['csvdir'],
         args.force,
         args.quiet)
 
-def run_start(fnamecfg, force=False, quiet=False):
+def run_start(fnamecfg, name=None, force=False, quiet=False):
     """Initialize timetracking on a project"""
-    debug('START: RUNNING COMMAND START')
+    debug(yellow('START: RUNNING COMMAND START'))
     now = datetime.now()
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
-    fin_start = cfgproj.get_filename_start()
-    debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
+    start_obj = cfgproj.get_starttime_obj(name)
+    fin_start = start_obj.filename
     # Is this project tracked?
     ###if not exists(cfgproj_fname):
     ###    print(str_notrkrepo(dirname(dirname(cfgproj_fname))))
     ###    sys_exit(0)
     # Print elapsed time, if timer was started
-    cfgproj.prt_elapsed()
+    start_obj.prt_elapsed()
     # Set/reset starting time, if applicable
     if not exists(fin_start) or force:
         #cfgproj.mk_workdir()
@@ -58,12 +60,12 @@ def run_start(fnamecfg, force=False, quiet=False):
             if not quiet:
                 print(f'Timetracker {"started" if not force else "reset to"} '
                       f'{now.strftime("%a %I:%M %p")}: {now} '
-                      f"for project '{cfgproj.project}' ID={cfgproj.name}")
+                      f"for project '{cfgproj.project}'")
             debug(f'  WROTE: {fin_start}')
     # Informational message
     elif not force:
         print(str_started())
-    debug(f'START: exists({int(exists(fin_start))}) FILENAME({relpath(fin_start)})')
+    return fin_start
 
 
     #dirtrk = kws['trksubdir']

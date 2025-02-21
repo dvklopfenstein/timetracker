@@ -24,6 +24,10 @@ command-line time tracker that stores data in csv spreadsheets.
 ## Advantages
 * Freedom software (aka open-source)
 * Own your data
+* NO invasive tracking ever of:
+  * keyboard and mouse activity
+  * currently active browser tab and its title and URL
+  * currently active application and the title of its window
 * Human-readable ASCII data stored in csv files
 * Modify your data if you forget to log time
 * Quick to set up

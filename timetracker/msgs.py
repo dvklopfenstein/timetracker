@@ -10,6 +10,11 @@ def str_started():
     ##Test feature
     ##print('    Do `trk start --force`              to reset start time to now')
 
+def str_started_epoch():
+    """Message to print when the timer is started"""
+    return ('Do `trk stop -m "task description" --epoch EPOCH` '
+            'to specify the time to stop tracking')
+
 def str_notrkrepo(trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""
     return f'fatal: not a Trk repository (or any of the parent directories): {trkdir}'

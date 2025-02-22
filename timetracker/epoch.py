@@ -16,6 +16,8 @@ def str_arg_epoch(dtval=None, dtfmt=None):
     """Get instructions on how to specify an epoch"""
     if dtfmt is None:
         dtfmt = FMTDT_H
+    if dtval is None:
+        dtval = datetime.now()
     # pylint: disable=fixme
     # TODO: Base epoch dt example on dtval
     return (

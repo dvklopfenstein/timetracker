@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 DIRTRK = '.timetracker'
 DIRCSV = '.'
+FMTTIME = '%H:%M:%S.%f'             # Default time format
 FMTDT = '%Y-%m-%d %H:%M:%S.%f'      # Default datetime format
 FMTDT_H = '%a %p %Y-%m-%d %H:%M:%S' # Human-friendly format
 

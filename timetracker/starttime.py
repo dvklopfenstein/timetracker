@@ -49,6 +49,8 @@ class Starttime:
             hms = self._hms_from_startfile(dtstart)
             triggered = hms > self.min_trigger
             if triggered:
+                self._prt_elapsed_hms(hms)
+                print(str_started_epoch())
                 print(str_arg_epoch(dtstart))
             self._prt_elapsed_hms(hms)
             print(str_started())

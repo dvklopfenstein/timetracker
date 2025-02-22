@@ -12,11 +12,16 @@ from datetime import datetime
 from timetracker.consts import FMTDT_H
 
 
-def str_arg_epoch(starttime=None):
+def str_arg_epoch(dtval=None, dtfmt=None):
     """Get instructions on how to specify an epoch"""
+    if dtfmt is None:
+        dtfmt = FMTDT_H
+    # pylint: disable=fixme
+    # TODO: Base epoch dt example on dtval
     return (
-    'Use `--epoch` or `-e` to specify the time elapsed since '
-    f'{starttime.strftime(FMTDT_H) if starttime is not None else "the start time"}:\n'
+    '\n'
+    'Use `--epoch` or `-e` to specify an elapsed time (since '
+    f'{dtval.strftime(dtfmt) if dtval is not None else "the start time"}):\n'
     '    --epoch "30 minutes" # Human-readable format\n'
     '    --epoch "30 min"     # Human-readable format\n'
     '    --epoch "00:30:00"   # Hour:minute:second format\n'
@@ -26,7 +31,7 @@ def str_arg_epoch(starttime=None):
     '    --epoch "04:00:00"   # Hour:minute:second format\n'
     '    --epoch "4:00:00"    # Hour:minute:second format, shortened\n'
     '\n'
-    'Or use `--epoch` or `-e` to explicitly state a start or end datetime:\n'
+    'Or use `--epoch` or `-e` to specify a start or stop datetime:\n'
     '    --epoch "2025-02-19 15:30:00.243778" # datetime format, 24 hour clock (default)\n'
     '    --epoch "2025-02-19 15:30:00"        # datetime format, 24 hour clock shortened\n'
     '    --epoch "2025-02-19 03:30:00 pm"     # datetime format, 12 hour clock\n'

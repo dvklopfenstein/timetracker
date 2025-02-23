@@ -51,7 +51,7 @@ class Starttime:
             if triggered:
                 self._prt_elapsed_hms(hms)
                 print(str_started_epoch())
-                print(str_arg_epoch(dtstart))
+                print(str_arg_epoch(dtstart, desc=' after start'))
             self._prt_elapsed_hms(hms)
             print(str_started())
             if triggered:

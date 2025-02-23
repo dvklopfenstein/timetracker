@@ -59,6 +59,7 @@ files:
 defs:
 	find . -name \*.py | xargs grep -nw --color def | grep -v self | grep -w --color def
 
+
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:
 vim_ver:

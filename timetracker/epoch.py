@@ -9,41 +9,50 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
+from datetime import timedelta
+from timetracker.timecalc import RoundTime
 from timetracker.consts import FMTDT_H
 
 
-def str_arg_epoch(dtval=None, dtfmt=None):
+def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     """Get instructions on how to specify an epoch"""
     if dtfmt is None:
         dtfmt = FMTDT_H
     if dtval is None:
         dtval = datetime.now()
-    # pylint: disable=fixme
-    # TODO: Base epoch dt example on dtval
+    round30min = RoundTime(30)
+    dtp = round30min.time_ceil(dtval + timedelta(minutes=90))
+    dtp2 = round30min.time_ceil(dtval + timedelta(minutes=120))
     return (
     '\n'
     'Use `--epoch` or `-e` to specify an elapsed time (since '
     f'{dtval.strftime(dtfmt) if dtval is not None else "the start time"}):\n'
-    '    --epoch "30 minutes" # Human-readable format\n'
-    '    --epoch "30 min"     # Human-readable format\n'
-    '    --epoch "00:30:00"   # Hour:minute:second format\n'
-    '    --epoch "30:00"      # Hour:minute:second format, shortened\n'
+    f'    --epoch "30 minutes" # 30 minutes{desc}; Human-readable format\n'
+    f'    --epoch "30 min"     # 30 minutes{desc}; Human-readable format\n'
+    f'    --epoch "00:30:00"   # 30 minutes{desc}; Hour:minute:second format\n'
+    f'    --epoch "30:00"      # 30 minutes{desc}; Hour:minute:second format, shortened\n'
     '\n'
-    '    --epoch "4 hours"    # Human-readable format\n'
-    '    --epoch "04:00:00"   # Hour:minute:second format\n'
-    '    --epoch "4:00:00"    # Hour:minute:second format, shortened\n'
+    f'    --epoch "4 hours"    # 4 hours{desc}; Human-readable format\n'
+    f'    --epoch "04:00:00"   # 4 hours{desc}; Hour:minute:second format\n'
+    f'    --epoch "4:00:00"    # 4 hours{desc}; Hour:minute:second format, shortened\n'
     '\n'
     'Or use `--epoch` or `-e` to specify a start or stop datetime:\n'
-    '    --epoch "2025-02-19 15:30:00.243778" # datetime format, 24 hour clock (default)\n'
-    '    --epoch "2025-02-19 15:30:00"        # datetime format, 24 hour clock shortened\n'
-    '    --epoch "2025-02-19 03:30:00 pm"     # datetime format, 12 hour clock\n'
-    '    --epoch "02-19 15:30:00"     # this year, datetime format, 24 hour clock shortened\n'
-    '    --epoch "02-19 03:30:00 pm"  # this year, datetime format, 12 hour clock\n'
-    '    --epoch "02-19 3pm"          # this year, 12 hour clock\n'
-    '    --epoch "02-19 3:30pm"       # this year, 12 hour clock\n'
-    '    --epoch "2-19 3:30pm"        # this year, 12 hour clock\n'
-    '    --epoch "3pm"                # today, 12 hour clock\n'
-    '    --epoch "3:30pm"             # today, 12 hour clock\n'
+    f'''    --epoch "{dtp.strftime('%Y-%m-%d %H:%M:%S')}"    '''
+    '# datetime format, 24 hour clock shortened\n'
+    f'''    --epoch "{dtp.strftime('%Y-%m-%d %I:%M:%S %p').lower()}" '''
+    '# datetime format, 12 hour clock\n'
+    f'''    --epoch "{dtp.strftime('%m-%d %H:%M:%S')}"         '''
+    '# this year, datetime format, 24 hour clock shortened\n'
+    f'''    --epoch "{dtp.strftime('%m-%d %I:%M:%S %p').lower()}"      '''
+    '# this year, datetime format, 12 hour clock\n'
+
+    f'''    --epoch "{dtp2.strftime('%m-%d %I%p').lower().replace(' 0', ' ')}"\n'''
+    f'''    --epoch "{dtp.strftime('%m-%d %I:%M %p').lower().replace(' 0', ' ')}"\n'''
+    f'''    --epoch "{dtp2.strftime('%m-%d %I:%M %p').lstrip("0").lower().replace(' 0', ' ')}""\n'''
+    f'''    --epoch "{dtp.strftime('%I:%M %p').lstrip("0").lower().replace(' 0', ' ')}"       '''
+    '# Today\n'
+    f'''    --epoch "{dtp2.strftime('%I:%M %p').lstrip("0").lower().replace(' 0', ' ')}"       '''
+    '# Today\n'
     )
 
 

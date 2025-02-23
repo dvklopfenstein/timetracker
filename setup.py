@@ -29,6 +29,8 @@ CONSOLE_SCRIPTS = [
 
 REQUIRES = [
     'tomlkit',
+    'pytimeparse2',
+    'python-dateutil',
 ]
 
 setup(

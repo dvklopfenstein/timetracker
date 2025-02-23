@@ -9,7 +9,7 @@ from datetime import timedelta
 
 # tempora parse_timedelta: 30:00 -> 1 day, 6:00:00, not 30 minutes
 # from tempora import parse_timedelta
-from pytimeparse import parse as parse_tdelta
+from pytimeparse2 import parse as parse_tdelta
 from dateutil.parser import parse as parse_dt
 
 from timetracker.consts import FMTDT_H
@@ -66,6 +66,7 @@ def _get_dt_n_expdt(dtval):
         ("02-19 5pm",              dtp ),
         ("02-19 5:00 pm",          dtp ),
         ("2-19 5:30 pm",           dtp2),
+        # pylint: disable=line-too-long
         ("5:00 pm", datetime(today.year, today.month, today.day, dtp.hour, dtp.minute, dtp.second)),
         ("5:30 pm", datetime(today.year, today.month, today.day, dtp2.hour, dtp2.minute, dtp2.second)),
     )

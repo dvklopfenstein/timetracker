@@ -3,14 +3,15 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg)](https://doi.org/10.5281/zenodo.14803225)
 ![GitHub License](https://img.shields.io/github/license/dvklopfenstein/timetracker)
 
-
-
 Claim your power. Track your time on your own terms.
 
-Track time spent on multiple projects, one repo at a time from the CLI.
-
-Timetracker-csv is a lightweight, repo-based, researcher username-based,
-command-line time tracker that stores data in csv spreadsheets.
+With timetracker-csv:
+* Record history while developing multiple projects using the
+[CLI (command line interface)](https://blog.iron.io/pros-and-cons-of-a-command-line-interface/)    
+* Write elapsed task time to 
+[csv (comma-separated values)](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations/)
+files    
+* Collaborate on projects as a team   
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
@@ -22,15 +23,17 @@ command-line time tracker that stores data in csv spreadsheets.
 * [Documentation](docs/index.md)
 
 ## Advantages
-* Freedom software (aka open-source)
+* Freedom Software (aka open-source)
+* Quick to set up
 * Own your data
-* NO invasive tracking ever of:
+* NO invasive tracking **ever** of (as is done by multitudinous other timetracking apps):
   * keyboard and mouse activity
   * currently active browser tab and its title and URL
   * currently active application and the title of its window
-* Human-readable ASCII data stored in csv files
+* Human-readable ASCII data stored in csv (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
+  * Ready for [pandas](https://pandas.pydata.org/), a prevailing Python Data Analysis Library
+  * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++
 * Modify your data if you forget to log time
-* Quick to set up
 * Quickly see the current task being recorded
 * Quickly see elapsed time spent on the current task
 * No clicking and clicking and clicking on a GUI
@@ -43,7 +46,7 @@ command-line time tracker that stores data in csv spreadsheets.
 
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
-### 1) Initialize a `.timetracker/` directory
+### 1) Initialize a timetracker project
 ```
 $ trk init
 Initialized empty timetracker directory: /PROJDIR/.timetracker for name(dvk)

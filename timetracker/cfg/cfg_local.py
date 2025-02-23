@@ -197,9 +197,15 @@ class CfgProj:
         #csvdir.comment("Directory where the csv file is stored")
         csvpat = self.CSVPAT.replace('PROJECT', self.project)
         csv_section.add("filename", join(self._get_dircsv_relname(), csvpat))
-        ##
-        ### Adding the table to the document
         doc.add("csv", csv_section)
+
+        # TODO: [display]
+        # format = "24-hour"
+        # --or--
+        # format = "12-hour"
+        # --or use datetime format codes--
+        # # https://docs.python.org/3/library/datetime.html#format-codes
+        # format = '%a %p %Y-%m-%d %H:%M:%S'
         return doc
 
     #-------------------------------------------------------------

@@ -6,9 +6,15 @@ __author__ = "DV Klopfenstein, PhD"
 
 def str_started():
     """Message to print when the timer is started"""
-    return 'Do `trk stop -m "task description"` to stop tracking and record this time unit'
+    return ('Run `trk stop -m "task description"` '
+            'to stop tracking now and record this time unit')
     ##Test feature
-    ##print('    Do `trk start --force`              to reset start time to now')
+    ##print('    Run `trk start --force`              to reset start time to now')
+
+def str_started_epoch():
+    """Message to print when the timer is started"""
+    return ('Run `trk stop -m "task description" --epoch EPOCH` '
+            'to stop tracking at a specific or elapsed time')
 
 def str_notrkrepo(trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""

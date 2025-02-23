@@ -12,7 +12,7 @@ Track time spent on multiple projects, one repo at a time from the CLI.
 Timetracker-csv is a lightweight, repo-based, researcher username-based,
 command-line time tracker that stores data in csv spreadsheets.
 
-<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="500"/></p>
+<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="250"/></p>
 
 
 * [Advantages](#advantages)
@@ -24,6 +24,10 @@ command-line time tracker that stores data in csv spreadsheets.
 ## Advantages
 * Freedom software (aka open-source)
 * Own your data
+* NO invasive tracking ever of:
+  * keyboard and mouse activity
+  * currently active browser tab and its title and URL
+  * currently active application and the title of its window
 * Human-readable ASCII data stored in csv files
 * Modify your data if you forget to log time
 * Quick to set up

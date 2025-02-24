@@ -37,7 +37,7 @@ def cli_run_stop(fnamecfg, args):
         get_ntcsv(args.message, args.activity, args.tags),
         quiet=args.quiet,
         keepstart=args.keepstart,
-        epoch=args.epoch)
+        stop_at=args.at)
 
 #def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
@@ -71,7 +71,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
     # Print time information into csv
-    dtz = _get_dtz(kwargs.get('epoch'), dta)
+    dtz = _get_dtz(kwargs.get('stop_at'), dta)
     delta = dtz - dta
     csvline = _strcsv_timerstopped(
         dta, dtz, delta,
@@ -91,8 +91,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         print('NOT restarting the timer because `--keepstart` invoked')
     return fcsv
 
-def _get_dtz(epochstr, dta):
-    return datetime.now() if not epochstr else get_dtz(epochstr, dta)
+def _get_dtz(timetxt, dta):
+    return datetime.now() if not timetxt else get_dtz(timetxt, dta)
 
 
 ####def _msg_csv(fcsv):

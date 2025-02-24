@@ -42,27 +42,27 @@ class Starttime:
         debug(f'Starttime args . name     {name}')
         debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
 
-    def msg_fname01(self):
+    def prtmsg_fname01(self):
         """Print message depending if timer is started or not"""
         if not exists(self.filename):
-            str_tostart()
+            print(str_tostart())
         else:
             dtstart = self._read_starttime()
             hms = self._hms_from_startfile(dtstart)
             if hms <= self.min_trigger:
-                self._msg_basic(hms)
+                self._prtmsg_basic(hms)
             else:
-                self._msg_triggered(hms, dtstart)
+                self._prtmsg_triggered(hms, dtstart)
 
-    def _msg_basic(self, hms):
+    def _prtmsg_basic(self, hms):
         self._prt_elapsed_hms(hms)
         print(str_started())
 
-    def _msg_triggered(self, hms, dtstart):
+    def _prtmsg_triggered(self, hms, dtstart):
         self._prt_elapsed_hms(hms)
         print(str_started_epoch())
         print(str_arg_epoch(dtstart, desc=' after start'))
-        self._msg_basic(hms)
+        self._prtmsg_basic(hms)
         print(str_started_epoch())
         print(str_tostart_epoch())
 

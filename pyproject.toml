@@ -8,6 +8,7 @@ dynamic = [
     "authors",
     "readme",
     "description",
+    "keywords",
 ]
 
 [project.urls]

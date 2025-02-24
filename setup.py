@@ -33,6 +33,20 @@ REQUIRES = [
     'python-dateutil',
 ]
 
+KEYWORDS = [
+    "linux",
+    "cli",
+    "productivity",
+    "csv",
+    "history",
+    "collaboration",
+    "time-tracker",
+    "timetracker",
+    "csv-reading",
+    "csv-export",
+    "timetracking",
+]
+
 setup(
     # The name of the project on PyPi
     name='timetracker-csv',
@@ -61,6 +75,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     install_requires=REQUIRES,
+    keywords=KEYWORDS,
 )
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

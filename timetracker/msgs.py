@@ -4,6 +4,15 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 
+def str_tostart():
+    """Message instructing how to start the timer"""
+    return 'Run `trk start` to start tracking'
+
+def str_tostart_epoch():
+    """Message instructing how to start the timer"""
+    return ('Run `trk start --epoch EPOCH` to start tracking '
+            'at a specific or elapsed time')
+
 def str_started():
     """Message to print when the timer is started"""
     return ('Run `trk stop -m "task description"` '

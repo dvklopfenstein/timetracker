@@ -18,6 +18,8 @@ from timetracker.utils import orange
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
 from timetracker.cfg.utils import get_username
+from timetracker.msgs import str_tostart
+from timetracker.msgs import str_tostart_epoch
 from timetracker.msgs import str_started
 from timetracker.msgs import str_started_epoch
 from timetracker.epoch import str_arg_epoch
@@ -43,19 +45,26 @@ class Starttime:
     def msg_fname01(self):
         """Print message depending if timer is started or not"""
         if not exists(self.filename):
-            print('Run `trk start` to begin timetracking')
+            str_tostart()
         else:
             dtstart = self._read_starttime()
             hms = self._hms_from_startfile(dtstart)
-            triggered = hms > self.min_trigger
-            if triggered:
-                self._prt_elapsed_hms(hms)
-                print(str_started_epoch())
-                print(str_arg_epoch(dtstart, desc=' after start'))
-            self._prt_elapsed_hms(hms)
-            print(str_started())
-            if triggered:
-                print(str_started_epoch())
+            if hms <= self.min_trigger:
+                self._msg_basic(hms)
+            else:
+                self._msg_triggered(hms, dtstart)
+
+    def _msg_basic(self, hms):
+        self._prt_elapsed_hms(hms)
+        print(str_started())
+
+    def _msg_triggered(self, hms, dtstart):
+        self._prt_elapsed_hms(hms)
+        print(str_started_epoch())
+        print(str_arg_epoch(dtstart, desc=' after start'))
+        self._msg_basic(hms)
+        print(str_started_epoch())
+        print(str_tostart_epoch())
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""

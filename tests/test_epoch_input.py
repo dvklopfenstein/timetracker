@@ -69,6 +69,7 @@ def _get_dt_n_expdt(dtval):
         # pylint: disable=line-too-long
         ("5:00 pm", datetime(today.year, today.month, today.day, dtp.hour, dtp.minute, dtp.second)),
         ("5:30 pm", datetime(today.year, today.month, today.day, dtp2.hour, dtp2.minute, dtp2.second)),
+        # ("4 days, 9:33:54.912101", dtp),  # No
     )
 
 

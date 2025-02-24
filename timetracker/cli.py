@@ -29,8 +29,8 @@ from timetracker.cmd.time      import cli_run_time
 
 def main():
     """Connect all parts of the timetracker"""
-    #from logging import basicConfig, DEBUG
-    #basicConfig(level=DEBUG)
+    # from logging import basicConfig, DEBUG
+    # basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -179,6 +179,8 @@ class Cli:
         # Test feature: Force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
             help=SUPPRESS)
+        parser.add_argument('-e', '--epoch', metavar='STR',
+            help='Start tracking at a specific or elapsed time')
         return parser
 
     @staticmethod
@@ -186,7 +188,7 @@ class Cli:
         parser = subparsers.add_parser(name='stop',
             help='Stop timetracking',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-m', '--message', required=True,
+        parser.add_argument('-m', '--message', required=True, metavar='TXT',
             help='Message describing the work done in the time unit')
         parser.add_argument('--activity', default='',
             help='Activity for time unit')
@@ -195,6 +197,8 @@ class Cli:
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
+        parser.add_argument('-e', '--epoch', metavar='STR',
+            help='Start tracking at a specific or elapsed time')
         return parser
 
     @staticmethod

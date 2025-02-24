@@ -1,6 +1,6 @@
 """Epoch: an extent of time associated with a particular person or thing.
 
-“Epoch.” Merriam-Webster's Collegiate Thesaurus, Merriam-Webster, 
+“Epoch.” Merriam-Webster's Collegiate Thesaurus, Merriam-Webster,
  https://unabridged.merriam-webster.com/thesaurus/epoch.
  Accessed 21 Feb. 2025.
 """
@@ -10,6 +10,8 @@ __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
 from datetime import timedelta
+from pytimeparse2 import parse as parse_tdelta
+from dateutil.parser import parse as parse_dt
 from timetracker.timecalc import RoundTime
 from timetracker.consts import FMTDT_H
 
@@ -55,16 +57,32 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     '# Today\n'
     )
 
+def get_dtz(epochstr, dta):
+    """Get stop datetime, given a start time and a specific or elapsed time"""
+    try:
+        return Epoch(epochstr).get_dtz(dta)
+    except TypeError as err:
+        raise RuntimeError(f'UNABLE TO CONVERT str({epochstr}) '
+                            'TO A datetime OR timedelta object') from err
+
 
 class Epoch:
     """Epoch: an extent of time associated with a particular person or thing"""
 
     def __init__(self, elapsed_or_dt):
-        self.epoch = elapsed_or_dt
+        self.estr = elapsed_or_dt
+
+    def get_dtz(self, dta):
+        """Get the ending time, given an epoch string"""
+        return parse_dt(self.estr) if self.is_datetime() else dta + self.get_tdelta()
+
+    def get_tdelta(self):
+        """Get the ending time, given an estr timedelta and a start time"""
+        return timedelta(seconds=parse_tdelta(self.estr))
 
     def is_datetime(self):
         """Check if epoch is a datetime, rather than an elapsed time"""
-        epoch = self.epoch.lower()
+        epoch = self.estr.lower()
         if '-' in epoch:
             return True
         if 'am' in epoch:
@@ -72,15 +90,6 @@ class Epoch:
         if 'pm' in epoch:
             return True
         return False
-
-    @staticmethod
-    def get_today():
-        """Get today's date without the time"""
-        # pylint: disable=line-too-long
-        # https://stackoverflow.com/questions/6545254/difference-between-system-datetime-now-and-system-datetime-today
-        # https://codeofmatt.com/the-case-against-datetime-now/
-        #return DateTimeOffset.Now
-        return datetime.today()
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -15,6 +15,7 @@ from datetime import timedelta
 from logging import debug
 
 from timetracker.utils import orange
+from timetracker.utils import prt_todo
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
 from timetracker.cfg.utils import get_username
@@ -49,10 +50,13 @@ class Starttime:
         else:
             dtstart = self._read_starttime()
             hms = self._hms_from_startfile(dtstart)
-            if hms <= self.min_trigger:
+            hms1 = hms is not None
+            if hms1 and hms <= self.min_trigger:
                 self._prtmsg_basic(hms)
-            else:
+            elif hms1:
                 self._prtmsg_triggered(hms, dtstart)
+            else:
+                prt_todo('TODO: STARTFILE WITH NO HMS')
 
     def _prtmsg_basic(self, hms):
         self._prt_elapsed_hms(hms)

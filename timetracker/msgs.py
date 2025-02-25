@@ -17,8 +17,10 @@ def str_started():
     """Message to print when the timer is started"""
     return ('Run `trk stop -m "task description"` '
             'to stop tracking now and record this time unit')
-    ##Test feature
-    ##print('    Run `trk start --force`              to reset start time to now')
+
+def str_cancelled():
+    """Message to print when the timer is canceled"""
+    return 'Timer is canceled'
 
 def str_started_epoch():
     """Message to print when the timer is started"""

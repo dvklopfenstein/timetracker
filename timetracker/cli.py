@@ -22,6 +22,7 @@ from timetracker.cmd.none      import cli_run_none
 from timetracker.cmd.init      import cli_run_init
 from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
+from timetracker.cmd.cancel    import cli_run_cancel
 from timetracker.cmd.time      import cli_run_time
 #from timetracker.cmd.csvloc    import cli_run_csvloc
 #from timetracker.cmd.csvupdate import cli_run_csvupdate
@@ -38,6 +39,7 @@ fncs = {
     'init'     : cli_run_init,
     'start'    : cli_run_start,
     'stop'     : cli_run_stop,
+    'cancel'   : cli_run_cancel,
     'time'     : cli_run_time,
     #'csvloc'   : cli_run_csvloc,
     #'csvupdate': cli_run_csvupdate,
@@ -139,6 +141,7 @@ class Cli:
         self._add_subparser_start(subparsers)
         #self._add_subparser_restart(subparsers)
         self._add_subparser_stop(subparsers)
+        self._add_subparser_cancel(subparsers)
         self._add_subparser_time(subparsers)
         #self._add_subparser_csvupdate(subparsers)
         ##self._add_subparser_files(subparsers)
@@ -175,12 +178,12 @@ class Cli:
 
     @staticmethod
     def _add_subparser_start(subparsers):
-        parser = subparsers.add_parser(name='start', help='Start timetracking')
-        # Test feature: Force over-writing of start time
+        parser = subparsers.add_parser(name='start', help='start timetracking')
+        # test feature: force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
             help=SUPPRESS)
-        parser.add_argument('-@', '--at', metavar='STR',
-            help='Start tracking at a specific or elapsed time')
+        parser.add_argument('-@', '--at', metavar='str',
+            help='start tracking at a specific or elapsed time')
         return parser
 
     @staticmethod
@@ -199,6 +202,11 @@ class Cli:
             help=SUPPRESS)
         parser.add_argument('-@', '--at', metavar='STR',
             help='Start tracking at a specific or elapsed time')
+        return parser
+
+    @staticmethod
+    def _add_subparser_cancel(subparsers):
+        parser = subparsers.add_parser(name='cancel', help='cancel timetracking')
         return parser
 
     @staticmethod

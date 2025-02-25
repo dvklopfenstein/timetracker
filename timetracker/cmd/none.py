@@ -22,7 +22,7 @@ def run_none(fcfgproj, name=None):
         sys_exit(0)
     # Check for start time
     cfglocal = CfgProj(fcfgproj)
-    cfglocal.get_starttime_obj(name).prtmsg_fname01()
+    cfglocal.get_starttime_obj(name).prtmsg_started01()
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

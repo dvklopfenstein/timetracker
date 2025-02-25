@@ -29,6 +29,13 @@ start:
 	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
 	find $(DIRTRK)
 
+cancel:
+	trk --trksubdir $(DIRTRK) cancel
+	find $(DIRTRK)
+	@grep -Hw --color filename $(DIRTRK)/config
+	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
+	find $(DIRTRK)
+
 # Test that researcher passed a stop message using M="This is my stop message"
 # https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
 stop:

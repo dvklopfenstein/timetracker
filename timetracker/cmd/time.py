@@ -46,7 +46,7 @@ def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False
 def _no_csv(fcsv, cfgproj, uname):
     print(f'CSV file does not exist: {fcsv}')
     start_obj = cfgproj.get_starttime_obj(uname)
-    start_obj.prtmsg_fname01()
+    start_obj.prtmsg_started01()
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

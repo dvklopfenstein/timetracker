@@ -180,10 +180,10 @@ class Cli:
     def _add_subparser_start(subparsers):
         parser = subparsers.add_parser(name='start', help='start timetracking')
         # test feature: force over-writing of start time
-        parser.add_argument('-f', '--force', action='store_true',
-            help=SUPPRESS)
-        parser.add_argument('-@', '--at', metavar='str',
+        parser.add_argument('-@', '--at', metavar='time',
             help='start tracking at a specific or elapsed time')
+        parser.add_argument('-f', '--force', action='store_true',
+            help='Force restart timer now or `--at` a specific or elapsed time')
         return parser
 
     @staticmethod
@@ -200,7 +200,7 @@ class Cli:
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
-        parser.add_argument('-@', '--at', metavar='STR',
+        parser.add_argument('-@', '--at', metavar='time',
             help='Start tracking at a specific or elapsed time')
         return parser
 

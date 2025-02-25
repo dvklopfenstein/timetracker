@@ -52,6 +52,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
+    dtz = _get_dtz(kwargs.get('stop_at'), dta)
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -59,6 +60,10 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         error('NOT WRITING ELAPSED TIME; '
               'Do `trk start` to begin tracking time '
               'for project, TODO')
+        return None
+    if dtz <= dta:
+        error('NOT WRITING ELAPSED TIME: '
+              f'starttime({dta}) > stoptime({dtz})')
         return None
 
     # Append the timetracker file with this time unit
@@ -71,7 +76,6 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
     # Print time information into csv
-    dtz = _get_dtz(kwargs.get('stop_at'), dta)
     delta = dtz - dta
     csvline = _strcsv_timerstopped(
         dta, dtz, delta,

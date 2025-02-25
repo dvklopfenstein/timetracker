@@ -10,10 +10,10 @@ def str_tostart():
 
 def str_tostart_epoch():
     """Message instructing how to start the timer"""
-    return ('Run `trk start --epoch EPOCH` to start tracking '
+    return ('Run `trk start --at time` to start tracking '
             'at a specific or elapsed time')
 
-def str_started():
+def str_how_to_stop_now():
     """Message to print when the timer is started"""
     return ('Run `trk stop -m "task description"` '
             'to stop tracking now and record this time unit')
@@ -22,9 +22,13 @@ def str_cancelled():
     """Message to print when the timer is canceled"""
     return 'Timer is canceled'
 
+def str_not_running():
+    """Message to print when the timer is canceled"""
+    return 'Timer is not running'
+
 def str_started_epoch():
     """Message to print when the timer is started"""
-    return ('Run `trk stop -m "task description" --epoch EPOCH` '
+    return ('Run `trk stop -m "task description" --at time` '
             'to stop tracking at a specific or elapsed time')
 
 def str_notrkrepo(trkdir):

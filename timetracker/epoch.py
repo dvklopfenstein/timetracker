@@ -27,58 +27,74 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     dtp2 = round30min.time_ceil(dtval + timedelta(minutes=120))
     return (
     '\n'
-    'Use `--epoch` or `-e` to specify an elapsed time (since '
+    'Use `--at` or `-@` to specify an elapsed time (since '
     f'{dtval.strftime(dtfmt) if dtval is not None else "the start time"}):\n'
-    f'    --epoch "30 minutes" # 30 minutes{desc}; Human-readable format\n'
-    f'    --epoch "30 min"     # 30 minutes{desc}; Human-readable format\n'
-    f'    --epoch "00:30:00"   # 30 minutes{desc}; Hour:minute:second format\n'
-    f'    --epoch "30:00"      # 30 minutes{desc}; Hour:minute:second format, shortened\n'
+    f'    --at "30 minutes" # 30 minutes{desc}; Human-readable format\n'
+    f'    --at "30 min"     # 30 minutes{desc}; Human-readable format\n'
+    f'    --at "00:30:00"   # 30 minutes{desc}; Hour:minute:second format\n'
+    f'    --at "30:00"      # 30 minutes{desc}; Hour:minute:second format, shortened\n'
     '\n'
-    f'    --epoch "4 hours"    # 4 hours{desc}; Human-readable format\n'
-    f'    --epoch "04:00:00"   # 4 hours{desc}; Hour:minute:second format\n'
-    f'    --epoch "4:00:00"    # 4 hours{desc}; Hour:minute:second format, shortened\n'
+    f'    --at "4 hours"    # 4 hours{desc}; Human-readable format\n'
+    f'    --at "04:00:00"   # 4 hours{desc}; Hour:minute:second format\n'
+    f'    --at "4:00:00"    # 4 hours{desc}; Hour:minute:second format, shortened\n'
     '\n'
-    'Or use `--epoch` or `-e` to specify a start or stop datetime:\n'
-    f'''    --epoch "{dtp.strftime('%Y-%m-%d %H:%M:%S')}"    '''
+    'Or use `--at` or `-@` to specify a start or stop datetime:\n'
+    f'''    --at "{dtp.strftime('%Y-%m-%d %H:%M:%S')}"    '''
     '# datetime format, 24 hour clock shortened\n'
-    f'''    --epoch "{dtp.strftime('%Y-%m-%d %I:%M:%S %p').lower()}" '''
+    f'''    --at "{dtp.strftime('%Y-%m-%d %I:%M:%S %p').lower()}" '''
     '# datetime format, 12 hour clock\n'
-    f'''    --epoch "{dtp.strftime('%m-%d %H:%M:%S')}"         '''
+    f'''    --at "{dtp.strftime('%m-%d %H:%M:%S')}"         '''
     '# this year, datetime format, 24 hour clock shortened\n'
-    f'''    --epoch "{dtp.strftime('%m-%d %I:%M:%S %p').lower()}"      '''
+    f'''    --at "{dtp.strftime('%m-%d %I:%M:%S %p').lower()}"      '''
     '# this year, datetime format, 12 hour clock\n'
 
-    f'''    --epoch "{dtp2.strftime('%m-%d %I%p').lower().replace(' 0', ' ')}"\n'''
-    f'''    --epoch "{dtp.strftime('%m-%d %I:%M %p').lower().replace(' 0', ' ')}"\n'''
-    f'''    --epoch "{dtp2.strftime('%m-%d %I:%M %p').lstrip("0").lower().replace(' 0', ' ')}""\n'''
-    f'''    --epoch "{dtp.strftime('%I:%M %p').lstrip("0").lower().replace(' 0', ' ')}"       '''
+    f'''    --at "{dtp2.strftime('%m-%d %I%p').lower().replace(' 0', ' ')}"\n'''
+    f'''    --at "{dtp.strftime('%m-%d %I:%M %p').lower().replace(' 0', ' ')}"\n'''
+    f'''    --at "{dtp2.strftime('%m-%d %I:%M %p').lstrip("0").lower().replace(' 0', ' ')}""\n'''
+    f'''    --at "{dtp.strftime('%I:%M %p').lstrip("0").lower().replace(' 0', ' ')}"       '''
     '# Today\n'
-    f'''    --epoch "{dtp2.strftime('%I:%M %p').lstrip("0").lower().replace(' 0', ' ')}"       '''
+    f'''    --at "{dtp2.strftime('%I:%M %p').lstrip("0").lower().replace(' 0', ' ')}"       '''
     '# Today\n'
     )
 
-def get_dtz(epochstr, dta):
+
+def get_dtz(epochstr, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
     try:
-        return Epoch(epochstr).get_dtz(dta)
+        return Epoch(epochstr, dta, defaultdt).get_dtz()
     except TypeError as err:
-        raise RuntimeError(f'UNABLE TO CONVERT str({epochstr}) '
-                            'TO A datetime OR timedelta object') from err
-
+        raise RuntimeError('ERROR RUNNING get_dtz(...):\n  '
+            f'string        : {epochstr},\n  '
+            f'from datetime : {dta})') from err
 
 class Epoch:
     """Epoch: an extent of time associated with a particular person or thing"""
 
-    def __init__(self, elapsed_or_dt):
+    def __init__(self, elapsed_or_dt, dta, defaultdt):
         self.estr = elapsed_or_dt
+        self.dta = dta
+        self.tdflt = defaultdt
 
-    def get_dtz(self, dta):
+    def get_dtz(self):
         """Get the ending time, given an epoch string"""
-        return parse_dt(self.estr) if self.is_datetime() else dta + self.get_tdelta()
+        return self._conv_datetime() if self.is_datetime() else self.conv_tdelta()
 
-    def get_tdelta(self):
+    def conv_tdelta(self):
         """Get the ending time, given an estr timedelta and a start time"""
-        return timedelta(seconds=parse_tdelta(self.estr))
+        return self.dta + timedelta(seconds=self._conv_timedelta())
+
+    def _conv_datetime(self):
+        try:
+            return parse_dt(self.estr, default=self.tdflt)
+        except TypeError as err:
+            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
+                                'TO A datetime object') from err
+    def _conv_timedelta(self):
+        try:
+            return parse_tdelta(self.estr)
+        except TypeError as err:
+            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
+                                'TO A timedelta object') from err
 
     def is_datetime(self):
         """Check if epoch is a datetime, rather than an elapsed time"""

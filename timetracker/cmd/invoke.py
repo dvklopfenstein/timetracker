@@ -17,22 +17,25 @@ from timetracker.msgs import str_init
 from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.csvold import CsvFile
+from timetracker.docx import GenWordDoc
 
 
-def cli_run_time(fnamecfg, args):
+def cli_run_invoke(fnamecfg, args):
     """Initialize timetracking on a project"""
-    if args.input and exists(args.input):
-        _rpt_time(args.input)
+    if exists(args.input):
+        run_io(args.input, args.output)
         return
-    run_time(
+    run_invoke(
         fnamecfg,
         args.name,
-        unit=args.unit,
+        perhour=args.perhour,
+        fin=args.input,
+        fout=args.output,
     )
 
-def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
+def run_invoke(fnamecfg, uname, **kwargs):
     """Initialize timetracking on a project"""
-    debug(yellow('START: RUNNING COMMAND TIME'))
+    debug(yellow('START: RUNNING COMMAND INVOICE'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
@@ -41,13 +44,18 @@ def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False
     if not exists(fcsv):
         _no_csv(fcsv, cfgproj, uname)
         return None
-    return _rpt_time(fcsv)
+    return run_io(fcsv, None)
 
-def _rpt_time(fcsv):
+def run_io(fcsv, fout_docx):
+    """Run input output"""
     ocsv = CsvFile(fcsv)
-    total_time = ocsv.read_totaltime()
-    print(f'{total_time} H:M:S or {total_time.total_seconds()/3600:.2f} hours')
-    return total_time
+    data = ocsv.get_data()
+    for d in data:
+        print(d)
+    if data and fout_docx:
+        doc = GenWordDoc(data)
+        doc.write_doc(fout_docx)
+
 
 def _no_csv(fcsv, cfgproj, uname):
     print(f'CSV file does not exist: {fcsv}')

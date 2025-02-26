@@ -20,6 +20,8 @@
 ## Unreleased
 
 ## Release 2025-02-25 v0.3a0
+* ADD `--at` and `--force` to `start` and `stop` commands
+* ADD cancel command
 
 ## Release 2025-02-15 v0.2a3
 * ADD Test for csv management

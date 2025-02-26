@@ -26,18 +26,17 @@ def cli_run_csvupdate(cfglocal, args):
         return
     run_csvupdate(
         cfglocal,
-        args.project,
         args.name,
         args.output)
 
-def run_csvupdate(fnamecfg, project, name, fout):
+def run_csvupdate(fnamecfg, name, fout):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('CSVUPDATE: RUNNING COMMAND CSVUPDATE'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg, project)
+    cfgproj = CfgProj(fnamecfg)
 
 
     fcsv = cfgproj.get_filename_csv(name)

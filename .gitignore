@@ -1,4 +1,5 @@
 # Project files
+/*.docx
 *.bac
 my.mk
 .timetracker/

@@ -31,6 +31,7 @@ REQUIRES = [
     'tomlkit',
     'pytimeparse2',
     'python-dateutil',
+    'python-docx',
 ]
 
 KEYWORDS = [

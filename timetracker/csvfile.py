@@ -1,4 +1,5 @@
 """Local project configuration parser for timetracking"""
+# pylint: disable=duplicate-code
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"

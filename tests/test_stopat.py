@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Test the location of the csv file"""
+# pylint: disable=duplicate-code
 
 from os.path import exists
 from logging import basicConfig

@@ -17,6 +17,12 @@ from datetime import datetime
 from datetime import timedelta
 
 
+def timedelta_to_hms(tdelta):
+    """Convert a timedelta to hours and minutes"""
+    hours, remainder = divmod(tdelta.total_seconds(), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return int(hours), int(minutes), seconds
+
 class RoundTime:
     """Round a datetime object up or down to `round_to_min`"""
     # pylint: disable=line-too-long

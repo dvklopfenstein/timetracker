@@ -10,16 +10,18 @@ from os.path import exists
 #from os.path import abspath
 #from os.path import dirname
 #from os.path import normpath
-from collections import namedtuple
 from datetime import timedelta
 from datetime import datetime
 from logging import debug
+from logging import warning
 from csv import reader
 
 from timetracker.utils import orange
 #from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
+from timetracker.consts import FMTDT24HMS
 #from timetracker.cfg.utils import get_username
+from timetracker.timetext import NTTIMEDATA
 
 
 class CsvFile:
@@ -46,23 +48,23 @@ class CsvFile:
         debug(orange(f'Starttime args {int(exists(self.fcsv))} self.fcsv {self.fcsv}'))
 
     def get_data(self):
-        """Get data"""
+        """Get data where start and stop are datetimes; timdelta is calculated from them"""
         ret = []
-        nto = namedtuple('TimeData', 'start_datetime duration message activity tags')
+        nto = NTTIMEDATA
         with open(self.fcsv, encoding='utf8') as csvstrm:
             _, itr = self._start_readcsv(csvstrm)
             for row in itr:
-                startdt = datetime.strptime(row[2], FMTDT)
+                startdt = self._getdt(row[2])
                 ret.append(nto(
                     start_datetime=startdt,
-                    duration=datetime.strptime(row[5], FMTDT) - startdt,
+                    duration=self._getdt(row[5]) - startdt,
                     message=row[7],
                     activity=row[8],
                     tags=row[9]))
         return ret
 
     def read_totaltime(self):
-        """Read the csv"""
+        """Calculate the total time by parsing the csv"""
         time_total = []
         with open(self.fcsv, encoding='utf8') as csvstrm:
             _, itr = self._start_readcsv(csvstrm)
@@ -79,13 +81,32 @@ class CsvFile:
         return hdr, itr
 
     def _add_timedelta_from_row(self, time_total, row, rnum):
-        delta = datetime.strptime(row[5], FMTDT) - datetime.strptime(row[2], FMTDT)
+        startdt = self._getdt(row[5])
+        stopdt  = self._getdt(row[2])
+        if startdt is None or stopdt is not None:
+            return
+        delta = stopdt - startdt
         if delta.days >= 0:
             time_total.append(delta)
         # https://stackoverflow.com/questions/46803405/python-timedelta-object-with-negative-values
         if delta.days < 0:
             row = ','.join(row)
-            print(f'Warning: Ignoring negative time delta in {self.fcsv}[{rnum}]: {row}')
+            warning(f'Warning: Ignoring negative time delta in {self.fcsv}[{rnum}]: {row}')
+
+    @staticmethod
+    def _getdt(timestr):
+        try:
+            return datetime.strptime(timestr, FMTDT)
+        except ValueError:
+            pass
+        try:
+            # pylint: disable=fixme
+            # TODO: warn to update csv
+            return datetime.strptime(timestr, FMTDT24HMS)
+        except ValueError as err:
+            warning(f'{err}')
+            warning(f'UNRECOGNIZED datetime format({timestr})')
+            return None
 
     def _chk_hdr(self, hdrs):
         """Check the file format"""

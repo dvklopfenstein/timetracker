@@ -1,5 +1,6 @@
 MAKEFLAGS := --no-print-directory
 PYTHON := python3
+CSV := /home/dvklo/timetrackers/timetracker_trk_dvklo.csv
 
 install:
 	pip install .
@@ -56,6 +57,11 @@ _stop:
 
 time:
 	trk --trksubdir $(DIRTRK) time
+
+docx:
+	trk --trksubdir $(DIRTRK) time -i $(CSV)
+	trk --trksubdir $(DIRTRK) invoice -i $(CSV) -o timetracker.docx
+
 	
 files:
 	@grep -nH --color filename $(DIRTRK)/config
@@ -122,6 +128,8 @@ clean:
 	rm -f updated.csv
 	rm -f .timetracker_starttime
 	rm -rf tmp; mkdir tmp;
+	rm -f *.docx
+	rm -f .timetracker_starttime
 
 clobber:
 	make clean

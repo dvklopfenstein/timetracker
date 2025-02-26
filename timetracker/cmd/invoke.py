@@ -17,7 +17,7 @@ from timetracker.msgs import str_init
 from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.csvold import CsvFile
-from timetracker.docx import GenWordDoc
+from timetracker.docx import WordDoc
 
 
 def cli_run_invoke(fnamecfg, args):
@@ -49,11 +49,13 @@ def run_invoke(fnamecfg, uname, **kwargs):
 def run_io(fcsv, fout_docx):
     """Run input output"""
     ocsv = CsvFile(fcsv)
-    data = ocsv.get_data()
-    for d in data:
+    timedata = ocsv.get_data()
+    for d in timedata:
         print(d)
-    if data and fout_docx:
-        doc = GenWordDoc(data)
+    if timedata and fout_docx:
+        doc = WordDoc(timedata)
+        for e in doc.ttext:
+            print(e)
         doc.write_doc(fout_docx)
 
 

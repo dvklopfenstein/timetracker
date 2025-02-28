@@ -29,7 +29,7 @@ class WordDoc:
 
     def __init__(self, timedata):
         self.tdata = timedata
-        self.ttext = get_data_formatted(timedata)
+        self.nttext = get_data_formatted(timedata)
 
     def write_doc(self, fout_docx):
         """Write a report into a Microsoft Word document"""
@@ -54,30 +54,35 @@ class WordDoc:
 
         #document.add_picture('monty-truth.png', width=Inches(1.25))
 
-        self.add_table(document)
+        self._add_table(document)
         document.add_page_break()
 
         document.save(fout_docx)
         print(f'  WROTE: {fout_docx}')
 
-    def add_table(self, doc):
-        """Add a table containing timetracking data to a Word document"""
-        records = (
-            (3, '101', 'Spam'),
-            (7, '422', 'Eggs'),
-            (4, '631', 'Spam, spam, eggs, and spam')
-        )
-        table = doc.add_table(rows=1, cols=3)
-        hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = 'Qty'
-        hdr_cells[1].text = 'Id'
-        hdr_cells[2].text = 'Desc'
-        for qty, idval, desc in records:
-            row_cells = table.add_row().cells
-            row_cells[0].text = str(qty)
-            row_cells[1].text = idval
-            row_cells[2].text = desc
+    def _get_headers(self):
+        """Get the number of rows in the timetracking data (self.nttext must have data)"""
+        return self.nttext[0]._fields
 
+    def _get_nrows(self):
+        """Get the number of rows in the timetracking data (self.nttext must have data)"""
+        return len(self.nttext)
+
+    def _get_ncols(self):
+        """Get the number of rows in the timetracking data (self.nttext must have data)"""
+        return len(self.nttext[0])
+
+    def _add_table(self, doc):
+        """Add a table containing timetracking data to a Word document"""
+        if not self.nttext:
+            return
+        table = doc.add_table(rows=1, cols=self._get_ncols())
+        for hdr, cell in zip(self._get_headers(), table.rows[0].cells):
+            cell.text = hdr
+        for ntd in self.nttext:
+            row_cells = table.add_row().cells
+            for cell, val in zip(row_cells, list(ntd)):
+                cell.text = val
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

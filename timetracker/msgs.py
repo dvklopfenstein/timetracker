@@ -3,6 +3,16 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from os.path import exists
+from os.path import dirname
+
+
+def str_uninitialized(fnamecfg):
+    """Print an init message if the timetracker local configuration does not exist"""
+    if exists(fnamecfg):
+        return False
+    print(str_init(dirname(fnamecfg)))
+    return True
 
 def str_tostart():
     """Message instructing how to start the timer"""

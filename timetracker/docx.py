@@ -26,6 +26,7 @@ from timetracker.timetext import get_data_formatted
 
 class WordDoc:
     """Generate a Microsoft Word document containing a table of data"""
+    # pylint: disable=too-few-public-methods
 
     def __init__(self, timedata):
         self.tdata = timedata

@@ -7,13 +7,12 @@ from sys import exit as sys_exit
 from os.path import exists
 #from os.path import abspath
 #from os.path import relpath
-from os.path import dirname
 from logging import debug
 
 ##from timeit import default_timer
 #from timetracker.msgs import str_timed
 #from timetracker.msgs import str_notrkrepo
-from timetracker.msgs import str_init
+from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.csvold import CsvFile
@@ -33,8 +32,7 @@ def cli_run_time(fnamecfg, args):
 def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
     """Initialize timetracking on a project"""
     debug(yellow('START: RUNNING COMMAND TIME'))
-    if not exists(fnamecfg):
-        print(str_init(dirname(fnamecfg)))
+    if str_uninitialized(fnamecfg):
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
     fcsv = cfgproj.get_filename_csv(uname)

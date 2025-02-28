@@ -24,9 +24,9 @@ jobs:
         pip install pytimeparse2
         pip install python-dateutil
         pip install python-docx
-    - name: Analyzing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
     - name: Run pytest
       run: |
         pytest
+    - name: Analyzing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')

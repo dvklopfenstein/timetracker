@@ -7,6 +7,7 @@ from sys import exit as sys_exit
 from os.path import exists
 from os.path import dirname
 from timetracker.msgs import str_init
+from timetracker.msgs import str_tostart
 from timetracker.cfg.cfg_local import CfgProj
 
 
@@ -22,7 +23,11 @@ def run_none(fcfgproj, name=None):
         sys_exit(0)
     # Check for start time
     cfglocal = CfgProj(fcfgproj)
-    cfglocal.get_starttime_obj(name).prtmsg_started01()
+    ostart = cfglocal.get_starttime_obj(name)
+    if ostart.file_exists():
+        ostart.prtmsg_started01()
+    else:
+        print(str_tostart())
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

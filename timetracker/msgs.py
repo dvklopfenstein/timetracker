@@ -18,13 +18,17 @@ def str_how_to_stop_now():
     return ('Run `trk stop -m "task description"` '
             'to stop tracking now and record this time unit')
 
-def str_cancelled():
+def str_cancelled1():
     """Message to print when the timer is canceled"""
     return 'Timer is canceled'
 
 def str_not_running():
     """Message to print when the timer is canceled"""
     return 'Timer is not running'
+
+def str_no_time_recorded(fcsv):
+    """No time recorded"""
+    return f'No time yet recorded in {fcsv}'
 
 def str_started_epoch():
     """Message to print when the timer is started"""

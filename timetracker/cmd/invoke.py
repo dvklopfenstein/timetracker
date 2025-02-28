@@ -54,15 +54,14 @@ def run_io(fcsv, fout_docx):
         print(d)
     if timedata and fout_docx:
         doc = WordDoc(timedata)
-        for e in doc.ttext:
+        for e in doc.nttext:
             print(e)
         doc.write_doc(fout_docx)
-
 
 def _no_csv(fcsv, cfgproj, uname):
     print(f'CSV file does not exist: {fcsv}')
     start_obj = cfgproj.get_starttime_obj(uname)
-    start_obj.prtmsg_started01()
+    start_obj.prtmsg_started_csv(fcsv)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

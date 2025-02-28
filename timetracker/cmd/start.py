@@ -46,7 +46,8 @@ def run_start(fnamecfg, name=None, **kwargs):
     # Print elapsed time, if timer was started
     start_at = kwargs.get('start_at')
     if start_at is None:
-        start_obj.prtmsg_started01()
+        if start_obj.file_exists():
+            start_obj.prtmsg_started01()
     else:
         start_obj.prt_elapsed()
     # Set/reset starting time, if applicable
@@ -63,7 +64,7 @@ def run_start(fnamecfg, name=None, **kwargs):
         assert isinstance(starttime, datetime)
         start_obj.wr_starttime(starttime)
         if not kwargs.get('quiet', False):
-            print(f'Timetracker {"started" if not force else "reset to"} '
+            print(f'Timetracker {"started now" if not force else "reset to"}: '
                   f'{starttime.strftime("%a %I:%M %p")}: {starttime} '
                   f"for project '{cfgproj.project}'")
     # Informational message

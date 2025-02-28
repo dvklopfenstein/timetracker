@@ -19,11 +19,11 @@ from timetracker.utils import prt_todo
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
 from timetracker.cfg.utils import get_username
-from timetracker.msgs import str_tostart
 from timetracker.msgs import str_tostart_epoch
 from timetracker.msgs import str_how_to_stop_now
 from timetracker.msgs import str_started_epoch
 from timetracker.msgs import str_not_running
+from timetracker.msgs import str_no_time_recorded
 from timetracker.epoch import str_arg_epoch
 
 # 2025-01-21 17:09:47.035936
@@ -44,20 +44,29 @@ class Starttime:
         debug(f'Starttime args . name     {name}')
         debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
 
+    def file_exists(self):
+        """Retrun True if starttime file exists, False otherwise"""
+        return exists(self.filename)
+
+    def prtmsg_started_csv(self, fcsv):
+        """Print message depending on if a csv file containing elapsed time exists"""
+        if self.file_exists():
+            self.prtmsg_started01()
+        else:
+            print(str_no_time_recorded(fcsv))
+
     def prtmsg_started01(self):
         """Print message depending if timer is started or not"""
-        if not exists(self.filename):
-            print(str_tostart())
+        assert exists(self.filename), f'FILE MUST EXIST prtmsg_started01: {self.filename}'
+        dtstart = self._read_starttime()
+        hms = self._hms_from_startfile(dtstart)
+        hms1 = hms is not None
+        if hms1 and hms <= self.min_trigger:
+            self._prtmsg_basic(hms, 'Timer running')
+        elif hms1:
+            self._prtmsg_triggered(hms, dtstart, 'Timer running')
         else:
-            dtstart = self._read_starttime()
-            hms = self._hms_from_startfile(dtstart)
-            hms1 = hms is not None
-            if hms1 and hms <= self.min_trigger:
-                self._prtmsg_basic(hms)
-            elif hms1:
-                self._prtmsg_triggered(hms, dtstart)
-            else:
-                prt_todo('TODO: STARTFILE WITH NO HMS')
+            prt_todo('TODO: STARTFILE WITH NO HMS')
 
     def wr_starttime(self, starttime):
         """Write the start time into a ./timetracker/start_*.txt"""
@@ -66,15 +75,15 @@ class Starttime:
             debug(f'  WROTE START: {starttime.strftime(FMTDT)}')
             debug(f'  WROTE FILE:  {self.filename}')
 
-    def _prtmsg_basic(self, hms):
-        self._prt_elapsed_hms(hms)
+    def _prtmsg_basic(self, hms, msg):
+        self._prt_elapsed_hms(hms, msg)
         print(str_how_to_stop_now())
 
-    def _prtmsg_triggered(self, hms, dtstart):
-        self._prt_elapsed_hms(hms)
+    def _prtmsg_triggered(self, hms, dtstart, msg):
+        self._prt_elapsed_hms(hms, msg)
         print(str_started_epoch())
         print(str_arg_epoch(dtstart, desc=' after start'))
-        self._prtmsg_basic(hms)
+        self._prtmsg_basic(hms, msg)
         print(str_started_epoch())
         print(str_tostart_epoch())
 
@@ -97,17 +106,17 @@ class Starttime:
                 return datetime.strptime(line, FMTDT)
         return None
 
-    def prt_elapsed(self):
+    def prt_elapsed(self, msg='Timer running'):
         """Print elapsed time if timer is started"""
         # Print elapsed time, if timer was started
         if exists(self.filename):
             dtstart = self._read_starttime()
             hms = self._hms_from_startfile(dtstart)
-            return self._prt_elapsed_hms(hms) if hms is not None else str_not_running()
+            return self._prt_elapsed_hms(hms, msg) if hms is not None else str_not_running()
         return None
 
-    def _prt_elapsed_hms(self, hms):
-        print(f'Timer running: {hms} H:M:S '
+    def _prt_elapsed_hms(self, hms, msg):
+        print(f'{msg}: {hms} H:M:S '
               f"elapsed time for '{self.project}' ID={self.name}")
 
     def rm_starttime(self):

@@ -68,10 +68,10 @@ class CsvFile:
         """Calculate the total time by parsing the csv"""
         time_total = []
         with open(self.fcsv, encoding='utf8') as csvstrm:
-            _, itr = self._start_readcsv(csvstrm)
-            self._add_timedelta_from_row(time_total, next(itr), 2)
-            for rnum, row in enumerate(itr, 3):
-                self._add_timedelta_from_row(time_total, row, rnum)
+            _, itr = self._start_readcsv(csvstrm)         # hdr (rownum=1)
+            self._add_timedelta_from_row(time_total, next(itr), rownum=2)
+            for rownum, row in enumerate(itr, 3):
+                self._add_timedelta_from_row(time_total, row, rownum)
         return sum(time_total, start=timedelta())
 
     def _start_readcsv(self, csvstrm):
@@ -81,10 +81,10 @@ class CsvFile:
         self._chk_hdr(hdr)
         return hdr, itr
 
-    def _add_timedelta_from_row(self, time_total, row, rnum):
-        startdt = self._getdt(row[5])
-        stopdt  = self._getdt(row[2])
-        if startdt is None or stopdt is not None:
+    def _add_timedelta_from_row(self, time_total, row, rownum):
+        startdt = self._getdt(row[2])
+        stopdt  = self._getdt(row[5])
+        if startdt is None or stopdt is None:
             return
         delta = stopdt - startdt
         if delta.days >= 0:
@@ -92,7 +92,7 @@ class CsvFile:
         # https://stackoverflow.com/questions/46803405/python-timedelta-object-with-negative-values
         if delta.days < 0:
             row = ','.join(row)
-            warning(f'Warning: Ignoring negative time delta in {self.fcsv}[{rnum}]: {row}')
+            warning(f'Warning: Ignoring negative time delta in {self.fcsv}[{rownum}]: {row}')
 
     @staticmethod
     def _getdt(timestr):

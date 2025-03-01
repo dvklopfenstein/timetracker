@@ -57,9 +57,9 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
         # TODO: Add project
-        error('NOT WRITING ELAPSED TIME; '
+        print('No elapsed time to stop; '
               'Do `trk start` to begin tracking time '
-              'for project, TODO')
+              f'for project, {cfgproj.project}')
         return None
     if dtz <= dta:
         error('NOT WRITING ELAPSED TIME: '

@@ -5,16 +5,12 @@
 
 Claim your power. Track your time on your own terms.
 
-With timetracker-csv:
-* Record history while developing multiple projects using the
-[CLI (command line interface)](https://blog.iron.io/pros-and-cons-of-a-command-line-interface/)    
-* Write elapsed task time to 
-[csv (comma-separated values)](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations/)
-files    
-* Collaborate on projects as a team   
+Track time spent on multiple projects,
+one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-command-line-interface),
+with time saved in pandas-friendly
+[csv](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
-
 
 * [Advantages](#advantages)
 * [Quickstart](#quickstart)

@@ -12,12 +12,12 @@ from timetracker.csvold import CsvFile
 from timetracker.docx import WordDoc
 
 
-def cli_run_invoke(fnamecfg, args):
+def cli_run_report(fnamecfg, args):
     """Report all time units"""
     if exists(args.input):
         run_io(args.input, args.output)
         return
-    run_invoke(
+    run_report(
         fnamecfg,
         args.name,
         perhour=args.perhour,
@@ -25,7 +25,7 @@ def cli_run_invoke(fnamecfg, args):
         fout=args.output,
     )
 
-def run_invoke(fnamecfg, uname, **kwargs):
+def run_report(fnamecfg, uname, **kwargs):
     """Report all time units"""
     debug(yellow('START: RUNNING COMMAND INVOICE'))
     fcsv = get_fcsv(fnamecfg, uname, kwargs.get('dirhome'))

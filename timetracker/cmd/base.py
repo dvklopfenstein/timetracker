@@ -5,10 +5,8 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
-from logging import debug
 
 from timetracker.msgs import str_uninitialized
-from timetracker.utils import yellow
 from timetracker.cfg.cfg_local  import CfgProj
 
 
@@ -24,7 +22,6 @@ def get_fcsv(fnamecfg, uname, dirhome=None):
     return fcsv
 
 def _no_csv(fcsv, cfgproj, uname):
-    #print(f'CSV file does not exist: {fcsv}')
     start_obj = cfgproj.get_starttime_obj(uname)
     start_obj.prtmsg_started_csv(fcsv)
 

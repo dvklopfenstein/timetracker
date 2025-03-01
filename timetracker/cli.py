@@ -83,6 +83,8 @@ class Cli:
 
     @staticmethod
     def _get_cmds():
+        """In ArgumentParser, usage=f'%(prog)s [-h] {self._get_cmds()}'"""
+        # parser.add_subparsers(dest='command', metavar=self._get_cmds(), help=SUPPRESS)
         cmds = ','.join(k for k in FNCS if k != 'invoice')
         return f'{{{cmds}}}'
 
@@ -100,7 +102,6 @@ class Cli:
         """Create the top-level parser"""
         parser = ArgumentParser(
             prog=progname,
-            usage=f'%(prog)s [-h] {self._get_cmds()}',
             description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
@@ -118,13 +119,13 @@ class Cli:
         return parser
 
     def _add_subparsers(self, parser):
-        subparsers = parser.add_subparsers(dest='command', metavar=self._get_cmds(), help=SUPPRESS)
+        subparsers = parser.add_subparsers(dest='command')
         self._add_subparser_init(subparsers)
         self._add_subparser_start(subparsers)
         self._add_subparser_stop(subparsers)
         self._add_subparser_cancel(subparsers)
         self._add_subparser_time(subparsers)
-        self._add_subparser_invoice(subparsers)
+        self._add_subparser_report(subparsers)
         self._add_subparser_csvupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
@@ -193,15 +194,16 @@ class Cli:
             help='Specify an input csv file')
         return parser
 
-    def _add_subparser_invoice(self, subparsers):
-        parser = subparsers.add_parser(name='invoice', help='Generate an invoice')
+    def _add_subparser_report(self, subparsers):
+        parser = subparsers.add_parser(name='report',
+            help='Generate an report for all time units and include cumulative time')
         parser.add_argument('-p', '--perhour', type=int, default=350,
-            help='Generate an invoice')
+            help='Generate an report')
         parser.add_argument('-i', '--input', metavar='file.csv',
             default=self._get_dflt_csvfilename(),
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.csv',
-            default='invoice.csv',
+            default='report.csv',
             help='Specify an output csv file')
         return parser
 

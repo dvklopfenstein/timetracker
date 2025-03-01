@@ -25,7 +25,7 @@ def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False
     """Report the total time spent on a project"""
     debug(yellow('START: RUNNING COMMAND TIME'))
     fcsv = get_fcsv(fnamecfg, uname, kwargs.get('dirhome'))
-    return _rpt_time(fcsv)
+    return _rpt_time(fcsv) if fcsv is not None else None
 
 def _rpt_time(fcsv):
     ocsv = CsvFile(fcsv)

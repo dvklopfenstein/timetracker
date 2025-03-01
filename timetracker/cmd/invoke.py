@@ -29,7 +29,7 @@ def run_invoke(fnamecfg, uname, **kwargs):
     """Report all time units"""
     debug(yellow('START: RUNNING COMMAND INVOICE'))
     fcsv = get_fcsv(fnamecfg, uname, kwargs.get('dirhome'))
-    return run_io(fcsv, None)
+    return run_io(fcsv, None) if fcsv is not None else None
 
 def run_io(fcsv, fout_docx):
     """Run input output"""

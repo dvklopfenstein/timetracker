@@ -7,7 +7,8 @@ Claim your power. Track your time on your own terms.
 
 Track time spent on multiple projects,
 one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-command-line-interface),
-with time saved in pandas-friendly
+with time saved in
+[pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly
 [csv](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>

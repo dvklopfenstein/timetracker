@@ -20,7 +20,6 @@ from docx import Document
 #
 #from timetracker.utils import orange
 #from timetracker.consts import DIRTRK
-from timetracker.timetext import get_data_formatted
 ##from timetracker.cfg.utils import get_username
 
 
@@ -28,9 +27,8 @@ class WordDoc:
     """Generate a Microsoft Word document containing a table of data"""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, timedata):
-        self.tdata = timedata
-        self.nttext = get_data_formatted(timedata)
+    def __init__(self, time_formatted):
+        self.nttext = time_formatted
 
     def write_doc(self, fout_docx):
         """Write a report into a Microsoft Word document"""

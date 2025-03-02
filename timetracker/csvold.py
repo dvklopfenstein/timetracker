@@ -50,6 +50,7 @@ class CsvFile:
 
     def get_data(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
+        debug('get_data')
         ret = []
         nto = NTTIMEDATA
         with open(self.fcsv, encoding='utf8') as csvstrm:

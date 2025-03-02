@@ -96,7 +96,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     return fcsv
 
 def _get_dtz(timetxt, dta):
-    return datetime.now() if not timetxt else get_dtz(timetxt, dta)
+    now = datetime.now()
+    return now if not timetxt else get_dtz(timetxt, now)
 
 
 ####def _msg_csv(fcsv):

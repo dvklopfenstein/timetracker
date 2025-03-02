@@ -50,9 +50,9 @@ class Cli:
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
         debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {self.fcfg}')
         if self.args.command is not None:
-            FNCS[self.args.command](,self.fcfg self.args)
+            FNCS[self.args.command](self.fcfg, self.args)
         else:
-            cli_run_none(,self.fcfg self.args)
+            cli_run_none(self.fcfg, self.args)
 
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""

@@ -23,7 +23,7 @@ def cli_run_cancel(fnamecfg, args):
 
 def run_cancel(fnamecfg, name=None):
     """Initialize timetracking on a project"""
-    debug(yellow('START: RUNNING COMMAND CANCEL'))
+    debug(yellow('RUNNING COMMAND CANCEL'))
     if str_uninitialized(fnamecfg):
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)

@@ -43,7 +43,7 @@ def cli_run_stop(fnamecfg, args):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('STOP: RUNNING COMMAND STOP'))
+    debug(yellow('RUNNING COMMAND STOP'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
@@ -52,7 +52,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
-    dtz = _get_dtz(kwargs.get('stop_at'), dta)
+    dtz = _get_dtz(kwargs.get('stop_at'))
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -95,7 +95,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         print('NOT restarting the timer because `--keepstart` invoked')
     return fcsv
 
-def _get_dtz(timetxt, dta):
+def _get_dtz(timetxt):
     now = datetime.now()
     return now if not timetxt else get_dtz(timetxt, now)
 

@@ -31,7 +31,7 @@ def cli_run_start(fnamecfg, args):
 
 def run_start(fnamecfg, name=None, **kwargs):
     """Initialize timetracking on a project"""
-    debug(yellow('START: RUNNING COMMAND START'))
+    debug(yellow('RUNNING COMMAND START'))
     now = kwargs.get('now', datetime.now())
     if str_uninitialized(fnamecfg):
         sys_exit(0)

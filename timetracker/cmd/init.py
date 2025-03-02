@@ -39,7 +39,7 @@ def run_init_test(fnamecfg, dircsv, project, dirhome):
 
 def run_init_local(fnamecfg, dircsv, project, quiet=True):
     """Initialize the local configuration file for a timetracking project"""
-    debug(yellow('INIT: RUNNING COMMAND INIT'))
+    debug(yellow('RUNNING COMMAND INIT'))
     debug(f'INIT: fnamecfg:    {fnamecfg}')
     debug(f'INIT: project:     {project}')
     debug(f'INIT: dircsv({dircsv})')

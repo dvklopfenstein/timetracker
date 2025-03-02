@@ -5,7 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from logging import debug
-from timetracker.cmd.base import get_fcsv
+from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
 from timetracker.csvold import CsvFile
 
@@ -23,7 +23,7 @@ def cli_run_time(fnamecfg, args):
 
 def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
     """Report the total time spent on a project"""
-    debug(yellow('START: RUNNING COMMAND TIME'))
+    debug(yellow('RUNNING COMMAND TIME'))
     fcsv = get_fcsv(fnamecfg, uname, kwargs.get('dirhome'))
     return _rpt_time(fcsv) if fcsv is not None else None
 

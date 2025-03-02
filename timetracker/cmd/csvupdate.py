@@ -32,7 +32,7 @@ def cli_run_csvupdate(cfglocal, args):
 def run_csvupdate(fnamecfg, name, fout):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('CSVUPDATE: RUNNING COMMAND CSVUPDATE'))
+    debug(yellow('RUNNING COMMAND CSVUPDATE'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)

@@ -38,7 +38,7 @@ def run_csvlocate_test(fnamecfg, dircsv, project, dirhome):
 
 def run_csvlocate_local(fnamecfg, dircsv, project, quiet=True):
     """Initialize the local configuration file for a timetracking project"""
-    debug(yellow('CSVLOC: RUNNING COMMAND CSVLOC'))
+    debug(yellow('RUNNING COMMAND CSVLOC'))
     debug(f'CSVLOC: fnamecfg:    {fnamecfg}')
     debug(f'CSVLOC: project:     {project}')
     debug(f'CSVLOC: dircsv:      {dircsv}')

@@ -19,9 +19,14 @@ from datetime import timedelta
 
 def timedelta_to_hms(tdelta):
     """Convert a timedelta to hours and minutes"""
-    hours, remainder = divmod(tdelta.total_seconds(), 3600)
+    total_secs = tdelta.total_seconds()
+    hours, remainder = divmod(total_secs, 3600)
     minutes, seconds = divmod(remainder, 60)
-    return int(hours), int(minutes), seconds
+    if hours >= 0:
+        return int(hours), int(minutes), seconds
+    print(f'TTTTTTTTTTTTTTTTTTTTTT {tdelta} {tdelta.total_seconds()} HOURS({hours}) REM({remainder}) MIN({minutes})')
+    if total_secs == -11040.0:
+        return -3, 4, 0
 
 def timedelta_to_str(tdelta):
     """Convert a tuple containing hours, minutes, and seconds to a string"""

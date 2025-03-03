@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from collections import namedtuple
 from timetracker.consts import FMTDT12HM
 from timetracker.timecalc import timedelta_to_hms
+from timetracker.timecalc import timedelta_to_str
 
 
 NTTIMEDATA = namedtuple('TimeData', 'start_datetime duration message activity tags')
@@ -34,7 +35,7 @@ def _get_nto(has_activity, has_tags):
     return namedtuple('TimeText', flds)
 
 def _get_nto_fieldnames(has_activity, has_tags):
-    lst = ['Weekday', 'Starttime', 'Duration']
+    lst = ['Weekday', 'Starttime', 'Duration', 'Total']
     if has_activity:
         lst.append('Activity')
     lst.append('Description')
@@ -45,24 +46,49 @@ def _get_nto_fieldnames(has_activity, has_tags):
 def _nttxt(ntd):
     weekday = ntd.start_datetime.strftime('%a')
     startdt = ntd.start_datetime.strftime(FMTDT12HM)
-    hours, minutes, _ = timedelta_to_hms(ntd.duration)
-    return (weekday, startdt, f'{hours:02}:{minutes:02}')
+    ##cur_hours, cur_minutes, _ = timedelta_to_hms(ntd.duration)
+    total = timedelta_to_str(ntd.duration)
+    return (weekday, startdt, f'{total}')
 
 def _get_dfmttd_at00(nto, nts):
     # pylint: disable=protected-access
-    return [nto._make(_nttxt(e) + (e.message,)) for e in nts]
+    ret = []
+    itr = iter(nts)
+    ntd = next(itr)
+    total = ntd.duration
+    ret.append(nto._make(_nttxt(ntd) + (timedelta_to_str(total), ntd.message,)))
+    for ntd in itr:
+        total += ntd.duration
+        ret.append(nto._make(_nttxt(ntd) + (timedelta_to_str(total), ntd.message,)))
+    ##return [nto._make(_nttxt(ntd) + (ntd.message,)) for ntd in nts]
+    return ret
 
 def _get_dfmttd_at10(nto, nts):
     # pylint: disable=protected-access
-    return [nto._make(_nttxt(e) + (e.activity, e.message)) for e in nts]
+    ret = []
+    itr = iter(nts)
+    for ntd in nts:
+        ret.append(nto._make(_nttxt(ntd) + (ntd.activity, ntd.message)))
+    ##return [nto._make(_nttxt(ntd) + (ntd.activity, ntd.message)) for ntd in nts]
+    return ret
 
 def _get_dfmttd_at01(nto, nts):
     # pylint: disable=protected-access
-    return [nto._make(_nttxt(e) + (e.message, e.tags)) for e in nts]
+    ret = []
+    itr = iter(nts)
+    for ntd in nts:
+        ret.append(nto._make(_nttxt(ntd) + (ntd.message, ntd.tags)))
+    ##return [nto._make(_nttxt(ntd) + (ntd.message, ntd.tags)) for ntd in nts]
+    return ret
 
 def _get_dfmttd_at11(nto, nts):
     # pylint: disable=protected-access
-    return [nto._make(_nttxt(e) + (e.activity, e.message, e.tags)) for e in nts]
+    ret = []
+    itr = iter(nts)
+    for ntd in nts:
+        ret.append(nto._make(_nttxt(ntd) + (ntd.activity, ntd.message, ntd.tags)))
+    ##return [nto._make(_nttxt(ntd) + (ntd.activity, ntd.message, ntd.tags)) for ntd in nts]
+    return ret
 
 FUNCS = {
     (False, False): _get_dfmttd_at00,

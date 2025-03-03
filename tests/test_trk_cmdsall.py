@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test the location of the csv file"""
+"""Test running all commands when timetracker repo is uninitialized"""
 # pylint: disable=duplicate-code
 
 from os.path import exists
@@ -19,6 +19,7 @@ from timetracker.cmd.report import run_report
 from timetracker.cmd.start import run_start
 from tests.pkgtttest.mkprojs import mk_projdirs
 from tests.pkgtttest.mkprojs import findhome_str
+from tests.pkgtttest.testbase import TestBase
 
 basicConfig(level=DEBUG)
 
@@ -30,15 +31,10 @@ def test_startat(project='pumpkin', username='carver'):
     Obj(project, username, dircur='dirproj', dirgit01=True).run()
     Obj(project, username, dircur='dirdoc',  dirgit01=True).run()
 
-class Obj:
-    """Test the location of the csv file"""
-    # pylint: disable=too-few-public-methods
 
-    def __init__(self, project, username, dircur, dirgit01):
-        self.project = project
-        self.uname = username
-        self.dircurattr = dircur
-        self.dirgit01 = dirgit01
+class Obj(TestBase):
+    """Test running all commands when timetracker repo is uninitialized"""
+    # pylint: disable=too-few-public-methods
 
     def run(self):
         """Run init, start --at, stop"""

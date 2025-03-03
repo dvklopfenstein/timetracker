@@ -39,5 +39,4 @@ Elapsed H:M:S=0:01:36.981588 added to ./.timetracker/timetracker_dvk.csv
 Contents
 --------
 
-[google](google5109fbe0b537cd10.html)
 Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserverd

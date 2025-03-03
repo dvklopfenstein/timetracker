@@ -195,11 +195,11 @@ class Cli:
         parser = subparsers.add_parser(name='report',
             help='Generate an report for all time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.fcsv,
+        parser.add_argument('-i', '--input', metavar='file.csv', nargs='*',
+            #default=self.fcsv,
             help='Specify an input csv file')
-        parser.add_argument('-o', '--output', metavar='file.csv',
-            help='Specify an output csv file')
+        parser.add_argument('-o', '--output', metavar='file.docx',
+            help='Specify an output file')
         return parser
 
     def _add_subparser_csvupdate(self, subparsers):

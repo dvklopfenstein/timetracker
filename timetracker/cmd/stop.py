@@ -5,19 +5,15 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
-#from os.path import relpath
-from os.path import dirname
-#from logging import info
 from logging import debug
 from logging import error
 from collections import namedtuple
 from datetime import datetime
-##from timeit import default_timer
 from timetracker.utils import yellow
 from timetracker.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
-from timetracker.msgs import str_init
+from timetracker.msgs import str_uninitialized
 
 
 NTCSV = namedtuple("CsvFields", "message activity tags")
@@ -44,10 +40,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND STOP'))
-    if not exists(fnamecfg):
-        print(str_init(dirname(fnamecfg)))
+    if str_uninitialized(fnamecfg):
         sys_exit(0)
-        #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)

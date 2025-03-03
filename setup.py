@@ -31,13 +31,28 @@ REQUIRES = [
     'tomlkit',
     'pytimeparse2',
     'python-dateutil',
+    'python-docx',
+]
+
+KEYWORDS = [
+    "linux",
+    "cli",
+    "productivity",
+    "csv",
+    "history",
+    "collaboration",
+    "time-tracker",
+    "timetracker",
+    "csv-reading",
+    "csv-export",
+    "timetracking",
 ]
 
 setup(
     # The name of the project on PyPi
     name='timetracker-csv',
     # https://peps.python.org/pep-0440/
-    version='0.2a5',
+    version='0.3a0',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',
     packages=PACKAGES,
@@ -61,6 +76,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     install_requires=REQUIRES,
+    keywords=KEYWORDS,
 )
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

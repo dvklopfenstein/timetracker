@@ -14,6 +14,7 @@ from collections import namedtuple
 from datetime import datetime
 ##from timeit import default_timer
 from timetracker.utils import yellow
+from timetracker.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.msgs import str_init
@@ -35,13 +36,14 @@ def cli_run_stop(fnamecfg, args):
         args.name,
         get_ntcsv(args.message, args.activity, args.tags),
         quiet=args.quiet,
-        keepstart=args.keepstart)
+        keepstart=args.keepstart,
+        stop_at=args.at)
 
 #def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('STOP: RUNNING COMMAND STOP'))
+    debug(yellow('RUNNING COMMAND STOP'))
     if not exists(fnamecfg):
         print(str_init(dirname(fnamecfg)))
         sys_exit(0)
@@ -50,13 +52,18 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
+    dtz = _get_dtz(kwargs.get('stop_at'))
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
         # TODO: Add project
-        error('NOT WRITING ELAPSED TIME; '
+        print('No elapsed time to stop; '
               'Do `trk start` to begin tracking time '
-              'for project, TODO')
+              f'for project, {cfgproj.project}')
+        return None
+    if dtz <= dta:
+        error('NOT WRITING ELAPSED TIME: '
+              f'starttime({dta}) > stoptime({dtz})')
         return None
 
     # Append the timetracker file with this time unit
@@ -69,7 +76,6 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if not exists(fcsv):
         _wr_csvlong_hdrs(fcsv)
     # Print time information into csv
-    dtz = datetime.now()
     delta = dtz - dta
     csvline = _strcsv_timerstopped(
         dta, dtz, delta,
@@ -88,6 +94,11 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
     return fcsv
+
+def _get_dtz(timetxt):
+    now = datetime.now()
+    return now if not timetxt else get_dtz(timetxt, now)
+
 
 ####def _msg_csv(fcsv):
 ####    if fcsv:

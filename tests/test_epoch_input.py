@@ -14,7 +14,7 @@ from dateutil.parser import parse as parse_dt
 
 from timetracker.consts import FMTDT_H
 from timetracker.timecalc import RoundTime
-
+from tests.pkgtttest.startdts import DT2525
 
 basicConfig(level=DEBUG)
 
@@ -34,6 +34,12 @@ def test_epoch_input():
         debug(f'{txt:26} {str(act):26} {exp}')
         assert act == exp, f'{idx}) TSTR({txt}): ACT({act}) != EXP({exp})'
         #assert isinstance(act, int)
+
+    # "Today" is 2525
+    assert str(parse_dt('4am',           default=DT2525)) == "2525-01-01 04:00:00"
+    assert str(parse_dt('5:00 pm',       default=DT2525)) == "2525-01-01 17:00:00"
+    assert str(parse_dt('5:30pm',        default=DT2525)) == "2525-01-01 17:30:00"
+    assert str(parse_dt('2-19 5:30 pm',  default=DT2525)) == "2525-02-19 17:30:00"
     debug('TEST PASSED')
 
 
@@ -69,6 +75,7 @@ def _get_dt_n_expdt(dtval):
         # pylint: disable=line-too-long
         ("5:00 pm", datetime(today.year, today.month, today.day, dtp.hour, dtp.minute, dtp.second)),
         ("5:30 pm", datetime(today.year, today.month, today.day, dtp2.hour, dtp2.minute, dtp2.second)),
+        # ("4 days, 9:33:54.912101", dtp),  # No
     )
 
 

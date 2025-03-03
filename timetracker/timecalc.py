@@ -1,4 +1,14 @@
 """Time calculations"""
+# 2016 https://pyinterval.readthedocs.io/en/latest/guide.html
+#      https://github.com/taschini/pyinterval
+# 2024 https://github.com/AlexandreDecan/portion (482 stars)
+#      https://pypi.org/project/portion/
+#      https://pypi.org/project/python-intervals/ (2020)
+# NNNN https://mauriciopoppe.github.io/interval-arithmetic/
+#      https://www.mauriciopoppe.com/notes/computer-science/programming-languages/cpp-refresher/
+# 2022 https://github.com/mauriciopoppe
+# 2025 https://github.com/flintlib/flint/
+# 2018 https://github.com/loliGothicK/Cranberries ARCHIVED
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
@@ -6,6 +16,12 @@ __author__ = "DV Klopfenstein, PhD"
 from datetime import datetime
 from datetime import timedelta
 
+
+def timedelta_to_hms(tdelta):
+    """Convert a timedelta to hours and minutes"""
+    hours, remainder = divmod(tdelta.total_seconds(), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return int(hours), int(minutes), seconds
 
 class RoundTime:
     """Round a datetime object up or down to `round_to_min`"""

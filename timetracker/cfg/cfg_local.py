@@ -48,7 +48,6 @@ class CfgProj:
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    ####def __init__(self, filename, dircsv=None, project=None):
     def __init__(self, filename, project=None, dirhome=None):
         self.filename = filename
         debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
@@ -84,7 +83,7 @@ class CfgProj:
             return
         raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
 
-    def get_starttime_obj(self, username=None):
+    def get_starttime_obj(self, username):
         """Get a Starttime instance"""
         username = get_username(username)
         project = self._read_project_from_cfgfile()
@@ -92,6 +91,8 @@ class CfgProj:
 
     def write_file(self, dircsv='.', force=False, quiet=False):
         """Write a new config file"""
+        if dircsv is None:
+            dircsv = '.'
         fname = self.get_filename_cfg()
         self._mk_dircfg(quiet)
         if not exists(fname):
@@ -111,10 +112,6 @@ class CfgProj:
         fin_cfglocal = self.get_filename_cfg()
         return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
 
-    ####def str_cfg(self):
-    ####    """Return string containing configuration file contents"""
-    ####    return dumps(self._get_doc_new())
-
     #-------------------------------------------------------------
     def _mk_dircfg(self, quiet=False):
         """Makes a `.timetracker/` working directory, if needed; The project cfg is stored here"""
@@ -125,7 +122,6 @@ class CfgProj:
             absdir = abspath(dircfg)
             if not quiet:
                 print(f'Initialized timetracker directory: {absdir}')
-
 
     def _read_project_from_cfgfile(self):
         """Read a config file and load it into a TOML document"""
@@ -139,7 +135,6 @@ class CfgProj:
         doc = self.read_doc()
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
-            ##fcsv_orig = join(dircsv, self.CSVPAT.replace('PROJECT', self.project))
             fpat = fpat.replace('PROJECT', self.project)
             return replace_envvar(fpat, username) if '$' in fpat else fpat
         return None
@@ -153,7 +148,6 @@ class CfgProj:
 
     def _wr_cfg(self, fname, doc):
         """Write config file"""
-        ##chk_isdir(get_dirname_abs(doc['csv']['filename']), "doc['csv']['filename']")
         TOMLFile(fname).write(doc)
         # Use `~`, if it makes the path shorter
         ##fcsv = replace_homepath(doc['csv']['filename'])
@@ -165,20 +159,13 @@ class CfgProj:
     def _get_dircsv(self):
         """Read the project cfg to get the csv dir name for storing time data"""
         fcsv = self._read_csvdir_from_cfgfile()
-        ####debug(f'CCCCCCCCCC dircsv: {fcfg}')
-        ####debug(f'CCCCCCCCCC dircsv: {fcsv}')
         if fcsv is not None:
             return dirname(fcsv)
         dircsv = get_abspath(DIRCSV, self.dirproj, self.dirhome)
-        ####debug(f'DDDDDDDDDD dircsv: {dircsv}')
         return dircsv
 
     def _get_dircsv_absname(self):
         dircsv = self._get_dircsv()
-        ####fcsv_orig = join(dircsv, self.CSVPAT.replace('PROJECT', self.project))
-        ####debug(f'BBBBBBBBBB {dircsv}')
-        ####debug(f'BBBBBBBBBB {fcsv_orig}')
-        ####return get_abspath(fcsv_orig, self.dirproj)
         return get_abspath(dircsv, self.dirproj, self.dirhome)
 
     def _get_dircsv_relname(self):

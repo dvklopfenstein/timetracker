@@ -1,5 +1,6 @@
 MAKEFLAGS := --no-print-directory
 PYTHON := python3
+CSV := /home/dvklo/timetrackers/timetracker_trk_dvklo.csv
 
 install:
 	pip install .
@@ -29,6 +30,13 @@ start:
 	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
 	find $(DIRTRK)
 
+cancel:
+	trk --trksubdir $(DIRTRK) cancel
+	find $(DIRTRK)
+	@grep -Hw --color filename $(DIRTRK)/config
+	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
+	find $(DIRTRK)
+
 # Test that researcher passed a stop message using M="This is my stop message"
 # https://stackoverflow.com/questions/51535230/makefile-test-if-variable-is-not-empty
 stop:
@@ -49,6 +57,11 @@ _stop:
 
 time:
 	trk --trksubdir $(DIRTRK) time
+
+docx:
+	trk --trksubdir $(DIRTRK) time -i $(CSV)
+	trk --trksubdir $(DIRTRK) invoice -i $(CSV) -o timetracker.docx
+
 	
 files:
 	@grep -nH --color filename $(DIRTRK)/config
@@ -115,6 +128,8 @@ clean:
 	rm -f updated.csv
 	rm -f .timetracker_starttime
 	rm -rf tmp; mkdir tmp;
+	rm -f *.docx
+	rm -f .timetracker_starttime
 
 clobber:
 	make clean

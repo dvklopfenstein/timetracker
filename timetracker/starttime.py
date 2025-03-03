@@ -18,6 +18,7 @@ from timetracker.utils import orange
 from timetracker.utils import prt_todo
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
+from timetracker.consts import FMTDT_H
 from timetracker.cfg.utils import get_username
 from timetracker.msgs import str_tostart_epoch
 from timetracker.msgs import str_how_to_stop_now
@@ -64,7 +65,7 @@ class Starttime:
         if hms1 and hms <= self.min_trigger:
             self._prtmsg_basic(hms, 'Timer running')
         elif hms1:
-            self._prtmsg_triggered(hms, dtstart, 'Timer running')
+            self._prtmsg_triggered(hms, dtstart)
         else:
             prt_todo('TODO: STARTFILE WITH NO HMS')
 
@@ -79,7 +80,8 @@ class Starttime:
         self._prt_elapsed_hms(hms, msg)
         print(str_how_to_stop_now())
 
-    def _prtmsg_triggered(self, hms, dtstart, msg):
+    def _prtmsg_triggered(self, hms, dtstart):
+        msg = f'Timer started on {dtstart.strftime(FMTDT_H)} and running'
         self._prt_elapsed_hms(hms, msg)
         print(str_started_epoch())
         print(str_arg_epoch(dtstart, desc=' after start'))
@@ -117,7 +119,7 @@ class Starttime:
 
     def _prt_elapsed_hms(self, hms, msg):
         print(f'{msg}: {hms} H:M:S '
-              f"elapsed time for '{self.project}' ID={self.name}")
+              f"for '{self.project}' ID={self.name}")
 
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""

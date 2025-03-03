@@ -10,7 +10,7 @@ from timetracker.utils import yellow
 from timetracker.csvold import CsvFile
 from timetracker.docx import WordDoc
 from timetracker.timetext import get_data_formatted
-from timetracker.timetext import get_fstr
+#from timetracker.timetext import get_fstr
 
 
 def cli_run_report(fnamecfg, args):

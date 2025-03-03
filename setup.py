@@ -77,7 +77,7 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=REQUIRES,
     # Needed for assignment expressions & the walrus operator
-    python_requires='>=3.8',  
+    python_requires='>=3.8',
     keywords=KEYWORDS,
 )
 

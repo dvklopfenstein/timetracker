@@ -9,6 +9,7 @@ dynamic = [
     "readme",
     "description",
     "keywords",
+    "requires-python",
 ]
 
 [project.urls]

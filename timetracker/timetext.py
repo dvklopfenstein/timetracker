@@ -39,6 +39,7 @@ def _get_nto(has_activity, has_tags, pnum):
     return namedtuple('TimeText', flds)
 
 def get_fstr(has_activity, has_tags, pnum):
+    """Get formatting for printing to stdout"""
     lst = ['{Day:3}', '{Date:10}', '{Span:>5}', '{Total:5}']
     if pnum:
         lst.append('{Sum:5}')

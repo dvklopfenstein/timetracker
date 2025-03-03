@@ -23,6 +23,11 @@ def timedelta_to_hms(tdelta):
     minutes, seconds = divmod(remainder, 60)
     return int(hours), int(minutes), seconds
 
+def timedelta_to_str(tdelta):
+    """Convert a tuple containing hours, minutes, and seconds to a string"""
+    cur_hours, cur_minutes, _ = timedelta_to_hms(tdelta)
+    return f'{cur_hours:02}:{cur_minutes:02}'
+
 class RoundTime:
     """Round a datetime object up or down to `round_to_min`"""
     # pylint: disable=line-too-long

@@ -200,6 +200,8 @@ class Cli:
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.docx',
             help='Specify an output file')
+        parser.add_argument('-p', '--product', type=float,
+            help=SUPPRESS)  # Future feature
         return parser
 
     def _add_subparser_csvupdate(self, subparsers):

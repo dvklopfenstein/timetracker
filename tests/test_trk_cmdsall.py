@@ -19,7 +19,7 @@ from timetracker.cmd.report import run_report
 from timetracker.cmd.start import run_start
 from tests.pkgtttest.mkprojs import mk_projdirs
 from tests.pkgtttest.mkprojs import findhome_str
-from tests.pkgtttest.testbase import TestBase
+from tests.pkgtttest.runbase import RunBase
 
 basicConfig(level=DEBUG)
 
@@ -32,7 +32,7 @@ def test_startat(project='pumpkin', username='carver'):
     Obj(project, username, dircur='dirdoc',  dirgit01=True).run()
 
 
-class Obj(TestBase):
+class Obj(RunBase):
     """Test running all commands when timetracker repo is uninitialized"""
     # pylint: disable=too-few-public-methods
 

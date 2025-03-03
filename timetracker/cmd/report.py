@@ -10,20 +10,21 @@ from timetracker.utils import yellow
 from timetracker.csvold import CsvFile
 from timetracker.docx import WordDoc
 from timetracker.timetext import get_data_formatted
+from timetracker.timetext import get_fstr
 
 
 def cli_run_report(fnamecfg, args):
     """Report all time units"""
     if args.input is None:
-        run_report(fnamecfg, args.name)
+        run_report(fnamecfg, args.name, pnum=args.product)
     elif len(args.input) == 1:
-        run_io(args.input[0], args.output)
+        _run_io(args.input[0], args.output, pnum=args.product)
     else:
         raise RuntimeError('TIME TO IMPLEMENT')
     ##if args.input and exists(args.input):
     ##    print(args.input)
     ##if args.input and args.output and exists(args.input):
-    ##    run_io(args.input, args.output)
+    ##    _run_io(args.input, args.output)
     ##    return
     ##run_report(
     ##    fnamecfg,
@@ -32,22 +33,23 @@ def cli_run_report(fnamecfg, args):
     ##    fout=args.output,
     ##)
 
-def run_report(fnamecfg, uname, dirhome=None):
+def run_report(fnamecfg, uname, pnum=None, dirhome=None):
     """Report all time units"""
     debug(yellow('RUNNING COMMAND REPORT'))
     fcsv = get_fcsv(fnamecfg, uname, dirhome)
-    return run_io(fcsv, None) if fcsv is not None else None
+    return _run_io(fcsv, None, pnum) if fcsv is not None else None
 
-def run_io(fcsv, fout_docx):
+def _run_io(fcsv, fout_docx, pnum):
     """Run input output"""
     ocsv = CsvFile(fcsv)
     timedata = ocsv.get_data()
     for e in sorted(timedata, key=lambda nt: nt.start_datetime):
         print(e)
-    timefmtd = get_data_formatted(timedata)
+    timefmtd = get_data_formatted(timedata, pnum)
     if timefmtd:
-        for e in timefmtd:
-            print(e)
+        #fstr = get_fstr(
+        for ntd in timefmtd:
+            print(ntd._asdict())
         if fout_docx:
             doc = WordDoc(timefmtd)
             doc.write_doc(fout_docx)

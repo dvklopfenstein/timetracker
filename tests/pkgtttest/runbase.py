@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Test the location of the csv file"""
+"""Base class for object that runs tests"""
 
 
-class TestBase:
-    """Base class for test object"""
+class RunBase:
+    """Base class for object that runs tests"""
     # pylint: disable=too-few-public-methods
 
     def __init__(self, project, username, dircur, dirgit01):

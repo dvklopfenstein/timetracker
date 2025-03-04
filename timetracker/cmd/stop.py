@@ -7,23 +7,14 @@ from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
 from logging import error
-from collections import namedtuple
 from datetime import datetime
 from timetracker.utils import yellow
 from timetracker.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.msgs import str_uninitialized
+from timetracker.ntcsv import get_ntcsv
 
-
-NTCSV = namedtuple("CsvFields", "message activity tags")
-
-def get_ntcsv(message, activity=None, tags=None):
-    """Get a namedtuple with csv row information"""
-    return NTCSV(
-        message=message,
-        activity=activity if activity is not None else '',
-        tags=';'.join(tags) if tags is not None else '')
 
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""

@@ -25,7 +25,7 @@ SEP = f'\n{"="*80}\n'
 def test_get_filename_csv(project='apples', dircur='dirproj', username='piemaker'):
     """Test getting a csv name when the project config file does not exist"""
     with TemporaryDirectory() as tmphome:
-        cfgname, finder, exp = proj_setup(tmphome, project, dircur, dirgit01=True)
+        cfgname, _, _ = proj_setup(tmphome, project, dircur, dirgit01=True) # finder, exp
         cfgproj = CfgProj(cfgname, dirhome=tmphome)
         fcsv = cfgproj.get_filename_csv(username)
         assert fcsv is None, f'SHOULD BE NONE WHEN PROJ CFG NOT EXIST; fcsv({fcsv})'

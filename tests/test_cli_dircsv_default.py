@@ -14,7 +14,7 @@ from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
-from timetracker.cmd.stop import get_ntcsv
+from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.runfncs import proj_setup
 

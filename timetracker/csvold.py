@@ -22,7 +22,7 @@ from timetracker.utils import orange
 from timetracker.consts import FMTDT
 from timetracker.consts import FMTDT24HMS
 #from timetracker.cfg.utils import get_username
-from timetracker.timetext import NTTIMEDATA
+from timetracker.ntcsv import NTTIMEDATA
 
 
 class CsvFile:

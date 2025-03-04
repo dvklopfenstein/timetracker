@@ -12,8 +12,6 @@ from timetracker.timecalc import str_td
 from timetracker.utils import white
 
 
-NTTIMEDATA = namedtuple('TimeData', 'start_datetime duration message activity tags')
-
 def get_data_formatted(timedata, pnum=None):
     """Get timetracker data formatted for a report"""
     has_activity, has_tags = _has_activity_tags(timedata)

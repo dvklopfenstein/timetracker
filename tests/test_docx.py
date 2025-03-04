@@ -9,7 +9,7 @@
 from datetime import datetime
 from datetime import timedelta
 from timetracker.docx import WordDoc
-from timetracker.timetext import NTTIMEDATA
+from timetracker.ntcsv import NTTIMEDATA
 from timetracker.timetext import get_data_formatted
 from tests.pkgtttest.cmpstr import get_filename
 

@@ -8,13 +8,13 @@ from logging import debug
 from tempfile import TemporaryDirectory
 from pytest import raises
 from timetracker.utils import cyan
-from timetracker.cmd.stop import get_ntcsv
 from timetracker.cmd.stop import run_stop
 from timetracker.cmd.time import run_time
 from timetracker.cmd.cancel import run_cancel
 from timetracker.cmd.csvupdate import run_csvupdate
 from timetracker.cmd.report import run_report
 from timetracker.cmd.start import run_start
+from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
 

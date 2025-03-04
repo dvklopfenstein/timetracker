@@ -39,6 +39,7 @@ class Cli:
     def __init__(self, args=None):
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
         self.fcfg = self.finder.get_cfgfilename()
+        self.user = get_username()  # default username
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         ####self.args = self._init_args_cli() if args is None else self._init_args_test(args)
@@ -103,7 +104,7 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
-        parser.add_argument('-n', '--username', metavar='NAME', dest='name', default=get_username(),
+        parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username for timetracking")
         parser.add_argument('-q', '--quiet', action='store_true',
             help='Only print error and warning messages; information will be suppressed.')
@@ -120,6 +121,7 @@ class Cli:
         self._add_subparser_cancel(subparsers)
         self._add_subparser_time(subparsers)
         self._add_subparser_report(subparsers)
+        self._add_subparser_csv(subparsers)
         self._add_subparser_csvupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
@@ -151,10 +153,12 @@ class Cli:
     def _add_subparser_start(subparsers):
         parser = subparsers.add_parser(name='start', help='start timetracking')
         # test feature: force over-writing of start time
-        parser.add_argument('-@', '--at', metavar='time',
-            help='start tracking at a specific or elapsed time')
         parser.add_argument('-f', '--force', action='store_true',
             help='Force restart timer now or `--at` a specific or elapsed time')
+        parser.add_argument('-@', '--at', metavar='time',
+            help='start tracking at a '
+                 'specific(ex: 4pm, "Tue 4pm") or '
+                 'elapsed time(ex: 10min, ~10min, 4hr)')
         return parser
 
     @staticmethod
@@ -172,7 +176,9 @@ class Cli:
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
         parser.add_argument('-@', '--at', metavar='time',
-            help='Start tracking at a specific or elapsed time')
+            help='start tracking at a '
+                 'specific(ex: 4pm, "2025-01-05 04:30pm") or '
+                 'elapsed time(ex: 1hr, ~1hr, 1h20m)')
         return parser
 
     @staticmethod
@@ -202,6 +208,14 @@ class Cli:
             help='Specify an output file')
         parser.add_argument('-p', '--product', type=float,
             help=SUPPRESS)  # Future feature
+        return parser
+
+    def _add_subparser_csv(self, subparsers):
+        parser = subparsers.add_parser(name='csv',
+            help='Show the locations of csv files managed by timetracker',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-g', '--global', action='store_true',
+            help='Look for csv files for all projects tracked in the global config file')
         return parser
 
     def _add_subparser_csvupdate(self, subparsers):

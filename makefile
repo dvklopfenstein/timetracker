@@ -18,6 +18,7 @@ PROJ = trk
 trk:
 	trk --trksubdir $(DIRTRK)
 
+# -----------------------------------------------------------------------------
 init:
 	rm -rf $(DIRTRK)
 	trk --trksubdir $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
@@ -54,6 +55,9 @@ _stop:
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv
+
+report:
+	trk --trksubdir $(DIRTRK) report
 
 time:
 	trk --trksubdir $(DIRTRK) time

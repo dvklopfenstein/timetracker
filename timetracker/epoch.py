@@ -81,7 +81,10 @@ class Epoch:
 
     def conv_tdelta(self):
         """Get the ending time, given an estr timedelta and a start time"""
-        return self.dta + timedelta(seconds=self._conv_timedelta())
+        secs = self._conv_timedelta()
+        if secs is not None:
+            return self.dta + timedelta(seconds=secs)
+        raise RuntimeError(f'STRING "{self.estr}" COULD NOT BE CONVERTED TO A timedelta')
 
     def _conv_datetime(self):
         try:
@@ -91,7 +94,13 @@ class Epoch:
                                 'TO A datetime object') from err
     def _conv_timedelta(self):
         try:
-            return parse_tdelta(self.estr)
+            estr = self.estr
+            estr1 = estr[:1]
+            if estr1 not in {'~', '\\'}:
+                return parse_tdelta(estr)
+            if estr1 == '~':
+                return -parse_tdelta(estr[1:])
+            return -parse_tdelta(estr[2:])
         except TypeError as err:
             raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
                                 'TO A timedelta object') from err
@@ -99,6 +108,8 @@ class Epoch:
     def is_datetime(self):
         """Check if epoch is a datetime, rather than an elapsed time"""
         epoch = self.estr.lower()
+        if epoch[:1] in {'\\', '~'}:
+            return False
         if '-' in epoch:
             return True
         if 'am' in epoch:

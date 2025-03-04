@@ -6,14 +6,9 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from os.path import exists
 from os.path import relpath
-from os.path import dirname
 from logging import debug
-##from logging import error
 from datetime import datetime
 from csv import reader
-##from csv import DictReader
-##from csv import writer
-##from timeit import default_timer
 from timetracker.utils import yellow
 from timetracker.consts import FMTDT
 from timetracker.msgs import str_init
@@ -34,7 +29,7 @@ def run_csvupdate(fnamecfg, name, fout):
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND CSVUPDATE'))
     if not exists(fnamecfg):
-        print(str_init(dirname(fnamecfg)))
+        print(str_init(fnamecfg))
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
 

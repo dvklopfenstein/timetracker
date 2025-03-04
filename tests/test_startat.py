@@ -8,12 +8,10 @@ from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
-from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
-from tests.pkgtttest.mkprojs import mk_projdirs
-from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.startdts import DT2525
+from tests.pkgtttest.runfncs import proj_setup
 
 basicConfig(level=DEBUG)
 
@@ -61,10 +59,7 @@ class Obj:
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN(start_at={start_at})'))
         with TemporaryDirectory() as tmphome:
-            exp = mk_projdirs(tmphome, self.project, self.dirgit01)
-            finder = CfgFinder(dircur=getattr(exp, self.dircurattr), trksubdir=None)
-            cfgname = finder.get_cfgfilename()
-            assert not exists(cfgname), findhome_str(exp.dirhome)
+            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
 
             # CMD: INIT; CFG PROJECT
             cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome)  # cfgg

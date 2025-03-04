@@ -19,6 +19,7 @@ from os.path import abspath
 from os.path import dirname
 from os.path import normpath
 from logging import debug
+from glob import glob
 
 from tomlkit import comment
 from tomlkit import document
@@ -69,9 +70,19 @@ class CfgProj:
         """Get the csv filename by reading the cfg csv pattern and filling in"""
         username = get_username(username)
         fcsv = self._read_csv_from_cfgfile(username)
-        if fcsv is not None:
-            return fcsv
-        return replace_envvar(self._get_dircsv_absname(), username)
+        ####if fcsv is not None:
+        ####    return fcsv
+        ####return replace_envvar(self._get_dircsv_absname(), username)
+        ####return None
+        return fcsv if fcsv is not None else None
+
+    def get_project_csvs(self):
+        """Get the csv filename by reading the cfg csv pattern and filling in"""
+        fcsvpat = self._read_csvpat_from_cfgfile()
+        if fcsvpat is not None:
+            globpat = replace_envvar(fcsvpat, '*')
+            return glob(globpat)
+        return None
 
     def set_filename_csv(self, filename_str):
         """Write the config file, replacing [csv][filename] value"""
@@ -132,11 +143,22 @@ class CfgProj:
 
     def _read_csv_from_cfgfile(self, username):
         """Read a config file and load it into a TOML document"""
+        ####doc = self.read_doc()
+        ####if doc is not None:
+        ####    fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
+        ####    fpat = fpat.replace('PROJECT', self.project)
+        fcsvpat = self._read_csvpat_from_cfgfile()
+        if fcsvpat:
+            return replace_envvar(fcsvpat, username) if '$' in fcsvpat else fcsvpat
+        return None
+
+    def _read_csvpat_from_cfgfile(self):
+        """Read a config file and load it into a TOML document"""
         doc = self.read_doc()
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
             fpat = fpat.replace('PROJECT', self.project)
-            return replace_envvar(fpat, username) if '$' in fpat else fpat
+            return fpat
         return None
 
     def _read_csvdir_from_cfgfile(self):

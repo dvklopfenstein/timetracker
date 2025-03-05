@@ -34,13 +34,13 @@ def run_csv(fnamecfg, uname, dirhome=None):
 def _get_csv_proj_user(cfgproj, uname):
     fcsv = cfgproj.get_filename_csv(uname)
     if fcsv is not None:
-        print(f'CSV: CSVFILE   exists({int(exists(fcsv))}) {fcsv}')
+        print(f'CSV exists({int(exists(fcsv))}) {fcsv}')
 
 def _get_csv_proj_all(cfgproj):
     fcsvs = cfgproj.get_project_csvs()
     for fcsv in fcsvs:
         if fcsv is not None:
-            print(f'CSV: CSVFILE   exists({int(exists(fcsv))}) {fcsv}')
+            print(f'CSV exists({int(exists(fcsv))}) {fcsv}')
 
 def _run_cfg_global(dirhome):
     cfg_global = CfgGlobal(dirhome)

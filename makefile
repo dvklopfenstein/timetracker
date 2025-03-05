@@ -59,6 +59,9 @@ _stop:
 report:
 	trk --trksubdir $(DIRTRK) report
 
+csv:
+	trk --trksubdir $(DIRTRK) csv
+
 time:
 	trk --trksubdir $(DIRTRK) time
 

@@ -8,12 +8,13 @@ from os.path import exists
 from logging import debug
 from logging import error
 from datetime import datetime
-from timetracker.utils import yellow
-from timetracker.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
+from timetracker.consts import FMTDT_H
 from timetracker.msgs import str_uninitialized
 from timetracker.ntcsv import get_ntcsv
+from timetracker.epoch import get_dtz
+from timetracker.utils import yellow
 
 
 def cli_run_stop(fnamecfg, args):
@@ -37,7 +38,6 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
-    dtz = _get_dtz(kwargs.get('stop_at'))
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -46,6 +46,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
               'Do `trk start` to begin tracking time '
               f'for project, {cfgproj.project}')
         return None
+    dtz = _get_dtz(kwargs.get('stop_at'))
     if dtz <= dta:
         error('NOT WRITING ELAPSED TIME: '
               f'starttime({dta}) > stoptime({dtz})')
@@ -71,7 +72,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
 
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     if not kwargs.get('quiet', False):
-        print(f'Timer stopped; Elapsed H:M:S={delta} '
+        print(f'Timer stopped at {dtz.strftime(FMTDT_H)}\n'
+              f'Elapsed H:M:S {delta} '
               f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
     if not kwargs.get('keepstart', False):

@@ -10,11 +10,11 @@ NTTIMEDATA = namedtuple('TimeData', 'start_datetime duration message activity ta
 
 NTCSV = namedtuple("CsvFields", "message activity tags")
 
-def get_ntcsv(message, activity=None, tags=None):
+def get_ntcsv(message, activity='', tags=None):
     """Get a namedtuple with csv row info: message, activity, & tags"""
     return NTCSV(
         message=message,
-        activity=activity if activity is not None else '',
+        activity=activity,
         tags=';'.join(tags) if tags is not None else '')
 
 

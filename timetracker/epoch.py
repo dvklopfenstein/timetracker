@@ -107,11 +107,12 @@ class Epoch:
 
     def is_datetime(self):
         """Check if epoch is a datetime, rather than an elapsed time"""
-        epoch = self.estr.lower()
+        epoch = self.estr
         if epoch[:1] in {'\\', '~'}:
             return False
         if '-' in epoch:
             return True
+        epoch = epoch.lower()
         if 'am' in epoch:
             return True
         if 'pm' in epoch:

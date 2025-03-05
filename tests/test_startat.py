@@ -67,9 +67,7 @@ class Obj:
 
             # CMD: START
             fin_start = run_start(cfgname, self.uname,
-                                  start_at=start_at,
-                                  now=DT2525,
-                                  defaultdt=DT2525)
+                                  start_at=start_at, now=DT2525, defaultdt=DT2525)
             assert exists(fin_start)
             return cfgp.get_starttime_obj(self.uname).read_starttime()
 

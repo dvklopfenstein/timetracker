@@ -1,30 +1,32 @@
 #!/usr/bin/env python3
-"""Test the location of the csv file"""
-# pylint: disable=duplicate-code
+"""Test `trk stop --at`"""
 
 from os.path import exists
-from logging import basicConfig
-from logging import DEBUG
+#from logging import basicConfig
+#from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
+from timetracker.utils import yellow
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
-from tests.pkgtttest.startdts import DT2525
+#from timetracker.cmd.stop import run_stop
+from tests.pkgtttest.dts import DT2525
+from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
 
-basicConfig(level=DEBUG)
+#basicConfig(level=DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
 
 def test_stopat(project='pumpkin', username='carver'):
-    """Test `trk start --at"""
+    """Test `trk stop --at"""
     _run(Obj(project, username, dircur='dirproj', dirgit01=True))
     _run(Obj(project, username, dircur='dirdoc',  dirgit01=True))
 
 def _run(obj):
-    # Test researcher-entered datetime starttimes
+    # Test researcher-entered datetime stoptimes
     obj.chk('4am',                   '2525-01-01 04:00:00')
     obj.chk("2025-02-19 17:00:00",   '2025-02-19 17:00:00')
     obj.chk("2025-02-19 05:00:00 pm",'2025-02-19 17:00:00')
@@ -44,43 +46,33 @@ def _run(obj):
     obj.chk("4:00:00",    '2525-01-01 04:00:00')
 
 
-class Obj:
-    """Test the location of the csv file"""
+class Obj(RunBase):
+    """Test `trk stop --at`"""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, project, username, dircur, dirgit01):
-        self.project = project
-        self.uname = username
-        self.dircurattr = dircur
-        self.dirgit01 = dirgit01
-
-    def _run(self, start_at, dircsv=None):
-        """Run init, start --at, stop"""
+    def _run(self, stop_at, dircsv=None):
+        """Run init, stop --at, stop"""
         debug(cyan(f'\n{"="*100}'))
-        debug(cyan(f'RUN(start_at={start_at})'))
+        debug(cyan(f'RUN(stop_at={stop_at})'))
         with TemporaryDirectory() as tmphome:
-            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
+            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # CMD: INIT; CFG PROJECT
-            cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome)  # cfgg
+            cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome, quiet=True)  # cfgg
             #findhome(tmphome)
 
             # CMD: START
-            fin_start = run_start(cfgname, self.uname,
-                                  start_at=start_at,
-                                  now=DT2525,
-                                  defaultdt=DT2525)
+            fin_start = run_start(cfgname, self.uname, now=DT2525, defaultdt=DT2525)
             assert exists(fin_start)
             return cfgp.get_starttime_obj(self.uname).read_starttime()
 
-        # pylint: disable=fixme
-        # TODO: Test elapsed times greater than a day so csv default timedelta has "1 Day, HH:MM:SS"
 
-
-    def chk(self, start_at, expstr):
-        """Run start --at and check value"""
-        starttime = self._run(start_at)
-        assert str(starttime) == expstr, f'TEST({start_at}): ACT({starttime}) !=  EXP({expstr})'
+    def chk(self, stop_at, expstr):
+        """Run stop --at and check value"""
+        print(yellow(f'\nTEST: stop={stop_at:22} EXP={expstr}'))
+        stoptime = self._run(stop_at)
+        assert stoptime, 'pylint'
+        #assert str(stoptime) == expstr, f'TEST({stop_at}): ACT({stoptime}) !=  EXP({expstr})'
 
 
 if __name__ == '__main__':

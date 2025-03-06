@@ -10,6 +10,7 @@ from timetracker.utils import yellow
 from timetracker.csvold import CsvFile
 from timetracker.docx import WordDoc
 from timetracker.timetext import get_data_formatted
+from timetracker.report import Report
 #from timetracker.timetext import get_fstr
 
 
@@ -43,13 +44,11 @@ def _run_io(fcsv, fout_docx, pnum):
     """Run input output"""
     ocsv = CsvFile(fcsv)
     timedata = ocsv.get_data()
-    for e in sorted(timedata, key=lambda nt: nt.start_datetime):
-        print(e)
+    #for e in sorted(timedata, key=lambda nt: nt.start_datetime):
+    #    print(e)  # TimeData namedtuple
     timefmtd = get_data_formatted(timedata, pnum)
     if timefmtd:
-        #fstr = get_fstr(
-        for ntd in timefmtd:
-            print(ntd._asdict())
+        Report(timefmtd).prt_basic()
         if fout_docx:
             doc = WordDoc(timefmtd)
             doc.write_doc(fout_docx)

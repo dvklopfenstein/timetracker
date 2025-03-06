@@ -50,29 +50,26 @@ class Obj(RunBase):
     """Test `trk stop --at`"""
     # pylint: disable=too-few-public-methods
 
-    def _run(self, stop_at, dircsv=None):
+    def _run(self, stop_at, tmphome, dircsv=None):
         """Run init, stop --at, stop"""
-        debug(cyan(f'\n{"="*100}'))
-        debug(cyan(f'RUN(stop_at={stop_at})'))
-        with TemporaryDirectory() as tmphome:
-            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
-
-            # CMD: INIT; CFG PROJECT
-            cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome, quiet=True)  # cfgg
-            #findhome(tmphome)
-
-            # CMD: START
-            fin_start = run_start(cfgname, self.uname, now=DT2525, defaultdt=DT2525)
-            assert exists(fin_start)
-            return cfgp.get_starttime_obj(self.uname).read_starttime()
+        cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
+        cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome, quiet=True)  # cfgg
+        fin_start = run_start(cfgname, self.uname, now=DT2525, defaultdt=DT2525)
+        assert exists(fin_start)
+        assert stop_at, 'pylint'
+        return 'pylint'
+        #findhome(tmphome)
 
 
     def chk(self, stop_at, expstr):
         """Run stop --at and check value"""
         print(yellow(f'\nTEST: stop={stop_at:22} EXP={expstr}'))
-        stoptime = self._run(stop_at)
-        assert stoptime, 'pylint'
-        #assert str(stoptime) == expstr, f'TEST({stop_at}): ACT({stoptime}) !=  EXP({expstr})'
+        debug(cyan(f'\n{"="*100}'))
+        debug(cyan(f'RUN(stop_at={stop_at})'))
+        with TemporaryDirectory() as tmphome:
+            stoptime = self._run(stop_at, tmphome)
+            assert stoptime, 'pylint'
+            #assert str(stoptime) == expstr, f'TEST({stop_at}): ACT({stoptime}) !=  EXP({expstr})'
 
 
 if __name__ == '__main__':

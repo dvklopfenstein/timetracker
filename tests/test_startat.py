@@ -70,8 +70,8 @@ class Obj(RunBase):
     def chk(self, start_at, expstr):
         """Run start --at and check value"""
         print(yellow(f'\nTEST: start={start_at:22} EXP={expstr}'))
-        starttime = self._run(start_at)
-        assert str(starttime) == expstr, f'TEST({start_at}): ACT({starttime}) !=  EXP({expstr})'
+        startdt = self._run(start_at)
+        assert str(startdt) == expstr, f'TEST({start_at}): ACT({startdt}) !=  EXP({expstr})'
 
 
 if __name__ == '__main__':

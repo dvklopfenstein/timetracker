@@ -22,16 +22,16 @@ def cli_run_init(fnamecfg, args):
         args.project,
         args.quiet)
 
-def run_init(fnamecfg, dircsv, project, quiet=True):
+def run_init(fnamecfg, dircsv, project, quiet=False):
     """Initialize timetracking on a project"""
     cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
     debug(cfgproj.get_desc("new"))
     dirhome = get_dirhome_globalcfg()
     run_init_global(dirhome, cfgproj)
 
-def run_init_test(fnamecfg, dircsv, project, dirhome):
+def run_init_test(fnamecfg, dircsv, project, dirhome, quiet=False):
     """Initialize timetracking on a test project"""
-    cfgproj = run_init_local(fnamecfg, dircsv, project, False)
+    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
     cfg_global = run_init_global(dirhome, cfgproj)
     return cfgproj, cfg_global
 

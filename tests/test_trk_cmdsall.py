@@ -38,7 +38,7 @@ class Obj(RunBase):
         debug(cyan(f'\n{"="*100}'))
         uname = self.uname
         with TemporaryDirectory() as tmphome:
-            cfgname, _, _= proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
+            cfgname, _, _= proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # DO NOT INIT
 

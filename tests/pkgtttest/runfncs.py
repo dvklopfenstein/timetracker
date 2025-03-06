@@ -14,7 +14,7 @@ class RunBase:
     def __init__(self, project, username, dircur, dirgit01):
         self.project = project
         self.uname = username
-        self.dircurattr = dircur
+        self.dircur = dircur
         self.dirgit01 = dirgit01
 
 

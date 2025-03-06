@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
-"""Test the location of the csv file"""
-# pylint: disable=duplicate-code
+"""Test `trk start --at`"""
 
 from os.path import exists
-from logging import basicConfig
-from logging import DEBUG
+#from logging import basicConfig
+#from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
+from timetracker.utils import yellow
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
-from tests.pkgtttest.startdts import DT2525
+from tests.pkgtttest.dts import DT2525
+from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
 
-basicConfig(level=DEBUG)
+#basicConfig(level=DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
@@ -44,22 +45,16 @@ def _run(obj):
     obj.chk("4:00:00",    '2525-01-01 04:00:00')
 
 
-class Obj:
-    """Test the location of the csv file"""
+class Obj(RunBase):
+    """Test `trk start --at`"""
     # pylint: disable=too-few-public-methods
-
-    def __init__(self, project, username, dircur, dirgit01):
-        self.project = project
-        self.uname = username
-        self.dircurattr = dircur
-        self.dirgit01 = dirgit01
 
     def _run(self, start_at, dircsv=None):
         """Run init, start --at, stop"""
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN(start_at={start_at})'))
         with TemporaryDirectory() as tmphome:
-            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
+            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # CMD: INIT; CFG PROJECT
             cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome)  # cfgg
@@ -74,6 +69,7 @@ class Obj:
 
     def chk(self, start_at, expstr):
         """Run start --at and check value"""
+        print(yellow(f'\nTEST: start={start_at:22} EXP={expstr}'))
         starttime = self._run(start_at)
         assert str(starttime) == expstr, f'TEST({start_at}): ACT({starttime}) !=  EXP({expstr})'
 

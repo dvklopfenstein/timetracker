@@ -10,7 +10,7 @@ from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from timetracker.ntcsv import get_ntcsv
-from tests.pkgtttest.startdts import DTBEGIN
+from tests.pkgtttest.dts import DTBEGIN
 from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.mkprojs import mkdirs
 

@@ -114,9 +114,11 @@ class CfgProj:
             doc = self._get_doc_new()
             doc['csv']['filename'] = join(dircsv, self.CSVPAT)
             self._wr_cfg(fname, doc)
-            print(f'Overwrote {fname}')
+            if not quiet:
+                print(f'Overwrote {fname}')
         else:
-            print(f'Use `force` to overwrite: {fname}')
+            if not quiet:
+                print(f'Use `force` to overwrite: {fname}')
 
     def read_doc(self):
         """Read a config file and load it into a TOML document"""

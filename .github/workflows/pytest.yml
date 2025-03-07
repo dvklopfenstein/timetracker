@@ -1,4 +1,4 @@
-name: Pylint
+name: Pytest
 
 on: [push]
 
@@ -24,6 +24,6 @@ jobs:
         pip install pytimeparse2
         pip install python-dateutil
         pip install python-docx
-    - name: Analyzing the code with pylint
+    - name: Run pytest
       run: |
-        pylint $(git ls-files '*.py')
+        pytest

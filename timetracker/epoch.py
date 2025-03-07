@@ -10,8 +10,10 @@ __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
 from datetime import timedelta
-from pytimeparse2 import parse as parse_tdelta
-from dateutil.parser import parse as parse_dt
+from pytimeparse2 import parse as pytimeparse2_parsertd
+from dateutil.parser import parse as dateutil_parserdt
+from dateutil.parser import ParserError
+from dateutil.parser import UnknownTimezoneWarning
 from timetracker.timecalc import RoundTime
 from timetracker.consts import FMTDT_H
 
@@ -58,66 +60,113 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     )
 
 
-def get_dtz(epochstr, dta, defaultdt=None):
+####def get_dtz(epochstr, dta, defaultdt=None):
+####    """Get stop datetime, given a start time and a specific or elapsed time"""
+####    try:
+####        return Epoch(epochstr, dta, defaultdt).get_dtz()
+####    except TypeError as err:
+####        raise RuntimeError('ERROR RUNNING get_dtz(...):\n  '
+####            f'string        : {epochstr},\n  '
+####            f'from datetime : {dta})') from err
+
+def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
     try:
-        return Epoch(epochstr, dta, defaultdt).get_dtz()
-    except TypeError as err:
-        raise RuntimeError('ERROR RUNNING get_dtz(...):\n  '
-            f'string        : {epochstr},\n  '
-            f'from datetime : {dta})') from err
-
-class Epoch:
-    """Epoch: an extent of time associated with a particular person or thing"""
-
-    def __init__(self, elapsed_or_dt, dta, defaultdt):
-        self.estr = elapsed_or_dt
-        self.dta = dta
-        self.tdflt = defaultdt
-
-    def get_dtz(self):
-        """Get the ending time, given an epoch string"""
-        return self._conv_datetime() if self.is_datetime() else self.conv_tdelta()
-
-    def conv_tdelta(self):
-        """Get the ending time, given an estr timedelta and a start time"""
-        secs = self._conv_timedelta()
+        return dateutil_parserdt(elapsed_or_dt, default=defaultdt)
+    except (ParserError, UnknownTimezoneWarning) as err:
+        secs = _conv_timedelta(elapsed_or_dt)
         if secs is not None:
-            return self.dta + timedelta(seconds=secs)
-        raise RuntimeError(f'STRING "{self.estr}" COULD NOT BE CONVERTED TO A timedelta')
+            return dta + timedelta(seconds=secs)
+        print(f'ERROR: {err}')
+    raise RuntimeError(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A timedelta')
 
-    def _conv_datetime(self):
-        try:
-            return parse_dt(self.estr, default=self.tdflt)
-        except TypeError as err:
-            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
-                                'TO A datetime object') from err
-    def _conv_timedelta(self):
-        try:
-            estr = self.estr
-            estr1 = estr[:1]
-            if estr1 not in {'~', '\\'}:
-                return parse_tdelta(estr)
-            if estr1 == '~':
-                return -parse_tdelta(estr[1:])
-            return -parse_tdelta(estr[2:])
-        except TypeError as err:
-            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
-                                'TO A timedelta object') from err
+def _conv_timedelta(elapsed_or_dt):
+    try:
+        estr1 = elapsed_or_dt[:1]
+        if estr1 not in {'~', '\\'}:
+            return pytimeparse2_parsertd(elapsed_or_dt)
+        if estr1 == '~':
+            return -pytimeparse2_parsertd(elapsed_or_dt[1:])
+        return -pytimeparse2_parsertd(elapsed_or_dt[2:])
+    except TypeError as err:
+        raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
+                            'TO A timedelta object') from err
 
-    def is_datetime(self):
-        """Check if epoch is a datetime, rather than an elapsed time"""
-        epoch = self.estr
-        if epoch[:1] in {'\\', '~'}:
-            return False
-        if '-' in epoch:
-            return True
-        epoch = epoch.lower()
-        if 'am' in epoch:
-            return True
-        if 'pm' in epoch:
-            return True
-        return False
+####def is_datetime(self):
+####    """Check if epoch is a datetime, rather than an elapsed time"""
+####    epoch = self.estr
+####    if epoch[:1] in {'\\', '~'}:
+####        return False
+####    if '-' in epoch:
+####        return True
+####    epoch = epoch.lower()
+####    if 'am' in epoch:
+####        return True
+####    if 'pm' in epoch:
+####        return True
+####    return False
+
+####class Epoch:
+####    """Epoch: an extent of time associated with a particular person or thing"""
+####    # pyli
+####
+####    def __init__(self, elapsed_or_dt, dta, defaultdt):
+####        self.estr = elapsed_or_dt
+####        self.dta = dta
+####        self.tdflt = defaultdt
+####
+####    ####def get_dtz(self):
+####    ####    """Get the ending time, given an epoch string"""
+####    ####    return self._conv_datetime2() #if self.is_datetime() else self.conv_tdelta()
+####    ####    #return self._conv_datetime() if self.is_datetime() else self.conv_tdelta()
+####
+####    def _conv_tdelta(self):
+####        """Get the ending time, given an estr timedelta and a start time"""
+####        secs = self._conv_timedelta()
+####        if secs is not None:
+####            return self.dta + timedelta(seconds=secs)
+####        raise RuntimeError(f'STRING "{self.estr}" COULD NOT BE CONVERTED TO A timedelta')
+####
+####    ####def _conv_datetime(self):
+####    ####    try:
+####    ####        return dateutil_parserdt(self.estr, default=self.tdflt)
+####    ####    except TypeError as err:
+####    ####        raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
+####    ####                            'TO A datetime object') from err
+####
+####    def get_dtz(self):
+####        """GET dtz"""
+####        try:
+####            return dateutil_parserdt(self.estr, default=self.tdflt)
+####        except (ParserError, UnknownTimezoneWarning) as err:
+####            return self._conv_tdelta()
+####
+####    def _conv_timedelta(self):
+####        try:
+####            estr = self.estr
+####            estr1 = estr[:1]
+####            if estr1 not in {'~', '\\'}:
+####                return pytimeparse2_parsertd(estr)
+####            if estr1 == '~':
+####                return -pytimeparse2_parsertd(estr[1:])
+####            return -pytimeparse2_parsertd(estr[2:])
+####        except TypeError as err:
+####            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
+####                                'TO A timedelta object') from err
+####
+####    ####def is_datetime(self):
+####    ####    """Check if epoch is a datetime, rather than an elapsed time"""
+####    ####    epoch = self.estr
+####    ####    if epoch[:1] in {'\\', '~'}:
+####    ####        return False
+####    ####    if '-' in epoch:
+####    ####        return True
+####    ####    epoch = epoch.lower()
+####    ####    if 'am' in epoch:
+####    ####        return True
+####    ####    if 'pm' in epoch:
+####    ####        return True
+####    ####    return False
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

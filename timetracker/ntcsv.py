@@ -14,7 +14,7 @@ def get_ntcsv(message, activity='', tags=None):
     """Get a namedtuple with csv row info: message, activity, & tags"""
     return NTCSV(
         message=message,
-        activity=activity,
+        activity=activity if activity is not None else '',
         tags=';'.join(tags) if tags is not None else '')
 
 

@@ -10,6 +10,7 @@ from logging import error
 from datetime import datetime
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
+from timetracker.csvold import CsvFile
 from timetracker.consts import FMTDT_H
 from timetracker.msgs import str_uninitialized
 from timetracker.ntcsv import get_ntcsv
@@ -46,99 +47,50 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
               'Do `trk start` to begin tracking time '
               f'for project, {cfgproj.project}')
         return None
-    dtz = _get_dtz(kwargs.get('stop_at'))
+    stopat = kwargs.get('stop_at')
+    dtz = datetime.now() if stopat is None else get_dtz(stopat, dta, kwargs.get('defaultdt'))
     if dtz <= dta:
-        error('NOT WRITING ELAPSED TIME: '
-              f'starttime({dta}) > stoptime({dtz})')
+        error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return None
+    delta = dtz - dta
 
     # Append the timetracker file with this time unit
     fcsv = cfgproj.get_filename_csv(uname)
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
-    ####_msg_csv(fcsv)
-    # Print header into csv, if needed
-    if not exists(fcsv):
-        _wr_csvlong_hdrs(fcsv)
-    # Print time information into csv
-    delta = dtz - dta
-    csvline = _strcsv_timerstopped(
-        dta, dtz, delta,
-        csvfields.message,
-        csvfields.activity,
-        csvfields.tags)
-    _wr_csvlong_data(fcsv, csvline)
-
-    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
-    if not kwargs.get('quiet', False):
-        print(f'Timer stopped at {dtz.strftime(FMTDT_H)}\n'
-              f'Elapsed H:M:S {delta} '
-              f'appended to {get_shortest_name(fcsv)}')
+        return None
+    line = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
+    _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
     # Remove the starttime file
     if not kwargs.get('keepstart', False):
         start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
-    return fcsv
+    return fcsv, line
 
-def _get_dtz(timetxt):
-    now = datetime.now()
-    return now if not timetxt else get_dtz(timetxt, now)
-
-
-####def _msg_csv(fcsv):
-####    if fcsv:
-####        debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}')
-####    else:
-####        error('Not saving time interval; no csv filename was provided')
-
-def _wr_csvlong_hdrs(fcsv):
-    # aTimeLogger columns: Activity From To Notes
-    with open(fcsv, 'w', encoding='utf8') as prt:
-        print(
-            'start_day,'
-            'xm,'
-            'start_datetime,'
-            # Stop
-            'stop_day,'
-            'zm,'
-            'stop_datetime,'
-            # Duration
-            'duration,'
-            # Info
-            'message,'
-            'activity,'
-            'tags',
-            file=prt,
-        )
-
-def _wr_csvlong_data(fcsv, csvline):
-    with open(fcsv, 'a', encoding='utf8') as ostrm:
-        print(csvline, file=ostrm)
-
-def _strcsv_timerstopped(dta, dtz, delta, message, activity, tags):
-    # pylint: disable=unknown-option-value,too-many-arguments, too-many-positional-arguments
-    return (f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
-            f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
-            f'{delta},'
-            f'{message},'
-            f'{activity},'
-            f'{tags}')
+def _msg_stop_complete(fcsv, delta, dtz, quiet):
+    """Finish stopping"""
+    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    if not quiet:
+        print(f'Timer stopped at {dtz.strftime(FMTDT_H)}\n'
+              f'Elapsed H:M:S {delta} '
+              f'appended to {get_shortest_name(fcsv)}')
 
 
-def _wr_csv_hdrs(fcsv):
-    # aTimeLogger columns: Activity From To Notes
-    with open(fcsv, 'w', encoding='utf8') as prt:
-        print(
-            'startsecs,'
-            'stopsecs,'
-            # Info
-            'message,',
-            'activity,',
-            'tags',
-            file=prt,
-        )
+
+####def _wr_csv_hdrs(fcsv):
+####    # aTimeLogger columns: Activity From To Notes
+####    with open(fcsv, 'w', encoding='utf8') as prt:
+####        print(
+####            'startsecs,'
+####            'stopsecs,'
+####            # Info
+####            'message,',
+####            'activity,',
+####            'tags',
+####            file=prt,
+####        )
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

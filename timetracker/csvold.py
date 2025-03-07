@@ -16,6 +16,7 @@ from datetime import datetime
 from logging import debug
 from logging import warning
 from csv import reader
+from csv import writer
 
 from timetracker.utils import orange
 #from timetracker.consts import DIRTRK
@@ -74,6 +75,22 @@ class CsvFile:
             for rownum, row in enumerate(itr, 3):
                 self._add_timedelta_from_row(time_total, row, rownum)
         return sum(time_total, start=timedelta())
+
+    def wr_stopline(self, dta, dtz, delta, csvfields):
+        """Write one data line in the csv file"""
+        # Print header into csv, if needed
+        if not exists(self.fcsv):
+            with open(self.fcsv, 'w', encoding='utf8') as prt:
+                print(','.join(self.hdrs), file=prt)
+        # Print time information into csv
+        with open(self.fcsv, 'a', encoding='utf8') as csvfile:
+            data = [dta.strftime("%a"), dta.strftime("%p"), str(dta),
+                    dtz.strftime("%a"), dtz.strftime("%p"), str(dtz),
+                    str(delta),
+                    csvfields.message, csvfields.activity, csvfields.tags]
+            writer(csvfile).writerow(data)
+            return data
+        return None
 
     def _start_readcsv(self, csvstrm):
         timereader = reader(csvstrm)

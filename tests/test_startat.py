@@ -25,6 +25,7 @@ def test_startat(project='pumpkin', username='carver'):
     _run(Obj(project, username, dircur='dirdoc',  dirgit01=True))
 
 def _run(obj):
+    # pylint: disable=duplicate-code
     # Test researcher-entered datetime starttimes
     obj.chk('4am',                   '2525-01-01 04:00:00')
     obj.chk("2025-02-19 17:00:00",   '2025-02-19 17:00:00')

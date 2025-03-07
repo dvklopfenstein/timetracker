@@ -33,6 +33,7 @@ def test_stopat(project='pumpkin', username='carver'):
 def _run(obj):
     # Test researcher-entered datetime stoptimes
     # pylint: disable=line-too-long
+    # pylint: disable=duplicate-code
     obj.chk('4am',                   'Mon,AM,2525-01-01 00:00:00,Mon,AM,2525-01-01 04:00:00,4:00:00,"A,B,C",,')
     return
     # pylint: disable=unreachable

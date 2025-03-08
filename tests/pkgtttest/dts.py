@@ -81,7 +81,7 @@ YEAR2DT = {
     '9595':  DT9595,
 }
 
-def get_dt(yearstr, hour, minute, second, microsecond):
+def get_dt(yearstr, hour, minute=0, second=0, microsecond=0):
     """Get a datetime object with the specified time"""
     dt0 = YEAR2DT.get(yearstr, DTBEGIN)
     return datetime(

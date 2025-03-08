@@ -3,7 +3,7 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import argv
+from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
 from os.path import exists
@@ -37,13 +37,13 @@ class Cli:
     }
 
     def __init__(self, args=None):
+        sysargs = self._adjust_args(args)
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
-        ####self.args = self._init_args_cli() if args is None else self._init_args_test(args)
-        self.args = self._init_args(args)
+        self.args = self._init_args(sysargs)
 
     def run(self):
         """Run timetracker"""
@@ -55,10 +55,33 @@ class Cli:
         else:
             cli_run_none(self.fcfg, self.args)
 
+    def _adjust_args(self, given_args):
+        """Replace config default values with researcher-specified values"""
+        debug(f'ARGV: {sys_argv}')
+        ret = []
+        args = sys_argv[1:] if given_args is None else given_args
+        optname = None
+        for elem in args:
+            if optname == '--at':
+                #debug(f' --at opt was({elem})')
+                elem = self._adjust_opt_at(elem)
+                #debug(f' --at opt now({elem})')
+                optname = None
+            ret.append(elem)
+            if elem == '--at':
+                optname = elem
+            #debug(f'ADJUST_ARGS>>({elem})')
+        return ret
+
+    @staticmethod
+    def _adjust_opt_at(val):
+        if val[:1] != '-':
+            return val
+        return val if val[1:2] == ' ' else ' ' + val
+
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        self._adjust_args(args)
         debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
@@ -67,23 +90,13 @@ class Cli:
 
     def _init_trksubdir(self):
         found = False
-        for arg in argv:
+        for arg in sys_argv:
             if found:
                 debug(f'Cli FOUND: argv --trksubdir {arg}')
                 return arg
             if arg == '--trksubdir':
                 found = True
         return None
-
-    def _adjust_args(self, args):
-        """Replace config default values with researcher-specified values"""
-        debug(f'ARGV: {argv}')
-        #argv_set = set(argv)
-        # If a test set a proj dir other than ./timetracker, use it
-        ####if not argv_set.isdisjoint(self.ARGV_TESTS['trksubdir']):
-        ####    print('XXXXXXXXXXXXXXXXXXX', self.finder.trksubdir)
-        ####    print('XXXXXXXXXXXXXXXXXXX', args.trksubdir)
-        return args
 
     @staticmethod
     def _get_cmds():
@@ -155,7 +168,7 @@ class Cli:
         # test feature: force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
             help='Force restart timer now or `--at` a specific or elapsed time')
-        parser.add_argument('-@', '--at', metavar='time',
+        parser.add_argument('--at', metavar='time',
             help='start tracking at a '
                  'specific(ex: 4pm, "Tue 4pm") or '
                  'elapsed time(ex: 10min, ~10min, 4hr)')
@@ -175,7 +188,7 @@ class Cli:
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
-        parser.add_argument('-@', '--at', metavar='time',
+        parser.add_argument('--at', metavar='time',
             help='start tracking at a '
                  'specific(ex: 4pm, "2025-01-05 04:30pm") or '
                  'elapsed time(ex: 1hr, ~1hr, 1h20m)')

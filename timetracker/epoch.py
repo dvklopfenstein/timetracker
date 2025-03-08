@@ -13,6 +13,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
 from datetime import timedelta
+#from logging import debug
 from pytimeparse2 import parse as pyt2_parser_secs
 from dateutil.parser import parse as dateutil_parserdt
 from dateutil.parser import ParserError
@@ -77,13 +78,13 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
     if elapsed_or_dt.count(':') != 2:
-        #print(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
+        #debug(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
         secs = _conv_timedelta(elapsed_or_dt)
-        #print(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
+        #debug(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
         if secs is not None:
             return dta + timedelta(seconds=secs)
     try:
-        #print(cyan(f'CCCCCCCCCCCCCC Using dateutil.parser({elapsed_or_dt}, default={defaultdt})'))
+        #debug(cyan(f'CCCCCCCCCCCCCC Using dateutil.parser({elapsed_or_dt}, default={defaultdt})'))
         return dateutil_parserdt(elapsed_or_dt, default=defaultdt)
     except (ParserError, UnknownTimezoneWarning) as err:
         print(orange(f'ERROR: {err}'))

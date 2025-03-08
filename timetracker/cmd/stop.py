@@ -48,7 +48,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
               f'for project, {cfgproj.project}')
         return None
     stopat = kwargs.get('stop_at')
-    dtz = datetime.now() if stopat is None else get_dtz(stopat, dta, kwargs.get('defaultdt'))
+    now = kwargs.get('now', datetime.now())
+    dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt', now))
     if dtz <= dta:
         error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return None
@@ -60,14 +61,15 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
         return None
-    line = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
+    csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
     _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
+
     # Remove the starttime file
     if not kwargs.get('keepstart', False):
         start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
-    return fcsv, line
+    return {'fcsv':fcsv, 'csvline':csvline}
 
 def _msg_stop_complete(fcsv, delta, dtz, quiet):
     """Finish stopping"""

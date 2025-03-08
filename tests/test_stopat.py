@@ -5,9 +5,10 @@ from os import system
 from os.path import exists
 from os.path import join
 from io import StringIO
-#from logging import basicConfig
-#from logging import DEBUG
+from logging import basicConfig
+from logging import DEBUG
 from logging import debug
+from logging import getLogger
 from tempfile import TemporaryDirectory
 from csv import writer
 from timetracker.utils import cyan
@@ -16,74 +17,93 @@ from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
-from tests.pkgtttest.dts import DT2525
+from tests.pkgtttest.dts import get_dt
 from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
 
 #basicConfig(level=DEBUG)
+basicConfig()
+epoch_logger = getLogger('timetracker.epoch')
+print('epoch_logger:', epoch_logger)
+epoch_logger.setLevel(DEBUG)
+print('epoch_logger:', epoch_logger)
+print('Effective logging level:', epoch_logger.getEffectiveLevel())
 
 SEP = f'\n{"="*80}\n'
 
 
 def test_stopat(project='pumpkin', username='carver'):
     """Test `trk stop --at"""
-    _run(Obj(project, username, dircur='dirproj', dirgit01=True))
-    #_run(Obj(project, username, dircur='dirdoc',  dirgit01=True))
+    dta = get_dt(yearstr='2525', hour=8, minute=30)
+    _run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))
+    _run(dta, Obj(project, username, dircur='dirdoc',  dirgit01=True))
 
-def _run(obj):
+def _run(dta, obj):
     # Test researcher-entered datetime stoptimes
     # pylint: disable=line-too-long
-    # pylint: disable=duplicate-code
-    obj.chk('4am',                   'Mon,AM,2525-01-01 00:00:00,Mon,AM,2525-01-01 04:00:00,4:00:00,"A,B,C",,')
-    return
-    # pylint: disable=unreachable
-    obj.chk("2025-02-19 17:00:00",   '2025-02-19 17:00:00')
-    obj.chk("2025-02-19 05:00:00 pm",'2025-02-19 17:00:00')
-    obj.chk("02-19 17:00:00",        '2525-02-19 17:00:00')
-    obj.chk("02-19 05:00:00 pm",     '2525-02-19 17:00:00')
-    obj.chk("02-19 5pm",             '2525-02-19 17:00:00')
-    obj.chk("02-19 5:00 pm",         '2525-02-19 17:00:00')
-    obj.chk("2-19 5:30 pm",          '2525-02-19 17:30:00')
+    obj.chk(dta, '11:30am',               'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 11:30:00,3:00:00,"A,B,C",,')
+    obj.chk(dta, "2525-02-19 17:00:00",   'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-02-19 17:00:00,"49 days, 8:30:00","A,B,C",,')
+    obj.chk(dta, "2525-02-19 05:00:00 pm",'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-02-19 17:00:00,"49 days, 8:30:00","A,B,C",,')
+    obj.chk(dta, "01-01 17:00:00",        'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, "01-01 05:00:00 pm",     'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    # https://github.com/dateutil/dateutil/issues/1421 (5pm with a default datetime; 5pm w/no default works fine)
+    # obj.chk(dta, dta, "01-1 5pm",             'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, "01/01 5:00 pm",         'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, "1/1 5:30 pm",           'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:30:00,9:00:00,"A,B,C",,')
+    # Process researcher-entered stop-times containing two ':' as datetimes
+    obj.chk(dta, "09:30:00",   'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:30:00,1:00:00,"A,B,C",,')
+    obj.chk(dta, "09:00:00",   'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "4:00:00",    None)
     # Test researcher-entered datetime timedeltas
-    obj.chk("30 minutes", '2525-01-01 00:30:00')
-    obj.chk("30 min",     '2525-01-01 00:30:00')
-    obj.chk("30min",      '2525-01-01 00:30:00')
-    obj.chk("00:30:00",   '2525-01-01 00:30:00')
-    obj.chk("30:00",      '2525-01-01 00:30:00')
-    obj.chk("4 hours",    '2525-01-01 04:00:00')
-    obj.chk("04:00:00",   '2525-01-01 04:00:00')
-    obj.chk("4:00:00",    '2525-01-01 04:00:00')
+    #obj.chk(dta, dta, "30 minutes", 'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 08:30:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30 min",     'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30min",      'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30:00",      'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "4 hours",    'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 12:30:00,4:00:00,"A,B,C",,')
 
 
 class Obj(RunBase):
     """Test `trk stop --at`"""
     # pylint: disable=too-few-public-methods
 
-    def _run(self, stop_at, tmphome, dircsv=None):
+    def _run(self, dta, stop_at, tmphome, dircsv=None):
         """Run init, stop --at, stop"""
         cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
         cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome, quiet=True)  # cfgg
-        fin_start = run_start(cfgname, self.uname, now=DT2525, defaultdt=DT2525)
+        fin_start = run_start(cfgname, self.uname,
+            now=dta,
+            defaultdt=dta)
         assert exists(fin_start)
         csvfields = get_ntcsv("A,B,C", None, None)
-        fcsv, act = run_stop(cfgname, self.uname, csvfields,
-                             dirhome=tmphome, stop_at=stop_at, defaultdt=DT2525)
+        dct = run_stop(cfgname, self.uname, csvfields,
+                       dirhome=tmphome,
+                       stop_at=stop_at,
+                       now=dta,
+                       defaultdt=dta)
+        assert dct is not None
+        fcsv = dct['fcsv']
         assert fcsv == join(tmphome, 'proj/pumpkin/timetracker_pumpkin_carver.csv')
-        assert exists(fcsv)
+        if dct['csvline'] is not None:
+            assert exists(fcsv)
         system(f'cat {fcsv}')
         #findhome(tmphome)
-        return act
+        return dct['csvline']
 
-    def chk(self, stop_at, exp_str):
+    def chk(self, start_at, stop_at, exp_csvstr):
         """Run stop --at and check value"""
-        print(yellow(f'\nTEST: stop={stop_at:22} EXP={exp_str}'))
+        print(yellow(f'\nTEST: stop={stop_at:22} EXP={exp_csvstr}'))
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN(stop_at={stop_at})'))
         with TemporaryDirectory() as tmphome:
-            act_list = self._run(stop_at, tmphome)
-            act_str = self._get_actstr(act_list)
-            assert act_str == exp_str, f'ERROR({stop_at}))\nACT: {act_str}\nEXP: {exp_str}'
+            act_list = self._run(start_at, stop_at, tmphome)
+            print('ACTUAL LIST:', act_list)
+            if act_list is not None:
+                act_csvstr = self._get_actstr(act_list)
+                assert act_csvstr == exp_csvstr, (
+                    f'ERROR(stop_at: {stop_at})\n'
+                    f'ACT({act_csvstr})\n'
+                    f'EXP({exp_csvstr})')
 
     @staticmethod
     def _get_actstr(actual_csvrow):

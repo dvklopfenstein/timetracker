@@ -36,6 +36,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if str_uninitialized(fnamecfg):
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
+    fcsv = cfgproj.get_filename_csv(uname)
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
@@ -46,21 +47,20 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         print('No elapsed time to stop; '
               'Do `trk start` to begin tracking time '
               f'for project, {cfgproj.project}')
-        return None
+        return {'fcsv':fcsv, 'csvline':None}
     stopat = kwargs.get('stop_at')
     now = kwargs.get('now', datetime.now())
     dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt', now))
     if dtz <= dta:
         error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
-        return None
+        return {'fcsv':fcsv, 'csvline':None}
     delta = dtz - dta
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv(uname)
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
-        return None
+        return {'fcsv':fcsv, 'csvline':None}
     csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
     _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
 

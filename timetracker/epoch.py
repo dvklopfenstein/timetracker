@@ -3,6 +3,9 @@
 “Epoch.” Merriam-Webster's Collegiate Thesaurus, Merriam-Webster,
  https://unabridged.merriam-webster.com/thesaurus/epoch.
  Accessed 21 Feb. 2025.
+
+https://github.com/onegreyonewhite/pytimeparse2/issues/11
+https://github.com/dateutil/dateutil/
 """
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
@@ -10,12 +13,14 @@ __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
 from datetime import timedelta
-from pytimeparse2 import parse as pytimeparse2_parsertd
+from pytimeparse2 import parse as pyt2_parser_secs
 from dateutil.parser import parse as dateutil_parserdt
 from dateutil.parser import ParserError
 from dateutil.parser import UnknownTimezoneWarning
 from timetracker.timecalc import RoundTime
 from timetracker.consts import FMTDT_H
+#from timetracker.utils import cyan
+from timetracker.utils import orange
 
 
 def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
@@ -71,23 +76,23 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
-    try:
-        return dateutil_parserdt(elapsed_or_dt, default=defaultdt)
-    except (ParserError, UnknownTimezoneWarning) as err:
+    if elapsed_or_dt.count(':') != 2:
+        #print(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
         secs = _conv_timedelta(elapsed_or_dt)
+        #print(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
         if secs is not None:
             return dta + timedelta(seconds=secs)
-        print(f'ERROR: {err}')
-    raise RuntimeError(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A timedelta')
+    try:
+        #print(cyan(f'CCCCCCCCCCCCCC Using dateutil.parser({elapsed_or_dt}, default={defaultdt})'))
+        return dateutil_parserdt(elapsed_or_dt, default=defaultdt)
+    except (ParserError, UnknownTimezoneWarning) as err:
+        print(orange(f'ERROR: {err}'))
+    print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A TIME')
+    return None
 
 def _conv_timedelta(elapsed_or_dt):
     try:
-        estr1 = elapsed_or_dt[:1]
-        if estr1 not in {'~', '\\'}:
-            return pytimeparse2_parsertd(elapsed_or_dt)
-        if estr1 == '~':
-            return -pytimeparse2_parsertd(elapsed_or_dt[1:])
-        return -pytimeparse2_parsertd(elapsed_or_dt[2:])
+        return pyt2_parser_secs(elapsed_or_dt)
     except TypeError as err:
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
                             'TO A timedelta object') from err
@@ -146,10 +151,10 @@ def _conv_timedelta(elapsed_or_dt):
 ####            estr = self.estr
 ####            estr1 = estr[:1]
 ####            if estr1 not in {'~', '\\'}:
-####                return pytimeparse2_parsertd(estr)
+####                return pyt2_parser_secs(estr)
 ####            if estr1 == '~':
-####                return -pytimeparse2_parsertd(estr[1:])
-####            return -pytimeparse2_parsertd(estr[2:])
+####                return -pyt2_parser_secs(estr[1:])
+####            return -pyt2_parser_secs(estr[2:])
 ####        except TypeError as err:
 ####            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
 ####                                'TO A timedelta object') from err

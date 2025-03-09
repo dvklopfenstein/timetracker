@@ -76,6 +76,33 @@ class Starttime:
             debug(f'  WROTE START: {starttime.strftime(FMTDT)}')
             debug(f'  WROTE FILE:  {self.filename}')
 
+    def get_desc(self, note=' set'):
+        """Get a string describing the state of an instance of the CfgProj"""
+        return (
+            f'CfgProj {note} {int(exists(self.filename))} '
+            f'fname start {self.filename}')
+
+    def read_starttime(self):
+        """Get datetime from a starttime file"""
+        return self._read_starttime() if exists(self.filename) else None
+
+    def prt_elapsed(self, msg='Timer running'):
+        """Print elapsed time if timer is started"""
+        # Print elapsed time, if timer was started
+        if exists(self.filename):
+            dtstart = self._read_starttime()
+            hms = self._hms_from_startfile(dtstart)
+            #return self._prt_elapsed_hms(hms, msg) if hms is not None else str_not_running()
+            # pylint: disable=line-too-long
+            return self._prt_startdt_n_elapsed(dtstart, hms, msg) if hms is not None else str_not_running()
+        return None
+
+    def rm_starttime(self):
+        """Remove the starttime file, thus resetting the timer"""
+        fstart = self.filename
+        if exists(fstart):
+            remove(fstart)
+
     def _prtmsg_basic(self, hms, msg):
         self._prt_elapsed_hms(hms, msg)
         print(str_how_to_stop_now())
@@ -89,16 +116,6 @@ class Starttime:
         print(str_started_epoch())
         print(str_tostart_epoch())
 
-    def get_desc(self, note=' set'):
-        """Get a string describing the state of an instance of the CfgProj"""
-        return (
-            f'CfgProj {note} {int(exists(self.filename))} '
-            f'fname start {self.filename}')
-
-    def read_starttime(self):
-        """Get datetime from a starttime file"""
-        return self._read_starttime() if exists(self.filename) else None
-
     def _read_starttime(self):
         with open(self.filename, encoding='utf8') as ifstrm:
             for line in ifstrm:
@@ -108,24 +125,13 @@ class Starttime:
                 return datetime.strptime(line, FMTDT)
         return None
 
-    def prt_elapsed(self, msg='Timer running'):
-        """Print elapsed time if timer is started"""
-        # Print elapsed time, if timer was started
-        if exists(self.filename):
-            dtstart = self._read_starttime()
-            hms = self._hms_from_startfile(dtstart)
-            return self._prt_elapsed_hms(hms, msg) if hms is not None else str_not_running()
-        return None
-
     def _prt_elapsed_hms(self, hms, msg):
-        print(f'{msg}: {hms} H:M:S '
+        print(f'{msg} H:M:S {hms} '
               f"for '{self.project}' ID={self.name}")
 
-    def rm_starttime(self):
-        """Remove the starttime file, thus resetting the timer"""
-        fstart = self.filename
-        if exists(fstart):
-            remove(fstart)
+    def _prt_startdt_n_elapsed(self, startdt, hms, msg):
+        msg = f'{msg} started {startdt.strftime(FMTDT_H)}; running'
+        self._prt_elapsed_hms(hms, msg)
 
     def _hms_from_startfile(self, dtstart):
         """Get the elapsed time starting from time in a starttime file"""

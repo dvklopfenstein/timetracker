@@ -51,7 +51,8 @@ stop:
 	fi
 
 _stop:
-	trk --trksubdir $(DIRTRK) stop -m "\"$(M)\""
+	#trk --trksubdir $(DIRTRK) stop -m "\"$(M)\""
+	trk --trksubdir $(DIRTRK) stop -m "$(M)"
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv

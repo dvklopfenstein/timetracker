@@ -62,7 +62,7 @@ def run_start(fnamecfg, name=None, **kwargs):
         assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         start_obj.wr_starttime(starttime)
         if not kwargs.get('quiet', False):
-            print(f'Timetracker {"started now" if not force else "reset to"}: '
+            print(f'Timetracker {_get_msg(start_at, force)}: '
                   f'{starttime.strftime("%a %I:%M %p")}: {starttime} '
                   f"for project '{cfgproj.project}'")
     # Informational message
@@ -72,6 +72,11 @@ def run_start(fnamecfg, name=None, **kwargs):
         else:
             print(f'Run `trk start --at {start_at} --force` to force restart')
     return start_obj.filename
+
+def _get_msg(start_at, force):
+    if force:
+        return "reset to"
+    return "started now" if start_at is None else "started at"
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

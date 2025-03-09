@@ -88,7 +88,7 @@ class CsvFile:
                     dtz.strftime("%a"), dtz.strftime("%p"), str(dtz),
                     str(delta),
                     csvfields.message, csvfields.activity, csvfields.tags]
-            writer(csvfile).writerow(data)
+            writer(csvfile, lineterminator='\n').writerow(data)
             return data
         return None
 

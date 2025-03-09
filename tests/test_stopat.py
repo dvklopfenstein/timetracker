@@ -104,7 +104,7 @@ class Obj(RunBase):
     @staticmethod
     def _get_actstr(actual_csvrow):
         csvfile = StringIO()
-        wrcsv = writer(csvfile)
+        wrcsv = writer(csvfile, lineterminator="\n")
         wrcsv.writerow(actual_csvrow)
         return csvfile.getvalue().rstrip()
 

@@ -2,7 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* [**Release 2025-03-08 v0.3a2**](#release-2025-03-08-v03a2) Added stop --at test; Added report module
+* [**Release 2025-03-09 v0.3a2**](#release-2025-03-09-v03a3) Added stop --at test; Added report module
 * [**Release 2025-02-25 v0.3a0**](#release-2025-02-25-v03a0) Added --at functionality to start & stop command
 * **Release 2025-02-18 v0.2a5** Changed logo to a stopwatch
 * **Release 2025-02-18 v0.2a4** Added `trk time` command to report elapsed hours
@@ -20,10 +20,11 @@
 
 ## Unreleased
 
-## Release 2025-03-08 v0.3a2
+## Release 2025-03-09 v0.3a3
 * ADD stop --at test
 * ADD report command
   * Initial implementation works for a single user on a single project (more to come)
+* CHANGED Fine-tuned stdout messages to researcher for commands: start, stop, and cancel
 * CHANGED datetime & timedelta parsing to be simpler
 * CHANGED to ensure None is written as '' in csv
 * CHANGED csv writing code from the stop command to the CsvFile object

@@ -74,6 +74,7 @@ $ pip install .
 ```
 
 ## Other timetrackers
+* >700 stars [Bartib](https://github.com/nikolassv/bartib)
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
 * 85 stars [ti](https://github.com/richmeta/ti)
 * 44 stars [tim](https://github.com/MatthiasKauer/tim)

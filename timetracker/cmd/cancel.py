@@ -30,7 +30,7 @@ def run_cancel(fnamecfg, name=None):
     start_obj = cfgproj.get_starttime_obj(name)
     fin_start = start_obj.filename
     if exists(fin_start):
-        start_obj.prt_elapsed(f'{str_cancelled1()}; was running')
+        start_obj.prt_elapsed(f'{str_cancelled1()}; was')
         remove(fin_start)
     else:
         print(str_not_running())

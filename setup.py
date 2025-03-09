@@ -52,7 +52,7 @@ setup(
     # The name of the project on PyPi
     name='timetracker-csv',
     # https://peps.python.org/pep-0440/
-    version='0.3a0',
+    version='0.3a2',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',
     packages=PACKAGES,
@@ -76,6 +76,8 @@ setup(
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     install_requires=REQUIRES,
+    # Needed for assignment expressions & the walrus operator
+    python_requires='>=3.8',
     keywords=KEYWORDS,
 )
 

@@ -1,54 +1,44 @@
 #!/usr/bin/env python3
-"""Test the location of the csv file"""
+"""Test running all commands when timetracker repo is uninitialized"""
 # pylint: disable=duplicate-code
 
-from os.path import exists
 from logging import basicConfig
 from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from pytest import raises
 from timetracker.utils import cyan
-from timetracker.cfg.finder import CfgFinder
-from timetracker.cmd.stop import get_ntcsv
 from timetracker.cmd.stop import run_stop
 from timetracker.cmd.time import run_time
 from timetracker.cmd.cancel import run_cancel
 from timetracker.cmd.csvupdate import run_csvupdate
 from timetracker.cmd.report import run_report
 from timetracker.cmd.start import run_start
-from tests.pkgtttest.mkprojs import mk_projdirs
-from tests.pkgtttest.mkprojs import findhome_str
+from timetracker.ntcsv import get_ntcsv
+from tests.pkgtttest.runfncs import RunBase
+from tests.pkgtttest.runfncs import proj_setup
 
 basicConfig(level=DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
 
-def test_startat(project='pumpkin', username='carver'):
+def test_trk_cmdsall(project='pumpkin', username='carver'):
     """Test `trk start --at"""
     Obj(project, username, dircur='dirproj', dirgit01=True).run()
     Obj(project, username, dircur='dirdoc',  dirgit01=True).run()
 
-class Obj:
-    """Test the location of the csv file"""
-    # pylint: disable=too-few-public-methods
 
-    def __init__(self, project, username, dircur, dirgit01):
-        self.project = project
-        self.uname = username
-        self.dircurattr = dircur
-        self.dirgit01 = dirgit01
+class Obj(RunBase):
+    """Test running all commands when timetracker repo is uninitialized"""
+    # pylint: disable=too-few-public-methods
 
     def run(self):
         """Run init, start --at, stop"""
         debug(cyan(f'\n{"="*100}'))
         uname = self.uname
         with TemporaryDirectory() as tmphome:
-            exp = mk_projdirs(tmphome, self.project, self.dirgit01)
-            finder = CfgFinder(dircur=getattr(exp, self.dircurattr), trksubdir=None)
-            cfgname = finder.get_cfgfilename()
-            assert not exists(cfgname), findhome_str(exp.dirhome)
+            cfgname, _, _= proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # DO NOT INIT
 
@@ -85,4 +75,4 @@ class Obj:
 
 
 if __name__ == '__main__':
-    test_startat()
+    test_trk_cmdsall()

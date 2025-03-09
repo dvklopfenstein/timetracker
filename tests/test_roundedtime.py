@@ -10,8 +10,8 @@ from datetime import timedelta
 from timetracker.consts import FMTTIME
 from timetracker.timecalc import RoundTime
 
-from tests.pkgtttest.startdts import DT2525
-from tests.pkgtttest.startdts import get_dt
+from tests.pkgtttest.dts import DT2525
+from tests.pkgtttest.dts import get_dt
 
 
 basicConfig(level=DEBUG)

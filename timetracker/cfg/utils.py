@@ -85,7 +85,7 @@ def has_homedir(projdir, homedir):
 def replace_envvar(fpat, username):
     """Replace '$USER$' with the value of the envvar-works with any envvar"""
     pta = fpat.find('$')
-    assert pta != -1
+    assert pta != -1, f'PATTERN{fpat} USERNAME({username})'
     pt1 = pta + 1
     ptb = fpat.find('$', pt1)
     envkey = fpat[pt1:ptb]

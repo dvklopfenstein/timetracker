@@ -22,7 +22,7 @@ https://unabridged.merriam-webster.com/unabridged/terminus. Accessed 21 Feb. 202
 from datetime import datetime
 
 
-BEGIN = datetime(1412, 1, 6)
+DTBEGIN = datetime(1412, 1, 6)
 
 
 # In the year 2525 If man is still alive If woman can survive They may find
@@ -81,9 +81,9 @@ YEAR2DT = {
     '9595':  DT9595,
 }
 
-def get_dt(yearstr, hour, minute, second, microsecond):
+def get_dt(yearstr, hour, minute=0, second=0, microsecond=0):
     """Get a datetime object with the specified time"""
-    dt0 = YEAR2DT.get(yearstr, BEGIN)
+    dt0 = YEAR2DT.get(yearstr, DTBEGIN)
     return datetime(
         dt0.year, dt0.month, dt0.day,
         hour=hour,

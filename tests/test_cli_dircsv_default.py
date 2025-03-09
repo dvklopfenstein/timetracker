@@ -5,26 +5,18 @@ from os.path import isabs
 from os.path import exists
 from os.path import join
 from os.path import dirname
-#from os.path import normpath
-#from os.path import expanduser
 from logging import basicConfig
 from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
-#from timetracker.cli import Cli
 from timetracker.utils import cyan
-#from timetracker.utils import pink
-from timetracker.cfg.finder import CfgFinder
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
-from timetracker.cmd.stop import get_ntcsv
-#from tests.pkgtttest.mkprojs import RELCSVS
-from tests.pkgtttest.mkprojs import mk_projdirs
-#from tests.pkgtttest.mkprojs import findhome
+from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.mkprojs import findhome_str
-#from tests.pkgtttest.mkprojs import prt_expdirs
+from tests.pkgtttest.runfncs import proj_setup
 
 
 basicConfig(level=DEBUG)
@@ -62,10 +54,11 @@ class Obj:
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN: dircsv({dircsv}) csv({fcsv}) EXPCSV({expcsv})'))
         with TemporaryDirectory() as tmphome:
-            exp = mk_projdirs(tmphome, self.project, self.dirgit01)
-            finder = CfgFinder(dircur=getattr(exp, self.dircurattr), trksubdir=None)
-            cfgname = finder.get_cfgfilename()
-            assert not exists(cfgname), findhome_str(exp.dirhome)
+            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
+            #exp = mk_projdirs(tmphome, self.project, self.dirgit01)
+            #finder = CfgFinder(dircur=getattr(exp, self.dircurattr), trksubdir=None)
+            #cfgname = finder.get_cfgfilename()
+            #assert not exists(cfgname), findhome_str(exp.dirhome)
 
             # CMD: INIT; CFG PROJECT
             cfgp, cfgg = run_init_test(cfgname, dircsv, self.project, exp.dirhome)

@@ -1,91 +1,112 @@
 #!/usr/bin/env python3
-"""Test the location of the csv file"""
-# pylint: disable=duplicate-code
+"""Test `trk stop --at`"""
 
+from os import system
 from os.path import exists
+from os.path import join
+from io import StringIO
 from logging import basicConfig
 from logging import DEBUG
 from logging import debug
+from logging import getLogger
 from tempfile import TemporaryDirectory
+from csv import writer
 from timetracker.utils import cyan
-from timetracker.cfg.finder import CfgFinder
+from timetracker.utils import yellow
+from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
-from tests.pkgtttest.mkprojs import mk_projdirs
-from tests.pkgtttest.mkprojs import findhome_str
-from tests.pkgtttest.startdts import DT2525
+from timetracker.cmd.stop import run_stop
+from tests.pkgtttest.dts import get_dt
+from tests.pkgtttest.runfncs import RunBase
+from tests.pkgtttest.runfncs import proj_setup
 
-basicConfig(level=DEBUG)
+#basicConfig(level=DEBUG)
+basicConfig()
+getLogger("timetracker.epoch").setLevel(DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
 
 def test_stopat(project='pumpkin', username='carver'):
-    """Test `trk start --at"""
-    _run(Obj(project, username, dircur='dirproj', dirgit01=True))
-    _run(Obj(project, username, dircur='dirdoc',  dirgit01=True))
+    """Test `trk stop --at"""
+    dta = get_dt(yearstr='2525', hour=8, minute=30)
+    _run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))
+    _run(dta, Obj(project, username, dircur='dirdoc',  dirgit01=True))
 
-def _run(obj):
-    # Test researcher-entered datetime starttimes
-    obj.chk('4am',                   '2525-01-01 04:00:00')
-    obj.chk("2025-02-19 17:00:00",   '2025-02-19 17:00:00')
-    obj.chk("2025-02-19 05:00:00 pm",'2025-02-19 17:00:00')
-    obj.chk("02-19 17:00:00",        '2525-02-19 17:00:00')
-    obj.chk("02-19 05:00:00 pm",     '2525-02-19 17:00:00')
-    obj.chk("02-19 5pm",             '2525-02-19 17:00:00')
-    obj.chk("02-19 5:00 pm",         '2525-02-19 17:00:00')
-    obj.chk("2-19 5:30 pm",          '2525-02-19 17:30:00')
+def _run(dta, obj):
+    # Test researcher-entered datetime stoptimes
+    # pylint: disable=line-too-long
+    obj.chk(dta, '11:30am',               'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 11:30:00,3:00:00,"A,B,C",,')
+    obj.chk(dta, "2525-02-19 17:00:00",   'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-02-19 17:00:00,"49 days, 8:30:00","A,B,C",,')
+    obj.chk(dta, "2525-02-19 05:00:00 pm",'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-02-19 17:00:00,"49 days, 8:30:00","A,B,C",,')
+    obj.chk(dta, "01-01 17:00:00",        'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, "01-01 05:00:00 pm",     'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    # https://github.com/dateutil/dateutil/issues/1421 (5pm with a default datetime; 5pm w/no default works fine)
+    # obj.chk(dta, dta, "01-1 5pm",             'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, "01/01 5:00 pm",         'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, "1/1 5:30 pm",           'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:30:00,9:00:00,"A,B,C",,')
+    # Process researcher-entered stop-times containing two ':' as datetimes
+    obj.chk(dta, "09:30:00",   'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:30:00,1:00:00,"A,B,C",,')
+    obj.chk(dta, "09:00:00",   'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "4:00:00",    None)
     # Test researcher-entered datetime timedeltas
-    obj.chk("30 minutes", '2525-01-01 00:30:00')
-    obj.chk("30 min",     '2525-01-01 00:30:00')
-    obj.chk("30min",      '2525-01-01 00:30:00')
-    obj.chk("00:30:00",   '2525-01-01 00:30:00')
-    obj.chk("30:00",      '2525-01-01 00:30:00')
-    obj.chk("4 hours",    '2525-01-01 04:00:00')
-    obj.chk("04:00:00",   '2525-01-01 04:00:00')
-    obj.chk("4:00:00",    '2525-01-01 04:00:00')
+    #obj.chk(dta, dta, "30 minutes", 'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 08:30:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30 min",     'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30min",      'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30:00",      'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "4 hours",    'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 12:30:00,4:00:00,"A,B,C",,')
 
 
-class Obj:
-    """Test the location of the csv file"""
+class Obj(RunBase):
+    """Test `trk stop --at`"""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, project, username, dircur, dirgit01):
-        self.project = project
-        self.uname = username
-        self.dircurattr = dircur
-        self.dirgit01 = dirgit01
+    def _run(self, dta, stop_at, tmphome, dircsv=None):
+        """Run init, stop --at, stop"""
+        cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
+        # pylint: disable=unused-variable
+        cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome, quiet=True)  # cfgg
+        fin_start = run_start(cfgname, self.uname,
+            now=dta,
+            defaultdt=dta)
+        assert exists(fin_start)
+        csvfields = get_ntcsv("A,B,C", None, None)
+        dct = run_stop(cfgname, self.uname, csvfields,
+                       dirhome=tmphome,
+                       stop_at=stop_at,
+                       now=dta,
+                       defaultdt=dta)
+        assert dct is not None
+        fcsv = dct['fcsv']
+        assert fcsv == join(tmphome, 'proj/pumpkin/timetracker_pumpkin_carver.csv')
+        if dct['csvline'] is not None:
+            assert exists(fcsv)
+        system(f'cat {fcsv}')
+        #findhome(tmphome)
+        return dct['csvline']
 
-    def _run(self, start_at, dircsv=None):
-        """Run init, start --at, stop"""
+    def chk(self, start_at, stop_at, exp_csvstr):
+        """Run stop --at and check value"""
+        print(yellow(f'\nTEST: stop={stop_at:22} EXP={exp_csvstr}'))
         debug(cyan(f'\n{"="*100}'))
-        debug(cyan(f'RUN(start_at={start_at})'))
+        debug(cyan(f'RUN(stop_at={stop_at})'))
         with TemporaryDirectory() as tmphome:
-            exp = mk_projdirs(tmphome, self.project, self.dirgit01)
-            finder = CfgFinder(dircur=getattr(exp, self.dircurattr), trksubdir=None)
-            cfgname = finder.get_cfgfilename()
-            assert not exists(cfgname), findhome_str(exp.dirhome)
+            act_list = self._run(start_at, stop_at, tmphome)
+            print('ACTUAL LIST:', act_list)
+            if act_list is not None:
+                act_csvstr = self._get_actstr(act_list)
+                assert act_csvstr == exp_csvstr, (
+                    f'ERROR(stop_at: {stop_at})\n'
+                    f'ACT({act_csvstr})\n'
+                    f'EXP({exp_csvstr})')
 
-            # CMD: INIT; CFG PROJECT
-            cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome)  # cfgg
-            #findhome(tmphome)
-
-            # CMD: START
-            fin_start = run_start(cfgname, self.uname,
-                                  start_at=start_at,
-                                  now=DT2525,
-                                  defaultdt=DT2525)
-            assert exists(fin_start)
-            return cfgp.get_starttime_obj(self.uname).read_starttime()
-
-        # pylint: disable=fixme
-        # TODO: Test elapsed times greater than a day so csv default timedelta has "1 Day, HH:MM:SS"
-
-
-    def chk(self, start_at, expstr):
-        """Run start --at and check value"""
-        starttime = self._run(start_at)
-        assert str(starttime) == expstr, f'TEST({start_at}): ACT({starttime}) !=  EXP({expstr})'
+    @staticmethod
+    def _get_actstr(actual_csvrow):
+        csvfile = StringIO()
+        wrcsv = writer(csvfile)
+        wrcsv.writerow(actual_csvrow)
+        return csvfile.getvalue().rstrip()
 
 
 if __name__ == '__main__':

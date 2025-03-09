@@ -5,29 +5,18 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
-#from os.path import relpath
-from os.path import dirname
-#from logging import info
 from logging import debug
 from logging import error
-from collections import namedtuple
 from datetime import datetime
-##from timeit import default_timer
-from timetracker.utils import yellow
-from timetracker.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
-from timetracker.msgs import str_init
+from timetracker.csvold import CsvFile
+from timetracker.consts import FMTDT_H
+from timetracker.msgs import str_uninitialized
+from timetracker.ntcsv import get_ntcsv
+from timetracker.epoch import get_dtz
+from timetracker.utils import yellow
 
-
-NTCSV = namedtuple("CsvFields", "message activity tags")
-
-def get_ntcsv(message, activity=None, tags=None):
-    """Get a namedtuple with csv row information"""
-    return NTCSV(
-        message=message,
-        activity=activity if activity is not None else '',
-        tags=';'.join(tags) if tags is not None else '')
 
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
@@ -44,15 +33,13 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND STOP'))
-    if not exists(fnamecfg):
-        print(str_init(dirname(fnamecfg)))
+    if str_uninitialized(fnamecfg):
         sys_exit(0)
-        #sys_exit(str_init(dirname(fnamecfg)))
     cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
+    fcsv = cfgproj.get_filename_csv(uname)
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()
-    dtz = _get_dtz(kwargs.get('stop_at'))
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -60,98 +47,52 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         print('No elapsed time to stop; '
               'Do `trk start` to begin tracking time '
               f'for project, {cfgproj.project}')
-        return None
+        return {'fcsv':fcsv, 'csvline':None}
+    stopat = kwargs.get('stop_at')
+    now = kwargs.get('now', datetime.now())
+    dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt', now))
     if dtz <= dta:
-        error('NOT WRITING ELAPSED TIME: '
-              f'starttime({dta}) > stoptime({dtz})')
-        return None
+        error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
+        return {'fcsv':fcsv, 'csvline':None}
+    delta = dtz - dta
 
     # Append the timetracker file with this time unit
-    fcsv = cfgproj.get_filename_csv(uname)
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
-    ####_msg_csv(fcsv)
-    # Print header into csv, if needed
-    if not exists(fcsv):
-        _wr_csvlong_hdrs(fcsv)
-    # Print time information into csv
-    delta = dtz - dta
-    csvline = _strcsv_timerstopped(
-        dta, dtz, delta,
-        csvfields.message,
-        csvfields.activity,
-        csvfields.tags)
-    _wr_csvlong_data(fcsv, csvline)
+        return {'fcsv':fcsv, 'csvline':None}
+    csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
+    _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
 
-    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
-    if not kwargs.get('quiet', False):
-        print(f'Timer stopped; Elapsed H:M:S={delta} '
-              f'appended to {get_shortest_name(fcsv)}')
     # Remove the starttime file
     if not kwargs.get('keepstart', False):
         start_obj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
-    return fcsv
+    return {'fcsv':fcsv, 'csvline':csvline}
 
-def _get_dtz(timetxt):
-    now = datetime.now()
-    return now if not timetxt else get_dtz(timetxt, now)
-
-
-####def _msg_csv(fcsv):
-####    if fcsv:
-####        debug(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}')
-####    else:
-####        error('Not saving time interval; no csv filename was provided')
-
-def _wr_csvlong_hdrs(fcsv):
-    # aTimeLogger columns: Activity From To Notes
-    with open(fcsv, 'w', encoding='utf8') as prt:
-        print(
-            'start_day,'
-            'xm,'
-            'start_datetime,'
-            # Stop
-            'stop_day,'
-            'zm,'
-            'stop_datetime,'
-            # Duration
-            'duration,'
-            # Info
-            'message,'
-            'activity,'
-            'tags',
-            file=prt,
-        )
-
-def _wr_csvlong_data(fcsv, csvline):
-    with open(fcsv, 'a', encoding='utf8') as ostrm:
-        print(csvline, file=ostrm)
-
-def _strcsv_timerstopped(dta, dtz, delta, message, activity, tags):
-    # pylint: disable=unknown-option-value,too-many-arguments, too-many-positional-arguments
-    return (f'{dta.strftime("%a")},{dta.strftime("%p")},{dta},'
-            f'{dtz.strftime("%a")},{dtz.strftime("%p")},{dtz},'
-            f'{delta},'
-            f'{message},'
-            f'{activity},'
-            f'{tags}')
+def _msg_stop_complete(fcsv, delta, dtz, quiet):
+    """Finish stopping"""
+    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    if not quiet:
+        print(f'Timer stopped at {dtz.strftime(FMTDT_H)}\n'
+              f'Elapsed H:M:S {delta} '
+              f'appended to {get_shortest_name(fcsv)}')
 
 
-def _wr_csv_hdrs(fcsv):
-    # aTimeLogger columns: Activity From To Notes
-    with open(fcsv, 'w', encoding='utf8') as prt:
-        print(
-            'startsecs,'
-            'stopsecs,'
-            # Info
-            'message,',
-            'activity,',
-            'tags',
-            file=prt,
-        )
+
+####def _wr_csv_hdrs(fcsv):
+####    # aTimeLogger columns: Activity From To Notes
+####    with open(fcsv, 'w', encoding='utf8') as prt:
+####        print(
+####            'startsecs,'
+####            'stopsecs,'
+####            # Info
+####            'message,',
+####            'activity,',
+####            'tags',
+####            file=prt,
+####        )
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

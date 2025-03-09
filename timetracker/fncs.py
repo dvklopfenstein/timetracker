@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from timetracker.cmd.init      import cli_run_init
 from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
+from timetracker.cmd.csv       import cli_run_csv
 from timetracker.cmd.cancel    import cli_run_cancel
 from timetracker.cmd.time      import cli_run_time
 from timetracker.cmd.report    import cli_run_report
@@ -20,6 +21,7 @@ FNCS = {
     'cancel'   : cli_run_cancel,
     'time'     : cli_run_time,
     'report'   : cli_run_report,
+    'csv'      : cli_run_csv,
     #'csvloc'   : cli_run_csvloc,
     'csvupdate': cli_run_csvupdate,
 }

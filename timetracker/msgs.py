@@ -11,7 +11,7 @@ def str_uninitialized(fnamecfg):
     """Print an init message if the timetracker local configuration does not exist"""
     if exists(fnamecfg):
         return False
-    print(str_init(dirname(fnamecfg)))
+    print(str_init(fnamecfg))
     return True
 
 def str_tostart():
@@ -53,10 +53,10 @@ def str_init_empty_proj(cfglocal):
     """Message upon initializing an empyt timetracking project"""
     return f'Initialized empty Trk repository in {cfglocal.get_filename_cfg()}'
 
-def str_init(dirproj):
+def str_init(fnamecfg):
     """Message that occurs when there is no Timetracking config file"""
     return ('Run `trk init` to initialize time-tracking '
-           f'for the project in {dirproj}')
+           f'for the project in {dirname(fnamecfg)}')
 
 def str_notrkrepo_mount(mountname, trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""

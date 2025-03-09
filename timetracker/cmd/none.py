@@ -4,25 +4,22 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
-from os.path import exists
-from os.path import dirname
-from timetracker.msgs import str_init
+from timetracker.msgs import str_uninitialized
 from timetracker.msgs import str_tostart
 from timetracker.cfg.cfg_local import CfgProj
 
 
-def cli_run_none(fcfgproj, args):
+def cli_run_none(fnamecfg, args):
     """noneialize timetracking on a project"""
     # pylint: disable=unused-argument
-    run_none(fcfgproj, args.name)
+    run_none(fnamecfg, args.name)
 
-def run_none(fcfgproj, name=None):
+def run_none(fnamecfg, name=None):
     """If no Timetracker command is run, print informative messages"""
-    if not exists(fcfgproj):
-        print(str_init(dirname(fcfgproj)))
+    if str_uninitialized(fnamecfg):
         sys_exit(0)
     # Check for start time
-    cfglocal = CfgProj(fcfgproj)
+    cfglocal = CfgProj(fnamecfg)
     ostart = cfglocal.get_starttime_obj(name)
     if ostart.file_exists():
         ostart.prtmsg_started01()

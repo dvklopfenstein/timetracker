@@ -30,8 +30,8 @@ def run_time_local(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet
     fcsv = get_fcsv(fnamecfg, uname, kwargs.get('dirhome'))
     return _rpt_time(fcsv) if fcsv is not None else None
 
-def run_time_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
-    """Report the total time spent on all projects"""
+#def run_time_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
+#    """Report the total time spent on all projects"""
 
 def _rpt_time(fcsv):
     ocsv = CsvFile(fcsv)

@@ -18,7 +18,7 @@ Time is saved in
 * [Quickstart](#quickstart)
 * [Installation](#installation)
 * [Other time-trackers](#other-timetrackers)
-* [Documentation](docs/index.md)
+* [Documentation](docs/README.md)
 
 ## Advantages
 * Freedom Software (aka open-source)

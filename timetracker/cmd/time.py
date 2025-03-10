@@ -15,17 +15,23 @@ def cli_run_time(fnamecfg, args):
     if args.input and exists(args.input):
         _rpt_time(args.input)
         return
-    run_time(
+    run_time_local(
         fnamecfg,
         args.name,
         unit=args.unit,
     )
+    #if args.global:
+    #    run_time_global(
+    #    )
 
-def run_time(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
+def run_time_local(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
     """Report the total time spent on a project"""
     debug(yellow('RUNNING COMMAND TIME'))
     fcsv = get_fcsv(fnamecfg, uname, kwargs.get('dirhome'))
     return _rpt_time(fcsv) if fcsv is not None else None
+
+def run_time_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
+    """Report the total time spent on all projects"""
 
 def _rpt_time(fcsv):
     ocsv = CsvFile(fcsv)

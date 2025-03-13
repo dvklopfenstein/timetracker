@@ -3,7 +3,6 @@
 
 from os.path import join
 from os.path import exists
-from os.path import dirname
 from os.path import expanduser
 from logging import debug
 from logging import DEBUG

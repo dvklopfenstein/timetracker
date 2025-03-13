@@ -34,13 +34,13 @@ def test_basic():
 
 def test_dir():
     """Test the basic timetracker flow"""
-    mainargs = '--trksubdir .tt'.split()
+    mainargs = '--trk-dir .tt'.split()
     args = _trk_init(mainargs)
-    assert args.trksubdir == '.tt'
+    assert args.trk_dir == '.tt'
     args = _trk_start(mainargs)
-    assert args.trksubdir == '.tt'
+    assert args.trk_dir == '.tt'
     args = _trk_stop(mainargs)
-    assert args.trksubdir == '.tt'
+    assert args.trk_dir == '.tt'
 
 # ------------------------------------------------------------
 def _trk_stop(mainargs=None):
@@ -86,7 +86,7 @@ def _trk():
     args = _parse_args([])
     # TODO: Check that help message was printed
     # TODO: Check: Run `trk init` to initialize local timetracker
-    assert args.trksubdir == DIRTRK
+    assert args.trk_dir == DIRTRK
     assert args.name == environ['USER']
     assert not args.quiet
     assert args.command is None

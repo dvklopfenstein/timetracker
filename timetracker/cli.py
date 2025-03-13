@@ -33,7 +33,7 @@ class Cli:
     # pylint: disable=too-few-public-methods
 
     ARGV_TESTS = {
-        'trksubdir': set(['--trksubdir']),
+        'trksubdir': set(['--trk-dir']),
     }
 
     def __init__(self, args=None):
@@ -92,9 +92,9 @@ class Cli:
         found = False
         for arg in sys_argv:
             if found:
-                debug(f'Cli FOUND: argv --trksubdir {arg}')
+                debug(f'Cli FOUND: argv --trk-dir {arg}')
                 return arg
-            if arg == '--trksubdir':
+            if arg == '--trk-dir':
                 found = True
         return None
 
@@ -113,7 +113,7 @@ class Cli:
             description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        parser.add_argument('--trksubdir', metavar='DIR', default=self.finder.trksubdir,
+        parser.add_argument('--trk-dir', metavar='DIR', default=self.finder.trksubdir,
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)

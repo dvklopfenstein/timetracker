@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 
 DIRTRK = '.timetracker'
+FILENAME_GLOBALCFG = '.timetrackerconfig'
 DIRCSV = '.'
 FMTTIME = '%H:%M:%S.%f'             # time format, with microseconds (default)
 FMTTIME_HMS = '%H:%M:%S'            # time format, without microseconds

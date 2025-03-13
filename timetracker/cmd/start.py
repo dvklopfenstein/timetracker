@@ -54,7 +54,7 @@ def run_start(fnamecfg, name=None, **kwargs):
         #cfgproj.mk_workdir()
         #cfgproj.update_localini(project, csvdir)
         #cfgproj.wr_cfg()
-        #cfg_global = CfgGlobal()
+        #cfg_global = CfgGlobal(dirhome)
         #chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfgproj())
         #if chgd:
         #    cfg_global.wr_cfg()

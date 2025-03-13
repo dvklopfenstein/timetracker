@@ -20,6 +20,7 @@ from os.path import commonprefix
 from subprocess import run
 from logging import debug
 from logging import warning
+from timetracker.consts import FILENAME_GLOBALCFG
 
 def get_abspath(fnam, dirproj, dirhome=None):
     """Get the path of the path fnam relative to dirproj"""
@@ -153,7 +154,9 @@ def get_shortest_name(filename):
 
 def get_dirhome_globalcfg():
     """Get the home directory, where the global configuration will be stored"""
-    return expanduser('~') if 'TIMETRACKERCONF' not in environ else environ['TIMETRACKERCONF']
+    if 'TIMETRACKERCONF' not in environ:
+        return join(expanduser('~'), FILENAME_GLOBALCFG)
+    return environ['TIMETRACKERCONF']
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

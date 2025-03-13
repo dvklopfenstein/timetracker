@@ -7,6 +7,7 @@ __author__ = "DV Klopfenstein, PhD"
 ##from os import environ
 from os.path import isabs
 from os.path import exists
+from os.path import dirname
 ##from os.path import expanduser
 ##from os.path import basename
 from os.path import join
@@ -21,12 +22,12 @@ from tomlkit import array
 from tomlkit.toml_file import TOMLFile
 
 ##from timetracker.cfg.utils import replace_homepath
+from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import ltblue
 from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
 #from timetracker.cfg.utils import get_relpath_adj
-
-FILENAME_GLOBALCFG = '.timetrackerconfig'
+#from timetracker.consts import FILENAME_GLOBALCFG
 
 
 class CfgGlobal:
@@ -35,6 +36,9 @@ class CfgGlobal:
     def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
         self.dirhome = abspath(get_dirhome(dirhome))
         self.filename = join(self.dirhome, basename)
+    ##def __init__(self, filename):
+    ##    self.dirhome = dirname(filename)
+    ##    self.filename = filename
         debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- '
                    f'{self.filename}'))
         self.doc = self._init_docglobal()
@@ -125,6 +129,13 @@ class CfgGlobal:
         arr.multiline(True)
         doc["projects"] = arr
         return doc
+
+    #@staticmethod
+    #def _init_dirhome(filename):
+    #    if isdir(filename):
+    #        return filename, FILENAME_GLOBALCFG
+    #    if filename.endswith(FILENAME_GLOBALCFG):
+    #        return dirname, filename
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

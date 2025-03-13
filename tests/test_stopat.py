@@ -11,6 +11,7 @@ from logging import debug
 from logging import getLogger
 from tempfile import TemporaryDirectory
 from csv import writer
+from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
@@ -66,7 +67,8 @@ class Obj(RunBase):
         """Run init, stop --at, stop"""
         cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
-        cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome, quiet=True)  # cfgg
+        fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
+        cfgp, _ = run_init_test(cfgname, dircsv, self.project, fcfgg, quiet=True)  # cfgg
         fin_start = run_start(cfgname, self.uname,
             now=dta,
             defaultdt=dta)

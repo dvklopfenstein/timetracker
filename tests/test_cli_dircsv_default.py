@@ -9,6 +9,7 @@ from logging import basicConfig
 from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
+from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.init import run_init_test
@@ -61,7 +62,8 @@ class Obj:
             #assert not exists(cfgname), findhome_str(exp.dirhome)
 
             # CMD: INIT; CFG PROJECT
-            cfgp, cfgg = run_init_test(cfgname, dircsv, self.project, exp.dirhome)
+            fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
+            cfgp, cfgg = run_init_test(cfgname, dircsv, self.project, fcfgg)
             # pylint: disable=unsubscriptable-object
             assert cfgp.read_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
             exp_cfg_csv_fname = join(dircsv, fcsv)

@@ -26,13 +26,13 @@ def run_init(fnamecfg, dircsv, project, quiet=False):
     """Initialize timetracking on a project"""
     cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
     debug(cfgproj.get_desc("new"))
-    dirhome = get_dirhome_globalcfg()
-    run_init_global(dirhome, cfgproj)
+    filename_globalcfg = get_dirhome_globalcfg()
+    run_init_global(filename_globalcfg, cfgproj)
 
-def run_init_test(fnamecfg, dircsv, project, dirhome, quiet=False):
+def run_init_test(fnamecfg, dircsv, project, filename_globalcfg, quiet=False):
     """Initialize timetracking on a test project"""
     cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
-    cfg_global = run_init_global(dirhome, cfgproj)
+    cfg_global = run_init_global(filename_globalcfg, cfgproj)
     return cfgproj, cfg_global
 
 def run_init_local(fnamecfg, dircsv, project, quiet=True):
@@ -49,10 +49,10 @@ def run_init_local(fnamecfg, dircsv, project, quiet=True):
     cfgproj.write_file(dircsv=dircsv, quiet=quiet)
     return cfgproj
 
-def run_init_global(dirhome, cfgproj):
+def run_init_global(filename_globalcfg, cfgproj):
     """Initialize the global configuration file for a timetracking project"""
     # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
-    cfg_global = CfgGlobal(dirhome)
+    cfg_global = CfgGlobal(filename_globalcfg)
     chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfg())
     if chgd:
         cfg_global.wr_cfg()

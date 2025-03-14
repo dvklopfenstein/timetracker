@@ -26,7 +26,7 @@ def str_tostart_epoch():
 def str_how_to_stop_now():
     """Message to print when the timer is started"""
     return ('Run `trk stop -m "task description"` '
-            'to stop tracking now and record this time unit')
+            'to stop tracking now and record this time unit') # str_how_to_stop_now
 
 def str_cancelled1():
     """Message to print when the timer is canceled"""

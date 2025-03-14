@@ -103,13 +103,6 @@ def _conv_timedelta(elapsed_or_dt):
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
                             'TO A timedelta object') from err
 
-#def _adjust_ampm(elapsed_or_dt):
-#    """Adjust for behavior when defaultdt is not None.
-#
-#       https://github.com/dateutil/dateutil/issues/1421
-#       """
-#       #if (
-
 ####def is_datetime(self):
 ####    """Check if epoch is a datetime, rather than an elapsed time"""
 ####    epoch = self.estr

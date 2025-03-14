@@ -86,7 +86,7 @@ class Starttime:
         """Get datetime from a starttime file"""
         return self._read_starttime() if exists(self.filename) else None
 
-    def prt_elapsed(self, msg='Timer running'):
+    def prt_elapsed(self, msg='Timer running;'):
         """Print elapsed time if timer is started"""
         # Print elapsed time, if timer was started
         if exists(self.filename):

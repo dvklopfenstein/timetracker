@@ -12,7 +12,7 @@ from logging import debug
 ##from timeit import default_timer
 ##$from datetime import timedelta
 from datetime import datetime
-from timetracker.msgs import str_how_to_stop_now
+#from timetracker.msgs import str_how_to_stop_now
 #from timetracker.msgs import str_notrkrepo
 from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
@@ -67,9 +67,11 @@ def run_start(fnamecfg, name=None, **kwargs):
                   f"for project '{cfgproj.project}'")
     # Informational message
     elif not force:
-        if start_at is None:
-            print(str_how_to_stop_now())
-        else:
+        ## if start_at is None:
+        ##     print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
+        ##     print(str_how_to_stop_now())
+        ## else:
+        if start_at is not None:
             print(f'Run `trk start --at {start_at} --force` to force restart')
     return start_obj.filename
 

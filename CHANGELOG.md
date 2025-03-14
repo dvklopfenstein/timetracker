@@ -2,7 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* [**Release 2025-03-09 v0.3a2**](#release-2025-03-09-v03a3) Added stop --at test; Added report module
+* [**Release 2025-03-14 v0.3a4**](#release-2025-03-14-v03a4) Added stop --at test; Added report module
 * [**Release 2025-02-25 v0.3a0**](#release-2025-02-25-v03a0) Added --at functionality to start & stop command
 * **Release 2025-02-18 v0.2a5** Changed logo to a stopwatch
 * **Release 2025-02-18 v0.2a4** Added `trk time` command to report elapsed hours
@@ -20,7 +20,7 @@
 
 ## Unreleased
 
-## Release 2025-03-09 v0.3a3
+## Release 2025-03-14 v0.3a4
 * ADD stop --at test
 * ADD report command
   * Initial implementation works for a single user on a single project (more to come)

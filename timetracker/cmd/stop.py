@@ -49,10 +49,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
               f'for project, {cfgproj.project}')
         return {'fcsv':fcsv, 'csvline':None}
     stopat = kwargs.get('stop_at')
-    #print('SSSSSSSSSSSSSSSSSSSSSS', stopat)
     now = kwargs.get('now', datetime.now())
-    dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt', now))
-    #dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt'))
+    dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt'))
     if dtz <= dta:
         error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return {'fcsv':fcsv, 'csvline':None}

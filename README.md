@@ -18,7 +18,7 @@ Time is saved in
 * [Quickstart](#quickstart)
 * [Installation](#installation)
 * [Other time-trackers](#other-timetrackers)
-* [Documentation](docs/index.md)
+* [Documentation](docs/README.md)
 
 ## Advantages
 * Freedom Software (aka open-source)
@@ -75,6 +75,7 @@ $ pip install .
 
 ## Other timetrackers
 * 700+ stars [Bartib](https://github.com/nikolassv/bartib)
+* 740+ stars [timetrace](https://github.com/dominikbraun/timetrace)
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
 * 85 stars [ti](https://github.com/richmeta/ti)
 * 44 stars [tim](https://github.com/MatthiasKauer/tim)

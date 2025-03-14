@@ -2,10 +2,12 @@
 """Test `trk start --at`"""
 
 from os.path import exists
+from os.path import join
 #from logging import basicConfig
 #from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
+from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.cmd.init import run_init_test
@@ -58,7 +60,8 @@ class Obj(RunBase):
             cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # CMD: INIT; CFG PROJECT
-            cfgp, _ = run_init_test(cfgname, dircsv, self.project, exp.dirhome)  # cfgg
+            fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
+            cfgp, _ = run_init_test(cfgname, dircsv, self.project, fcfgg)  # cfgg
             #findhome(tmphome)
 
             # CMD: START

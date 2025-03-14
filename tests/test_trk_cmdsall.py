@@ -9,7 +9,7 @@ from tempfile import TemporaryDirectory
 from pytest import raises
 from timetracker.utils import cyan
 from timetracker.cmd.stop import run_stop
-from timetracker.cmd.time import run_time
+from timetracker.cmd.time import run_time_local
 from timetracker.cmd.cancel import run_cancel
 from timetracker.cmd.csvupdate import run_csvupdate
 from timetracker.cmd.report import run_report
@@ -55,7 +55,7 @@ class Obj(RunBase):
 
             # time       Report elapsed time
             with raises(SystemExit) as excinfo:
-                run_time(cfgname, uname)
+                run_time_local(cfgname, uname)
             assert excinfo.value.code == 0
 
             # report     Generate an report for all time units and include cumulative time

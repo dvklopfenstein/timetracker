@@ -14,6 +14,8 @@ __author__ = "DV Klopfenstein, PhD"
 from datetime import datetime
 from datetime import timedelta
 #from logging import debug
+#from re import compile as re_compile
+#from re import IGNORECASE
 from pytimeparse2 import parse as pyt2_parser_secs
 from dateutil.parser import parse as dateutil_parserdt
 from dateutil.parser import ParserError
@@ -23,6 +25,7 @@ from timetracker.consts import FMTDT_H
 #from timetracker.utils import cyan
 from timetracker.utils import orange
 
+#NXM = re_compile(r'^\d+(a|p)m', IGNORECASE)
 
 def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     """Get instructions on how to specify an epoch"""
@@ -78,13 +81,15 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
     if elapsed_or_dt.count(':') != 2:
-        #debug(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
+        #print(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
         secs = _conv_timedelta(elapsed_or_dt)
-        #debug(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
+        #print(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
         if secs is not None:
             return dta + timedelta(seconds=secs)
     try:
-        #debug(cyan(f'CCCCCCCCCCCCCC Using dateutil.parser({elapsed_or_dt}, default={defaultdt})'))
+        ##if defaultdt is not None:
+        ##    elapsed_or_dt = _adjust_ampm(elapsed_or_dt)
+        #print(cyan(f'CCCCCCCCCCCCCC Using dateutil.parser({elapsed_or_dt}, default={defaultdt})'))
         return dateutil_parserdt(elapsed_or_dt, default=defaultdt)
     except (ParserError, UnknownTimezoneWarning) as err:
         print(orange(f'ERROR: {err}'))

@@ -16,23 +16,23 @@ pn:
 DIRTRK = ./.trkr
 PROJ = trk
 trk:
-	trk --trksubdir $(DIRTRK)
+	trk --trk-dir $(DIRTRK)
 
 # -----------------------------------------------------------------------------
 init:
 	rm -rf $(DIRTRK)
-	trk --trksubdir $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
+	trk --trk-dir $(DIRTRK) init --project $(PROJ) --csvdir ~/timetrackers
 	find $(DIRTRK)
 
 start:
-	trk --trksubdir $(DIRTRK) start
+	trk --trk-dir $(DIRTRK) start
 	find $(DIRTRK)
 	@grep -Hw --color filename $(DIRTRK)/config
 	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
 	find $(DIRTRK)
 
 cancel:
-	trk --trksubdir $(DIRTRK) cancel
+	trk --trk-dir $(DIRTRK) cancel
 	find $(DIRTRK)
 	@grep -Hw --color filename $(DIRTRK)/config
 	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
@@ -51,24 +51,24 @@ stop:
 	fi
 
 _stop:
-	#trk --trksubdir $(DIRTRK) stop -m "\"$(M)\""
-	trk --trksubdir $(DIRTRK) stop -m "$(M)"
+	#trk --trk-dir $(DIRTRK) stop -m "\"$(M)\""
+	trk --trk-dir $(DIRTRK) stop -m "$(M)"
 	find $(DIRTRK)
 	grep filename $(DIRTRK)/config
 	#find ~/timetrackers/ -type f -name \*.csv
 
 report:
-	trk --trksubdir $(DIRTRK) report
+	trk --trk-dir $(DIRTRK) report
 
 csv:
-	trk --trksubdir $(DIRTRK) csv
+	trk --trk-dir $(DIRTRK) csv
 
 time:
-	trk --trksubdir $(DIRTRK) time
+	trk --trk-dir $(DIRTRK) time
 
 docx:
-	trk --trksubdir $(DIRTRK) time -i $(CSV)
-	trk --trksubdir $(DIRTRK) invoice -i $(CSV) -o timetracker.docx
+	trk --trk-dir $(DIRTRK) time -i $(CSV)
+	trk --trk-dir $(DIRTRK) invoice -i $(CSV) -o timetracker.docx
 
 	
 files:

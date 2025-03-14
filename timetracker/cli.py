@@ -33,7 +33,7 @@ class Cli:
     # pylint: disable=too-few-public-methods
 
     ARGV_TESTS = {
-        'trksubdir': set(['--trksubdir']),
+        'trksubdir': set(['--trk-dir']),
     }
 
     def __init__(self, args=None):
@@ -92,9 +92,9 @@ class Cli:
         found = False
         for arg in sys_argv:
             if found:
-                debug(f'Cli FOUND: argv --trksubdir {arg}')
+                debug(f'Cli FOUND: argv --trk-dir {arg}')
                 return arg
-            if arg == '--trksubdir':
+            if arg == '--trk-dir':
                 found = True
         return None
 
@@ -113,7 +113,7 @@ class Cli:
             description="Track your time repo by repo",
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
-        parser.add_argument('--trksubdir', metavar='DIR', default=self.finder.trksubdir,
+        parser.add_argument('--trk-dir', metavar='DIR', default=self.finder.trksubdir,
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
@@ -134,8 +134,8 @@ class Cli:
         self._add_subparser_cancel(subparsers)
         self._add_subparser_time(subparsers)
         self._add_subparser_report(subparsers)
-        self._add_subparser_csv(subparsers)
-        self._add_subparser_csvupdate(subparsers)
+        self._add_subparser_projects(subparsers)
+        self._add_subparser_projectsupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -203,6 +203,8 @@ class Cli:
         parser = subparsers.add_parser(name='time',
             help='Report elapsed time',
             formatter_class=ArgumentDefaultsHelpFormatter)
+        #parser.add_argument('--global', action='store_true',
+        #    help='Report the elapsed time in hours on all projects')
         parser.add_argument('-u', '--unit', choices=['hours'], default=None,
             help='Report the elapsed time in hours')
         parser.add_argument('-i', '--input', metavar='file.csv',
@@ -223,15 +225,15 @@ class Cli:
             help=SUPPRESS)  # Future feature
         return parser
 
-    def _add_subparser_csv(self, subparsers):
-        parser = subparsers.add_parser(name='csv',
-            help='Show the locations of csv files managed by timetracker',
+    def _add_subparser_projects(self, subparsers):
+        parser = subparsers.add_parser(name='projects',
+            help='Show all projects and the locations of their csv files',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
-            help='Look for csv files for all projects tracked in the global config file')
+            help='Look for all projects and their csv files tracked in the global config file')
         return parser
 
-    def _add_subparser_csvupdate(self, subparsers):
+    def _add_subparser_projectsupdate(self, subparsers):
         parser = subparsers.add_parser(name='csvupdate',
             help='Update values in csv columns containing weekday, am/pm, and duration',
             formatter_class=ArgumentDefaultsHelpFormatter)

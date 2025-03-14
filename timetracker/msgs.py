@@ -26,7 +26,7 @@ def str_tostart_epoch():
 def str_how_to_stop_now():
     """Message to print when the timer is started"""
     return ('Run `trk stop -m "task description"` '
-            'to stop tracking now and record this time unit')
+            'to stop tracking now and record this time unit') # str_how_to_stop_now
 
 def str_cancelled1():
     """Message to print when the timer is canceled"""
@@ -56,7 +56,7 @@ def str_init_empty_proj(cfglocal):
 def str_init(fnamecfg):
     """Message that occurs when there is no Timetracking config file"""
     return ('Run `trk init` to initialize time-tracking '
-           f'for the project in {dirname(fnamecfg)}')
+           f'for the project in {dirname(dirname(fnamecfg))}')
 
 def str_notrkrepo_mount(mountname, trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""

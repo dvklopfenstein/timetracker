@@ -2,9 +2,11 @@
 """Various tests when the project config file does not exist"""
 
 from os import system
+from os.path import join
 from logging import basicConfig
 #from logging import DEBUG
 from tempfile import TemporaryDirectory
+from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.init import run_init_test
 from timetracker.cmd.start import run_start
@@ -34,7 +36,8 @@ def test_get_filename_csv():
         for projname, projdir in projname2projdir.items():
             finder = CfgFinder(projdir)
             cfgfilename = finder.get_cfgfilename()
-            run_init_test(cfgfilename, dircsv, projname, tmphome)
+            fcfgg = join(tmphome, FILENAME_GLOBALCFG)
+            run_init_test(cfgfilename, dircsv, projname, fcfgg)
             for idx in range(2, 12, 2):
                 run_start(cfgfilename, username, defaultdt=now, start_at=f'{idx}pm')
                 ntcsv = get_ntcsv(f'{projname} {username} {idx}')

@@ -3,12 +3,12 @@
 
 from os.path import join
 from os.path import exists
-from os.path import dirname
 from os.path import expanduser
 from logging import debug
 from logging import DEBUG
 from logging import basicConfig
 from tempfile import TemporaryDirectory
+from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 #from timetracker.cfg.utils import get_relpath_adj
@@ -23,7 +23,7 @@ SEP = f'{"-"*80}\n'
 def test_cfgbase_home():
     """Test instantiating a default CfgGlobal"""
     with TemporaryDirectory() as tmphome:
-        cfg = CfgGlobal(tmphome)
+        cfg = CfgGlobal(join(tmphome, FILENAME_GLOBALCFG))
         assert cfg.filename == join(tmphome, '.timetrackerconfig')
         assert cfg.doc['projects'] == []
         assert not exists(cfg.filename)
@@ -71,7 +71,7 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
 
 def _get_cfgglobal_empty(tmphome):
     """Write and get an empty Global Configuration file/object"""
-    cfgtop = CfgGlobal(tmphome)
+    cfgtop = CfgGlobal(join(tmphome, FILENAME_GLOBALCFG))
     assert cfgtop.filename == join(tmphome, '.timetrackerconfig'), f'{cfgtop.filename}'
     doc = cfgtop.rd_cfg()
     assert doc is None
@@ -88,12 +88,14 @@ def _get_cfgglobal_empty(tmphome):
 
 def test_dirhome():
     """Test the TimeTracker global configuration"""
-    cfg = CfgGlobal()
-    assert dirname(cfg.filename) == expanduser('~')
+    fcfg = join(expanduser('~'), FILENAME_GLOBALCFG)
+    cfg = CfgGlobal(fcfg)
+    assert cfg.filename == fcfg, f'{cfg.filename} != {fcfg}'
 
     with TemporaryDirectory() as tmphome:
-        cfg = CfgGlobal(tmphome)
-        assert dirname(cfg.filename) == tmphome
+        fcfg = join(tmphome, FILENAME_GLOBALCFG)
+        cfg = CfgGlobal(fcfg)
+        assert cfg.filename == fcfg
 
 
 if __name__ == '__main__':

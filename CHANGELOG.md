@@ -24,6 +24,14 @@
 * ADD stop --at test
 * ADD report command
   * Initial implementation works for a single user on a single project (more to come)
+* CHANGED arg, `--trksubdir` to match git's `--git-dir`
+* CHANGED CfgGlobal param to the config filename
+* CHANGED code to use [pytimeparse2](https://github.com/onegreyonewhite/pytimeparse2)
+          before dateutils to 
+          ensure stopping the timer in "4hours"
+          is interpreted as "4hours from now" and
+          not "4am today" https://github.com/dateutil/dateutil/issues/1421
+* CHANGED code to adapt to dateutils parse function behavior
 * CHANGED Fine-tuned stdout messages to researcher for commands: start, stop, and cancel
 * CHANGED datetime & timedelta parsing to be simpler
 * CHANGED to ensure None is written as '' in csv

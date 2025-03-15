@@ -80,19 +80,4 @@ def _msg_stop_complete(fcsv, delta, dtz, quiet):
               f'appended to {get_shortest_name(fcsv)}')
 
 
-
-####def _wr_csv_hdrs(fcsv):
-####    # aTimeLogger columns: Activity From To Notes
-####    with open(fcsv, 'w', encoding='utf8') as prt:
-####        print(
-####            'startsecs,'
-####            'stopsecs,'
-####            # Info
-####            'message,',
-####            'activity,',
-####            'tags',
-####            file=prt,
-####        )
-
-
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

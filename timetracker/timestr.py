@@ -10,6 +10,7 @@ from timetracker.consts import FMTDT24HMS
 
 
 def get_dt(timestr):
+    """Get a datetime object, given a string"""
     try:
         return datetime.strptime(timestr, FMTDT)
     except ValueError:

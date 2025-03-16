@@ -171,7 +171,7 @@ class Cli:
         parser.add_argument('--at', metavar='time',
             help='start tracking at a '
                  'specific(ex: 4pm, "Tue 4pm") or '
-                 'elapsed time(ex: 10min, ~10min, 4hr)')
+                 'elapsed time(ex: 10min, -10min, 4hr)')
         return parser
 
     @staticmethod

@@ -12,7 +12,6 @@ Welcome to timetracker-csv's documentation!
 
    sample_doc.rst
    markdown_doc.md
-   notebook.ipynb
 
 
 Indices and tables

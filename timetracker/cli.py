@@ -82,6 +82,7 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
+        print(f'TIMETRACKER ARGS: {args}')
         debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
@@ -172,6 +173,10 @@ class Cli:
             help='start tracking at a '
                  'specific(ex: 4pm, "Tue 4pm") or '
                  'elapsed time(ex: 10min, -10min, 4hr)')
+        parser.add_argument('-a', '--activity', metavar='txt',
+            help='Add an activity to this time slot')
+        parser.add_argument('-t', '--tags', nargs='*',
+            help='Add an activity to this time slot')
         return parser
 
     @staticmethod

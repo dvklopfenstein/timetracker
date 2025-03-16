@@ -1,8 +1,9 @@
-# Configuration file for the Sphinx documentation builder.
-#
+"""Configuration file for the Sphinx documentation builder"""
+
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+# pylint: disable=invalid-name
 
 # -- Path setup --------------------------------------------------------------
 
@@ -18,6 +19,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'timetracker-csv'
+# pylint: disable=redefined-builtin
 copyright = '2025, DV Klopfenstein, PhD'
 author = 'DV Klopfenstein, PhD'
 

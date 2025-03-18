@@ -6,15 +6,14 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from datetime import timedelta
-from datetime import datetime
 from logging import debug
 from logging import warning
 from csv import writer
 
 from timetracker.utils import orange
-from timetracker.consts import FMTDT
 from timetracker.ntcsv import NTTIMEDATA
 from timetracker.csvutils import get_hdr_itr
+from timetracker.csvutils import dt_from_str
 
 
 class CsvFile:
@@ -45,15 +44,14 @@ class CsvFile:
         debug('get_data')
         ret = []
         nto = NTTIMEDATA
-        strptime = datetime.strptime
         with open(self.fcsv, encoding='utf8') as csvstrm:
             hdr, itr = get_hdr_itr(csvstrm)
             self._chk_hdr(hdr)
             for row in itr:
-                startdt = strptime(row[2], FMTDT)
+                startdt = dt_from_str(row[2])
                 ret.append(nto(
                     start_datetime=startdt,
-                    duration=strptime(row[5], FMTDT) - startdt,
+                    duration=dt_from_str(row[5]) - startdt,
                     message=row[7],
                     activity=row[8],
                     tags=row[9]))
@@ -87,8 +85,8 @@ class CsvFile:
         return None
 
     def _add_timedelta_from_row(self, time_total, row, rownum):
-        startdt = datetime.strptime(row[2], FMTDT)
-        stopdt  = datetime.strptime(row[5], FMTDT)
+        startdt = dt_from_str(row[2])
+        stopdt  = dt_from_str(row[5])
         if startdt is None or stopdt is None:
             return
         delta = stopdt - startdt

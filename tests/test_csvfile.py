@@ -8,6 +8,7 @@ from datetime import datetime
 from timetracker.csvfile import CsvFile
 from timetracker.ntcsv import get_ntcsv
 from timetracker.utils import orange
+from timetracker.csvutils import td_from_str
 
 def test_csvfile():
     """Test reading and writing csv files using CsvFile"""
@@ -175,14 +176,13 @@ class Run:
     def __init__(self, fcsv):
         self.fcsv = fcsv
         self.obj = CsvFile(fcsv)
-        self.td_from_str = self.obj.td_from_str
 
     def run(self, dta, dtz, desc):
         """Write a line into the csv file"""
         ntd = get_ntcsv(desc, 'testing', None)
-        data = self.obj.wr_stopline(dta, None, dtz-dta, ntd)
+        data = self.obj.wr_stopline(dta, dtz-dta, ntd)
         tdstr = data[1]
-        tdobj = self.td_from_str(tdstr)
+        tdobj = td_from_str(tdstr)
         assert str(tdobj) == tdstr, f'OBJ({tdobj}) != CSVSTR({tdstr})'
         print(f'{len(tdstr):>2} {tdstr:30} {str(tdobj):30} {data[3]}')
 

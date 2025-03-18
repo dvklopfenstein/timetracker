@@ -7,9 +7,10 @@ from logging import debug
 
 from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
-from timetracker.csvold import CsvFile
+from timetracker.csvfile import CsvFile
 from timetracker.docx import WordDoc
 from timetracker.timetext import get_data_formatted
+from timetracker.csvrun import chk_n_convert
 from timetracker.report import Report
 #from timetracker.timetext import get_fstr
 
@@ -42,6 +43,7 @@ def run_report(fnamecfg, uname, pnum=None, dirhome=None):
 
 def _run_io(fcsv, fout_docx, pnum):
     """Run input output"""
+    chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
     timedata = ocsv.get_ntdata()
     #for e in sorted(timedata, key=lambda nt: nt.start_datetime):

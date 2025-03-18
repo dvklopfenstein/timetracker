@@ -7,7 +7,8 @@ from os.path import exists
 from logging import debug
 from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
-from timetracker.csvold import CsvFile
+from timetracker.csvrun import chk_n_convert
+from timetracker.csvfile import CsvFile
 
 
 def cli_run_time(fnamecfg, args):
@@ -34,8 +35,9 @@ def run_time_local(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet
 #    """Report the total time spent on all projects"""
 
 def _rpt_time(fcsv):
+    chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
-    total_time = ocsv.read_totaltime()
+    total_time = ocsv.read_totaltime_all()
     print(f'{total_time} H:M:S or {total_time.total_seconds()/3600:.3f} hours')
     return total_time
 

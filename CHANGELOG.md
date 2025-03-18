@@ -2,7 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* [**Release 2025-03-18 v0.3a7**](#release-2025-03-18-v03a7) Added `--activity` & `--tags` option to `stop' command
+* [**Release 2025-03-18 v0.3a7**](#release-2025-03-18-v03a7) Added `--activity` & `--tags` option to `stop' command; Use new concise csv
 * [**Release 2025-03-14 v0.3a4**](#release-2025-03-14-v03a4) Added stop --at test; Added report module
 * [**Release 2025-02-25 v0.3a0**](#release-2025-02-25-v03a0) Added --at functionality to start & stop command
 * **Release 2025-02-18 v0.2a5** Changed logo to a stopwatch

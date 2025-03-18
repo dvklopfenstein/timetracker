@@ -39,6 +39,14 @@ def wr_stopline(csvfilename, dta, delta, csvfields, dtz, wr_old=False):
     convert_csv(csvfilename)
     return newobj.wr_stopline(dta, delta, csvfields)
 
+def chk_n_convert(fcsv):
+    """Check & if needed, convert the original csv format to new concise format"""
+    if not exists(fcsv):
+        return
+    if len(get_hdr(fcsv)) == 5:
+        return
+    convert_csv(fcsv)
+
 def convert_csv(csvfilename):
     """Convert the original csv format to the new concise format"""
     oldobj = CsvFileOld(csvfilename)

@@ -5,13 +5,14 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
+from collections import namedtuple
 from datetime import timedelta
 from logging import debug
 from csv import writer
 
 from timetracker.utils import orange
-from timetracker.ntcsv import NTTIMEDATA
 from timetracker.csvutils import get_hdr_itr
+from timetracker.csvutils import dt_from_str
 from timetracker.csvutils import td_from_str
 
 
@@ -26,18 +27,28 @@ class CsvFile:
         'tags',           # 4
     ]
 
+    nto = namedtuple('TimeData', hdrs)
+
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
         debug(orange(f'Starttime args {int(exists(self.fcsv))} self.fcsv {self.fcsv}'))
 
-    def get_data(self):
+    def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
-        debug('get_data')
-        nto = NTTIMEDATA
+        debug('get_ntdata')
+        nto = self.nto
         with open(self.fcsv, encoding='utf8') as csvstrm:
             hdrs, itr = get_hdr_itr(csvstrm)
             self._chk_hdr(hdrs)
-            return [nto._make(*row) for row in itr]
+            ret = []
+            for row in itr:
+                ret.append(nto(
+                    start_datetime=dt_from_str(row[0]),
+                    duration=td_from_str(row[1]),
+                    activity=row[2],
+                    message=row[3],
+                    tags=row[4]))
+            return ret
         return None
 
     def read_totaltime_all(self):
@@ -56,7 +67,8 @@ class CsvFile:
         """Write one data line in the csv file"""
         # Print header into csv, if needed
         if not exists(self.fcsv):
-            self.wr_hdrs()
+            with open(self.fcsv, 'w', encoding='utf8') as csvfile:
+                self.wr_hdrs(csvfile)
         # Print time information into csv
         with open(self.fcsv, 'a', encoding='utf8') as csvfile:
             # timedelta(days=0, seconds=0, microseconds=0,
@@ -70,10 +82,9 @@ class CsvFile:
             return data
         return None
 
-    def wr_hdrs(self):
+    def wr_hdrs(self, prt):
         """Write header"""
-        with open(self.fcsv, 'w', encoding='utf8') as prt:
-            print(','.join(self.hdrs), file=prt)
+        print(','.join(self.hdrs), file=prt)
 
     def _chk_hdr(self, hdrs):
         """Check the file format"""

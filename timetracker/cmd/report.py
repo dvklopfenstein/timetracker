@@ -43,7 +43,7 @@ def run_report(fnamecfg, uname, pnum=None, dirhome=None):
 def _run_io(fcsv, fout_docx, pnum):
     """Run input output"""
     ocsv = CsvFile(fcsv)
-    timedata = ocsv.get_data()
+    timedata = ocsv.get_ntdata()
     #for e in sorted(timedata, key=lambda nt: nt.start_datetime):
     #    print(e)  # TimeData namedtuple
     timefmtd = get_data_formatted(timedata, pnum)

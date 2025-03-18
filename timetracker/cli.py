@@ -173,10 +173,6 @@ class Cli:
             help='start tracking at a '
                  'specific(ex: 4pm, "Tue 4pm") or '
                  'elapsed time(ex: 10min, -10min, 4hr)')
-        parser.add_argument('-a', '--activity', metavar='txt',
-            help='Add an activity to this time slot')
-        parser.add_argument('-t', '--tags', nargs='*',
-            help='Add an activity to this time slot')
         return parser
 
     @staticmethod
@@ -186,10 +182,6 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-m', '--message', required=True, metavar='TXT',
             help='Message describing the work done in the time unit')
-        parser.add_argument('--activity', default='',
-            help='Activity for time unit')
-        parser.add_argument('-t', '--tags', nargs='*',
-            help='Tags for this time unit')
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
             help=SUPPRESS)
@@ -197,6 +189,10 @@ class Cli:
             help='start tracking at a '
                  'specific(ex: 4pm, "2025-01-05 04:30pm") or '
                  'elapsed time(ex: 1hr, ~1hr, 1h20m)')
+        parser.add_argument('-a', '--activity', metavar='txt',
+            help='Add an activity to this time slot')
+        parser.add_argument('-t', '--tags', nargs='*',
+            help='Tags for this time unit')
         return parser
 
     @staticmethod

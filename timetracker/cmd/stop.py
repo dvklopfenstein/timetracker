@@ -10,12 +10,13 @@ from logging import error
 from datetime import datetime
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
-from timetracker.csvold import CsvFile
+#from timetracker.csvold import CsvFile
 from timetracker.consts import FMTDT_H
 from timetracker.msgs import str_uninitialized
 from timetracker.ntcsv import get_ntcsv
 from timetracker.epoch import get_dtz
 from timetracker.utils import yellow
+from timetracker.csvrun import wr_stopline
 
 
 def cli_run_stop(fnamecfg, args):
@@ -35,6 +36,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     debug(yellow('RUNNING COMMAND STOP'))
     if str_uninitialized(fnamecfg):
         sys_exit(0)
+
     cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
     fcsv = cfgproj.get_filename_csv(uname)
     # Get the elapsed time
@@ -61,7 +63,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
         return {'fcsv':fcsv, 'csvline':None}
-    csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
+    csvline = wr_stopline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
+    ##csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
     _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
 
     # Remove the starttime file

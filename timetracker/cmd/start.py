@@ -21,7 +21,7 @@ def cli_run_start(fnamecfg, args):
         args.name,
         start_at=args.at,
         force=args.force,
-        activity=args.activity,
+        ##activity=args.activity,
         quiet=args.quiet)
 
 def run_start(fnamecfg, name=None, **kwargs):

@@ -18,6 +18,7 @@ from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.none import cli_run_none
+from timetracker.cfg.utils import run_cmd
 
 
 def main():
@@ -82,11 +83,14 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        #print(f'TIMETRACKER ARGS: {args}')
         debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
+        if args.command == 'stop':
+            if args.message == 'd':
+                args.message = run_cmd('{git log -1 --pretty=%B').strip()
+        print(f'TIMETRACKER ARGS: {args}')
         return args
 
     def _init_trksubdir(self):
@@ -181,6 +185,7 @@ class Cli:
             help='Stop timetracking',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-m', '--message', required=True, metavar='TXT',
+            default=f'''("{run_cmd('git log -1 --pretty=%B').strip()}" invoked w/`-m d`''',
             help='Message describing the work done in the time unit')
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')

@@ -9,7 +9,6 @@ from os.path import join
 from datetime import timedelta
 from tempfile import TemporaryDirectory
 from timetracker.consts import FILENAME_GLOBALCFG
-from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init_test
@@ -24,7 +23,7 @@ def test_stopat(project='pumpkin', username='carver', dircsv=None):
     #basicConfig(level=DEBUG)
 
     with TemporaryDirectory() as tmphome:
-        cfgname, _, exp = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfgname, _, _ = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
         fcfgg = join(tmphome, FILENAME_GLOBALCFG)
         cfgp, _ = run_init_test(cfgname, dircsv, project, fcfgg, quiet=False)  # cfgg
         assert cfgname == cfgp.filename, f'{cfgname} != {cfgp.filename}'
@@ -38,6 +37,8 @@ def test_stopat(project='pumpkin', username='carver', dircsv=None):
         system(f'cat {csvfile}')
 
 
+# pylint: disable=unknown-option-value
+# pylint: disable=too-many-arguments,too-many-positional-arguments
 def _run(tmphome, cfgname, username, dta, idx, wr_old):
     fin_start = run_start(cfgname, username, now=dta, defaultdt=dta)
     assert exists(fin_start)

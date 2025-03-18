@@ -82,7 +82,7 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        print(f'TIMETRACKER ARGS: {args}')
+        #print(f'TIMETRACKER ARGS: {args}')
         debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')

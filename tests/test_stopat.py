@@ -38,25 +38,25 @@ def test_stopat(project='pumpkin', username='carver'):
 def _run(dta, obj):
     # Test researcher-entered datetime stoptimes
     # pylint: disable=line-too-long
-    obj.chk(dta, '11:30am',               'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 11:30:00,3:00:00,"A,B,C",,')
-    obj.chk(dta, "2525-02-19 17:00:00",   'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-02-19 17:00:00,"49 days, 8:30:00","A,B,C",,')
-    obj.chk(dta, "2525-02-19 05:00:00 pm",'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-02-19 17:00:00,"49 days, 8:30:00","A,B,C",,')
-    obj.chk(dta, "01-01 17:00:00",        'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
-    obj.chk(dta, "01-01 05:00:00 pm",     'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
+    obj.chk(dta, '11:30am',               '2525-01-01 08:30:00,3:00:00,,"A,B,C",')
+    obj.chk(dta, "2525-02-19 17:00:00",   '2525-01-01 08:30:00,"49 days, 8:30:00",,"A,B,C",')
+    obj.chk(dta, "2525-02-19 05:00:00 pm",'2525-01-01 08:30:00,"49 days, 8:30:00",,"A,B,C",')
+    obj.chk(dta, "01-01 17:00:00",        '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
+    obj.chk(dta, "01-01 05:00:00 pm",     '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
     # https://github.com/dateutil/dateutil/issues/1421 (5pm with a default datetime; 5pm w/no default works fine)
     # obj.chk(dta, dta, "01-1 5pm",             'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
-    obj.chk(dta, "01/01 5:00 pm",         'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
-    obj.chk(dta, "1/1 5:30 pm",           'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:30:00,9:00:00,"A,B,C",,')
+    obj.chk(dta, "01/01 5:00 pm",         '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
+    obj.chk(dta, "1/1 5:30 pm",           '2525-01-01 08:30:00,9:00:00,,"A,B,C",')
     # Process researcher-entered stop-times containing two ':' as datetimes
-    obj.chk(dta, "09:30:00",   'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:30:00,1:00:00,"A,B,C",,')
-    obj.chk(dta, "09:00:00",   'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "09:30:00",   '2525-01-01 08:30:00,1:00:00,,"A,B,C",')
+    obj.chk(dta, "09:00:00",   '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
     obj.chk(dta, "4:00:00",    None)
     # Test researcher-entered datetime timedeltas
     #obj.chk(dta, dta, "30 minutes", 'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 08:30:00,0:30:00,"A,B,C",,')
-    obj.chk(dta, "30 min",     'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
-    obj.chk(dta, "30min",      'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
-    obj.chk(dta, "30:00",      'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 09:00:00,0:30:00,"A,B,C",,')
-    obj.chk(dta, "4 hours",    'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 12:30:00,4:00:00,"A,B,C",,')
+    obj.chk(dta, "30 min",     '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+    obj.chk(dta, "30min",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+    obj.chk(dta, "30:00",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+    obj.chk(dta, "4 hours",    '2525-01-01 08:30:00,4:00:00,,"A,B,C",')
 
 
 class Obj(RunBase):

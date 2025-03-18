@@ -16,7 +16,8 @@ from timetracker.csvold  import CsvFile as CsvFileOld
 from timetracker.csvutils import get_hdr
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=unknown-option-value
+# pylint: disable=too-many-arguments,too-many-positional-arguments
 def wr_stopline(csvfilename, dta, delta, csvfields, dtz, wr_old=False):
     """Save csv in new format"""
     if wr_old:

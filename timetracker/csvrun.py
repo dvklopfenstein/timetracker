@@ -21,33 +21,44 @@ from timetracker.csvutils import get_hdr
 def wr_stopline(csvfilename, dta, delta, csvfields, dtz, wr_old=False):
     """Save csv in new format"""
     if wr_old:
+        print('AAAAA INTENTIONALLY MAKING ORIG FMT AAA')
         oldobj = CsvFileOld(csvfilename)
         return oldobj.wr_stopline(dta, dtz, delta, csvfields)
 
+    print('BBBBB CHECKING CSV FORMAT BBBBBBBBBBBBB')
     newobj = CsvFileNew(csvfilename)
     if not exists(csvfilename):
+        print('CCCCC CREATING NEW CSV CCCCCCCCCCCCCCCC')
         return newobj.wr_stopline(dta, delta, csvfields)
     hdr = get_hdr(csvfilename)
+    print('DDDDD CHECKING HDR FOR FORMAT DDDDDDDDD')
     if len(hdr) == 5:
+        print('EEEEE FOUND NEW FORMAT EEEEEEEEEEEEEEEE')
         return newobj.wr_stopline(dta, delta, csvfields)
-    return _wr_stopline(csvfilename, dta, delta, csvfields)
+    print('FFFFF FOUND ORIG FORMAT FFFFFFFFFFFFFFF')
+    return _wr_csvnew(csvfilename, dta, delta, csvfields)
 
-def _wr_stopline(csvfilename, dta, delta, csvfields):
+def _wr_csvnew(csvfilename, dta, delta, csvfields):
     oldobj = CsvFileOld(csvfilename)
     with TemporaryDirectory() as tmpdir:
         fcsvtmp = join(tmpdir, 'file.csv')
         newobj = CsvFileNew(fcsvtmp)
-        newobj.wr_hdrs()
         with open(fcsvtmp, 'w', encoding='utf8') as ocsv:
-            for row in oldobj.get_data():
-                writer(ocsv, lineterminator='\n').writerow(row)
+            newobj.wr_hdrs(ocsv)
+            for ntd in oldobj.get_ntdata():
+                writer(ocsv, lineterminator='\n').writerow(ntd)
             assert exists(fcsvtmp)
             data = [str(dta),
                     str(delta),
                     csvfields.activity, csvfields.message, csvfields.tags]
             writer(ocsv, lineterminator='\n').writerow(data)
-            rename(csvfilename, f'{csvfilename}.bac')
-            copy(fcsvtmp, csvfilename)
+        assert exists(csvfilename)
+        rename(csvfilename, f'{csvfilename}.bac')
+        assert not exists(csvfilename)
+        assert exists(fcsvtmp)
+        copy(fcsvtmp, csvfilename)
+        assert exists(csvfilename)
+        assert exists(fcsvtmp)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

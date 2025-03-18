@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-03-18 v0.3a5**](#release-2025-03-18-v03a5) Added `--activity` & `--tags` option to `stop' command
 * [**Release 2025-03-14 v0.3a4**](#release-2025-03-14-v03a4) Added stop --at test; Added report module
 * [**Release 2025-02-25 v0.3a0**](#release-2025-02-25-v03a0) Added --at functionality to start & stop command
 * **Release 2025-02-18 v0.2a5** Changed logo to a stopwatch
@@ -19,6 +20,11 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-03-18 v0.3a5
+* ADD to `stop` command: `--activity` and `--tags` options
+* CHANGE data format in csv to be more readable and require less disk space
+  * ADD converter to convert csv's using the old format to the new format
 
 ## Release 2025-03-14 v0.3a4
 * ADD stop --at test

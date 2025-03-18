@@ -90,7 +90,7 @@ class Cli:
         if args.command == 'stop':
             if args.message == 'd':
                 args.message = run_cmd('{git log -1 --pretty=%B').strip()
-        print(f'TIMETRACKER ARGS: {args}')
+        #print(f'TIMETRACKER ARGS: {args}')
         return args
 
     def _init_trksubdir(self):

@@ -13,7 +13,7 @@ from datetime import timedelta
 #from dateutil.parser import parse as parse_dt
 
 #from timetracker.consts import FMTDT_H
-from timetracker.timecalc import str_td
+from timetracker.epoch.calc import str_td
 from tests.pkgtttest.dts import DT2525
 from tests.pkgtttest.dts import get_dt
 

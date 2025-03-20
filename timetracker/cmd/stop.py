@@ -13,7 +13,7 @@ from timetracker.cfg.utils import get_shortest_name
 from timetracker.consts import FMTDT_H
 from timetracker.msgs import str_uninitialized
 from timetracker.ntcsv import get_ntcsv
-from timetracker.epoch import get_dtz
+from timetracker.epoch.epoch import get_dtz
 from timetracker.utils import yellow
 from timetracker.csvrun import wr_stopline
 

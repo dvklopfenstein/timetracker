@@ -24,7 +24,7 @@ from tests.pkgtttest.runfncs import proj_setup
 
 #basicConfig(level=DEBUG)
 basicConfig()
-getLogger("timetracker.epoch").setLevel(DEBUG)
+getLogger("timetracker.epoch.epoch").setLevel(DEBUG)
 
 SEP = f'\n{"="*80}\n'
 

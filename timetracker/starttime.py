@@ -25,7 +25,7 @@ from timetracker.msgs import str_how_to_stop_now
 from timetracker.msgs import str_started_epoch
 from timetracker.msgs import str_not_running
 from timetracker.msgs import str_no_time_recorded
-from timetracker.epoch import str_arg_epoch
+from timetracker.epoch.epoch import str_arg_epoch
 
 # 2025-01-21 17:09:47.035936
 

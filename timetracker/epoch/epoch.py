@@ -20,7 +20,7 @@ from pytimeparse2 import parse as pyt2_parser_secs
 from dateutil.parser import parse as dateutil_parserdt
 from dateutil.parser import ParserError
 from dateutil.parser import UnknownTimezoneWarning
-from timetracker.timecalc import RoundTime
+from timetracker.epoch.calc import RoundTime
 from timetracker.consts import FMTDT_H
 #from timetracker.utils import cyan
 from timetracker.utils import orange

@@ -9,10 +9,9 @@ from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
 from timetracker.csvfile import CsvFile
 from timetracker.docx import WordDoc
-from timetracker.timetext import get_data_formatted
+from timetracker.epoch.text import get_data_formatted
 from timetracker.csvrun import chk_n_convert
 from timetracker.report import Report
-#from timetracker.timetext import get_fstr
 
 
 def cli_run_report(fnamecfg, args):

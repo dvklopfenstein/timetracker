@@ -10,7 +10,7 @@ from logging import debug
 from datetime import datetime
 from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
-from timetracker.epoch import get_dtz
+from timetracker.epoch.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 
 

@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
-from timetracker.fncs import FNCS
+from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cfg.cfg_local import CfgProj

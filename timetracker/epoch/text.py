@@ -6,9 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from collections import namedtuple
 from datetime import timedelta
 from logging import debug
-#from timetracker.consts import FMTDT12HM
-#from timetracker.timecalc import timedelta_to_hms
-from timetracker.timecalc import str_td
+from timetracker.epoch.calc import str_td
 from timetracker.utils import white
 
 

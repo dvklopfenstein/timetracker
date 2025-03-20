@@ -10,7 +10,7 @@ from datetime import datetime
 from datetime import timedelta
 from timetracker.docx import WordDoc
 from timetracker.csvfile import CsvFile
-from timetracker.timetext import get_data_formatted
+from timetracker.epoch.text import get_data_formatted
 from tests.pkgtttest.cmpstr import get_filename
 
 # pylint: disable=fixme

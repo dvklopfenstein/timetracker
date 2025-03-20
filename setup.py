@@ -13,6 +13,7 @@ PACKAGES = [
     'timetracker',
     'timetracker.cmd',
     'timetracker.cfg',
+    'timetracker.epoch',
 ]
 
 PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}

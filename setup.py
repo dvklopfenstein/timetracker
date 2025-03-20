@@ -26,6 +26,7 @@ def get_long_description():
 
 CONSOLE_SCRIPTS = [
     'trk=timetracker.cli:main',
+    'timestr=timetracker.epoch.cli:main',
 ]
 
 REQUIRES = [

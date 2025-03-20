@@ -13,19 +13,15 @@ __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
 from datetime import timedelta
-#from logging import debug
-#from re import compile as re_compile
-#from re import IGNORECASE
 from pytimeparse2 import parse as pyt2_parser_secs
 from dateutil.parser import parse as dateutil_parserdt
 from dateutil.parser import ParserError
 from dateutil.parser import UnknownTimezoneWarning
 from timetracker.epoch.calc import RoundTime
 from timetracker.consts import FMTDT_H
-#from timetracker.utils import cyan
-from timetracker.utils import orange
+from timetracker.utils import white
+from timetracker.utils import yellow
 
-#NXM = re_compile(r'^\d+(a|p)m', IGNORECASE)
 
 def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     """Get instructions on how to specify an epoch"""
@@ -69,15 +65,6 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     )
 
 
-####def get_dtz(epochstr, dta, defaultdt=None):
-####    """Get stop datetime, given a start time and a specific or elapsed time"""
-####    try:
-####        return Epoch(epochstr, dta, defaultdt).get_dtz()
-####    except TypeError as err:
-####        raise RuntimeError('ERROR RUNNING get_dtz(...):\n  '
-####            f'string        : {epochstr},\n  '
-####            f'from datetime : {dta})') from err
-
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
     if elapsed_or_dt.count(':') != 2:
@@ -92,8 +79,8 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
         #print(cyan(f'CCCCCCCCCCCCCC Using dateutil.parser({elapsed_or_dt}, default={defaultdt})'))
         return dateutil_parserdt(elapsed_or_dt, default=defaultdt)
     except (ParserError, UnknownTimezoneWarning) as err:
-        print(orange(f'ERROR: {err}'))
-    print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A TIME')
+        print('ERROR FROM', white('python-dateutil: '), yellow(f'{err}'))
+    print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A DATETIME BY dateutils')
     return None
 
 def _conv_timedelta(elapsed_or_dt):
@@ -126,24 +113,12 @@ def _conv_timedelta(elapsed_or_dt):
 ####        self.dta = dta
 ####        self.tdflt = defaultdt
 ####
-####    ####def get_dtz(self):
-####    ####    """Get the ending time, given an epoch string"""
-####    ####    return self._conv_datetime2() #if self.is_datetime() else self.conv_tdelta()
-####    ####    #return self._conv_datetime() if self.is_datetime() else self.conv_tdelta()
-####
 ####    def _conv_tdelta(self):
 ####        """Get the ending time, given an estr timedelta and a start time"""
 ####        secs = self._conv_timedelta()
 ####        if secs is not None:
 ####            return self.dta + timedelta(seconds=secs)
 ####        raise RuntimeError(f'STRING "{self.estr}" COULD NOT BE CONVERTED TO A timedelta')
-####
-####    ####def _conv_datetime(self):
-####    ####    try:
-####    ####        return dateutil_parserdt(self.estr, default=self.tdflt)
-####    ####    except TypeError as err:
-####    ####        raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
-####    ####                            'TO A datetime object') from err
 ####
 ####    def get_dtz(self):
 ####        """GET dtz"""
@@ -164,20 +139,6 @@ def _conv_timedelta(elapsed_or_dt):
 ####        except TypeError as err:
 ####            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
 ####                                'TO A timedelta object') from err
-####
-####    ####def is_datetime(self):
-####    ####    """Check if epoch is a datetime, rather than an elapsed time"""
-####    ####    epoch = self.estr
-####    ####    if epoch[:1] in {'\\', '~'}:
-####    ####        return False
-####    ####    if '-' in epoch:
-####    ####        return True
-####    ####    epoch = epoch.lower()
-####    ####    if 'am' in epoch:
-####    ####        return True
-####    ####    if 'pm' in epoch:
-####    ####        return True
-####    ####    return False
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

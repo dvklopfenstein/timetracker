@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
-"""Test dateutil interpreting 5pm"""
-# https://github.com/dateutil/dateutil/issues/1421
+"""Test dateutil interpreting 5pm.
+https://github.com/dateutil/dateutil/issues/1421
+
+Other issues that make python-dateutil not good for this project:
+    * Interprets "Tue" as "next Tuesday"
+    * Does not recognize "last Tuesday"
+    * Does not recognize "next Tuesday"
+"""
 
 from datetime import datetime
 from dateutil.parser import parse

@@ -13,7 +13,7 @@ from csv import writer
 
 from timetracker.utils import orange
 from timetracker.csvutils import get_hdr_itr
-from timetracker.csvutils import dt_from_str
+from timetracker.epoch.calc import dt_from_str
 
 
 class CsvFile:

@@ -8,6 +8,7 @@ from datetime import datetime
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from timetracker.epoch.epoch import get_dtz
+from timetracker.epoch.calc import dt_from_str
 
 
 def main(arglist=None):
@@ -19,12 +20,16 @@ def main(arglist=None):
 def run(arglist=None):
     """CLI for examining how strings are converted to a datetime object"""
     args = _get_args(arglist)
-    #print(f'ARGS: {args}')
-    dto = get_dtz(args.timetext, args.now, args.defaultdt)
+    print(f'ARGS: {args}')
+    now = datetime.now()
+    if args.now is not None:
+        now = get_dtz(args.now, now)
+    defaultdt = None if args.defaultdt is None else dt_from_str(args.defaultdt)
+    print('DEFAULTDT:', type(defaultdt))
+    dto = get_dtz(args.timetext, now, defaultdt)
     if dto is not None:
         ret = _prt(dto, f'<- "{args.timetext}"', args.formatcode)
-        if args.now:
-            _prt(datetime.now(), '<- now', args.formatcode)
+        _prt(now, '<- now', args.formatcode)
         return ret
     return None
 
@@ -46,12 +51,11 @@ def _get_args(arglist=None):
     parser.add_argument('-f', '--formatcode',
         help=("Format the datetime object using "
               "https://docs.python.org/3/library/datetime.html#format-codes"))
-    parser.add_argument('-n', '--now', action='store_true',
+    parser.add_argument('-n', '--now',
         help="Print the current datetime as well as the converted `timetext`")
-    parser.add_argument('--setnow',
-        help="datetime representing `now`")
     parser.add_argument('-d', '--defaultdt',
-        help="datetime representing a default to pass to dateutil")
+        help=('default to pass to datetime parser, '
+              'eg "2025-03-20 09:00:00" or "2025-03-20 09:00:00.000001"'))
     return parser.parse_args(arglist)
 
 

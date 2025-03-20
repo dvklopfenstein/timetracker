@@ -10,13 +10,14 @@ from timetracker.epoch.calc import str_td
 from timetracker.utils import white
 
 
+# ---------------------------------------------------------------------
 def get_data_formatted(timedata, pnum=None):
     """Get timetracker data formatted for a report"""
     has_activity, has_tags = _has_activity_tags(timedata)
     nto = _get_nto(has_activity, has_tags, pnum)
     return FUNCS[(pnum is not None, has_activity, has_tags)](nto, timedata)
 
-# ---------------------------------------------------------------------
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 def _has_activity_tags(timedata):
     has_activity = False
     has_tags = False

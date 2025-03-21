@@ -1,6 +1,6 @@
 [project]
 name = "timetracker-csv"
-version = "0.3a8"
+version = "0.4a0"
 dynamic = [
     "dependencies",
     "scripts",

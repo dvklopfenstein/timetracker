@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-03-21 v0.4a0**](#release-2025-03-21-v04a0) Added prerequisite, dateparser, to replace dateutil
 * [**Release 2025-03-18 v0.3a8**](#release-2025-03-18-v03a8) Added `--activity` & `--tags` option to `stop' command; Use new concise csv
 * [**Release 2025-03-14 v0.3a4**](#release-2025-03-14-v03a4) Added stop --at test; Added report module
 * [**Release 2025-02-25 v0.3a0**](#release-2025-02-25-v03a0) Added --at functionality to start & stop command
@@ -20,6 +21,11 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-03-21 v0.4a0
+* ADD new prerequisite, dateparser, due to its accuracy and flexibility
+* REMOVE prerequisite, dateutil, due to its incorrect output and lack of flexibility
+  https://github.com/dateutil/dateutil/issues/1421
 
 ## Release 2025-03-18 v0.3a8
 * ADD `convert_csv` function to convert old csv format to new concise csv format

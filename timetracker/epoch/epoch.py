@@ -73,7 +73,8 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
         return dto
     try:
         debug(cyan(f'CCCCCCCCCCCCCC Using dateparser.parser({elapsed_or_dt}, default={defaultdt})'))
-        return dateparser_parserdt(elapsed_or_dt)
+        settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
+        return dateparser_parserdt(elapsed_or_dt, settings=settings)
     except (ValueError, TypeError, SettingValidationError) as err:
         print('ERROR FROM', white('python-dateparser: '), yellow(f'{err}'))
     print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')

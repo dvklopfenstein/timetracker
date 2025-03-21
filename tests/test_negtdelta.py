@@ -6,13 +6,8 @@ from logging import DEBUG
 #from logging import debug
 # datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
 # timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
-#from datetime import datetime
 from datetime import timedelta
 
-#from pytimeparse2 import parse as parse_tdelta
-#from dateutil.parser import parse as parse_dt
-
-#from timetracker.consts import FMTDT_H
 from timetracker.epoch.calc import str_td
 from tests.pkgtttest.dts import DT2525
 from tests.pkgtttest.dts import get_dt

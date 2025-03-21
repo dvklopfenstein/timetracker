@@ -49,7 +49,7 @@ def run_start(fnamecfg, name=None, **kwargs):
         #if chgd:
         #    cfg_global.wr_cfg()
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
-        assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
+        #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
         if not kwargs.get('quiet', False):
             print(f'Timetracker {_get_msg(start_at, force)}: '

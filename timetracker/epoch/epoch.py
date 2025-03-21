@@ -74,7 +74,11 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     try:
         debug(cyan(f'CCCCCCCCCCCCCC Using dateparser.parser({elapsed_or_dt}, default={defaultdt})'))
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
-        return dateparser_parserdt(elapsed_or_dt, settings=settings)
+        dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
+        if dto is None:
+            print(f'warning: text({elapsed_or_dt}) could not be converted to a datetime object')
+        debug(f'dto({dto})')
+        return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print('ERROR FROM', white('python-dateparser: '), yellow(f'{err}'))
     print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
@@ -96,56 +100,6 @@ def _conv_timedelta(elapsed_or_dt):
     except TypeError as err:
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
                             'TO A timedelta object') from err
-
-####def is_datetime(self):
-####    """Check if epoch is a datetime, rather than an elapsed time"""
-####    epoch = self.estr
-####    if epoch[:1] in {'\\', '~'}:
-####        return False
-####    if '-' in epoch:
-####        return True
-####    epoch = epoch.lower()
-####    if 'am' in epoch:
-####        return True
-####    if 'pm' in epoch:
-####        return True
-####    return False
-
-####class Epoch:
-####    """Epoch: an extent of time associated with a particular person or thing"""
-####    # pyli
-####
-####    def __init__(self, elapsed_or_dt, dta, defaultdt):
-####        self.estr = elapsed_or_dt
-####        self.dta = dta
-####        self.tdflt = defaultdt
-####
-####    def _conv_tdelta(self):
-####        """Get the ending time, given an estr timedelta and a start time"""
-####        secs = self.conv_timedelta()
-####        if secs is not None:
-####            return self.dta + timedelta(seconds=secs)
-####        raise RuntimeError(f'STRING "{self.estr}" COULD NOT BE CONVERTED TO A timedelta')
-####
-####    def get_dtz(self):
-####        """GET dtz"""
-####        try:
-####            return dateparser_parserdt(self.estr, default=self.tdflt)
-####        except (ParserError, UnknownTimezoneWarning) as err:
-####            return self._conv_tdelta()
-####
-####    def conv_timedelta(self):
-####        try:
-####            estr = self.estr
-####            estr1 = estr[:1]
-####            if estr1 not in {'~', '\\'}:
-####                return pyt2_parse_secs(estr)
-####            if estr1 == '~':
-####                return -pyt2_parse_secs(estr[1:])
-####            return -pyt2_parse_secs(estr[2:])
-####        except TypeError as err:
-####            raise RuntimeError(f'UNABLE TO CONVERT str({self.estr}) '
-####                                'TO A timedelta object') from err
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

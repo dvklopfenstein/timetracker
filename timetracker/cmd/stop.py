@@ -52,6 +52,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     stopat = kwargs.get('stop_at')
     now = kwargs.get('now', datetime.now())
     dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt'))
+    if dtz is None:
+        raise RuntimeError("NOT STOPPING TIMER; NO STOP TIME FOUND")
     if dtz <= dta:
         error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return {'fcsv':fcsv, 'csvline':None}

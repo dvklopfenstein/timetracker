@@ -33,6 +33,7 @@ def run(arglist=None, fnc=None):
         ret = _prt(dto, f'<- "{args.timetext}"', args.formatcode)
         _prt(now, '<- now', args.formatcode)
         return ret
+    print(f'**FATAL: UNABLE TO CONVERT TEXT({args.timetext})')
     return None
 
 def _prt(dto, desc, formatcode):

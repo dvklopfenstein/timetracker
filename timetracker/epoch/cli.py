@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
+from logging import debug
 from datetime import datetime
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -13,26 +14,26 @@ from timetracker.epoch.calc import dt_from_str
 
 def main(arglist=None):
     """CLI for examining how strings are converted to a datetime object"""
-    if run(arglist) is not None:
+    if run(arglist, get_dtz) is not None:
         sys_exit(0)
     sys_exit(1)  # Exited with error
 
-def run(arglist=None):
+
+def run(arglist=None, fnc=None):
     """CLI for examining how strings are converted to a datetime object"""
     args = _get_args(arglist)
-    print(f'ARGS: {args}')
+    debug(f'ARGS: {args}')
     now = datetime.now()
     if args.now is not None:
-        now = get_dtz(args.now, now)
+        now = fnc(args.now, now)
     defaultdt = None if args.defaultdt is None else dt_from_str(args.defaultdt)
-    print('DEFAULTDT:', type(defaultdt))
-    dto = get_dtz(args.timetext, now, defaultdt)
+    debug(f'DEFAULTDT: {type(defaultdt)}')
+    dto = fnc(args.timetext, now, defaultdt)
     if dto is not None:
         ret = _prt(dto, f'<- "{args.timetext}"', args.formatcode)
         _prt(now, '<- now', args.formatcode)
         return ret
     return None
-
 
 def _prt(dto, desc, formatcode):
     dtprt = str(dto) if formatcode is None else dto.strptime(formatcode)

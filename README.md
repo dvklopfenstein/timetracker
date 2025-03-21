@@ -3,8 +3,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg)](https://doi.org/10.5281/zenodo.14803225)
 ![GitHub License](https://img.shields.io/github/license/dvklopfenstein/timetracker)
 
-Claim your power. Track your time on your own terms.
-
 Track time spent on multiple projects,
 one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-command-line-interface)    
 

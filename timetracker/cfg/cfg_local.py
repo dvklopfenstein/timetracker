@@ -57,7 +57,6 @@ class CfgProj:
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
-        self.project = basename(self.dirproj)
         self.dirhome = dirhome
         ####self.dircsv = self._get_dircsv() if dircsv is None else dircsv
 
@@ -150,7 +149,7 @@ class CfgProj:
         doc = self.read_doc()
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
-            fpat = fpat.replace('PROJECT', self.project)
+            fpat = fpat.replace('PROJECT', doc['project'])
             return fpat
         return None
 

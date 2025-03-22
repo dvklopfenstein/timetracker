@@ -53,8 +53,8 @@ def run_start(fnamecfg, name=None, **kwargs):
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
         if not kwargs.get('quiet', False):
             print(f'Timetracker {_get_msg(start_at, force)}: '
-                  f'{starttime.strftime("%a %I:%M %p")}: {starttime} '
-                  f"for project '{cfgproj.project}'")
+                  f'{starttime.strftime("%a %I:%M %p")}: {starttime} ')
+                  #f"for project '{cfgproj.project}'")
 
     # Informational message
     elif not force:

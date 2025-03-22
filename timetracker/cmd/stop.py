@@ -24,11 +24,9 @@ def cli_run_stop(fnamecfg, args):
         fnamecfg,
         args.name,
         get_ntcsv(args.message, args.activity, args.tags),
-        quiet=args.quiet,
         keepstart=args.keepstart,
         stop_at=args.at)
 
-#def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running

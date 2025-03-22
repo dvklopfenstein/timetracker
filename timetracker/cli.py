@@ -122,10 +122,9 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
+        parser.add_argument('-f', '--file', 
         parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username for timetracking")
-        parser.add_argument('-q', '--quiet', action='store_true',
-            help='Only print error and warning messages; information will be suppressed.')
         parser.add_argument('--version', action='store_true',
             help='Print the timetracker version')
         self._add_subparsers(parser)
@@ -236,7 +235,9 @@ class Cli:
             help='Show all projects and the locations of their csv files',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
-            help='Look for all projects and their csv files tracked in the global config file')
+            help='List all projects listed managed in the global config file')
+        parser.add_argument('-f', '--file',
+            help='Use given config file')
         return parser
 
     def _add_subparser_projectsupdate(self, subparsers):

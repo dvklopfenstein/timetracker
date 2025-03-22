@@ -88,7 +88,6 @@ def _trk():
     # TODO: Check: Run `trk init` to initialize local timetracker
     assert args.trk_dir == DIRTRK
     assert args.name == environ['USER']
-    assert not args.quiet
     assert args.command is None
 
 def _parse_args(arglist):

@@ -1,19 +1,21 @@
-"""Configutation manager for timetracker"""
+"""Configuration manager for timetracker"""
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
-from os.path import exists
-from logging import debug
-from timetracker.utils import yellow
+#from sys import exit as sys_exit
+#from os.path import exists
+#from logging import debug
+#from timetracker.utils import yellow
 from timetracker.cfg.utils import get_filename_globalcfg
-from timetracker.cfg.cfg_global import CfgGlobal
-from timetracker.cfg.cfg_local  import CfgProj
-from timetracker.msgs import str_tostart
+#from timetracker.cfg.cfg_global import CfgGlobal
+#from timetracker.cfg.cfg_local  import CfgProj
+#from timetracker.msgs import str_tostart
 
 
+# pylint: disable=too-few-public-methods
 class Cfg:
+    """Configuration manager for timetracker"""
 
     def __init__(self, fcfg_local, fcfg_global=None):
         self.fcfg_local = fcfg_local

@@ -45,6 +45,7 @@ class Cli:
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
+        #print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -90,7 +91,6 @@ class Cli:
         if args.command == 'stop':
             if args.message == 'd':
                 args.message = run_cmd('{git log -1 --pretty=%B').strip()
-        #print(f'TIMETRACKER ARGS: {args}')
         return args
 
     def _init_trksubdir(self):
@@ -237,8 +237,6 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
             help='List all projects listed managed in the global config file')
-        parser.add_argument('-f', '--file',
-            help='Use given config file')
         return parser
 
     def _add_subparser_projectsupdate(self, subparsers):

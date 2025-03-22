@@ -14,17 +14,16 @@ from timetracker.msgs import str_init
 
 def cli_run_projects(fnamecfg, args):
     """Stop the timer and record this time unit"""
-    print(args)
-    run_projects(fnamecfg)
+    run_projects(fnamecfg, args.file)
 
-def run_projects(fcfg_local, dirhome=None):
+def run_projects(fcfg_local, file, dirhome=None):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND PROJECTS'))
-    filename_globalcfg = get_filename_globalcfg(dirhome)
-    print('FFFFFFFFFFFFFFFFFF', filename_globalcfg)
+    filename_globalcfg = get_filename_globalcfg(dirhome) if file is None else file
     if not exists(filename_globalcfg):
-        print(str_init(print(str_init(fcfg_local))))
+
+        print(str_init(fcfg_local))
         return
     cfg_global = CfgGlobal(filename_globalcfg)
     projects = cfg_global.get_projects()

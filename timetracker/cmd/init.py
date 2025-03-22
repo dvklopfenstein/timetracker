@@ -19,8 +19,7 @@ def cli_run_init(fnamecfg, args):
     run_init(
         fnamecfg,
         args.csvdir,
-        args.project,
-        args.quiet)
+        args.project)
 
 def run_init(fnamecfg, dircsv, project, quiet=False):
     """Initialize timetracking on a project"""

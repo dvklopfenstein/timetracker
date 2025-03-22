@@ -58,7 +58,7 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
             debug(f'PROJ CFG: {filenamecfg_proj}')
             #debug(run_cmd(f'cat {filenamecfg_proj}'))
             # ADD PROJECT TO GLOBAL CONFIG AND WRITE
-            cfgtop.add_proj(proj, filenamecfg_proj)
+            cfgtop.add_project(proj, filenamecfg_proj)
             assert cfgtop.doc["projects"].unwrap() == exp_projs, (
                 'UNEXPECTED PROJS:\n'
                 f'EXP({exp_projs})\n'

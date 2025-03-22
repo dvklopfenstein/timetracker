@@ -20,9 +20,8 @@ def cli_run_start(fnamecfg, args):
         fnamecfg,
         args.name,
         start_at=args.at,
-        force=args.force,
+        force=args.force)
         ##activity=args.activity,
-        quiet=args.quiet)
 
 def run_start(fnamecfg, name=None, **kwargs):
     """Initialize timetracking on a project"""
@@ -45,7 +44,7 @@ def run_start(fnamecfg, name=None, **kwargs):
     force = kwargs.get('force', False)
     if not exists(start_obj.filename) or force:
         #cfg_global = CfgGlobal(dirhome)
-        #chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfgproj())
+        #chgd = cfg_global.add_project(cfgproj.project, cfgproj.get_filename_cfgproj())
         #if chgd:
         #    cfg_global.wr_cfg()
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))

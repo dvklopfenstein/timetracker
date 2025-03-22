@@ -19,55 +19,55 @@ class Cfg:
         self.fcfg_local = fcfg_local
         self.fcfg_global = get_filename_globalcfg() if fcfg_global is None else fcfg_global
 
-def cli_run_init(fnamecfg, args):
-    """initialize timetracking on a project"""
-    run_init(
-        fnamecfg,
-        args.csvdir,
-        args.project,
-        args.quiet)
-
-def run_init(fnamecfg, dircsv, project, quiet=False):
-    """Initialize timetracking on a project"""
-    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
-    debug(cfgproj.get_desc("new"))
-    filename_globalcfg = get_filename_globalcfg()
-    run_init_global(filename_globalcfg, cfgproj, project)
-
-def run_init_test(fnamecfg, dircsv, project, filename_globalcfg, quiet=False):
-    """Initialize timetracking on a test project"""
-    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
-    cfg_global = run_init_global(filename_globalcfg, cfgproj, project)
-    return cfgproj, cfg_global
-
-def run_init_local(fnamecfg, dircsv, project, quiet=True):
-    """Initialize the local configuration file for a timetracking project"""
-    debug(yellow('RUNNING COMMAND INIT'))
-    debug(f'INIT: fnamecfg:    {fnamecfg}')
-    debug(f'INIT: project:     {project}')
-    debug(f'INIT: dircsv({dircsv})')
-    if exists(fnamecfg):
-        print(str_tostart())
-        sys_exit(0)
-    cfgproj = CfgProj(fnamecfg, project)
-    # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfgproj.write_file(project, dircsv=dircsv, quiet=quiet)
-    return cfgproj
-
-def run_init_global(filename_globalcfg, cfgproj, project):
-    """Initialize the global configuration file for a timetracking project"""
-    # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
-    cfg_global = CfgGlobal(filename_globalcfg)
-    chgd = cfg_global.add_project(project, cfgproj.get_filename_cfg())
-    if chgd:
-        cfg_global.wr_cfg()
-    return cfg_global
-
-
-class CfgTrk:
-    """Manages the global and a project configuration file"""
-
-    def __init__(self, fcfg_proj, fcfg_global=None):
-        self.cfgproj = CfgProj(fcfg, project)
+#def cli_run_init(fnamecfg, args):
+#    """initialize timetracking on a project"""
+#    run_init(
+#        fnamecfg,
+#        args.csvdir,
+#        args.project,
+#        args.quiet)
+#
+#def run_init(fnamecfg, dircsv, project, quiet=False):
+#    """Initialize timetracking on a project"""
+#    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
+#    debug(cfgproj.get_desc("new"))
+#    filename_globalcfg = get_filename_globalcfg()
+#    run_init_global(filename_globalcfg, cfgproj, project)
+#
+#def run_init_test(fnamecfg, dircsv, project, filename_globalcfg, quiet=False):
+#    """Initialize timetracking on a test project"""
+#    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
+#    cfg_global = run_init_global(filename_globalcfg, cfgproj, project)
+#    return cfgproj, cfg_global
+#
+#def run_init_local(fnamecfg, dircsv, project, quiet=True):
+#    """Initialize the local configuration file for a timetracking project"""
+#    debug(yellow('RUNNING COMMAND INIT'))
+#    debug(f'INIT: fnamecfg:    {fnamecfg}')
+#    debug(f'INIT: project:     {project}')
+#    debug(f'INIT: dircsv({dircsv})')
+#    if exists(fnamecfg):
+#        print(str_tostart())
+#        sys_exit(0)
+#    cfgproj = CfgProj(fnamecfg, project)
+#    # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
+#    cfgproj.write_file(project, dircsv=dircsv, quiet=quiet)
+#    return cfgproj
+#
+#def run_init_global(filename_globalcfg, cfgproj, project):
+#    """Initialize the global configuration file for a timetracking project"""
+#    # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
+#    cfg_global = CfgGlobal(filename_globalcfg)
+#    chgd = cfg_global.add_project(project, cfgproj.get_filename_cfg())
+#    if chgd:
+#        cfg_global.wr_cfg()
+#    return cfg_global
+#
+#
+#class CfgTrk:
+#    """Manages the global and a project configuration file"""
+#
+#    def __init__(self, fcfg_proj, fcfg_global=None):
+#        self.cfgproj = CfgProj(fcfg, project)
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

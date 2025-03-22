@@ -122,7 +122,8 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
-        parser.add_argument('-f', '--file', 
+        parser.add_argument('-f', '--file',
+            help='Use specified file as the global config file')
         parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username for timetracking")
         parser.add_argument('--version', action='store_true',

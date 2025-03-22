@@ -3,18 +3,6 @@
 
 from os import environ
 from os import unsetenv
-#from os import makedirs
-#from os.path import exists
-#from os.path import join
-#from logging import basicConfig
-#from logging import DEBUG
-#from tempfile import TemporaryDirectory
-#from tests.pkgtttest.mkprojs import mkdirs
-#from tests.pkgtttest.mkprojs import findhome
-#from subprocess import run
-from collections import namedtuple
-from pytest import raises
-from timetracker.cmd.stop import run_stop
 from timetracker.cfg.utils import get_filename_globalcfg
 
 

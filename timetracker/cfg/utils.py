@@ -148,10 +148,10 @@ def get_shortest_name(filename):
     frel = normpath(relpath(filename))
     return fabs if len(fabs) < len(frel) else frel
 
-def get_dirhome_globalcfg():
+def get_filename_globalcfg(dirhome=None):
     """Get the home directory, where the global configuration will be stored"""
     if 'TIMETRACKERCONF' not in environ:
-        return join(expanduser('~'), FILENAME_GLOBALCFG)
+        return join(expanduser('~') if dirhome is None else dirhome, FILENAME_GLOBALCFG)
     return environ['TIMETRACKERCONF']
 
 

@@ -70,10 +70,6 @@ class CfgProj:
         """Get the csv filename by reading the cfg csv pattern and filling in"""
         username = get_username(username)
         fcsv = self._read_csv_from_cfgfile(username)
-        ####if fcsv is not None:
-        ####    return fcsv
-        ####return replace_envvar(self._get_dircsv_absname(), username)
-        ####return None
         return fcsv if fcsv is not None else None
 
     def get_project_csvs(self):
@@ -145,10 +141,6 @@ class CfgProj:
 
     def _read_csv_from_cfgfile(self, username):
         """Read a config file and load it into a TOML document"""
-        ####doc = self.read_doc()
-        ####if doc is not None:
-        ####    fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
-        ####    fpat = fpat.replace('PROJECT', self.project)
         fcsvpat = self._read_csvpat_from_cfgfile()
         if fcsvpat:
             return replace_envvar(fcsvpat, username) if '$' in fcsvpat else fcsvpat

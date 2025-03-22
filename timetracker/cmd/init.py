@@ -44,7 +44,7 @@ def run_init_local(fnamecfg, dircsv, project, quiet=True):
     if exists(fnamecfg):
         print(str_tostart())
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg, project)
+    cfgproj = CfgProj(fnamecfg)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
     cfgproj.write_file(dircsv=dircsv, quiet=quiet)
     return cfgproj

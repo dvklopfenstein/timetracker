@@ -9,7 +9,7 @@ from os.path import dirname
 from logging import debug
 #from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.utils import yellow
-from timetracker.cfg.utils import get_dirhome_globalcfg
+from timetracker.cfg.utils import get_filename_globalcfg
 from timetracker.cfg.utils import run_cmd
 from timetracker.cfg.cfg_local import CfgProj
 
@@ -26,7 +26,7 @@ def run_csvlocate(fnamecfg, dircsv, project, quiet=True):
     """Initialize timetracking on a project"""
     cfgproj = run_csvlocate_local(fnamecfg, dircsv, project, quiet)
     debug(cfgproj.get_desc("new"))
-    dirhome = get_dirhome_globalcfg()
+    dirhome = get_filename_globalcfg()
     assert dirhome
 
 def run_csvlocate_test(fnamecfg, dircsv, project, dirhome):

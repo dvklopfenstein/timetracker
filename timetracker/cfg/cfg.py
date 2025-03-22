@@ -1,4 +1,4 @@
-"""Initialize a timetracker project"""
+"""Configutation manager for timetracker"""
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
@@ -13,6 +13,11 @@ from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.msgs import str_tostart
 
 
+class Cfg:
+
+    def __init__(self, fcfg_local, fcfg_global=None):
+        self.fcfg_local = fcfg_local
+        self.fcfg_global = get_filename_globalcfg() if fcfg_global is None else fcfg_global
 
 def cli_run_init(fnamecfg, args):
     """initialize timetracking on a project"""
@@ -44,7 +49,7 @@ def run_init_local(fnamecfg, dircsv, project, quiet=True):
     if exists(fnamecfg):
         print(str_tostart())
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
+    cfgproj = CfgProj(fnamecfg, project)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
     cfgproj.write_file(project, dircsv=dircsv, quiet=quiet)
     return cfgproj
@@ -58,5 +63,11 @@ def run_init_global(filename_globalcfg, cfgproj, project):
         cfg_global.wr_cfg()
     return cfg_global
 
+
+class CfgTrk:
+    """Manages the global and a project configuration file"""
+
+    def __init__(self, fcfg_proj, fcfg_global=None):
+        self.cfgproj = CfgProj(fcfg, project)
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

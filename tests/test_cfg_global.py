@@ -47,7 +47,8 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
             # EXP: apples '~/proj/apples/.timetracker/config'
             exp_projs.append([proj, cfgname_proj])
             # INIT LOCAL PROJECT CONFIG
-            cfgloc = CfgProj(cfgname_proj, project=proj)
+            #cfgloc = CfgProj(cfgname_proj, project=proj)
+            cfgloc = CfgProj(cfgname_proj)
             assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'
                                                    f'ACT({cfgloc.trksubdir})\n'
                                                    f'{cfgloc}')

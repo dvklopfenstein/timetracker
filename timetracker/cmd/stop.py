@@ -46,8 +46,8 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         # TODO: Check for local .timetracker/config file
         # TODO: Add project
         print('No elapsed time to stop; '
-              'Do `trk start` to begin tracking time '
-              f'for project, {cfgproj.project}')
+              'Do `trk start` to begin tracking time ')
+              #f'for project, {cfgproj.project}')
         return {'fcsv':fcsv, 'csvline':None}
     stopat = kwargs.get('stop_at')
     now = kwargs.get('now', datetime.now())

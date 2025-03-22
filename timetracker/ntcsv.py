@@ -6,8 +6,6 @@ __author__ = "DV Klopfenstein, PhD"
 from collections import namedtuple
 
 
-NTTIMEDATA = namedtuple('TimeData', 'start_datetime duration message activity tags')
-
 NTCSV = namedtuple("CsvFields", "message activity tags")
 
 def get_ntcsv(message, activity='', tags=None):

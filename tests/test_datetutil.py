@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
-"""Test dateutil interpreting 5pm"""
-# https://github.com/dateutil/dateutil/issues/1421
+"""Test dateutil interpreting 5pm.
+https://github.com/dateutil/dateutil/issues/1421
+
+Other issues that make python-dateutil not good for this project:
+    * Interprets "Tue" as "next Tuesday"
+    * Does not recognize "last Tuesday"
+    * Does not recognize "next Tuesday"
+
+Issue 1421 displays this BS (4pm should be "16:00:00" not "16:12:53")
+$ tests/run_dateutil.py "4pm" --n "2025-03-20 09:00:00" -d "2025-03-20 09:12:53"
+2025-03-20 16:12:53        <- "4pm"
+2025-03-20 09:00:00        <- now
+
+"""
 
 from datetime import datetime
 from dateutil.parser import parse

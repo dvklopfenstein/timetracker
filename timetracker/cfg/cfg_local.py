@@ -49,16 +49,14 @@ class CfgProj:
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    def __init__(self, filename, project=None, dirhome=None):
+    def __init__(self, filename, dirhome=None):
         self.filename = filename
         debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
         if dirhome is not None:
             debug(pink(f'CfgProj args {int(exists(dirhome))} dirhome  {dirhome}'))
-        debug(f'CfgProj args . project({project})')
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
-        self.project = basename(self.dirproj) if project is None else project
         self.dirhome = dirhome
         ####self.dircsv = self._get_dircsv() if dircsv is None else dircsv
 
@@ -70,10 +68,6 @@ class CfgProj:
         """Get the csv filename by reading the cfg csv pattern and filling in"""
         username = get_username(username)
         fcsv = self._read_csv_from_cfgfile(username)
-        ####if fcsv is not None:
-        ####    return fcsv
-        ####return replace_envvar(self._get_dircsv_absname(), username)
-        ####return None
         return fcsv if fcsv is not None else None
 
     def get_project_csvs(self):
@@ -100,18 +94,18 @@ class CfgProj:
         project = self._read_project_from_cfgfile()
         return Starttime(self.dircfg, project, username)
 
-    def write_file(self, dircsv='.', force=False, quiet=False):
+    def write_file(self, project, dircsv='.', force=False, quiet=False):
         """Write a new config file"""
         if dircsv is None:
             dircsv = '.'
         fname = self.get_filename_cfg()
         self._mk_dircfg(quiet)
         if not exists(fname):
-            doc = self._get_doc_new()
+            doc = self._get_doc_new(project)
             doc['csv']['filename'] = join(dircsv, self.CSVPAT)
             self._wr_cfg(fname, doc)
         elif force:
-            doc = self._get_doc_new()
+            doc = self._get_doc_new(project)
             doc['csv']['filename'] = join(dircsv, self.CSVPAT)
             self._wr_cfg(fname, doc)
             if not quiet:
@@ -145,10 +139,6 @@ class CfgProj:
 
     def _read_csv_from_cfgfile(self, username):
         """Read a config file and load it into a TOML document"""
-        ####doc = self.read_doc()
-        ####if doc is not None:
-        ####    fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
-        ####    fpat = fpat.replace('PROJECT', self.project)
         fcsvpat = self._read_csvpat_from_cfgfile()
         if fcsvpat:
             return replace_envvar(fcsvpat, username) if '$' in fcsvpat else fcsvpat
@@ -159,7 +149,7 @@ class CfgProj:
         doc = self.read_doc()
         if doc is not None:
             fpat = get_abspath(doc['csv']['filename'], self.dirproj, self.dirhome)
-            fpat = fpat.replace('PROJECT', self.project)
+            fpat = fpat.replace('PROJECT', doc['project'])
             return fpat
         return None
 
@@ -196,17 +186,17 @@ class CfgProj:
         fcsv_abs = self._get_dircsv_absname()
         return get_relpath(fcsv_abs, self.dirproj)
 
-    def _get_doc_new(self):
+    def _get_doc_new(self, project):
         doc = document()
         doc.add(comment("TimeTracker project configuration file"))
         doc.add(nl())
-        doc["project"] = self.project
+        doc["project"] = project
 
         # [csv]
         # format = "timetracker_dvklo.csv"
         csv_section = table()
         #csvdir.comment("Directory where the csv file is stored")
-        csvpat = self.CSVPAT.replace('PROJECT', self.project)
+        csvpat = self.CSVPAT.replace('PROJECT', project)
         csv_section.add("filename", join(self._get_dircsv_relname(), csvpat))
         doc.add("csv", csv_section)
 
@@ -227,7 +217,6 @@ class CfgProj:
         return (
             f'CfgProj {note} . trksdir  {self.trksubdir}\n'
             f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
-            f'CfgProj {note} . project  {self.project}\n'
             f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
             f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
             f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')

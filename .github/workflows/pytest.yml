@@ -22,7 +22,7 @@ jobs:
         pip install pylint
         pip install pytest
         pip install pytimeparse2
-        pip install python-dateutil
+        pip install dateparser
         pip install python-docx
     - name: Run pytest
       run: |

@@ -10,11 +10,10 @@ from logging import error
 from datetime import datetime
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
-#from timetracker.csvold import CsvFile
 from timetracker.consts import FMTDT_H
 from timetracker.msgs import str_uninitialized
 from timetracker.ntcsv import get_ntcsv
-from timetracker.epoch import get_dtz
+from timetracker.epoch.epoch import get_dtz
 from timetracker.utils import yellow
 from timetracker.csvrun import wr_stopline
 
@@ -25,11 +24,9 @@ def cli_run_stop(fnamecfg, args):
         fnamecfg,
         args.name,
         get_ntcsv(args.message, args.activity, args.tags),
-        quiet=args.quiet,
         keepstart=args.keepstart,
         stop_at=args.at)
 
-#def run_stop(fnamecfg, csvfields, quiet=False, keepstart=False):
 def run_stop(fnamecfg, uname, csvfields, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
@@ -47,12 +44,14 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         # TODO: Check for local .timetracker/config file
         # TODO: Add project
         print('No elapsed time to stop; '
-              'Do `trk start` to begin tracking time '
-              f'for project, {cfgproj.project}')
+              'Do `trk start` to begin tracking time ')
+              #f'for project, {cfgproj.project}')
         return {'fcsv':fcsv, 'csvline':None}
     stopat = kwargs.get('stop_at')
     now = kwargs.get('now', datetime.now())
     dtz = now if stopat is None else get_dtz(stopat, now, kwargs.get('defaultdt'))
+    if dtz is None:
+        raise RuntimeError("NOT STOPPING TIMER; NO STOP TIME FOUND")
     if dtz <= dta:
         error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return {'fcsv':fcsv, 'csvline':None}

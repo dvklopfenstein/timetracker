@@ -13,7 +13,7 @@ from pytimeparse2 import parse as parse_tdelta
 from dateutil.parser import parse as parse_dt
 
 from timetracker.consts import FMTDT_H
-from timetracker.timecalc import RoundTime
+from timetracker.epoch.calc import RoundTime
 from tests.pkgtttest.dts import DT2525
 
 basicConfig(level=DEBUG)

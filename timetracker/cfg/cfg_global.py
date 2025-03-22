@@ -33,9 +33,6 @@ from timetracker.cfg.utils import has_homedir
 class CfgGlobal:
     """Global configuration parser for timetracking"""
 
-    ##def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
-    ##    self.dirhome = abspath(get_dirhome(dirhome))
-    ##    self.filename = join(self.dirhome, basename)
     def __init__(self, filename):
         self.filename = filename
         debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- '
@@ -45,6 +42,11 @@ class CfgGlobal:
     ####def str_cfg(self):
     ####    """Return string containing configuration file contents"""
     ####    return dumps(self.doc)
+
+    def get_projects(self):
+        """Get the projects managed by timetracker"""
+        doc = self.rd_cfg()
+        return doc.get('projects') if doc is not None else None
 
     def rd_cfg(self):
         """Read a global cfg file; return a doc obj"""
@@ -56,9 +58,9 @@ class CfgGlobal:
         TOMLFile(self.filename).write(docprt)
         debug(f'CFGGLOBAL  WROTE: {self.filename}')
 
-    def add_proj(self, project, cfgfilename):
+    def add_project(self, project, cfgfilename):
         """Add a project to the global config file, if it is not already present"""
-        assert isabs(cfgfilename), f'CfgGlobal.add_proj(...) cfg NOT abspath: {cfgfilename}'
+        assert isabs(cfgfilename), f'CfgGlobal.add_project(...) cfg NOT abspath: {cfgfilename}'
         doc = self.rd_cfg()
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):

@@ -47,19 +47,18 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
             # EXP: apples '~/proj/apples/.timetracker/config'
             exp_projs.append([proj, cfgname_proj])
             # INIT LOCAL PROJECT CONFIG
-            cfgloc = CfgProj(cfgname_proj, project=proj)
+            cfgloc = CfgProj(cfgname_proj)
             assert cfgloc.trksubdir == trksubdir, (f'\nEXP({trksubdir})\n'
                                                    f'ACT({cfgloc.trksubdir})\n'
                                                    f'{cfgloc}')
             assert cfgloc.dircfg == workdir
-            assert cfgloc.project == proj
-            cfgloc.write_file()
+            cfgloc.write_file(proj)
             # cat project/.timetracker/config
             filenamecfg_proj = cfgloc.get_filename_cfg()
             debug(f'PROJ CFG: {filenamecfg_proj}')
             #debug(run_cmd(f'cat {filenamecfg_proj}'))
             # ADD PROJECT TO GLOBAL CONFIG AND WRITE
-            cfgtop.add_proj(proj, filenamecfg_proj)
+            cfgtop.add_project(proj, filenamecfg_proj)
             assert cfgtop.doc["projects"].unwrap() == exp_projs, (
                 'UNEXPECTED PROJS:\n'
                 f'EXP({exp_projs})\n'

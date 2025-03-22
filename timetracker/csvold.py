@@ -5,15 +5,15 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
+from collections import namedtuple
 from datetime import timedelta
 from logging import debug
 from logging import warning
 from csv import writer
 
 from timetracker.utils import orange
-from timetracker.ntcsv import NTTIMEDATA
 from timetracker.csvutils import get_hdr_itr
-from timetracker.csvutils import dt_from_str
+from timetracker.epoch.calc import dt_from_str
 
 
 class CsvFile:
@@ -39,11 +39,11 @@ class CsvFile:
         self.fcsv = csvfilename
         debug(orange(f'Starttime args {int(exists(self.fcsv))} self.fcsv {self.fcsv}'))
 
-    def get_data(self):
+    def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
-        debug('get_data')
+        debug('get_ntdata')
         ret = []
-        nto = NTTIMEDATA
+        nto = namedtuple('TimeDataOrig', 'start_datetime duration activity message tags')
         with open(self.fcsv, encoding='utf8') as csvstrm:
             hdr, itr = get_hdr_itr(csvstrm)
             self._chk_hdr(hdr)

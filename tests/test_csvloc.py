@@ -42,7 +42,7 @@ def test_csvloc():
 
 def _run_abspath(relcsvs, abscsvs_messy):
     """Get csv abspath"""
-    print("\n= TEST get_abspath(filenamecsv, dirproj) =======================================")
+    print("\n= TEST abspath(filenamecsv, dirproj) =======================================")
     for relcsv, abscsv_messy, abscsv_exp in zip(relcsvs, abscsvs_messy, _exp_abscsv_clean()):
         abscsv_clean = abspath(abscsv_messy)
         if '~' in abscsv_clean:

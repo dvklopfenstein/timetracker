@@ -90,7 +90,7 @@ class Cli:
             sys_exit(0)
         if args.command == 'stop':
             if args.message == 'd':
-                args.message = run_cmd('{git log -1 --pretty=%B').strip()
+                args.message = run_cmd('git log -1 --pretty=%B').strip()
         return args
 
     def _init_trksubdir(self):

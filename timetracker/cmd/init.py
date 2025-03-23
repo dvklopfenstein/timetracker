@@ -12,13 +12,18 @@ from timetracker.msgs import str_tostart
 
 def cli_run_init(fnamecfg, args):
     """initialize timetracking on a project"""
-    run_init(
-        fnamecfg,
-        args.csvdir,
-        project=args.project,
-        force=args.force,
-        fcfg_global=args.file,
-        trk_dir=args.trk_dir)
+    if not args.force:
+        run_init(
+            fnamecfg,
+            args.csvdir,
+            project=args.project,
+            fcfg_global=args.file)
+    else:
+        run_reinit(
+            fnamecfg,
+            args.csvdir,
+            project=args.project,
+            fcfg_global=args.file)
 
 def run_init(fnamecfg, dircsv, project, **kwargs):
     """Initialize timetracking on a project"""
@@ -37,6 +42,12 @@ def run_init(fnamecfg, dircsv, project, **kwargs):
     debug(cfg.cfg_loc.get_desc("new"))
     cfg.add_project(project)
     return cfg
+
+def run_reinit(fnamecfg, dircsv, project, **kwargs):
+    """Reinitialize timetracking project"""
+    cfg = Cfg(fnamecfg, kwargs.get('fcfg_global'), kwargs.get('dirhome'))
+    print('FFFFFFFFFFFFFFFF', fnamecfg)
+    cfg.reinit(project, dircsv=dircsv)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

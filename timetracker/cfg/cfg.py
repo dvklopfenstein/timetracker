@@ -43,6 +43,12 @@ class Cfg:
         if chgd:
             self.cfg_glb.wr_cfg()
 
+    def reinit(self, project, dircsv):
+        """Re-initialize the project, keeping existing files"""
+        print('GET READY TO REINIT')
+        print(f'PROJECT: {project}')
+        print(f'DIRCSV:  {dircsv}')
+
 #class CfgTrk:
 #    """Manages the global and a project configuration file"""
 #

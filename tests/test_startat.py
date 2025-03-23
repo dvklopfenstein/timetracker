@@ -2,15 +2,13 @@
 """Test `trk start --at`"""
 
 from os.path import exists
-from os.path import join
 #from logging import basicConfig
 #from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
-from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.utils import yellow
-from timetracker.cmd.init import run_init_test
+from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from tests.pkgtttest.dts import DT2525
 from tests.pkgtttest.runfncs import RunBase
@@ -57,18 +55,17 @@ class Obj(RunBase):
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN(start_at={start_at})'))
         with TemporaryDirectory() as tmphome:
-            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
+            cfgname, _, _ = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # CMD: INIT; CFG PROJECT
-            fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-            cfgp, _ = run_init_test(cfgname, dircsv, self.project, fcfgg)  # cfgg
+            cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
             #findhome(tmphome)
 
             # CMD: START
             fin_start = run_start(cfgname, self.uname,
                                   start_at=start_at, now=DT2525, defaultdt=DT2525)
             assert exists(fin_start)
-            return cfgp.get_starttime_obj(self.uname).read_starttime()
+            return cfg.cfg_loc.get_starttime_obj(self.uname).read_starttime()
 
 
     def chk(self, start_at, expstr):

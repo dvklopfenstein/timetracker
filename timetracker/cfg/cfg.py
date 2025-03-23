@@ -5,67 +5,44 @@ __author__ = "DV Klopfenstein, PhD"
 
 #from sys import exit as sys_exit
 #from os.path import exists
-#from logging import debug
+from logging import debug
 #from timetracker.utils import yellow
+from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_filename_globalcfg
-#from timetracker.cfg.cfg_global import CfgGlobal
-#from timetracker.cfg.cfg_local  import CfgProj
 #from timetracker.msgs import str_tostart
+from timetracker.msgs import str_init
+from timetracker.msgs import str_reinit
 
 
 # pylint: disable=too-few-public-methods
 class Cfg:
     """Configuration manager for timetracker"""
 
-    def __init__(self, fcfg_local, fcfg_global=None):
-        self.fcfg_local = fcfg_local
-        self.fcfg_global = get_filename_globalcfg() if fcfg_global is None else fcfg_global
+    def __init__(self, fcfg_local, fcfg_global=None, dirhome=None):
+        self.cfg_loc = CfgProj(fcfg_local)
+        # pylint: disable=line-too-long
+        self.cfg_glb = CfgGlobal(get_filename_globalcfg(dirhome) if fcfg_global is None else fcfg_global)
+        debug(f'{int(self.cfg_loc.exists)} PROJ {self.cfg_loc.filename}')
+        debug(f'{int(self.cfg_glb.exists)} GLOB {self.cfg_glb.filename}')
 
-#def cli_run_init(fnamecfg, args):
-#    """initialize timetracking on a project"""
-#    run_init(
-#        fnamecfg,
-#        args.csvdir,
-#        args.project,
-#        args.quiet)
-#
-#def run_init(fnamecfg, dircsv, project, quiet=False):
-#    """Initialize timetracking on a project"""
-#    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
-#    debug(cfgproj.get_desc("new"))
-#    filename_globalcfg = get_filename_globalcfg()
-#    run_init_global(filename_globalcfg, cfgproj, project)
-#
-#def run_init_test(fnamecfg, dircsv, project, filename_globalcfg, quiet=False):
-#    """Initialize timetracking on a test project"""
-#    cfgproj = run_init_local(fnamecfg, dircsv, project, quiet)
-#    cfg_global = run_init_global(filename_globalcfg, cfgproj, project)
-#    return cfgproj, cfg_global
-#
-#def run_init_local(fnamecfg, dircsv, project, quiet=True):
-#    """Initialize the local configuration file for a timetracking project"""
-#    debug(yellow('RUNNING COMMAND INIT'))
-#    debug(f'INIT: fnamecfg:    {fnamecfg}')
-#    debug(f'INIT: project:     {project}')
-#    debug(f'INIT: dircsv({dircsv})')
-#    if exists(fnamecfg):
-#        print(str_tostart())
-#        sys_exit(0)
-#    cfgproj = CfgProj(fnamecfg, project)
-#    # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-#    cfgproj.write_file(project, dircsv=dircsv, quiet=quiet)
-#    return cfgproj
-#
-#def run_init_global(filename_globalcfg, cfgproj, project):
-#    """Initialize the global configuration file for a timetracking project"""
-#    # 4. WRITE A GLOBAL TIMETRACKER CONFIG FILE: ~/.timetrackerconfig, if needed
-#    cfg_global = CfgGlobal(filename_globalcfg)
-#    chgd = cfg_global.add_project(project, cfgproj.get_filename_cfg())
-#    if chgd:
-#        cfg_global.wr_cfg()
-#    return cfg_global
-#
-#
+    def needs_init(self):
+        """Check for existance of both local and global config to see if init is needed"""
+        if self.cfg_loc.exists and self.cfg_glb.exists:
+            return False
+        if not self.cfg_loc.exists:
+            print(str_init(self.cfg_loc.filename))
+        elif not self.cfg_glb.exists:
+            print(f'Global config, {self.cfg_glb.filename} not found')
+            print(str_reinit())
+        return True
+
+    def add_project(self, project):
+        """Add the project to the local and global config"""
+        chgd = self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
+        if chgd:
+            self.cfg_glb.wr_cfg()
+
 #class CfgTrk:
 #    """Manages the global and a project configuration file"""
 #

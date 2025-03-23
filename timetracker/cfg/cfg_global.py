@@ -35,8 +35,9 @@ class CfgGlobal:
 
     def __init__(self, filename):
         self.filename = filename
-        debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- '
-                   f'{self.filename}'))
+        self.exists = exists(filename)
+        debug(ltblue(f'CfgGlobal CONFIG: exists({int(self.exists)}) -- '
+                     f'{self.filename}'))
         self.doc = self._init_docglobal()
 
     ####def str_cfg(self):

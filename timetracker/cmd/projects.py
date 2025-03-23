@@ -3,13 +3,14 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os.path import dirname
-from os.path import exists
+#from os.path import dirname
+#from os.path import exists
 from logging import debug
 from timetracker.utils import yellow
-from timetracker.cfg.utils import get_filename_globalcfg
-from timetracker.cfg.cfg_global import CfgGlobal
-from timetracker.msgs import str_init
+from timetracker.cfg.cfg import Cfg
+#from timetracker.cfg.utils import get_filename_globalcfg
+#from timetracker.cfg.cfg_global import CfgGlobal
+#from timetracker.msgs import str_init
 
 
 def cli_run_projects(fnamecfg, args):
@@ -20,17 +21,20 @@ def run_projects(fcfg_local, file, dirhome=None):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND PROJECTS'))
-    filename_globalcfg = get_filename_globalcfg(dirhome) if file is None else file
-    if not exists(filename_globalcfg):
-
-        print(str_init(fcfg_local))
+    cfg = Cfg(fcfg_local, file, dirhome)
+    if cfg.needs_init():
         return
-    cfg_global = CfgGlobal(filename_globalcfg)
-    projects = cfg_global.get_projects()
-    if projects is None:
-        print(str_init(print(str_init(fcfg_local))))
-    for proj, fcfgloc in sorted(projects):
-        print(f'{proj:26} {dirname(dirname(fcfgloc))}')
+    return
+    #filename_globalcfg = get_filename_globalcfg(dirhome) if file is None else file
+    #if not exists(filename_globalcfg):
+    #    print(str_init(fcfg_local))
+    #    return
+    #cfg_global = CfgGlobal(filename_globalcfg)
+    #projects = cfg_global.get_projects()
+    #if projects is None:
+    #    print(str_init(print(str_init(fcfg_local))))
+    #for proj, fcfgloc in sorted(projects):
+    #    print(f'{proj:26} {dirname(dirname(fcfgloc))}')
 
 
     #cfg = Cfg(fcfg_local, fcfg_global)

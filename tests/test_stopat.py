@@ -15,7 +15,7 @@ from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
-from timetracker.cmd.init import run_init_test
+from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from tests.pkgtttest.dts import get_dt
@@ -68,7 +68,7 @@ class Obj(RunBase):
         cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
         fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-        cfgp, _ = run_init_test(cfgname, dircsv, self.project, fcfgg, quiet=True)  # cfgg
+        run_init(cfgname, dircsv, self.project, dirhome=tmphome)
         fin_start = run_start(cfgname, self.uname,
             now=dta,
             defaultdt=dta)

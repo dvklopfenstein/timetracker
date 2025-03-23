@@ -62,5 +62,9 @@ def str_notrkrepo_mount(mountname, trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""
     return f'fatal: not a Trk repository (or any parent up to mount point {mountname}): {trkdir}'
 
+def str_reinit():
+    """How to re-initialize"""
+    return 'Run `trk init` with `--force` to re-initialize'
+
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

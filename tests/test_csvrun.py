@@ -3,15 +3,13 @@
 
 from os import system
 from os.path import exists
-from os.path import join
 #from logging import basicConfig
 #from logging import DEBUG
 from datetime import timedelta
 from tempfile import TemporaryDirectory
-from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
-from timetracker.cmd.init import run_init_test
+from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from timetracker.csvutils import get_hdr
@@ -27,9 +25,8 @@ def test_stopat(project='pumpkin', username='carver', dircsv=None):
 
     with TemporaryDirectory() as tmphome:
         cfgname, _, _ = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        fcfgg = join(tmphome, FILENAME_GLOBALCFG)
-        cfgp, _ = run_init_test(cfgname, dircsv, project, fcfgg, quiet=False)  # cfgg
-        assert cfgname == cfgp.filename, f'{cfgname} != {cfgp.filename}'
+        cfg = run_init(cfgname, dircsv, project, dirhome=tmphome)  # cfgg
+        assert cfgname == cfg.cfg_loc.filename, f'{cfgname} != {cfg.cfg_loc.filename}'
 
         # Write in old format
         dta = get_dt(yearstr='2525', hour=8, minute=30)

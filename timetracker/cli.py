@@ -45,7 +45,7 @@ class Cli:
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        #print(f'TIMETRACKER ARGS: {self.args}')
+        print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -165,12 +165,13 @@ class Cli:
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")
+        parser.add_argument('-f', '--force', action='store_true',
+            help='Reinitialize the project: Add missing config files & keep existing')
         return parser
 
     @staticmethod
     def _add_subparser_start(subparsers):
         parser = subparsers.add_parser(name='start', help='start timetracking')
-        # test feature: force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
             help='Force restart timer now or `--at` a specific or elapsed time')
         parser.add_argument('--at', metavar='time',

@@ -51,6 +51,7 @@ class CfgProj:
 
     def __init__(self, filename, dirhome=None):
         self.filename = filename
+        self.exists = exists(self.filename)
         debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
         if dirhome is not None:
             debug(pink(f'CfgProj args {int(exists(dirhome))} dirhome  {dirhome}'))

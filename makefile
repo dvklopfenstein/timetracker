@@ -66,8 +66,8 @@ projects:
 csv:
 	trk -f $(GLOBCFG) --trk-dir $(DIRTRK) csv
 
-time:
-	trk -f $(GLOBCFG) --trk-dir $(DIRTRK) time
+hours:
+	trk -f $(GLOBCFG) --trk-dir $(DIRTRK) hours
 
 docx:
 	trk -f $(GLOBCFG) --trk-dir $(DIRTRK) time -i $(CSV)

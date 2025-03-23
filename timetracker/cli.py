@@ -137,7 +137,7 @@ class Cli:
         self._add_subparser_start(subparsers)
         self._add_subparser_stop(subparsers)
         self._add_subparser_cancel(subparsers)
-        self._add_subparser_time(subparsers)
+        self._add_subparser_hours(subparsers)
         self._add_subparser_report(subparsers)
         self._add_subparser_projects(subparsers)
         self._add_subparser_projectsupdate(subparsers)
@@ -206,14 +206,12 @@ class Cli:
         parser = subparsers.add_parser(name='cancel', help='cancel timetracking')
         return parser
 
-    def _add_subparser_time(self, subparsers):
-        parser = subparsers.add_parser(name='time',
-            help='Report elapsed time',
+    def _add_subparser_hours(self, subparsers):
+        parser = subparsers.add_parser(name='hours',
+            help='Report elapsed time in hours',
             formatter_class=ArgumentDefaultsHelpFormatter)
         #parser.add_argument('--global', action='store_true',
         #    help='Report the elapsed time in hours on all projects')
-        parser.add_argument('-u', '--unit', choices=['hours'], default=None,
-            help='Report the elapsed time in hours')
         parser.add_argument('-i', '--input', metavar='file.csv',
             default=self.fcsv,
             help='Specify an input csv file')

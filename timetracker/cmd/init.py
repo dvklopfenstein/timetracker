@@ -24,6 +24,7 @@ def run_init(fnamecfg, dircsv, project, **kwargs):
     """Initialize timetracking on a project"""
     cfg = Cfg(fnamecfg, kwargs.get('fcfg_global'), kwargs.get('dirhome'))
     # Initialize the local configuration file for a timetracking project
+    cfg_loc = cfg.cfg_loc
     debug(yellow('RUNNING COMMAND INIT'))
     debug(f'INIT: fnamecfg:    {cfg_loc.filename}')
     debug(f'INIT: project:     {project}')

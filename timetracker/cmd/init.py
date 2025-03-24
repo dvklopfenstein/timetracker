@@ -38,9 +38,8 @@ def run_init(fnamecfg, dircsv, project, **kwargs):
         print(str_tostart())
         sys_exit(0)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfg_loc.write_file(project, dircsv=dircsv)
+    cfg.init(project, dircsv)
     debug(cfg.cfg_loc.get_desc("new"))
-    cfg.add_project(project)
     return cfg
 
 def run_reinit(fnamecfg, dircsv, project, **kwargs):

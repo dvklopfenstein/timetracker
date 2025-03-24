@@ -41,8 +41,23 @@ class Cfg:
         """Add the project to the local and global config"""
         return self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
 
-    def reinit(self, project, dircsv):
+    def init(self, project, dircsv=None):
+        """Initialize a project"""
+        self.cfg_loc.write_file(project, dircsv=dircsv)
+        self.cfg_glb.add_project(project, self.cfg_loc.filename)
+
+    def reinit(self, project, dircsv=None):
         """Re-initialize the project, keeping existing files"""
+        # Local project config
+        if not exists(self.cfg_loc.filename):
+            self.cfg_loc.write_file(project, dircsv=dircsv)
+        else:
+            debug('TIME TO IMPLEMENT REINIT LOCAL: {self.cfg_loc.filename}')
+        # Global config
+        if not exists(self.cfg_glb.filename):
+            self.cfg_glb.add_project(project, self.cfg_loc.filename)
+        else:
+            debug('TIME TO IMPLEMENT REINIT GLOBAL: {self.cfg_glb.filename}')
         print('GET READY TO REINIT')
         print(f'PROJECT: {project}')
         print(f'DIRCSV:  {dircsv}')

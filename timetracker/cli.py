@@ -45,7 +45,7 @@ class Cli:
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        print(f'TIMETRACKER ARGS: {self.args}')
+        #print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""

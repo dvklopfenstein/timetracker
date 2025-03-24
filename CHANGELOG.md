@@ -21,6 +21,8 @@
 # Details
 
 ## Unreleased
+* CHANGED command name `time` to `hours`
+* ADDED reinitialization command using `trk init --force`
 
 ## Release 2025-03-21 v0.4a0
 * ADD new prerequisite, dateparser, due to its accuracy and flexibility

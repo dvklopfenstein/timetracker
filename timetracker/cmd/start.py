@@ -43,10 +43,6 @@ def run_start(fnamecfg, name=None, **kwargs):
     # Set (if not started) or reset (if start is forced) starting time
     force = kwargs.get('force', False)
     if not exists(start_obj.filename) or force:
-        #cfg_global = CfgGlobal(dirhome)
-        #chgd = cfg_global.add_project(cfgproj.project, cfgproj.get_filename_cfgproj())
-        #if chgd:
-        #    cfg_global.wr_cfg()
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
         #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))

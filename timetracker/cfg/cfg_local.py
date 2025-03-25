@@ -125,14 +125,15 @@ class CfgProj:
         assert 'csv' in doc
         assert 'filename' in doc['csv']
         proj_orig = doc.get('project')
-        dcsv_orig = doc['csv'].get('filename')
+        csv_orig = doc['csv'].get('filename')
         chgd = False
         if proj_orig != project:
             print(f'{fname} -> Changed `project` from {proj_orig} to {project}')
             doc['project'] = project
             chgd = True
-        if dcsv_orig != dircsv:
-            print(f'{fname} -> Changed csv directory from {dcsv_orig} to {dircsv}')
+        csv_new = self._ini_csv_filename(dircsv)
+        if csv_orig != csv_new:
+            print(f'{fname} -> Changed csv directory from {csv_orig} to {csv_new}')
             doc['csv']['filename'] = self._ini_csv_filename(dircsv)
             chgd = True
         if chgd:

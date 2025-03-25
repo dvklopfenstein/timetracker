@@ -89,10 +89,12 @@ class CfgGlobal:
     def wr_ini_project(self, project, cfgfilename):
         """Add a project if needed & write; return if not"""
         if not exists(self.filename):
+            print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, cfgfilename)
         doc = TOMLFile(self.filename).read()
         if self._add_project(doc, project, cfgfilename):
             self.wr_doc(doc)
+            print(f'Initialized global timetracker config: {self.filename}')
         return doc
 
     def _add_project(self, doc, project, cfgfilename):

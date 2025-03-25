@@ -141,6 +141,7 @@ clean:
 	rm -rf tmp; mkdir tmp;
 	rm -f *.docx
 	rm -f .timetracker_starttime
+	rm -f *.cfg
 
 clobber:
 	make clean

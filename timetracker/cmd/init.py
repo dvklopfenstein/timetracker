@@ -4,6 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
+from os.path import exists
 from logging import debug
 from timetracker.utils import yellow
 from timetracker.cfg.cfg import Cfg
@@ -34,6 +35,7 @@ def run_init(fnamecfg, dircsv, project, **kwargs):
     debug(f'INIT: fnamecfg:    {cfg_loc.filename}')
     debug(f'INIT: project:     {project}')
     debug(f'INIT: dircsv({dircsv})')
+    _chk_global_cfg(kwargs.get('fcfg_global'))
     if cfg_loc.exists:
         print(str_tostart())
         sys_exit(0)
@@ -42,10 +44,14 @@ def run_init(fnamecfg, dircsv, project, **kwargs):
     debug(cfg.cfg_loc.get_desc("new"))
     return cfg
 
+def _chk_global_cfg(fcfg_global):
+    if fcfg_global is None or exists(fcfg_global):
+        return
+    print(f'Use `--force` with the `init` command to initialize global config: {fcfg_global}')
+
 def run_reinit(fnamecfg, dircsv, project, **kwargs):
     """Reinitialize timetracking project"""
     cfg = Cfg(fnamecfg, kwargs.get('fcfg_global'), kwargs.get('dirhome'))
-    print('FFFFFFFFFFFFFFFF', fnamecfg)
     cfg.reinit(project, dircsv=dircsv)
 
 

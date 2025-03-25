@@ -17,6 +17,7 @@ Time is saved in
 * [Installation](#installation)
 * [Other time-trackers](#other-timetrackers)
 * [Documentation](docs/README.md)
+* [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
 
 ## Advantages
 * Freedom Software (aka open-source)

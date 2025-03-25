@@ -29,15 +29,15 @@ __author__ = "DV Klopfenstein, PhD"
 
 # command   | Needs CfgGlobal
 #-----------|----------------
-# cancel    | 
-# common    | 
-# csvupdate |    
+# cancel    |
+# common    |
+# csvupdate |
 # start     |
 # stop      |
 # none      |
 # hours     | G
 # init      | G
-# projects  | G 
+# projects  | G
 # report    | G
 # csvloc    | G
 

@@ -18,6 +18,7 @@ RELCSVS = [
     #"~user/filename.csv",
 ]
 
+
 def mkdirs(tmp_home):
     """Make sub-directories in a temporary directory for use in tests"""
     projs = {
@@ -78,6 +79,13 @@ def findhome(home):
 
 def findhome_str(home):
     """Do a find on the given homedir and return results in a string"""
-    cmd = f'find {home}'
-    return (f'COMMAND: {cmd}\n'
-            f'{run(cmd.split(), capture_output=True, text=True, check=True).stdout}')
+    return run_cmd(f'find {home}')
+
+def run_cmd(cmd, prtcmd=True):
+    """Run a command and return the string, with the command repeated"""
+    txt = []
+    if prtcmd:
+        txt.append(f"{'- '*40}\n")
+        txt.append(f'COMMAND: {cmd}\n')
+    txt.append(f'{run(cmd.split(), capture_output=True, text=True, check=True).stdout}')
+    return ''.join(txt)

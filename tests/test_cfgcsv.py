@@ -42,7 +42,7 @@ def _run_plain(tmphome, project='apple', name='picker'):
     # exists(0) cfglocfilename /tmp/tmpp9wcmtg2/proj/apple/.timetracker/config
     assert not exists(expdirs.cfglocfilename)
     cfgproj = CfgProj(expdirs.cfglocfilename)
-    cfgproj.write_file(project)
+    cfgproj.wr_ini_file(project)
     _chk('plain',
          act=cfgproj.get_filename_csv(name),
          exp=join(expdirs.dirproj, f'timetracker_{project}_{name}.csv'))

@@ -37,35 +37,33 @@ class Cfg:
             print(str_reinit())
         return True
 
-    def add_project(self, project):
-        """Add the project to the local and global config"""
-        return self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
+    ####def add_project(self, project):
+    ####    """Add the project to the local and global config"""
+    ####    return self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
 
     def init(self, project, dircsv=None):
-        """Initialize a project"""
-        self.cfg_loc.write_file(project, dircsv=dircsv)
-        self.cfg_glb.add_project(project, self.cfg_loc.filename)
+        """Initialize a project, return CfgGlobal"""
+        self.cfg_loc.wr_ini_file(project, dircsv=dircsv)
+        return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
     def reinit(self, project, dircsv=None):
         """Re-initialize the project, keeping existing files"""
-        # Local project config
-        if not exists(self.cfg_loc.filename):
-            self.cfg_loc.write_file(project, dircsv=dircsv)
-        else:
-            debug('TIME TO IMPLEMENT REINIT LOCAL: {self.cfg_loc.filename}')
-        # Global config
-        if not exists(self.cfg_glb.filename):
-            self.cfg_glb.add_project(project, self.cfg_loc.filename)
-        else:
-            debug('TIME TO IMPLEMENT REINIT GLOBAL: {self.cfg_glb.filename}')
-        print('GET READY TO REINIT')
-        print(f'PROJECT: {project}')
-        print(f'DIRCSV:  {dircsv}')
+        self._reinit_local(self.cfg_loc, project, dircsv)
+        self._reinit_global(self.cfg_glb, project, self.cfg_loc.filename)
 
-#class CfgTrk:
-#    """Manages the global and a project configuration file"""
-#
-#    def __init__(self, fcfg_proj, fcfg_global=None):
-#        self.cfgproj = CfgProj(fcfg, project)
+    @staticmethod
+    def _reinit_local(cfg_loc, project, dircsv):
+        if not exists(cfg_loc.filename):
+            cfg_loc.wr_ini_file(project, dircsv=dircsv)
+        else:
+            cfg_loc.reinit(project, dircsv)
+
+    @staticmethod
+    def _reinit_global(cfg_gbl, project, fcfg_loc):
+        if not exists(cfg_gbl.filename):
+            cfg_gbl.wr_ini_project(project, fcfg_loc)
+        else:
+            cfg_gbl.reinit(project, fcfg_loc)
+
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -52,14 +52,14 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
                                                    f'ACT({cfgloc.trksubdir})\n'
                                                    f'{cfgloc}')
             assert cfgloc.dircfg == workdir
-            cfgloc.write_file(proj)
+            cfgloc.wr_ini_file(proj)
             assert exists(cfgloc.filename)
             # cat project/.timetracker/config
             filenamecfg_proj = cfgloc.get_filename_cfg()
             debug(f'PROJ CFG: {filenamecfg_proj}')
             #debug(run_cmd(f'cat {filenamecfg_proj}'))
             # ADD PROJECT TO GLOBAL CONFIG AND WRITE
-            doc_glo = cfg_glo.add_project(proj, filenamecfg_proj)
+            doc_glo = cfg_glo.wr_ini_project(proj, filenamecfg_proj)
             assert doc_glo["projects"].unwrap() == exp_projs, (
                 'UNEXPECTED PROJS:\n'
                 f'EXP({exp_projs})\n'
@@ -73,7 +73,8 @@ def _get_cfgglobal_empty(tmphome):
     """Write and get an empty Global Configuration file/object"""
     cfg_glo = CfgGlobal(join(tmphome, FILENAME_GLOBALCFG))
     assert cfg_glo.filename == join(tmphome, '.timetrackerconfig'), f'{cfg_glo.filename}'
-    doc_cur = cfg_glo.rd_cfg()
+    # pylint: disable=protected-access
+    doc_cur = cfg_glo._rd_cfg()
     assert doc_cur is None
     return cfg_glo
 

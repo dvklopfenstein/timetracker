@@ -8,7 +8,7 @@ from timetracker.cmd.start     import cli_run_start
 from timetracker.cmd.stop      import cli_run_stop
 from timetracker.cmd.projects  import cli_run_projects
 from timetracker.cmd.cancel    import cli_run_cancel
-from timetracker.cmd.time      import cli_run_time
+from timetracker.cmd.hours     import cli_run_hours
 from timetracker.cmd.report    import cli_run_report
 #from timetracker.cmd.csvloc   import cli_run_csvloc
 from timetracker.cmd.csvupdate import cli_run_csvupdate
@@ -19,7 +19,7 @@ FNCS = {
     'start'    : cli_run_start,
     'stop'     : cli_run_stop,
     'cancel'   : cli_run_cancel,
-    'time'     : cli_run_time,
+    'hours'    : cli_run_hours,
     'report'   : cli_run_report,
     'projects' : cli_run_projects,
     #'csvloc'   : cli_run_csvloc,

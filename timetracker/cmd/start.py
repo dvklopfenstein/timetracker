@@ -10,7 +10,7 @@ from logging import debug
 from datetime import datetime
 from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
-from timetracker.epoch import get_dtz
+from timetracker.epoch.epoch import get_dtz
 from timetracker.cfg.cfg_local  import CfgProj
 
 
@@ -20,9 +20,8 @@ def cli_run_start(fnamecfg, args):
         fnamecfg,
         args.name,
         start_at=args.at,
-        force=args.force,
+        force=args.force)
         ##activity=args.activity,
-        quiet=args.quiet)
 
 def run_start(fnamecfg, name=None, **kwargs):
     """Initialize timetracking on a project"""
@@ -44,17 +43,13 @@ def run_start(fnamecfg, name=None, **kwargs):
     # Set (if not started) or reset (if start is forced) starting time
     force = kwargs.get('force', False)
     if not exists(start_obj.filename) or force:
-        #cfg_global = CfgGlobal(dirhome)
-        #chgd = cfg_global.add_proj(cfgproj.project, cfgproj.get_filename_cfgproj())
-        #if chgd:
-        #    cfg_global.wr_cfg()
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
-        assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
+        #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
         if not kwargs.get('quiet', False):
             print(f'Timetracker {_get_msg(start_at, force)}: '
-                  f'{starttime.strftime("%a %I:%M %p")}: {starttime} '
-                  f"for project '{cfgproj.project}'")
+                  f'{starttime.strftime("%a %I:%M %p")}: {starttime} ')
+                  #f"for project '{cfgproj.project}'")
 
     # Informational message
     elif not force:

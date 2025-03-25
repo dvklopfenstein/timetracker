@@ -15,7 +15,7 @@ from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
-from timetracker.cmd.init import run_init_test
+from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from tests.pkgtttest.dts import get_dt
@@ -24,7 +24,7 @@ from tests.pkgtttest.runfncs import proj_setup
 
 #basicConfig(level=DEBUG)
 basicConfig()
-getLogger("timetracker.epoch").setLevel(DEBUG)
+getLogger("timetracker.epoch.epoch").setLevel(DEBUG)
 
 SEP = f'\n{"="*80}\n'
 
@@ -44,15 +44,15 @@ def _run(dta, obj):
     obj.chk(dta, "01-01 17:00:00",        '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
     obj.chk(dta, "01-01 05:00:00 pm",     '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
     # https://github.com/dateutil/dateutil/issues/1421 (5pm with a default datetime; 5pm w/no default works fine)
-    # obj.chk(dta, dta, "01-1 5pm",             'Mon,AM,2525-01-01 08:30:00,Mon,PM,2525-01-01 17:00:00,8:30:00,"A,B,C",,')
-    obj.chk(dta, "01/01 5:00 pm",         '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
-    obj.chk(dta, "1/1 5:30 pm",           '2525-01-01 08:30:00,9:00:00,,"A,B,C",')
+    obj.chk(dta, "01-1 5pm",      '2525-01-01 08:30:00,8:30:00,,"A,B,C",') # WORKS w/dataparser (not dateutil)
+    obj.chk(dta, "01/01 5:00 pm", '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
+    obj.chk(dta, "1/1 5:30 pm",   '2525-01-01 08:30:00,9:00:00,,"A,B,C",')
     # Process researcher-entered stop-times containing two ':' as datetimes
     obj.chk(dta, "09:30:00",   '2525-01-01 08:30:00,1:00:00,,"A,B,C",')
     obj.chk(dta, "09:00:00",   '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
     obj.chk(dta, "4:00:00",    None)
     # Test researcher-entered datetime timedeltas
-    #obj.chk(dta, dta, "30 minutes", 'Mon,AM,2525-01-01 08:30:00,Mon,AM,2525-01-01 08:30:00,0:30:00,"A,B,C",,')
+    obj.chk(dta, "30 minutes", '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
     obj.chk(dta, "30 min",     '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
     obj.chk(dta, "30min",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
     obj.chk(dta, "30:00",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
@@ -68,7 +68,7 @@ class Obj(RunBase):
         cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
         fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-        cfgp, _ = run_init_test(cfgname, dircsv, self.project, fcfgg, quiet=True)  # cfgg
+        run_init(cfgname, dircsv, self.project, dirhome=tmphome)
         fin_start = run_start(cfgname, self.uname,
             now=dta,
             defaultdt=dta)

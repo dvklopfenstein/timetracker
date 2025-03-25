@@ -13,11 +13,12 @@ from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 from timetracker import __version__
-from timetracker.fncs import FNCS
+from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.none import cli_run_none
+from timetracker.cfg.utils import run_cmd
 
 
 def main():
@@ -44,6 +45,7 @@ class Cli:
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
+        #print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -82,11 +84,13 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        #print(f'TIMETRACKER ARGS: {args}')
         debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
+        if args.command == 'stop':
+            if args.message == 'd':
+                args.message = run_cmd('git log -1 --pretty=%B').strip()
         return args
 
     def _init_trksubdir(self):
@@ -118,10 +122,10 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
+        parser.add_argument('-f', '--file',
+            help='Use specified file as the global config file')
         parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username for timetracking")
-        parser.add_argument('-q', '--quiet', action='store_true',
-            help='Only print error and warning messages; information will be suppressed.')
         parser.add_argument('--version', action='store_true',
             help='Print the timetracker version')
         self._add_subparsers(parser)
@@ -133,7 +137,7 @@ class Cli:
         self._add_subparser_start(subparsers)
         self._add_subparser_stop(subparsers)
         self._add_subparser_cancel(subparsers)
-        self._add_subparser_time(subparsers)
+        self._add_subparser_hours(subparsers)
         self._add_subparser_report(subparsers)
         self._add_subparser_projects(subparsers)
         self._add_subparser_projectsupdate(subparsers)
@@ -161,12 +165,13 @@ class Cli:
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")
+        parser.add_argument('-f', '--force', action='store_true',
+            help='Reinitialize the project: Add missing config files & keep existing')
         return parser
 
     @staticmethod
     def _add_subparser_start(subparsers):
         parser = subparsers.add_parser(name='start', help='start timetracking')
-        # test feature: force over-writing of start time
         parser.add_argument('-f', '--force', action='store_true',
             help='Force restart timer now or `--at` a specific or elapsed time')
         parser.add_argument('--at', metavar='time',
@@ -181,6 +186,7 @@ class Cli:
             help='Stop timetracking',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-m', '--message', required=True, metavar='TXT',
+            default=f'''("{run_cmd('git log -1 --pretty=%B').strip()}" invoked w/`-m d`''',
             help='Message describing the work done in the time unit')
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')
@@ -200,14 +206,12 @@ class Cli:
         parser = subparsers.add_parser(name='cancel', help='cancel timetracking')
         return parser
 
-    def _add_subparser_time(self, subparsers):
-        parser = subparsers.add_parser(name='time',
-            help='Report elapsed time',
+    def _add_subparser_hours(self, subparsers):
+        parser = subparsers.add_parser(name='hours',
+            help='Report elapsed time in hours',
             formatter_class=ArgumentDefaultsHelpFormatter)
         #parser.add_argument('--global', action='store_true',
         #    help='Report the elapsed time in hours on all projects')
-        parser.add_argument('-u', '--unit', choices=['hours'], default=None,
-            help='Report the elapsed time in hours')
         parser.add_argument('-i', '--input', metavar='file.csv',
             default=self.fcsv,
             help='Specify an input csv file')
@@ -231,7 +235,7 @@ class Cli:
             help='Show all projects and the locations of their csv files',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
-            help='Look for all projects and their csv files tracked in the global config file')
+            help='List all projects listed managed in the global config file')
         return parser
 
     def _add_subparser_projectsupdate(self, subparsers):

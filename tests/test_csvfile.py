@@ -8,7 +8,7 @@ from datetime import datetime
 from timetracker.csvfile import CsvFile
 from timetracker.ntcsv import get_ntcsv
 from timetracker.utils import orange
-from timetracker.csvutils import td_from_str
+from timetracker.epoch.calc import td_from_str
 
 def test_csvfile():
     """Test reading and writing csv files using CsvFile"""

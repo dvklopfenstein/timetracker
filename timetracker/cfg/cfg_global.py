@@ -33,56 +33,131 @@ from timetracker.cfg.utils import has_homedir
 class CfgGlobal:
     """Global configuration parser for timetracking"""
 
-    ##def __init__(self, dirhome='~', basename=FILENAME_GLOBALCFG):
-    ##    self.dirhome = abspath(get_dirhome(dirhome))
-    ##    self.filename = join(self.dirhome, basename)
     def __init__(self, filename):
         self.filename = filename
-        debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(self.filename))}) -- '
-                   f'{self.filename}'))
-        self.doc = self._init_docglobal()
+        debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(filename))}) -- {filename}'))
 
-    ####def str_cfg(self):
-    ####    """Return string containing configuration file contents"""
-    ####    return dumps(self.doc)
+    def get_projects(self):
+        """Get the projects managed by timetracker"""
+        doc = self._rd_cfg()
+        return doc.get('projects') if doc is not None else None
 
-    def rd_cfg(self):
+    def _rd_cfg(self):
         """Read a global cfg file; return a doc obj"""
         return TOMLFile(self.filename).read() if exists(self.filename) else None
 
-    def wr_cfg(self):
-        """Write config file"""
-        docprt = self._get_docprt()
-        TOMLFile(self.filename).write(docprt)
-        debug(f'CFGGLOBAL  WROTE: {self.filename}')
+    def wr_doc(self, doc):
+        """Write a global cfg file"""
+        TOMLFile(self.filename).write(doc)
+        print(f'  WROTE: {self.filename}')
 
-    def add_proj(self, project, cfgfilename):
+    ##def wr_cfg(self):
+    ##    """Write config file"""
+    ##    docprt = self._get_docprt()
+    ##    TOMLFile(self.filename).write(docprt)
+    ##    debug(f'CFGGLOBAL  WROTE: {self.filename}')
+
+    ##def wr_new(self):
+    ##    """Write config file"""
+    ##    docini = self._init_doc()
+    ##    docprt = self._get_docprt(docini)
+    ##    TOMLFile(self.filename).write(docprt)
+    ##    debug(f'CFGGLOBAL  WROTE: {self.filename}')
+
+    ##def _add_project(self, project, cfgfilename):
+    ##    """Add a project to the global config file, if it is not already present"""
+    ##    assert isabs(cfgfilename), f'CfgGlobal._add_project(...) cfg NOT abspath: {cfgfilename}'
+    ##    doc = self.rd_cfg()
+    ##    # If project is not already in global config
+    ##    if self._noproj(doc, project, cfgfilename):
+    ##        fnamecfg_proj = cfgfilename
+    ##        ##if has_homedir(self.dirhome, abspath(cfgfilename)):
+    ##        ##    ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
+    ##        ##    ##fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
+    ##        ##    ##debug(f'OOOOOOOOOO {fnamecfg_proj}')
+    ##        if doc is not None:
+    ##            doc['projects'].add_line((project, fnamecfg_proj))
+    ##            self.doc = doc
+    ##        else:
+    ##            self.doc['projects'].add_line((project, fnamecfg_proj))
+    ##        ##debug(f"PROJECT {project} ADD GLOBAL PROJECTS: {self.doc['projects'].as_string()}")
+    ##        return True
+    ##    # pylint: disable=unsubscriptable-object
+    ##    ##debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
+    ##    return False
+
+    def wr_ini_project(self, project, cfgfilename):
+        """Add a project if needed & write; return if not"""
+        if not exists(self.filename):
+            print(f'Initialized global timetracker config: {self.filename}')
+            return self._wr_project_init(project, cfgfilename)
+        doc = TOMLFile(self.filename).read()
+        if self._add_project(doc, project, cfgfilename):
+            self.wr_doc(doc)
+            print(f'Initialized global timetracker config: {self.filename}')
+        return doc
+
+    def _add_project(self, doc, project, cfgfilename):
         """Add a project to the global config file, if it is not already present"""
-        assert isabs(cfgfilename), f'CfgGlobal.add_proj(...) cfg NOT abspath: {cfgfilename}'
-        doc = self.rd_cfg()
+        debug(ltblue(f'CfgGlobal _add_project({project}, {cfgfilename}'))
+        assert isabs(cfgfilename), f'CfgGlobal._add_project(...) cfg NOT abspath: {cfgfilename}'
+        ####if not exists(self.filename):
+        ####    return self._wr_project_init(project, cfgfilename)
+        #### doc = TOMLFile(self.filename).read()
+        debug(ltblue(f'CfgGlobal {doc}'))
         # If project is not already in global config
         if self._noproj(doc, project, cfgfilename):
-            fnamecfg_proj = cfgfilename
+            debug(f'CfgGlobal add_line {project:15} {cfgfilename}')
             ##if has_homedir(self.dirhome, abspath(cfgfilename)):
             ##    ##cfgfilename = join('~', relpath(abspath(cfgfilename), self.dirhome))
             ##    ##fnamecfg_proj = get_relpath_adj(abspath(cfgfilename), self.dirhome)
             ##    ##debug(f'OOOOOOOOOO {fnamecfg_proj}')
-            if doc is not None:
-                doc['projects'].add_line((project, fnamecfg_proj))
-                self.doc = doc
-            else:
-                self.doc['projects'].add_line((project, fnamecfg_proj))
-            ##debug(f"PROJECT {project} ADD GLOBAL PROJECTS: {self.doc['projects'].as_string()}")
+            doc['projects'].add_line((project, cfgfilename))
+            ##debug(f"PROJECT {project} ADD GLOBAL PROJECTS: {doc['projects'].as_string()}")
             return True
         # pylint: disable=unsubscriptable-object
         ##debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
         return False
 
-    def _get_docprt(self):
-        doc_cur = self.doc.copy()
+    def reinit(self, project, cfgfilename):
+        """Read the global config file & only change `project` & `csv.filename`"""
+        doc = self._rd_cfg()
+        assert doc, "Global file should be checked for existence: {self.filename}"
+        if self._add_project(doc, project, cfgfilename):
+            self.wr_doc(doc)
+
+    def _noproj(self, doc, projnew, projcfgname):
+        """Test if the project is missing from the global config file"""
+        for projname, cfgname in doc['projects']:
+            debug(f'CfgGlobal {projname:15} {cfgname}')
+            if projname == projnew:
+                if cfgname == projcfgname:
+                    # Project is already in the global config file
+                    return False
+                debug(f'OLD cfgname: {cfgname}')
+                debug(f'NEW cfgname: {projcfgname}')
+                ##raise RuntimeError(f'ERROR: Project({projname}) config filename '
+                ##                    'is already set to:\n'
+                ##                   f'        {cfgname}\n'
+                ##                    '    Not over-writing with:\n'
+                ##                   f'        {projcfgname}\n'
+                ##                   f'    In {self.filename}\n'
+                ##                    '    Use arg, `--project` to create a unique project name')
+                return True
+        # Project is not in global config file
+        return True
+
+    def _wr_project_init(self, project, cfgfilename):
+        doc = self._new_doc()
+        doc['projects'].add_line((project, cfgfilename))
+        TOMLFile(self.filename).write(doc)
+        return doc
+
+    def _get_docprt(self, doc):
+        doc_cur = doc.copy()
         ##truehome = expanduser('~')
         dirhome = dirname(self.filename)
-        for idx, (projname, projdir) in enumerate(self.doc['projects'].unwrap()):
+        for idx, (projname, projdir) in enumerate(doc['projects'].unwrap()):
             ##pdir = relpath(abspath(projdir), truehome)
             ##pdir = relpath(abspath(projdir), dirhome)
             ##if pdir[:2] != '..':
@@ -93,33 +168,11 @@ class CfgGlobal:
                 debug(f'CFGGLOBAL XXXXXXXXXXX {projname:20} {pdir}')
         return doc_cur
 
-    def _noproj(self, doc, projnew, projcfgname):
-        """Test if the project is missing from the global config file"""
-        projs = doc['projects'] if doc is not None else self.doc['projects']
-        for projname, cfgname in projs:
-            if projname == projnew:
-                if cfgname == projcfgname:
-                    # Project is already in the global config file
-                    return False
-                debug(f'OLD cfgname: {cfgname}')
-                debug(f'NEW cfgname: {projcfgname}')
-                raise RuntimeError(f'ERROR: Project({projname}) config filename '
-                                    'is already set to:\n'
-                                   f'        {cfgname}\n'
-                                    '    Not over-writing with:\n'
-                                   f'        {projcfgname}\n'
-                                   f'    In {self.filename}\n'
-                                    '    Use arg, `--project` to create a unique project name')
-        # Project is not in global config file
-        return True
-
-    def _init_docglobal(self):
-        if exists(self.filename):
-            return TOMLFile(self.filename).read()
-        return self._new_docglobal()
+    def _init_doc(self):
+        return TOMLFile(self.filename).read() if exists(self.filename) else self._new_doc()
 
     @staticmethod
-    def _new_docglobal():
+    def _new_doc():
         # pylint: disable=duplicate-code
         doc = document()
         doc.add(comment("TimeTracker global configuration file"))

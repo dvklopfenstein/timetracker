@@ -25,7 +25,7 @@ from timetracker.msgs import str_how_to_stop_now
 from timetracker.msgs import str_started_epoch
 from timetracker.msgs import str_not_running
 from timetracker.msgs import str_no_time_recorded
-from timetracker.epoch import str_arg_epoch
+from timetracker.epoch.epoch import str_arg_epoch
 
 # 2025-01-21 17:09:47.035936
 
@@ -63,23 +63,26 @@ class Starttime:
         hms = self._hms_from_startfile(dtstart)
         hms1 = hms is not None
         if hms1 and hms <= self.min_trigger:
-            self._prtmsg_basic(hms, 'Timer running')
+            self._prtmsg_basic(dtstart, hms)
         elif hms1:
-            self._prtmsg_triggered(hms, dtstart)
+            self._prtmsg_triggered(dtstart, hms)
         else:
             prt_todo('TODO: STARTFILE WITH NO HMS')
 
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
-        with open(self.filename, 'w', encoding='utf8') as prt:
-            prt.write(f'{starttime.strftime(FMTDT)}')
-            if activity:
-                prt.write(f'\nAC {activity}')
-            if tags:
-                for tag in tags:
-                    prt.write(f'\nTG {tag}')
-            debug(f'  WROTE START: {starttime.strftime(FMTDT)}')
-            debug(f'  WROTE FILE:  {self.filename}')
+        if starttime is not None:
+            with open(self.filename, 'w', encoding='utf8') as prt:
+                prt.write(f'{starttime.strftime(FMTDT)}')
+                if activity:
+                    prt.write(f'\nAC {activity}')
+                if tags:
+                    for tag in tags:
+                        prt.write(f'\nTG {tag}')
+                debug(f'  WROTE START: {starttime.strftime(FMTDT)}')
+                debug(f'  WROTE FILE:  {self.filename}')
+                return
+        raise RuntimeError("NOT WRITING START TIME; NO START TIME FOUND")
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
@@ -108,16 +111,15 @@ class Starttime:
         if exists(fstart):
             remove(fstart)
 
-    def _prtmsg_basic(self, hms, msg):
-        self._prt_elapsed_hms(hms, msg)
+    def _prtmsg_basic(self, dta, hms):
+        self._str_started_n_running(dta, hms)
         print(str_how_to_stop_now())
 
-    def _prtmsg_triggered(self, hms, dtstart):
-        msg = f'Timer started on {dtstart.strftime(FMTDT_H)} and running'
-        self._prt_elapsed_hms(hms, msg)
+    def _prtmsg_triggered(self, dta, hms):
+        self._str_started_n_running(dta, hms)
         print(str_started_epoch())
-        print(str_arg_epoch(dtstart, desc=' after start'))
-        self._prtmsg_basic(hms, msg)
+        print(str_arg_epoch(dta, desc=' after start'))
+        self._prtmsg_basic(dta, hms)
         print(str_started_epoch())
         print(str_tostart_epoch())
 
@@ -129,6 +131,11 @@ class Starttime:
                 assert len(line) == 26, f'len({line})={len(line)}; EXPFMT: 2025-01-22 04:05:00.086891'
                 return datetime.strptime(line, FMTDT)
         return None
+
+    def _str_started_n_running(self, dta, hms):
+        self._prt_elapsed_hms(
+            hms,
+            f'Timer started on {dta.strftime(FMTDT_H)} and running')
 
     def _prt_elapsed_hms(self, hms, msg):
         print(f'{msg} H:M:S {hms} '

@@ -13,6 +13,7 @@ PACKAGES = [
     'timetracker',
     'timetracker.cmd',
     'timetracker.cfg',
+    'timetracker.epoch',
 ]
 
 PACKAGE_DIRS = {p:join(*p.split('.')) for p in PACKAGES}
@@ -25,12 +26,13 @@ def get_long_description():
 
 CONSOLE_SCRIPTS = [
     'trk=timetracker.cli:main',
+    'timestr=timetracker.epoch.cli:main',
 ]
 
 REQUIRES = [
     'tomlkit',
     'pytimeparse2',
-    'python-dateutil',
+    'dateparser',
     'python-docx',
 ]
 
@@ -52,7 +54,7 @@ setup(
     # The name of the project on PyPi
     name='timetracker-csv',
     # https://peps.python.org/pep-0440/
-    version='0.3a6',
+    version='0.4a0',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',
     packages=PACKAGES,

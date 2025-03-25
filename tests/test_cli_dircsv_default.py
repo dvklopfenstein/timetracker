@@ -9,10 +9,9 @@ from logging import basicConfig
 from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
-from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.cfg.cfg_local import CfgProj
-from timetracker.cmd.init import run_init_test
+from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from timetracker.ntcsv import get_ntcsv
@@ -62,14 +61,16 @@ class Obj:
             #assert not exists(cfgname), findhome_str(exp.dirhome)
 
             # CMD: INIT; CFG PROJECT
-            fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-            cfgp, cfgg = run_init_test(cfgname, dircsv, self.project, fcfgg)
+            cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
+            cfgp = cfg.cfg_loc
+            cfgg = cfg.cfg_glb
             # pylint: disable=unsubscriptable-object
-            assert cfgp.read_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
+            # pylint: disable=protected-access
+            assert cfgp._rd_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
             exp_cfg_csv_fname = join(dircsv, fcsv)
             exp_cfg_csv_filename = _get_abscsv(exp.dirproj, dircsv, fcsv, tmphome)
             cfgp.set_filename_csv(exp_cfg_csv_fname)
-            assert cfgp.read_doc()['csv']['filename'] == exp_cfg_csv_fname
+            assert cfgp._rd_doc()['csv']['filename'] == exp_cfg_csv_fname
             #findhome(tmphome)
             assert exists(cfgname), findhome_str(exp.dirhome)
             assert exists(cfgg.filename), findhome_str(exp.dirhome)

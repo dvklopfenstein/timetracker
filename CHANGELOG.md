@@ -2,7 +2,8 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* [**Release 2025-03-18 v0.3a6**](#release-2025-03-18-v03a6) Added `--activity` & `--tags` option to `stop' command
+* [**Release 2025-03-21 v0.4a0**](#release-2025-03-21-v04a0) Added prerequisite, dateparser, to replace dateutil
+* [**Release 2025-03-18 v0.3a8**](#release-2025-03-18-v03a8) Added `--activity` & `--tags` option to `stop' command; Use new concise csv
 * [**Release 2025-03-14 v0.3a4**](#release-2025-03-14-v03a4) Added stop --at test; Added report module
 * [**Release 2025-02-25 v0.3a0**](#release-2025-02-25-v03a0) Added --at functionality to start & stop command
 * **Release 2025-02-18 v0.2a5** Changed logo to a stopwatch
@@ -20,8 +21,16 @@
 # Details
 
 ## Unreleased
+* CHANGED command name `time` to `hours`
+* ADDED reinitialization command using `trk init --force`
 
-## Release 2025-03-18 v0.3a6
+## Release 2025-03-21 v0.4a0
+* ADD new prerequisite, dateparser, due to its accuracy and flexibility
+* REMOVE prerequisite, dateutil, due to its incorrect output and lack of flexibility
+  https://github.com/dateutil/dateutil/issues/1421
+
+## Release 2025-03-18 v0.3a8
+* ADD `convert_csv` function to convert old csv format to new concise csv format
 * ADD to `stop` command: `--activity` and `--tags` options
 * CHANGE data format in csv to be more readable and require less disk space
   * ADD converter to convert csv's using the old format to the new format

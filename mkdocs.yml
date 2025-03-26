@@ -1,0 +1,34 @@
+site_name: timetracker-csv
+site_url: https://dvklopfenstein.github.io/timetracker/
+theme:
+  name: readthedocs
+  custom_dir: docs_theme
+  static_templates:
+      - index.html
+watch:
+  - docs
+  - docs_theme
+extra_css:
+    - https://fonts.googleapis.com/css?family=Open+Sans:300,600
+    - assets/colors.css
+    - assets/theme.css
+    - assets/highlight.css
+markdown_extensions:
+  - admonition
+repo_url: https://github.com/dvklopfenstein/timetracker/
+edit_uri: edit/main/docs/
+site_author: DV Klopfenstein, PhD
+site_description: Track your time on multiple projects from the CLI; Task time is saved to pandas-friendly csv files
+nav:
+  - Overview: overview.md
+  - 'User Guide':
+    - Quickstart: installation.md
+    - Basic Usage: usage.md
+    - Advanced Usage: advanced.md
+    - 'Tips and Tricks': tips-and-tricks.md
+  - 'Reference':
+    - Command Line: reference-command-line.md
+    - Configuration File: reference-config-file.md
+  - 'Contributing':
+    - Contributing to timetracker-csv: contributing.md
+

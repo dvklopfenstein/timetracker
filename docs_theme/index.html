@@ -1,0 +1,116 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/agpl-3.0.html#license-text
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>timetracker-csv - Pandas-friendly time tracking from the CLI</title>
+    <meta name="description" content="Track your time in multiple repos without leaving the command line.">
+    <meta name="image" content="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png">
+    <meta itemprop="name" content="timetracker - The Command Line Journal">
+    <meta itemprop="description" content="Track your time in multiple repos without leaving the command line.">
+    <meta itemprop="image" content="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png">
+    <meta name="og:title" content="timetracker-csv - Pandas friendly timetracking">
+    <meta name="og:description" content="Track your time in multiple repos without leaving the command line.">
+    <meta name="og:image" content="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png">
+    <meta name="og:url" content="https://dvklopfenstein.github.io/timetracker/">
+    <meta name="og:site_name" content="timetracker-csv - Pandas friendly timetracking">
+    <meta name="og:type" content="website">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="assets/colors.css">
+    <link rel="stylesheet" href="assets/index.css">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "applicationCategory": "https://schema.org/LifestyleApplication",
+        "name": "timetracker-csv",
+        "description": "Track your time in multiple repos without leaving the command line.",
+        "operatingSystem": ["macOS", "Windows", "Linux"],
+        "thumbnailUrl": "https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png",
+        "installUrl": "ihttps://dvklopfenstein.github.io/timetracker/installation",
+        "softwareVersion": "0.4"
+    }
+    </script>
+</head>
+
+<body>
+    <header>
+        <div id="title">
+            <img id="logo" src="img/stopwatch.svg" width="90px" height="98px" title="trk" alt="trk logo" />
+            <h1>Track your time project by project <br />without leaving the command line.</h1>
+        </div>
+        <div id="prompt">
+            <div id="terminal">
+                <div id="typed"></div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <nav>
+            <a href="overview">Documentation</a>
+            <a href="installation" class="cta">Get Started</a>
+            <a href="http://github.com/dvklopfenstein/timetracker" title="View on Github">Fork on GitHub</a>
+        </nav>
+        <div class="flex">
+            <section>
+                <i class="icon nli"></i>
+                <h3>Human friendly.</h3>
+                <p>timetracker will start and stop the timer at times that you specify in a natural-language friendly way.</p>
+            </section>
+            <section>
+                <i class="icon future"></i>
+                <h3>Future-proof.</h3>
+                <p>Your timetracking data is stored in plain-text csv files that will still be readable in the year 2525 when your trendy proprietary apps have turned to dust.</p>
+            </section>
+            <section>
+                <i class="icon secure"></i>
+                <h3>Secure.</h3>
+                <p>Store your csv files on an encrypted proton drive</p>
+            </section>
+            <section>
+                <i class="icon sync"></i>
+                <h3>Accessible anywhere.</h3>
+                <p>Save your timetracking csv files in many ways; storing them in a GitHub repo, in a dropbox folder, or on your encrypted proton drive.</p>
+            </section>
+            <section>
+                <i class="icon github"></i>
+                <h3>Free &amp; Open Source.</h3>
+                <p>We heartily welcome <a href="https://www.github.com/dvklopfenstein/timetracker" title="Fork timetracker-csv on GitHub">your ideas</a>?</p>
+            </section>
+            <section>
+                <i class="icon folders"></i>
+                <h3>For lots of projects.</h3>
+                <p>Effortlessly access several timetracking projects simultaneously for indepth analysis using pandas.</p>
+            </section>
+        </div>
+    </main>
+    <footer>
+        We heartily welcome researcher feedback; open a <a href="https://github.com/dvklopfenstein/timetracker/issues/new/choose" title="new issue on Github">submit an issue</a> on Github.
+    </footer>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script>
+    new Typed("#typed", {
+        strings: [
+            "trk start",
+            "trk report yesterday 2pm: used trk to keep track of accomplished tasks. The done.txt for my todo.txt",
+            "trk report <b>-from</b> 2025 <b>-until</b> feb<br /><i>`(displays all entries from January 2025 to last Feb)`</i>",
+            "trk stop --tags grant=ABC grant=XYZ -m "Work for two grants",
+            "trk <b>--tags</b><br /><i>`grant=ABC    7<br />grant=XYZ    5</i>`",
+        ],
+        typeSpeed: 20, // less is faster
+        backSpeed: 10,
+        backDelay: 2500,
+        loop: true,
+        showCursor: false
+    });
+    </script>
+</body>
+
+</html>

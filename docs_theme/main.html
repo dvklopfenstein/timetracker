@@ -1,0 +1,17 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/gpl-3.0.html
+-->
+
+{% extends "base.html" %}
+
+{%- block search_button %}
+  {% if 'search' in config['plugins'] %}
+    <div role="search">
+      <form id ="rtd-search-form" class="wy-form mkdocs-search" action="{{ base_url }}/search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+        <button class="icon icon-search" aria-label="submit"></button>
+      </form>
+    </div>
+  {% endif %}
+{%- endblock %}

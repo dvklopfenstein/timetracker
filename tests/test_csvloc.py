@@ -55,6 +55,10 @@ def _run_relpath(relcsvs, absdirproj, abscsvs_messy):
     print("\n= TEST 4 =======================================================================")
     print(f"Get csv relative to project dir, {absdirproj}")
     print(f"HOME DIR: {expanduser('~')}")
+    print("relpath         join('/home/user/me/proj', relpath)       "
+          "os.path.abspath(absmessy)                relclean")
+    print("--------------- ----------------------------------------  "
+          "--------------------------------------   ------------")
     for cfgcsv_orig, abscsv_messy, relcsv_exp in zip(relcsvs, abscsvs_messy, _exp_relcsv_clean()):
         relcsv_clean = relpath(abscsv_messy, absdirproj)
         if '~' in abscsv_messy:

@@ -20,7 +20,7 @@ Time is saved in
 * [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
 
 ## Advantages
-* Freedom Software (aka open-source)
+* Libre Software (aka open-source)
 * Quick to set up
 * Own your data
 * NO invasive tracking **ever** of (as is done by multitudinous other timetracking apps):

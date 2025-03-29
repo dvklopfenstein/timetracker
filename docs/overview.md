@@ -92,3 +92,5 @@ or you can build from a cloned repo.
 ## Libre software and open-source
 `trk` is written in [Python](https://www.python.org).
 Ideas and inspirations are [heartily welcome](https://github.com/dvklopfenstein/timetracker/issues/new/choose).
+
+Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved

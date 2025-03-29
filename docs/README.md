@@ -1,3 +1,8 @@
+<!--
+Copyright (C) DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
+https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
+-->
 # Timetracker-csv
 [![PyPI - Version](https://img.shields.io/pypi/v/timetracker-csv)](https://pypi.org/project/timetracker-csv)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg)](https://doi.org/10.5281/zenodo.14803225)
@@ -23,6 +28,7 @@ Time is saved in
 * [**OVERVIEW**](overview.md)
 * **USERGUIDE**
   * [Installation](installation.md)
+  * [Global configuration file](config_global.md)
 * [**CONTRIBUTING**](contributing.md)
 
 
@@ -89,4 +95,4 @@ $ pip install .
 
 [pages](http:/dvklopfenstein.github.io/timetracker)
 
-Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved
+Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved

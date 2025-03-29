@@ -63,7 +63,7 @@ class Obj:
             # CMD: INIT; CFG PROJECT
             cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
             cfgp = cfg.cfg_loc
-            cfgg = cfg.cfg_glb
+            cfgg = cfg.get_cfgglobal(dirhome=tmphome)
             # pylint: disable=unsubscriptable-object
             # pylint: disable=protected-access
             assert cfgp._rd_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
@@ -75,7 +75,8 @@ class Obj:
             assert exists(cfgname), findhome_str(exp.dirhome)
             assert exists(cfgg.filename), findhome_str(exp.dirhome)
             assert dirname(dirname(cfgname)) == exp.dirproj
-            assert dirname(cfgg.filename) == exp.dirhome
+            assert dirname(cfgg.filename) == exp.dirhome, \
+                f'ACT({dirname(cfgg.filename)}) != EXP({exp.dirhome})'
             assert not exists(exp_cfg_csv_filename)
 
             # CMD: START

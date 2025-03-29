@@ -22,57 +22,57 @@ def test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.ac
     print(f'{SEP2}1) INITIALIZE "HOME" DIRECTORY')
     with TemporaryDirectory() as tmphome:
         gfname = join(tmphome, fcfg_glo)
+        run = Run(tmphome, gfname)
 
         print(f'{SEP2}2) Create local project directories')
         ntdirs = mk_projdirs(tmphome, project)
         findhome(tmphome)
 
         print(f'{SEP2}3) Initialize the {project} project')
-        cfg = Cfg(ntdirs.cfglocfilename, gfname, tmphome)
-        assert cfg.cfg_glb.filename == gfname
-        cfg.init(project)
-        _chk_init_proj(cfg, ntdirs, trksubdir)
+        cfg = Cfg(ntdirs.cfglocfilename)  # , gfname, tmphome)
+        cfg.init(project, fcfg_global=gfname, dirhome=tmphome)
+        run.chk_init_proj(cfg, ntdirs, trksubdir, gfname)
         findhome(tmphome)
 
         # --------------------------------------------------------
         print(f'{SEP1}4) rm config: global & local')
-        _rm_cfgs(cfg, loc=True, glb=True)
-        _prtcfgs(cfg)
+        run.rm_cfgs(cfg, loc=True, glb=True)
+        run.prtcfgs(cfg)
 
         print(f'{SEP3}5) reinitialize {project} project')
-        cfg.reinit(project)
-        _prtcfgs(cfg)
-        _chk_cfg(cfg, loc=True, glb=True)
+        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        run.prtcfgs(cfg)
+        run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
         print(f'\n{SEP1}6) rm config: global only')
-        _rm_cfgs(cfg, loc=False, glb=True)
-        _prtcfgs(cfg)
+        run.rm_cfgs(cfg, loc=False, glb=True)
+        run.prtcfgs(cfg)
 
         print(f'{SEP3}7) reinitialize {project} project')
-        cfg.reinit(project)
-        _prtcfgs(cfg)
-        _chk_cfg(cfg, loc=True, glb=True)
+        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        run.prtcfgs(cfg)
+        run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
         print(f'\n{SEP1}4) rm config: local only')
-        _rm_cfgs(cfg, loc=True, glb=False)
-        _prtcfgs(cfg)
+        run.rm_cfgs(cfg, loc=True, glb=False)
+        run.prtcfgs(cfg)
 
         print(f'{SEP3}5) reinitialize {project} project')
-        cfg.reinit(project)
-        _prtcfgs(cfg)
-        _chk_cfg(cfg, loc=True, glb=True)
+        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        run.prtcfgs(cfg)
+        run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
         print(f'\n{SEP1}6) rm config: keep all')
-        #_rm_cfgs(cfg, loc=False, glb=False)
-        _prtcfgs(cfg)
+        #run.rm_cfgs(cfg, loc=False, glb=False)
+        run.prtcfgs(cfg)
 
         print(f'{SEP3}7) reinitialize {project} project')
-        cfg.reinit(project)
-        _prtcfgs(cfg)
-        _chk_cfg(cfg, loc=True, glb=True)
+        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        run.prtcfgs(cfg)
+        run.chk_cfg(cfg, loc=True, glb=True)
 
         #    # cat project/.timetracker/config
         #    filenamecfg_proj = cfg.cfg_loc.get_filename_cfg()
@@ -88,44 +88,57 @@ def test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.ac
         #    debug(run_cmd(f'cat {cfg_glo.filename}'))
         #    findhome(trkdir)
 
-def _prtcfgs(cfg):
-    print(f'exists({int(exists(cfg.cfg_glb.filename))}) {cfg.cfg_glb.filename}')
-    print(f'exists({int(exists(cfg.cfg_loc.filename))}) {cfg.cfg_loc.filename}')
+class Run:
+    """Test init --force (reinit)"""
 
-def _chk_init_proj(cfg, ntdirs, trksubdir):
-    # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
-    # EXP: apples '~/proj/apples/.timetracker/config'
-    # INIT LOCAL PROJECT CONFIG
-    assert cfg.cfg_loc.trksubdir == trksubdir, (
-        f'\nEXP({trksubdir})\n'
-        f'ACT({cfg.cfg_loc.trksubdir})\n'
-        f'{cfg.cfg_loc}')
-    assert cfg.cfg_loc.dircfg == ntdirs.dirtrk
-    assert exists(cfg.cfg_glb.filename)
-    assert exists(cfg.cfg_loc.filename)
-    ##findhome(tmphome)
+    def __init__(self, tmphome, gfname):
+        self.tmphome = tmphome
+        self.gfname = gfname
+        self.cfg_glb = Cfg.get_cfgglobal(gfname, tmphome)
 
-def _chk_cfg(cfg, loc, glb):
-    # Check if local config exists or not
-    if loc:
+    def prtcfgs(self, cfg):
+        """Print the filenames of the local and global filenames"""
+        print(f'exists({int(exists(self.cfg_glb.filename))}) {self.cfg_glb.filename}')
+        print(f'exists({int(exists(cfg.cfg_loc.filename))}) {cfg.cfg_loc.filename}')
+
+    def chk_init_proj(self, cfg, ntdirs, trksubdir, gfname):
+        """Check if the project was initialized properly"""
+        # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
+        # EXP: apples '~/proj/apples/.timetracker/config'
+        # INIT LOCAL PROJECT CONFIG
+        assert self.cfg_glb.filename == gfname
+        assert cfg.cfg_loc.trksubdir == trksubdir, (
+            f'\nEXP({trksubdir})\n'
+            f'ACT({cfg.cfg_loc.trksubdir})\n'
+            f'{cfg.cfg_loc}')
+        assert cfg.cfg_loc.dircfg == ntdirs.dirtrk
+        assert exists(self.cfg_glb.filename), f'DOES NOT EXIST({self.cfg_glb.filename})'
         assert exists(cfg.cfg_loc.filename)
-    else:
-        assert not exists(cfg.cfg_loc.filename)
-    # Check if global config exists or not
-    if glb:
-        assert exists(cfg.cfg_glb.filename)
-    else:
-        assert not exists(cfg.cfg_glb.filename)
+        ##findhome(tmphome)
 
-def _rm_cfgs(cfg, loc, glb):
-    if loc:
-        assert exists(cfg.cfg_loc.filename)
-        remove(cfg.cfg_loc.filename)
-        assert not exists(cfg.cfg_loc.filename)
-    if glb:
-        assert exists(cfg.cfg_glb.filename)
-        remove(cfg.cfg_glb.filename)
-        assert not exists(cfg.cfg_glb.filename)
+    def chk_cfg(self, cfg, loc, glb):
+        """Check the local and global config filename"""
+        # Check if local config exists or not
+        if loc:
+            assert exists(cfg.cfg_loc.filename)
+        else:
+            assert not exists(cfg.cfg_loc.filename)
+        # Check if global config exists or not
+        if glb:
+            assert exists(self.cfg_glb.filename)
+        else:
+            assert not exists(self.cfg_glb.filename)
+
+    def rm_cfgs(self, cfg, loc, glb):
+        """Remove chose config files"""
+        if loc:
+            assert exists(cfg.cfg_loc.filename)
+            remove(cfg.cfg_loc.filename)
+            assert not exists(cfg.cfg_loc.filename)
+        if glb:
+            assert exists(self.cfg_glb.filename)
+            remove(self.cfg_glb.filename)
+            assert not exists(self.cfg_glb.filename)
 
 
 if __name__ == '__main__':

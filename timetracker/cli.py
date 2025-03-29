@@ -23,8 +23,8 @@ from timetracker.cfg.utils import run_cmd
 
 def main():
     """Connect all parts of the timetracker"""
-    #from logging import basicConfig, DEBUG
-    #basicConfig(level=DEBUG)
+    from logging import basicConfig, DEBUG
+    basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 
@@ -167,6 +167,8 @@ class Cli:
             help="The name of the project to be time tracked")
         parser.add_argument('-f', '--force', action='store_true',
             help='Reinitialize the project: Add missing config files & keep existing')
+        parser.add_argument('-G', '--global-config-file', metavar='FILE',
+            help='Use specified file as the global config file')
         return parser
 
     @staticmethod

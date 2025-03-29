@@ -19,21 +19,21 @@ from timetracker.msgs import str_reinit
 class Cfg:
     """Configuration manager for timetracker"""
 
-    def __init__(self, fcfg_local, fcfg_global=None, dirhome=None):
+    ####def __init__(self, fcfg_local, fcfg_global=None, dirhome=None):
+    def __init__(self, fcfg_local):
         self.cfg_loc = CfgProj(fcfg_local)
-        # pylint: disable=line-too-long
-        self.cfg_glb = CfgGlobal(get_filename_globalcfg(dirhome) if fcfg_global is None else fcfg_global)
         debug(f'{int(exists(self.cfg_loc.filename))} PROJ {self.cfg_loc.filename}')
-        debug(f'{int(exists(self.cfg_glb.filename))} GLOB {self.cfg_glb.filename}')
+        ####debug(f'{int(exists(self.cfg_glb.filename))} GLOB {self.cfg_glb.filename}')
 
-    def needs_init(self):
+    def needs_init(self, fcfg_global=None, dirhome=None):
         """Check for existance of both local and global config to see if init is needed"""
-        if (exist_loc := exists(self.cfg_loc)) and (exist_glb := exists(self.cfg_glb)):
+        fgcfg = self.get_cfgglobal(fcfg_global, dirhome).filename
+        if (exist_loc := exists(self.cfg_loc.filename)) and (exist_glb := exists(fgcfg)):
             return False
         if not exist_loc:
-            print(str_init(self.cfg_loc.filename))
+            print(str_init(exist_loc))
         elif not exist_glb:
-            print(f'Global config, {self.cfg_glb.filename} not found')
+            print(f'Global config, {fgcfg} not found')
             print(str_reinit())
         return True
 
@@ -41,15 +41,22 @@ class Cfg:
     ####    """Add the project to the local and global config"""
     ####    return self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
 
-    def init(self, project, dircsv=None):
+    def init(self, project, dircsv=None, fcfg_global=None, dirhome=None):
         """Initialize a project, return CfgGlobal"""
         self.cfg_loc.wr_ini_file(project, dircsv=dircsv)
-        return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
+        cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
+        return cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
-    def reinit(self, project, dircsv=None):
+    def reinit(self, project, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
         self._reinit_local(self.cfg_loc, project, dircsv)
-        self._reinit_global(self.cfg_glb, project, self.cfg_loc.filename)
+        cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
+        self._reinit_global(cfg_glb, project, self.cfg_loc.filename)
+
+    @staticmethod
+    def get_cfgglobal(fcfg=None, dirhome=None):
+        """Get a global configuration object"""
+        return CfgGlobal(get_filename_globalcfg(dirhome) if fcfg is None else fcfg)
 
     @staticmethod
     def _reinit_local(cfg_loc, project, dircsv):

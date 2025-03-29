@@ -59,7 +59,6 @@ class CfgProj:
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
         self.dirhome = dirhome
-        ####self.dircsv = self._get_dircsv() if dircsv is None else dircsv
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""
@@ -79,11 +78,17 @@ class CfgProj:
             return glob(globpat)
         return None
 
+    @staticmethod
+    def read_cfg(filename):
+        """Read the given config file and return a doc object"""
+        return TOMLFile(filename).read() if exists(filename) else None
+
     def set_filename_csv(self, filename_str):
         """Write the config file, replacing [csv][filename] value"""
         filenamecfg = self.get_filename_cfg()
-        if exists(filenamecfg):
-            doc = TOMLFile(filenamecfg).read()
+        if (doc := self.read_cfg(filenamecfg)):
+        ##if exists(filenamecfg):
+        ##    doc = TOMLFile(filenamecfg).read()
             doc['csv']['filename'] = filename_str
             self._wr_cfg(filenamecfg, doc)
             return

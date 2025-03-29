@@ -30,7 +30,7 @@ Time is saved in
 * Libre Software (aka open-source)
 * Quick to set up
 * Own your data
-* NO invasive tracking **ever** of (as is done by multitudinous other timetracking apps):
+* NO invasive tracking **ever** of mouse-clicks, browser tabs, keystrokes, etc., as is done by multitudinous other timetracking apps
 * Human-readable ASCII data stored in csv (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
   * Ready for [pandas](https://pandas.pydata.org/), the prevailing Python Data Analysis Library
   * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++

@@ -32,7 +32,7 @@ Time is saved in
 * Own your data
 * NO invasive tracking **ever** of mouse-clicks, browser tabs, keystrokes, etc., as is done by multitudinous other timetracking apps
 * Human-readable ASCII data stored in csv (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
-  * Ready for [pandas](https://pandas.pydata.org/), the Python Data Analysis Library for tabular data
+  * Ready for [pandas](https://pandas.pydata.org/), **the** Python Data Analysis Library for tabular data
   * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++
 * Modify your data if you forget to log time
 * Quickly see the current task being recorded

@@ -17,14 +17,6 @@ Time is saved in
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
-## Contents
-* [Quickstart](installation.md)
-* [Overview](overview.md)
-* [Basic usage](usage.md)
-* **Advanced usage**
-  * [Global config](config_global.md)
-* [Contribute](contributing.md)
-
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
 ### 1) Initialize a timetracker project

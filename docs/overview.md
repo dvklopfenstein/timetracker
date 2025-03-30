@@ -7,7 +7,7 @@ License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
 `trk` is a simple [pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly 
 timetracking application for the command line.
 
-You can use it to easily create, report, analyze, and plot time units.
+You can use it to swiftly create, report, analyze, and plot time units.
 Time is stored in pandas-friendly human-readable 
 [plain-text](https://lifehacker.com/i-still-use-plain-text-for-everything-and-i-love-it-1758380840)
 csv files.
@@ -28,8 +28,8 @@ vim, emacs, or notepad++.
 They can also be opened Excel.
 
 ## Tags
-To make it easier to analyze groups of entries later,
-`trk` includes support for inline tags,
+To analyze groups of time entries later,
+`trk` includes support for tags,
 which are stored in their own column in the csv files.
 You can find and filter entries by using tags
 along with other search conditions using pandas.
@@ -38,7 +38,7 @@ Multiple tags are separated by the `;` character.
 
 ## Activities
 Each csv files contains a column that can optionally contain an activity.
-Activities can make analyzing and plotting time slots easier.
+Activities can streamline analyzing and plotting groups of time slots.
 
 
 ## Support for multiple projects

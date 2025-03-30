@@ -20,10 +20,9 @@ edit_uri: edit/main/docs/
 site_author: DV Klopfenstein, PhD
 site_description: Track your time on multiple projects from the CLI; Task time is saved to pandas-friendly csv files
 nav:
-  - timetracker-csv: overview.md
-  - 'User Guide':
+  - Overview: overview.md
+  - 'USER GUILD':
     - Quickstart: installation.md
-    - Overview:   overview.md
     - Basic Usage: usage.md
     - Advanced Usage: advanced.md
     - 'Tips and Tricks': tips-and-tricks.md

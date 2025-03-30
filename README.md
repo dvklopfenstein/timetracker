@@ -16,7 +16,7 @@ Time is saved in
 * [Quickstart](#quickstart)
 * [Installation](#installation)
 * [Other time-trackers](#other-timetrackers)
-* [Documentation](docs/README.md)
+* [Documentation](http:/dvklopfenstein.github.io/timetracker)
 * [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
 
 ## Advantages
@@ -101,7 +101,5 @@ $ pip install .
   * tt-cli CLI only, no idle time detection, no support for clients
   * timetracker CLI only, no idle time detection, no support for clients
   * 1k stars [hamster comes pretty close but seems outdated/abandoned and a little bit too complex](https://github.com/projecthamster/hamster)
-
-[pages](http:/dvklopfenstein.github.io/timetracker)
 
 Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

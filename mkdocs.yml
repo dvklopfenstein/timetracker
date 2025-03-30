@@ -29,6 +29,6 @@ nav:
   - 'Reference':
     - Command Line: reference-command-line.md
     - Configuration File: reference-config-file.md
-  - 'Contributing':
+  - 'Community':
     - Contributing to timetracker-csv: contributing.md
 

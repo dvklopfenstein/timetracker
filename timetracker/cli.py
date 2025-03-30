@@ -23,8 +23,8 @@ from timetracker.cfg.utils import run_cmd
 
 def main():
     """Connect all parts of the timetracker"""
-    from logging import basicConfig, DEBUG
-    basicConfig(level=DEBUG)
+    #from logging import basicConfig, DEBUG
+    #basicConfig(level=DEBUG)
     obj = Cli()
     obj.run()
 

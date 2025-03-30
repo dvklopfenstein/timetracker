@@ -43,8 +43,14 @@ def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
         print(str_tostart())
         sys_exit(0)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
+    if project is None:
+        project = cfg.cfg_loc.get_project_from_filename()
+    if dircsv is None:
+        dircsv = '.'
+    debug('CMD INIT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
     cfg.init(project, dircsv, fcfg_global, kwargs.get('dirhome'))
-    debug(cfg.cfg_loc.get_desc("new"))
+    debug('CMD INIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    debug(cfg.cfg_loc.get_desc("ran_init"))
     return cfg
 
 def _chk_global_cfg(fcfg_global):
@@ -55,7 +61,7 @@ def _chk_global_cfg(fcfg_global):
 def run_reinit(fnamecfg, dircsv, project, **kwargs):
     """Reinitialize timetracking project"""
     cfg = Cfg(fnamecfg)
-    cfg.reinit(project,dircsv, kwargs.get('fcfg_global', kwargs.get('dirhome')))
+    cfg.reinit(project,dircsv, kwargs.get('fcfg_global'), kwargs.get('dirhome'))
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

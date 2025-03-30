@@ -21,6 +21,7 @@
 # Details
 
 ## Unreleased
+* ADDED ability to specify the global config file from the cli
 * ADDED major documentation start
 * ADDED a new console script, `timestr`, to test how time strings are converted to `datetime` by `dateparser`
 * ADDED reinitialization command using `trk init --force`

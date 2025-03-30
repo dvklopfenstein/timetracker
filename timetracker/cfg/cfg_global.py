@@ -49,7 +49,7 @@ class CfgGlobal:
     def wr_doc(self, doc):
         """Write a global cfg file"""
         TOMLFile(self.filename).write(doc)
-        print(f'  WROTE: {self.filename}')
+        print(f'  SSS WROTE: {self.filename}')
 
     ##def wr_cfg(self):
     ##    """Write config file"""
@@ -97,6 +97,17 @@ class CfgGlobal:
             print(f'Initialized global timetracker config: {self.filename}')
         return doc
 
+    def read_doc(self):
+        """Read the doc object"""
+        return TOMLFile(self.filename).read() if exists(self.filename) else None
+
+    def reinit(self, project, cfgfilename):
+        """Read the global config file & only change `project` & `csv.filename`"""
+        doc = self._rd_cfg()
+        assert doc, "Global file should be checked for existence: {self.filename}"
+        if self._add_project(doc, project, cfgfilename):
+            self.wr_doc(doc)
+
     def _add_project(self, doc, project, cfgfilename):
         """Add a project to the global config file, if it is not already present"""
         debug(ltblue(f'CfgGlobal _add_project({project}, {cfgfilename}'))
@@ -118,13 +129,6 @@ class CfgGlobal:
         # pylint: disable=unsubscriptable-object
         ##debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
         return False
-
-    def reinit(self, project, cfgfilename):
-        """Read the global config file & only change `project` & `csv.filename`"""
-        doc = self._rd_cfg()
-        assert doc, "Global file should be checked for existence: {self.filename}"
-        if self._add_project(doc, project, cfgfilename):
-            self.wr_doc(doc)
 
     def _noproj(self, doc, projnew, projcfgname):
         """Test if the project is missing from the global config file"""

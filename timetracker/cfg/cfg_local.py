@@ -86,9 +86,8 @@ class CfgProj:
     def set_filename_csv(self, filename_str):
         """Write the config file, replacing [csv][filename] value"""
         filenamecfg = self.get_filename_cfg()
-        if (doc := self.read_cfg(filenamecfg)):
-        ##if exists(filenamecfg):
-        ##    doc = TOMLFile(filenamecfg).read()
+        if exists(filenamecfg):
+            doc = TOMLFile(filenamecfg).read()
             doc['csv']['filename'] = filename_str
             self._wr_cfg(filenamecfg, doc)
             return
@@ -101,16 +100,21 @@ class CfgProj:
         return Starttime(self.dircfg, project, username)
 
     ##def write_file(self, project, dircsv='.', force=False):
-    def wr_ini_file(self, project, dircsv='.'):
+    def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
         """Write a new config file"""
         fname = self.get_filename_cfg()
+        debug(f'CfgProj wr_ini_file {fname}')
         assert not exists(fname)
         #if exists(fname):
         #    return
-        self._mk_dircfg()
+        if not exists(self.dircfg):
+            makedirs(self.dircfg, exist_ok=True)
         doc = self._get_doc_new(project)
         doc['csv']['filename'] = self._ini_csv_filename(dircsv)
+        if fcfg_global is not None:
+            self._add_doc_globalcfgfname(doc, fcfg_global)
         self._wr_cfg(fname, doc)
+        print(f'Initialized timetracker directory: {self.dircfg}')
         ## if not exists(fname):
         ##    -- do the write ---
         ##elif force:
@@ -121,7 +125,7 @@ class CfgProj:
         ##else:
         ##    print(f'Use `force` to overwrite: {fname}')
 
-    def reinit(self, project, dircsv):
+    def reinit(self, project, dircsv, fcfg_global=None):
         """Update the cfg file, if needed"""
         fname = self.get_filename_cfg()
         assert exists(fname)   # checked in Cfg.reinit prior to calling
@@ -141,9 +145,22 @@ class CfgProj:
             print(f'{fname} -> Changed csv directory from {csv_orig} to {csv_new}')
             doc['csv']['filename'] = self._ini_csv_filename(dircsv)
             chgd = True
+        if fcfg_global is not None:
+            raise RuntimeError('TIME TO IMPLEMENT ADDING/CHECKING Global config')
         if chgd:
             TOMLFile(fname).write(doc)
+        else:
+            print(f'No changes needed for {self.filename}')
 
+    def read_doc(self):
+        """Read the doc object"""
+        return TOMLFile(self.filename).read() if exists(self.filename) else None
+
+    def get_project_from_filename(self):
+        """Get the default project name from the project directory filename"""
+        return basename(self.dirproj)
+
+    #-------------------------------------------------------------
     def _ini_csv_filename(self, dircsv):
         if dircsv is None:
             dircsv = '.'
@@ -153,16 +170,6 @@ class CfgProj:
         """Read a config file and load it into a TOML document"""
         fin_cfglocal = self.get_filename_cfg()
         return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
-
-    #-------------------------------------------------------------
-    def _mk_dircfg(self):
-        """Makes a `.timetracker/` working directory, if needed; The project cfg is stored here"""
-        dircfg = self.dircfg
-        debug(f'mk_dircfg({dircfg})')
-        if not exists(dircfg):
-            makedirs(dircfg, exist_ok=True)
-            absdir = abspath(dircfg)
-            print(f'Initialized timetracker directory: {absdir}')
 
     def _read_project_from_cfgfile(self):
         """Read a config file and load it into a TOML document"""
@@ -200,8 +207,8 @@ class CfgProj:
         # Use `~`, if it makes the path shorter
         ##fcsv = replace_homepath(doc['csv']['filename'])
         ##doc['csv']['filename'] = fcsv
-        fcsv = doc['csv']['filename']
-        debug(pink(f'CfgProj _wr_cfg(...)  CSV:      {fcsv}'))
+        debug(pink(f'CfgProj _wr_cfg(...)  PROJ:     {doc["project"]}'))
+        debug(pink(f"CfgProj _wr_cfg(...)  CSV:      {doc['csv']['filename']}"))
         debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
 
     def _get_dircsv(self):
@@ -221,6 +228,7 @@ class CfgProj:
         return get_relpath(fcsv_abs, self.dirproj)
 
     def _get_doc_new(self, project):
+        assert project is not None and isinstance(project, str)
         doc = document()
         doc.add(comment("TimeTracker project configuration file"))
         doc.add(nl())
@@ -242,6 +250,15 @@ class CfgProj:
         # # https://docs.python.org/3/library/datetime.html#format-codes
         # format = '%a %p %Y-%m-%d %H:%M:%S'
         return doc
+
+    @staticmethod
+    def _add_doc_globalcfgfname(doc, fcfg_global):
+        # [global_config]
+        # filename = "/home/uname/myglobal.cfg"
+        section = table()
+        #csvdir.comment("Directory where the csv file is stored")
+        section.add("filename", fcfg_global)
+        doc.add("global_config", section)
 
     #-------------------------------------------------------------
     def get_desc(self, note=' set'):

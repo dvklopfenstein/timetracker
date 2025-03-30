@@ -23,7 +23,7 @@ Time is saved in
 * [Other time-trackers](#other-timetrackers)
 * [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
 
-## Documentation
+## Contents
 * [**QUICKSTART**](quickstart.md)
 * [**OVERVIEW**](overview.md)
 * **USERGUIDE**

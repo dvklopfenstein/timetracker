@@ -122,8 +122,8 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
-        parser.add_argument('-f', '--file',
-            help='Use specified file as the global config file')
+        ####parser.add_argument('-f', '--file',
+        ####    help='Use specified file as the global config file')
         parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username for timetracking")
         parser.add_argument('--version', action='store_true',
@@ -167,6 +167,8 @@ class Cli:
             help="The name of the project to be time tracked")
         parser.add_argument('-f', '--force', action='store_true',
             help='Reinitialize the project: Add missing config files & keep existing')
+        parser.add_argument('-G', '--global-config-file', metavar='FILE',
+            help='Use specified file as the global config file')
         return parser
 
     @staticmethod
@@ -215,6 +217,8 @@ class Cli:
         parser.add_argument('-i', '--input', metavar='file.csv',
             default=self.fcsv,
             help='Specify an input csv file')
+        parser.add_argument('-G', '--global-config-file',
+            help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_report(self, subparsers):
@@ -228,6 +232,8 @@ class Cli:
             help='Specify an output file')
         parser.add_argument('-p', '--product', type=float,
             help=SUPPRESS)  # Future feature
+        parser.add_argument('-G', '--global-config-file',
+            help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_projects(self, subparsers):
@@ -236,6 +242,8 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
             help='List all projects listed managed in the global config file')
+        parser.add_argument('-G', '--global-config-file',
+            help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_projectsupdate(self, subparsers):

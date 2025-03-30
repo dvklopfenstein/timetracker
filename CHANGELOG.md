@@ -21,7 +21,8 @@
 # Details
 
 ## Unreleased
-* CHANGED command name `time` to `hours`
+* ADDED ability to specify the global config file from the cli
+* ADDED major documentation start
 * ADDED a new console script, `timestr`, to test how time strings are converted to `datetime` by `dateparser`
 * ADDED reinitialization command using `trk init --force`
 * ADDED issue tracker
@@ -29,6 +30,7 @@
 * ADDED `trk stop -m d` will use your last git commit message as the timetracker stop message
 * ADDED new `epoch` package to manage all time modules
 * ADDED two new test scripts to test how time strings are converted to `datetime` objects by `dateparser` and `dateutils`
+* CHANGED command name `time` to `hours`
 
 ## Release 2025-03-21 v0.4a0
 * ADD new prerequisite, dateparser, due to its accuracy and flexibility

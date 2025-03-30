@@ -123,3 +123,5 @@ so feel free to fork the code and play around with it!
 If you create something you want to share with us, please create a pull request.
 We never expect pull requests to be perfect, idiomatic, instantly mergeable code.
 We can work through it together!
+
+Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved

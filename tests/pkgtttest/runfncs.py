@@ -22,6 +22,6 @@ def proj_setup(tmphome, project, dircur, dirgit01=True):
     """After creating a tmphome using TemporaryDirectory, create these"""
     exp = mk_projdirs(tmphome, project, dirgit01)
     finder = CfgFinder(dircur=getattr(exp, dircur), trksubdir=None)
-    cfgname = finder.get_cfgfilename()
-    assert not exists(cfgname), findhome_str(exp.dirhome)
-    return cfgname, finder, exp
+    fcfgproj = finder.get_cfgfilename()
+    assert not exists(fcfgproj), findhome_str(exp.dirhome)
+    return fcfgproj, finder, exp

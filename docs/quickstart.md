@@ -50,3 +50,5 @@ You can also get the total hours that you spent on a project:
 $ trk hours
 0:03:00 H:M:S or 3.000 hours
 ```
+
+Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved

@@ -64,7 +64,7 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         return {'fcsv':fcsv, 'csvline':None}
     csvline = wr_stopline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
     ##csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
-    _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
+    _msg_stop_complete(fcsv, delta, dtz)
 
     # Remove the starttime file
     if not kwargs.get('keepstart', False):
@@ -73,13 +73,12 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
         print('NOT restarting the timer because `--keepstart` invoked')
     return {'fcsv':fcsv, 'csvline':csvline}
 
-def _msg_stop_complete(fcsv, delta, dtz, quiet):
+def _msg_stop_complete(fcsv, delta, dtz):
     """Finish stopping"""
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
-    if not quiet:
-        print(f'Timer stopped at {dtz.strftime(FMTDT_H)}\n'
-              f'Elapsed H:M:S {delta} '
-              f'appended to {get_shortest_name(fcsv)}')
+    print(f'Timer stopped at {dtz.strftime(FMTDT_H)}\n'
+          f'Elapsed H:M:S {delta} '
+          f'appended to {get_shortest_name(fcsv)}')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

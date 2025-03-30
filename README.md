@@ -20,15 +20,13 @@ Time is saved in
 * [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
 
 ## Advantages
-* Freedom Software (aka open-source)
+* Libre Software (aka open-source)
 * Quick to set up
 * Own your data
-* NO invasive tracking **ever** of (as is done by multitudinous other timetracking apps):
-  * keyboard and mouse activity
-  * currently active browser tab and its title and URL
-  * currently active application and the title of its window
+* NO invasive tracking **ever** of keystrokes, browser activity, mouse-clicks, etc.,
+as is done by multitudinous other timetracking apps
 * Human-readable ASCII data stored in csv (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
-  * Ready for [pandas](https://pandas.pydata.org/), a prevailing Python Data Analysis Library
+  * Ready for [pandas](https://pandas.pydata.org/), **the** Python Data Analysis Library for tabular data
   * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++
 * Modify your data if you forget to log time
 * Quickly see the current task being recorded
@@ -37,9 +35,9 @@ Time is saved in
 * No required use of the internet or cloud-based services
 * Data supported for each time interval includes:
   * A required free-form descriptive message
-  * An optional `activity` or `type`
+  * An optional `activity` or type
   * Any number of tags
-* Plans to support exporting data for import by external time-tracking viewers
+* Export data for import by external time-tracking viewers
 
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.

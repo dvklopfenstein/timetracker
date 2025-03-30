@@ -139,6 +139,8 @@ class Cli:
         self._add_subparser_cancel(subparsers)
         self._add_subparser_hours(subparsers)
         self._add_subparser_report(subparsers)
+        self._add_subparser_tag(subparsers)
+        self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
         self._add_subparser_projectsupdate(subparsers)
         #help='timetracker subcommand help')
@@ -232,6 +234,26 @@ class Cli:
             help='Specify an output file')
         parser.add_argument('-p', '--product', type=float,
             help=SUPPRESS)  # Future feature
+        parser.add_argument('-G', '--global-config-file',
+            help='Use specified file as the global config file')
+        return parser
+
+    def _add_subparser_tag(self, subparsers):
+        parser = subparsers.add_parser(name='tag',
+            help='Show all tags used in this project',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-g', '--global', action='store_true',
+            help='List all tag listed managed in the global config file')
+        parser.add_argument('-G', '--global-config-file',
+            help='Use specified file as the global config file')
+        return parser
+
+    def _add_subparser_activity(self, subparsers):
+        parser = subparsers.add_parser(name='activity',
+            help='Show all activities used in this project',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-g', '--global', action='store_true',
+            help='List all activity listed managed in the global config file')
         parser.add_argument('-G', '--global-config-file',
             help='Use specified file as the global config file')
         return parser

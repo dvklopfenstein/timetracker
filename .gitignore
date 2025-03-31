@@ -11,6 +11,7 @@ timetracker_*.csv
 .timetracker_start
 
 # Build files
+/site/
 /build/
 /timetracker_csv.egg-info/
 /dist/

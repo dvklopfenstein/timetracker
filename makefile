@@ -146,3 +146,4 @@ clobber:
 	make clean
 	rm -rf .timetracker/ .tt/
 	rm -f timetracker_timetracker_dvklo.csv
+	rm -rf site

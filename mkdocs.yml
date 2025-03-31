@@ -19,16 +19,17 @@ repo_url: https://github.com/dvklopfenstein/timetracker/
 edit_uri: edit/main/docs/
 site_author: DV Klopfenstein, PhD
 site_description: Track your time on multiple projects from the CLI; Task time is saved to pandas-friendly csv files
+exclude_docs: |
+  /README.md
 nav:
   - Overview: overview.md
   - 'USER GUILD':
     - Quickstart: installation.md
     - Basic Usage: usage.md
     - Advanced Usage: advanced.md
-    - 'Tips and Tricks': tips-and-tricks.md
   - 'Reference':
     - Command Line: reference-command-line.md
-    - Configuration File: reference-config-file.md
+    - Global configuration File: config_global.md
   - 'Community':
     - Contributing to timetracker-csv: contributing.md
 

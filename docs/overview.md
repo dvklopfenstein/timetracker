@@ -19,7 +19,7 @@ csv files.
 including git-managed repos stored on GitHub,
 dropbox folders, or
 encrypted [proton-drive](https://proton.me/drive) folders.
-[https://proton.me/](Proton) is a "privacy by default" encrypted suite of tools, including email,
+[Proton](https://proton.me/) is a "privacy by default" encrypted suite of tools, including email,
 that over 100 million people use to stay private and secure online.
 
 Comma-separated files contain tables (rows and columns) of data and

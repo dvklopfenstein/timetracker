@@ -105,21 +105,21 @@ Use the `start` and `stop` commands to record time:
 $ trk start --at 9am
 Timetracker started at: Mon 09:00 AM: 2025-03-31 09:00:00
 
-$ trk stop --at 11:30am -m "Visited other worlds"
+$ trk stop --at 11:30am -m "Received skills necessary for the job"
 Timer stopped at Mon 2025-03-31 11:30:00 AM
 Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
 
 $ trk start --at 12:30pm
 Timetracker started at: Mon 12:30 PM: 2025-03-31 12:30:00
 
-$ trk stop --at 3pm -m "Began crafting a solid gold chest to store crucial docs"
+$ trk stop --at 3pm -m "Trained apprentices in decorative art"
 Timer stopped at Mon 2025-03-31 03:00:00 PM
 Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
 
 $ trk start --at 3pm
 Timetracker started at: Mon 03:00 PM: 2025-03-31 15:00:00
 
-$ trk stop --at 3:30pm -m "Trained apprentices in decorative art"
+$ trk stop --at 3:30pm -m "Began crafting a solid gold chest to store crucial docs"
 Timer stopped at Mon 2025-03-31 03:30:00 PM
 Elapsed H:M:S 0:30:00 appended to timetracker_meetinghouse_bez.csv
 
@@ -136,9 +136,9 @@ $ trk hours
 $ trk report
 Day  Date        Span     Total  Description
 ---  ----------  -----    -----  -----------------------------------
-Mon  2025-03-31  02:30    02:30  Visited other worlds
-Mon  2025-03-31  02:30    05:00  Began crafting a solid gold chest to store crucial docs
-Mon  2025-03-31  00:30    05:30  Trained apprentices in decorative art
+Mon  2025-03-31  02:30    02:30  Received skills necessary for the job
+Mon  2025-03-31  02:30    05:00  Trained apprentices in decorative art
+Mon  2025-03-31  00:30    05:30  Began crafting a solid gold chest to store crucial docs
 Mon  2025-03-31  02:00    07:30  Continued to add artistic touches to the chest
 ```
 
@@ -158,7 +158,7 @@ Elapsed H:M:S 12:00:00 appended to timetracker_meetinghouse_bez.csv
 
 For example, to add tags describing which metals are being crafted into various products, do:
 ```sh
-$ trk stop -a art -t metal=gold metal=silver product=chalice -m "Crafted requested goblets for the meetinghouse"
+$ trk stop -a art -t metal=gold metal=silver product=lampstand -m "Crafted requested light holders for the meetinghouse"
 Timer stopped at Thu 2025-04-03 09:00:00 PM
 Elapsed H:M:S 13:00:00 appended to timetracker_meetinghouse_bez.csv
 ```

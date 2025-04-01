@@ -4,12 +4,12 @@ License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
 -->
 
 # Basic Usage #
-**Timetracker-csv** tracks time one _project repository_ at a time.
+**Timetracker-csv** tracks time one project repository at a time.
 
 For a list of **timetracker-csv** commands, enter `trk --help`.
 
 ## Tracking time ##
-A _project repository_ is a directory that contains
+A project repository is a directory that contains
 project files and project sub-directories.
 
 **Timetracker-csv** works seemlessly
@@ -119,14 +119,14 @@ Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
 $ trk start --at 3pm
 Timetracker started at: Mon 03:00 PM: 2025-03-31 15:00:00
 
-$ trk stop --at 3:30pm -m "Began crafting a solid gold chest to store crucial docs"
+$ trk stop --at 3:30pm -m "Began crafting a chest from Acacia wood to store crucial docs"
 Timer stopped at Mon 2025-03-31 03:30:00 PM
 Elapsed H:M:S 0:30:00 appended to timetracker_meetinghouse_bez.csv
 
 $ trk start --at 3:30pm
 Timetracker started at: Mon 03:30 PM: 2025-03-31 15:30:00
 
-$ trk stop  --at 5:30pm -m "Continued to add artistic touches to the chest"
+$ trk stop  --at 5:30pm -m "Covered chest in gold"
 Timer stopped at Mon 2025-03-31 05:30:00 PM
 Elapsed H:M:S 2:00:00 appended to timetracker_meetinghouse_bez.csv
 
@@ -138,8 +138,8 @@ Day  Date        Span     Total  Description
 ---  ----------  -----    -----  -----------------------------------
 Mon  2025-03-31  02:30    02:30  Received skills necessary for the job
 Mon  2025-03-31  02:30    05:00  Trained apprentices in decorative art
-Mon  2025-03-31  00:30    05:30  Began crafting a solid gold chest to store crucial docs
-Mon  2025-03-31  02:00    07:30  Continued to add artistic touches to the chest
+Mon  2025-03-31  00:30    05:30  Began crafting a chest from Acacia wood to store crucial docs
+Mon  2025-03-31  02:00    07:30  Covered chest in gold
 ```
 
 ### Activities ###
@@ -147,8 +147,9 @@ There is one `Activity` column in each csv file.
 For example, to add the activity, `docs`, to a time unit do:
 ```sh
 $ trk stop -a docs -m "Document the ordered architecture for the meetinghouse"
+
 # or the longer form (for shell scripts and makefiles)
-$ trk stop --activity docs -m "Document the ordered architecture for the meetinghouse"
+$ trk stop --activity docs -m "Document meetinghouse architecture"
 Timer stopped at Wed 2025-04-02 08:00:00 PM
 Elapsed H:M:S 12:00:00 appended to timetracker_meetinghouse_bez.csv
 ```
@@ -158,7 +159,7 @@ Elapsed H:M:S 12:00:00 appended to timetracker_meetinghouse_bez.csv
 
 For example, to add tags describing which metals are being crafted into various products, do:
 ```sh
-$ trk stop -a art -t metal=gold metal=silver product=lampstand -m "Crafted requested light holders for the meetinghouse"
+$ trk stop -a art -t metal=gold product=lampstand -m "Crafted light holders for the meetinghouse"
 Timer stopped at Thu 2025-04-03 09:00:00 PM
 Elapsed H:M:S 13:00:00 appended to timetracker_meetinghouse_bez.csv
 ```

@@ -49,7 +49,7 @@ class CfgGlobal:
     def wr_doc(self, doc):
         """Write a global cfg file"""
         TOMLFile(self.filename).write(doc)
-        print(f'  SSS WROTE: {self.filename}')
+        debug(f'  SSS WROTE: {self.filename}')
 
     ##def wr_cfg(self):
     ##    """Write config file"""

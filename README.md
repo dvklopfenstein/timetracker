@@ -8,7 +8,9 @@ one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-comman
 
 Time is saved in
 [pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly
-[csv](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files
+[CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files.
+
+CSV files for each project can be combined into a single CSV file for analysis and plotting.
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
@@ -25,7 +27,7 @@ Time is saved in
 * Own your data
 * NO invasive tracking **ever** of keystrokes, browser activity, mouse-clicks, etc.,
 as is done by multitudinous other timetracking apps
-* Human-readable ASCII data stored in csv (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
+* Human-readable ASCII data stored in CSV (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
   * Ready for [pandas](https://pandas.pydata.org/), **the** Python Data Analysis Library for tabular data
   * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++
 * Modify your data if you forget to log time
@@ -87,8 +89,8 @@ $ pip install .
 * 13k stars [ActivityWatch](https://github.com/ActivityWatch/activitywatch)
 * 85 stars [ti](https://github.com/richmeta/ti)
 * 44 stars [tim](https://github.com/MatthiasKauer/tim)
-* 6 stars [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger csv format
-* https://atimelogger.pro/ csv files
+* 6 stars [Jupyter timetracker](https://github.com/PrateekKumarPython/jupyter-timetracker) uses aTimeLogger CSV format
+* https://atimelogger.pro/ CSV files
 * [List of timetrackers in PyPi](https://pypi.org/search/?q=timetracker)
 * [web-based time tracking application](https://github.com/anuko/timetracker)
 * [Wage Labor record](https://pypi.org/project/wage-labor-record/):

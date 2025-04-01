@@ -45,8 +45,10 @@ as is done by multitudinous other timetracking apps
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
 ### 1) Initialize a timetracker project
 ```
+$ cd ~/projects/meetinghouse
+
 $ trk init
-Initialized timetracker directory: /PROJDIR/.timetracker
+Initialized timetracker directory: /home/bez/projects/meetinghouse/.timetracker
 ```
 ### 2) Start the timer
 ```
@@ -55,15 +57,15 @@ Timetracker started now: Mon 09:00 AM: 2025-03-24 09:00:00
 ```
 ### 3) Stop the timer
 ```
-$ trk stop -m 'Accomplished the planned task'
+$ trk stop -m 'Received architectural plans'
 Timer stopped at Mon 2025-03-24 12:00:00 PM
-Elapsed H:M:S 0:03:00 appended to timetracker_timetracker_dvk.csv
+Elapsed H:M:S 0:03:00 appended to timetracker_meetinghouse_bez.csv
 ```
 ### 4) Report my time units for this project
 ```
 $ trk report
 Day  Date        Span     Total  Description
-Sun  2025-03-24  03:00    03:00  Accomplished the planned task
+Sun  2025-03-24  03:00    03:00  Received architectural plans
 ```
 You can also get the total hours that you spent on a project:
 ```

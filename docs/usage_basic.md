@@ -4,18 +4,71 @@ License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
 -->
 
 # Basic Usage #
-**Timetracker-csv** tracks time one _project repository_ at a time.
+**Timetracker-csv** tracks time one project repository at a time.
 
 For a list of **timetracker-csv** commands, enter `trk --help`.
 
-## Tracking time ##
-A _project repository_ is a directory that contains
+## Projects ##
+A project repository is a directory that contains
 project files and project sub-directories.
 
 **Timetracker-csv** works seemlessly
 with projects that are version-managed with `git`.
 But it also works with any project.
 
+If you use `git`, then each git-managed project repository
+will also be a trk-managed project.
+This means that time will be saved in separate
+CSV files for separate projects.
+
+Multiple CSV files can be combined
+into a single CSV file
+using the `trk export` command.
+
+
+## CSV files
+Comma-separated value
+([CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations))
+files store tabular data in plain text.
+CSV files are readable by both humans and computers.
+Each time unit is stored in a single row.
+Each row contains several columns, including:
+
+Name              | Example
+------------------|-----------------------------
+Start time        | 9am Monday, March 31, 2025
+Duration          | 2 hours
+One activity type | "documenting" or "coding"
+Description       | Made decorative almond tree blossoms out of gold
+Tags              | grant=ABC, grant=XYZ, art, metalwork
+
+There can be one activity per time unit.
+
+There can be any number of tags per time unit.
+Tags can be of the form `key=value` or simply `value`.
+
+The description of a time unit is mandatory
+(just as a `git commit` message is mandatory)
+and is specified when stopping the timer
+to describe the work that was done in the time unit.
+
+There is one CSV file written per user per project.
+Therefore, a single project repository will have more than
+one CSV file if there is more than one
+person working on the project.
+Having one project CSV file per person(user) prevents
+conflicts when using `git` to commit the files.
+
+People commonly use
+[pandas](https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/01_table_oriented.html#min-tut-01-tableoriented)
+to analyze and plot data contained in CSV files.
+
+Multiple CSV files can be combined
+into a single CSV file
+using the `trk export` command.
+
+
+## Initialize a project
 To begin, initialize your project for timetracking:
 ```sh
 # Initialize project for timetracking
@@ -23,7 +76,8 @@ $ trk init
 Initialized timetracker directory: /home/bez/projects/meetinghouse/.timetracker
 ```
 
-Initializing creates a local timetracker-csv config file for one project:
+Initializing creates a local timetracker-csv config file for one project
+which is stored in the `.timetracker` directory at the project root.
 ```sh
 # The local project timetracker-csv config file
 $ pwd
@@ -47,8 +101,8 @@ the location of that project's local config file
 # The global timetracker-csv config file contains a list of all projects
 $ cat ~/.timetrackerconfig
 projects = [
-    ["timetracker",  "/home/bez/projects/timetracker/.timetracker/config"],
     ["meetinghouse", "/home/bez/projects/meetinghouse/.timetracker/config"],
+    ["stonecutting",  "/home/bez/projects/stonecutting/.timetracker/config"],
 ]
 ```
 The list of projects 
@@ -56,15 +110,24 @@ inside the global configuration file
 is used for tasks such as:
 
   * Report total time spent on each project
-  * Export a single csv file containing all time entries for all projects.
+  * Export a single CSV file containing all time entries for all projects.
 
 
-### Specifying Date and Time ###
-
+## Start and stop the timer
 The commands, `trk start` or `trk stop`,
 use the current time for a start-time or a stop-time
 unless otherwise specified by the researcher.
+```sh
+$ trk start
+Timetracker started at: Mon 09:00 AM: 2025-03-31 09:00:00
+```
+```sh
+$ trk stop -m "Received skills necessary for the job"
+Timer stopped at Mon 2025-03-31 11:30:00 AM
+Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+```
 
+## Specify a date and time
 Explicitly specify a start and/or stop time, with the `--at` option
 (e.g. `trk start --at 9am` and `trk stop --at 5:3pm`):
 ```sh
@@ -119,14 +182,14 @@ Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
 $ trk start --at 3pm
 Timetracker started at: Mon 03:00 PM: 2025-03-31 15:00:00
 
-$ trk stop --at 3:30pm -m "Began crafting a solid gold chest to store crucial docs"
+$ trk stop --at 3:30pm -m "Began crafting a chest from Acacia wood to store crucial docs"
 Timer stopped at Mon 2025-03-31 03:30:00 PM
 Elapsed H:M:S 0:30:00 appended to timetracker_meetinghouse_bez.csv
 
 $ trk start --at 3:30pm
 Timetracker started at: Mon 03:30 PM: 2025-03-31 15:30:00
 
-$ trk stop  --at 5:30pm -m "Continued to add artistic touches to the chest"
+$ trk stop  --at 5:30pm -m "Covered chest in gold"
 Timer stopped at Mon 2025-03-31 05:30:00 PM
 Elapsed H:M:S 2:00:00 appended to timetracker_meetinghouse_bez.csv
 
@@ -138,27 +201,29 @@ Day  Date        Span     Total  Description
 ---  ----------  -----    -----  -----------------------------------
 Mon  2025-03-31  02:30    02:30  Received skills necessary for the job
 Mon  2025-03-31  02:30    05:00  Trained apprentices in decorative art
-Mon  2025-03-31  00:30    05:30  Began crafting a solid gold chest to store crucial docs
-Mon  2025-03-31  02:00    07:30  Continued to add artistic touches to the chest
+Mon  2025-03-31  00:30    05:30  Began crafting a chest from Acacia wood to store crucial docs
+Mon  2025-03-31  02:00    07:30  Covered chest in gold
 ```
 
-### Activities ###
-There is one `Activity` column in each csv file.
+## Activities
+There is one `Activity` column in each CSV file.
 For example, to add the activity, `docs`, to a time unit do:
 ```sh
 $ trk stop -a docs -m "Document the ordered architecture for the meetinghouse"
+
 # or the longer form (for shell scripts and makefiles)
-$ trk stop --activity docs -m "Document the ordered architecture for the meetinghouse"
+$ trk stop --activity docs -m "Document meetinghouse architecture"
 Timer stopped at Wed 2025-04-02 08:00:00 PM
 Elapsed H:M:S 12:00:00 appended to timetracker_meetinghouse_bez.csv
 ```
 
-### Tags ###
+## Tags
 `trk` supports multiple tags per time entry.
+Tags can be of the format, `key=value`, or simply `value`.
 
 For example, to add tags describing which metals are being crafted into various products, do:
 ```sh
-$ trk stop -a art -t metal=gold metal=silver product=lampstand -m "Crafted requested light holders for the meetinghouse"
+$ trk stop -a art -t metal=gold product=lampstand -m "Crafted light holders for the meetinghouse"
 Timer stopped at Thu 2025-04-03 09:00:00 PM
 Elapsed H:M:S 13:00:00 appended to timetracker_meetinghouse_bez.csv
 ```

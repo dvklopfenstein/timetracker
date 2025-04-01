@@ -21,14 +21,15 @@ site_author: DV Klopfenstein, PhD
 site_description: Track your time on multiple projects from the CLI; Task time is saved to pandas-friendly csv files
 exclude_docs: |
   /README.md
+  /usage_basic_next.md
 nav:
+  - Home: index.md
   - Overview: overview.md
-  - 'USER GUILD':
+  - 'Timetracker-csv':
     - Quickstart: installation.md
-    - Basic Usage: usage.md
-    - Advanced Usage: advanced.md
+    - Basic Usage: usage_basic.md
+    - Advanced Usage: usage_advanced.md
   - 'Reference':
-    - Command Line: reference-command-line.md
     - Global configuration File: config_global.md
   - 'Community':
     - Contributing to timetracker-csv: contributing.md

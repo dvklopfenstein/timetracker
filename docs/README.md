@@ -17,13 +17,40 @@ Time is saved in
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
+<<<<<<< HEAD
 ## Contents
 * [Quickstart](installation.md)
 * [Overview](overview.md)
-* [Basic usage](usage.md)
+* [Basic usage](usage_basic.md)
 * **Advanced usage**
   * [Global config](config_global.md)
 * [Contribute](contributing.md)
+* [Advantages](#advantages)
+* [Quickstart](#quickstart)
+* [Installation](#installation)
+* [Other time-trackers](#other-timetrackers)
+* [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
+
+
+
+## Advantages
+* Libre Software (aka open-source)
+* Quick to set up
+* Own your data
+* NO invasive tracking **ever** of mouse-clicks, browser tabs, keystrokes, etc., as is done by multitudinous other timetracking apps
+* Human-readable ASCII data stored in csv (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
+  * Ready for [pandas](https://pandas.pydata.org/), **the** Python Data Analysis Library for tabular data
+  * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++
+* Modify your data if you forget to log time
+* Quickly see the current task being recorded
+* Quickly see elapsed time spent on the current task
+* No clicking and clicking and clicking on a GUI
+* No required use of the internet or cloud-based services
+* Data supported for each time interval includes:
+  * A required free-form descriptive message
+  * An optional `activity` or type
+  * Any number of tags
+* Export data for import by external time-tracking viewers
 
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.

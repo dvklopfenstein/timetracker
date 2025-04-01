@@ -10,12 +10,12 @@ timetracking application for the command line.
 You can use it to swiftly create, report, analyze, and plot time units.
 Time is stored in pandas-friendly human-readable 
 [plain-text](https://lifehacker.com/i-still-use-plain-text-for-everything-and-i-love-it-1758380840)
-csv files.
+CSV files.
 
 
 ## Comma separated values
-`trk` stores each time unit in plain text in comma separated values (csv) files.
-`trk` csv files can be stored anywhere,
+`trk` stores each time unit in plain text in comma separated values (CSV) files.
+`trk` CSV files can be stored anywhere,
 including git-managed repos stored on GitHub,
 dropbox folders, or
 encrypted [proton-drive](https://proton.me/drive) folders.
@@ -30,14 +30,14 @@ They can also be opened Excel.
 ## Tags
 To analyze groups of time entries later,
 `trk` includes support for tags,
-which are stored in their own column in the csv files.
+which are stored in their own column in the CSV files.
 You can find and filter entries by using tags
 along with other search conditions using pandas.
-Tags are stored in the last column of the `trk` csv files.
+Tags are stored in the last column of the `trk` CSV files.
 Multiple tags are separated by the `;` character.
 
 ## Activities
-Each csv files contains a column that can optionally contain an activity.
+Each CSV files contains a column that can optionally contain an activity.
 Activities can streamline analyzing and plotting groups of time slots.
 
 
@@ -60,28 +60,28 @@ by doing a "Pull Request" or `PR` as the cool kids say.
 `trk` is intended to work in a git repo 
 containing a project developed by multiple researchers.
 The project time for each researcher is stored
-in one csv file per researcher.
-This ensures that there are no conflicts in the csv files
+in one CSV file per researcher.
+This ensures that there are no conflicts in the CSV files
 as multiple researchers work on the same project at the same time.
 
-The project csv files can be stored
+The project CSV files can be stored
 within the git-managed project or
 outside of the project directory.
-The location of the projct csv files
+The location of the projct CSV files
 is set when time tracking is initialized
 within the repo using `trk init --csvdir`.
 If the `--csvdir` is ommitted,
-the csv files are stored in the root directory of the project repo.
+the CSV files are stored in the root directory of the project repo.
 An example of initializing `trk` to store store
-csv files within a project subdirectory is:
+CSV files within a project subdirectory is:
 `trk init --csvdir doc/timetracking/`.
 The subdirectory `doc/timetracking/` must be created by the researcher,
 which is commonly done with `mkdir -p doc/timetracking`.
-The csv files can be hand-edited, if desired by a researcher.
+The CSV files can be hand-edited, if desired by a researcher.
 
 ## export
-Multiple csv files are concatenated (strung together one by one)
-into a single csv file using the `trk export` command.
+Multiple CSV files are concatenated (strung together one by one)
+into a single CSV file using the `trk export` command.
 
 ## Multi-platform support
 `trk` is compatible with most operating systems.

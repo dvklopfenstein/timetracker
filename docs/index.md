@@ -13,52 +13,55 @@ one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-comman
 
 Time is saved in
 [pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly
-[csv](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files
+[CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
 ## Quickstart
-The `name` used by this time tracker is determined by the `USER` environmental variable by default.
-### 1) Initialize a timetracker project
-```
+The `name` used by this time tracker is determined
+by the `USER` environmental variable by default.
+In this example, the username is "bez."
+```sh
+#----------------------------------------------------
+# 1) Initialize a timetracker project
+$ cd /home/bez/meetinghouse
+
 $ trk init
-Initialized timetracker directory: /PROJDIR/.timetracker
-```
-### 2) Start the timer
-```
+Initialized timetracker directory: /home/bez/meetinghouse/.timetracker
+
+#----------------------------------------------------
+# 2) Start the timer
 $ trk start
 Timetracker started now: Mon 09:00 AM: 2025-03-24 09:00:00
-```
-### 3) Stop the timer
-```
-$ trk stop -m 'Accomplished the planned task'
+
+#----------------------------------------------------
+# 3) Stop the timer
+$ trk stop -m 'Received instructions'
 Timer stopped at Mon 2025-03-24 12:00:00 PM
-Elapsed H:M:S 0:03:00 appended to timetracker_timetracker_dvk.csv
-```
-### 4) Report my time units for this project
-```
+Elapsed H:M:S 0:03:00 appended to timetracker_meetinghouse_bez.csv
+
+#----------------------------------------------------
+# 4a) Report my time units for this project
 $ trk report
 Day  Date        Span     Total  Description
-Sun  2025-03-24  03:00    03:00  Accomplished the planned task
-```
-You can also get the total hours that you spent on a project:
-```
+Sun  2025-03-24  03:00    03:00  Received instructions
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - 
+# 4b) You can also get the total hours that you spent on a project:
 $ trk hours
 0:03:00 H:M:S or 3.000 hours
 ```
 
 ## Installation
 Install with [timetracker-csv](https://pypi.org/project/timetracker-csv/) pip:
-```
+```sh
 $ pip install timetracker-csv
 ```
 Or install from source:
-```
+```sh
 $ git clone git@github.com:dvklopfenstein/timetracker.git
 $ cd timetracker
 $ pip install .
 ```
-
-[pages](http:/dvklopfenstein.github.io/timetracker)
 
 Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved

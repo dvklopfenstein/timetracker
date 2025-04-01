@@ -7,11 +7,11 @@ License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
 
 ## Installation
 Install with [timetracker-csv](https://pypi.org/project/timetracker-csv/) pip:
-```
+```sh
 $ pip install timetracker-csv
 ```
 Or install from source:
-```
+```sh
 $ git clone git@github.com:dvklopfenstein/timetracker.git
 $ cd timetracker
 $ pip install .
@@ -20,29 +20,31 @@ $ pip install .
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
 ### 1) Initialize a timetracker project
-```
+```sh
+$ cd /home/bez/projects/meetinghouse
+
 $ trk init
-Initialized timetracker directory: /PROJDIR/.timetracker
+Initialized timetracker directory: /home/bez/projects/meetinghouse/.timetracker
 ```
 ### 2) Start the timer
-```
+```sh
 $ trk start
 Timetracker started now: Mon 09:00 AM: 2025-03-24 09:00:00
 ```
 ### 3) Stop the timer
-```
-$ trk stop -m 'Accomplished the planned task'
+```sh
+$ trk stop -m 'Received architectural plans'
 Timer stopped at Mon 2025-03-24 12:00:00 PM
-Elapsed H:M:S 0:03:00 appended to timetracker_timetracker_dvk.csv
+Elapsed H:M:S 0:03:00 appended to timetracker_meetinghouse_bez.csv
 ```
 ### 4) Report my time units for this project
-```
+```sh
 $ trk report
 Day  Date        Span     Total  Description
-Sun  2025-03-24  03:00    03:00  Accomplished the planned task
+Sun  2025-03-24  03:00    03:00  Received architectural plans
 ```
 You can also get the total hours that you spent on a project:
-```
+```sh
 $ trk hours
 0:03:00 H:M:S or 3.000 hours
 ```

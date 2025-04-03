@@ -42,26 +42,20 @@ from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_relpath
 from timetracker.cfg.utils import replace_envvar
 
-# pylint: disable=fixme
-
-# Added dirhome to wr_ini_file and get_project_csvs
+# Added dirhome to wr_ini_file(...) and get_project_csvs(...)
 
 class CfgProj:
     """Local project configuration parser for timetracking"""
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
-    ####def __init__(self, filename, dirhome=None):
     def __init__(self, filename):
         self.filename = filename
         self.exists = exists(self.filename)
         debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
-        ####if dirhome is not None:
-        ####    debug(pink(f'CfgProj args {int(exists(dirhome))} dirhome  {dirhome}'))
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
-        ####self.dirhome = dirhome
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""
@@ -102,7 +96,6 @@ class CfgProj:
         project = self._read_project_from_cfgfile()
         return Starttime(self.dircfg, project, username)
 
-    ##def write_file(self, project, dircsv='.', force=False):
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Write a new config file"""
         fname = self.get_filename_cfg()
@@ -118,15 +111,6 @@ class CfgProj:
             self._add_doc_globalcfgfname(doc, fcfg_global)
         self._wr_cfg(fname, doc)
         print(f'Initialized timetracker directory: {self.dircfg}')
-        ## if not exists(fname):
-        ##    -- do the write ---
-        ##elif force:
-        ##    doc = self._get_doc_new(project)
-        ##    doc['csv']['filename'] = join(dircsv, self.CSVPAT)
-        ##    self._wr_cfg(fname, doc)
-        ##    print(f'Overwrote {fname}')
-        ##else:
-        ##    print(f'Use `force` to overwrite: {fname}')
 
     def reinit(self, project, dircsv, fcfg_global=None):
         """Update the cfg file, if needed"""
@@ -252,6 +236,7 @@ class CfgProj:
         csv_section.add("filename", join(self._get_dircsv_relname(dirhome), csvpat))
         doc.add("csv", csv_section)
 
+        # pylint: disable=fixme
         # TODO: [display]
         # format = "24-hour"
         # --or--

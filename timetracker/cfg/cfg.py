@@ -3,28 +3,22 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-#from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
-#from timetracker.utils import yellow
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_filename_globalcfg
-#from timetracker.msgs import str_tostart
 from timetracker.msgs import str_init
 from timetracker.msgs import str_reinit
 
 
-# pylint: disable=too-few-public-methods
 class Cfg:
     """Configuration manager for timetracker"""
 
-    ####def __init__(self, fcfg_local, fcfg_global=None, dirhome=None):
     def __init__(self, fcfg_local):
         self.cfg_loc = CfgProj(fcfg_local)
         self.cfg_glb = None
         debug(f'Cfg exists({int(exists(self.cfg_loc.filename))}) Cfg({self.cfg_loc.filename})')
-        ####debug(f'{int(exists(self.cfg_glb.filename))} GLOB {self.cfg_glb.filename}')
 
     def needs_init(self, fcfg_global=None, dirhome=None):
         """Check for existance of both local and global config to see if init is needed"""
@@ -38,19 +32,19 @@ class Cfg:
             print(str_reinit())
         return True
 
-    ####def add_project(self, project):
-    ####    """Add the project to the local and global config"""
-    ####    return self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
-
     def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Initialize a project, return CfgGlobal"""
+        if project is None:
+            project = self.cfg_loc.get_project_from_filename()
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
         self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
-    def reinit(self, project, dircsv=None, fcfg_global=None, dirhome=None):
+    def reinit(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
+        if project is None:
+            project = self.cfg_loc.get_project_from_filename()
         self._reinit_local(self.cfg_loc, project, dircsv, fcfg_global, dirhome)
         self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
         debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')

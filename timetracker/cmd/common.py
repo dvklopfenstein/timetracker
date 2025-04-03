@@ -14,8 +14,8 @@ def get_fcsv(fnamecfg, uname, dirhome=None):
     """Get the name of the csv file, if it exists"""
     if str_uninitialized(fnamecfg):
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg, dirhome=dirhome)
-    fcsv = cfgproj.get_filename_csv(uname)
+    cfgproj = CfgProj(fnamecfg)
+    fcsv = cfgproj.get_filename_csv(uname, dirhome)
     if not exists(fcsv):
         _no_csv(fcsv, cfgproj, uname)
         return None

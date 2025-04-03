@@ -30,12 +30,12 @@ def run_csvlocate(fnamecfg, dircsv, project):
 
 def run_csvlocate_test(fnamecfg, dircsv, project, dirhome):
     """Initialize timetracking on a test project"""
-    cfgproj = run_csvlocate_local(fnamecfg, dircsv, project)
+    cfgproj = run_csvlocate_local(fnamecfg, dircsv, project, dirhome)
     debug(run_cmd(f'cat {fnamecfg}'))
     assert dirhome
     return cfgproj
 
-def run_csvlocate_local(fnamecfg, dircsv, project):
+def run_csvlocate_local(fnamecfg, dircsv, project, dirhome=None):
     """Initialize the local configuration file for a timetracking project"""
     debug(yellow('RUNNING COMMAND CSVLOC'))
     debug(f'CSVLOC: fnamecfg:    {fnamecfg}')
@@ -44,9 +44,9 @@ def run_csvlocate_local(fnamecfg, dircsv, project):
     if exists(fnamecfg):
         print(f'Trk repository already initialized: {dirname(fnamecfg)}')
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg, project)
+    cfgproj = CfgProj(fnamecfg)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    cfgproj.wr_ini_file(project)
+    cfgproj.wr_ini_file(project, dirhome=dirhome)
     return cfgproj
 
 

@@ -44,14 +44,14 @@ class Cfg:
 
     def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Initialize a project, return CfgGlobal"""
-        self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
+        self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
         self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
     def reinit(self, project, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
-        self._reinit_local(self.cfg_loc, project, dircsv, fcfg_global)
+        self._reinit_local(self.cfg_loc, project, dircsv, fcfg_global, dirhome)
         self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
         debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')
         self._reinit_global(self.cfg_glb, project, self.cfg_loc.filename)
@@ -62,9 +62,9 @@ class Cfg:
         return CfgGlobal(get_filename_globalcfg(dirhome) if fcfg is None else fcfg)
 
     @staticmethod
-    def _reinit_local(cfg_loc, project, dircsv, fcfg_global):
+    def _reinit_local(cfg_loc, project, dircsv, fcfg_global, dirhome):
         if not exists(cfg_loc.filename):
-            cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
+            cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome)
         else:
             cfg_loc.reinit(project, dircsv, fcfg_global)
 

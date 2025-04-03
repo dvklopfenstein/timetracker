@@ -146,7 +146,8 @@ def _chk_cfg_global(cfg_glb, project, exp_glb_filename, exp_loc_filename):
     ]
     print(doc_glb)
 
-# pylint: disable=too-many-arguments
+# pylint: disable=unknown-option-value
+# pylint: disable=too-many-arguments,too-many-positional-arguments
 def _chk_cfg_loc(cfg_loc, project, user, exp_cfg_filename, exp_cfg_csv_filename, exp_filename_csv):
     # Check CfgProj values
     assert cfg_loc.filename == exp_cfg_filename

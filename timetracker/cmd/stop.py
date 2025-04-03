@@ -34,8 +34,9 @@ def run_stop(fnamecfg, uname, csvfields, **kwargs):
     if str_uninitialized(fnamecfg):
         sys_exit(0)
 
-    cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
-    fcsv = cfgproj.get_filename_csv(uname)
+    ####cfgproj = CfgProj(fnamecfg, dirhome=kwargs.get('dirhome'))
+    cfgproj = CfgProj(fnamecfg)
+    fcsv = cfgproj.get_filename_csv(uname, kwargs.get('dirhome'))
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
     dta = start_obj.read_starttime()

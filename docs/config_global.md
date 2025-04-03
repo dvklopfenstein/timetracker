@@ -22,4 +22,18 @@ a global timetracker-csv file other than  '~/.timetrackerconfig'.
 Specifying the global config file on the CLI overrides using '~/.timetrackerconfig' or 
 the config file specified by `TIMETRACKERCONF`.
 
+## Examples
+
+### Initialize a timetracker project repo
+
+### Example of using multiple global config files
+The sheep and the goats begin to track their time grazing.
+
+The lions and the wolves want to observe the sheep and the goats,
+but do not want the sheep and goats to know.
+So they begin tracking their time on the hunting project.
+
+David is taking care of the herds and flocks by
+watching over his flock and being on the lookout for lions.
+
 Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved

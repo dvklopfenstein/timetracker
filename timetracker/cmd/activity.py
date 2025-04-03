@@ -7,7 +7,7 @@ __author__ = "DV Klopfenstein, PhD"
 #from os.path import exists
 from logging import debug
 from timetracker.utils import yellow
-from timetracker.cfg.cfg import Cfg
+#from timetracker.cfg.cfg import Cfg
 #from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.cfg_global import CfgGlobal
 #from timetracker.msgs import str_init
@@ -20,11 +20,12 @@ def cli_run_activity(fnamecfg, args):
 def run_activity(fcfg_local, fcfg_global, dirhome=None):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('RUNNING COMMAND TAG'))
+    debug(yellow('RUNNING COMMAND ACTIVITY'))
+    assert fcfg_local
     assert fcfg_global
     assert dirhome
-    cfg = Cfg(fcfg_local)  #### , fcfg_global, dirhome)
-    assert cfg
+    #cfg = Cfg(fcfg_local)
+    #assert cfg
     print('The `activity` command is coming soon. If you need it sooner, open an issue at:')
     print('https://github.com/dvklopfenstein/timetracker/issues/new/choose')
     #filename_globalcfg = get_filename_globalcfg(dirhome) if file is None else file

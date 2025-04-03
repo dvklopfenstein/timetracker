@@ -34,13 +34,17 @@ class Cfg:
 
     def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Initialize a project, return CfgGlobal"""
+        if project is None:
+            project = self.cfg_loc.get_project_from_filename()
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
         self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
-    def reinit(self, project, dircsv=None, fcfg_global=None, dirhome=None):
+    def reinit(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
+        if project is None:
+            project = self.cfg_loc.get_project_from_filename()
         self._reinit_local(self.cfg_loc, project, dircsv, fcfg_global, dirhome)
         self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
         debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')

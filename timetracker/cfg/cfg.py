@@ -3,28 +3,22 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-#from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
-#from timetracker.utils import yellow
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_filename_globalcfg
-#from timetracker.msgs import str_tostart
 from timetracker.msgs import str_init
 from timetracker.msgs import str_reinit
 
 
-# pylint: disable=too-few-public-methods
 class Cfg:
     """Configuration manager for timetracker"""
 
-    ####def __init__(self, fcfg_local, fcfg_global=None, dirhome=None):
     def __init__(self, fcfg_local):
         self.cfg_loc = CfgProj(fcfg_local)
         self.cfg_glb = None
         debug(f'Cfg exists({int(exists(self.cfg_loc.filename))}) Cfg({self.cfg_loc.filename})')
-        ####debug(f'{int(exists(self.cfg_glb.filename))} GLOB {self.cfg_glb.filename}')
 
     def needs_init(self, fcfg_global=None, dirhome=None):
         """Check for existance of both local and global config to see if init is needed"""
@@ -37,10 +31,6 @@ class Cfg:
             print(f'Global config, {fgcfg} not found')
             print(str_reinit())
         return True
-
-    ####def add_project(self, project):
-    ####    """Add the project to the local and global config"""
-    ####    return self.cfg_glb.add_project(project, self.cfg_loc.get_filename_cfg())
 
     def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Initialize a project, return CfgGlobal"""

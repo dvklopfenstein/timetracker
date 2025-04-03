@@ -21,7 +21,10 @@ def run_activity(fcfg_local, fcfg_global, dirhome=None):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND TAG'))
+    assert fcfg_global
+    assert dirhome
     cfg = Cfg(fcfg_local)  #### , fcfg_global, dirhome)
+    assert cfg
     print('The `activity` command is coming soon. If you need it sooner, open an issue at:')
     print('https://github.com/dvklopfenstein/timetracker/issues/new/choose')
     #filename_globalcfg = get_filename_globalcfg(dirhome) if file is None else file
@@ -53,8 +56,8 @@ def run_activity(fcfg_local, fcfg_global, dirhome=None):
 #    if fcsv is not None:
 #        print(f'CSV exists({int(exists(fcsv))}) {fcsv}')
 #
-#def _get_proj_all(cfgproj):
-#    fcsvs = cfgproj.get_project_csvs()
+#def _get_proj_all(cfgproj, dirhome):
+#    fcsvs = cfgproj.get_project_csvs(dirhome)
 #    for fcsv in fcsvs:
 #        if fcsv is not None:
 #            print(f'CSV exists({int(exists(fcsv))}) {fcsv}')

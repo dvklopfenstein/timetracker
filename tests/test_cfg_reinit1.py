@@ -8,7 +8,7 @@ from logging import DEBUG
 from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg import Cfg
-from tests.pkgtttest.consts import SEP1
+from tests.pkgtttest.consts import sep_test
 from tests.pkgtttest.consts import SEP2
 from tests.pkgtttest.consts import SEP3
 from tests.pkgtttest.mkprojs import mk_projdirs
@@ -24,6 +24,7 @@ def test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.ac
         gfname = join(tmphome, fcfg_glo)
         run = Run(tmphome, gfname)
 
+        # --------------------------------------------------------
         print(f'{SEP2}2) Create local project directories')
         ntdirs = mk_projdirs(tmphome, project)
         findhome(tmphome)
@@ -35,41 +36,41 @@ def test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.ac
         findhome(tmphome)
 
         # --------------------------------------------------------
-        print(f'{SEP1}4) rm config: global & local')
+        print(f'{sep_test(1)}CFG REINIT TEST 1: rm config: global & local')
         run.rm_cfgs(cfg, loc=True, glb=True)
         run.prtcfgs(cfg)
 
-        print(f'{SEP3}5) reinitialize {project} project')
+        print(f'{SEP3}reinitialize {project} project')
         cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
-        print(f'\n{SEP1}6) rm config: global only')
+        print(f'\n{sep_test(2)}CFG REINIT TEST 2: rm config: global only')
         run.rm_cfgs(cfg, loc=False, glb=True)
         run.prtcfgs(cfg)
 
-        print(f'{SEP3}7) reinitialize {project} project')
+        print(f'{SEP3}reinitialize {project} project')
         cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
-        print(f'\n{SEP1}4) rm config: local only')
+        print(f'\n{sep_test(3)}CFG REINIT TEST 3: rm config: local only')
         run.rm_cfgs(cfg, loc=True, glb=False)
         run.prtcfgs(cfg)
 
-        print(f'{SEP3}5) reinitialize {project} project')
+        print(f'{SEP3}reinitialize {project} project')
         cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
-        print(f'\n{SEP1}6) rm config: keep all')
+        print(f'\n{sep_test(4)}CFG REINIT TEST 4: rm config: keep all')
         #run.rm_cfgs(cfg, loc=False, glb=False)
         run.prtcfgs(cfg)
 
-        print(f'{SEP3}7) reinitialize {project} project')
+        print(f'{SEP3}reinitialize {project} project')
         cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)

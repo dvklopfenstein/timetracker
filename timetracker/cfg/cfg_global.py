@@ -56,7 +56,8 @@ class CfgGlobal:
         if (fcfg_proj := self._add_project(doc, project, fcfgproj)):
             self.wr_doc(doc)
             print(f'Added project to the global timetracker config: {self.filename}:')
-            print(f'  project={project} config={fcfg_proj}')
+            print(f'  project: {project}')
+            print(f'  project config: {fcfg_proj}')
         return doc
 
     def read_doc(self):

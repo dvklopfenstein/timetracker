@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Test `trk stop --at`"""
 
+from os import environ
+from os import makedirs
 #from os import system
-#from os.path import exists
+from os.path import exists
 from os.path import join
-from os.path import dirname
 #from io import StringIO
 from logging import basicConfig
 from logging import DEBUG
@@ -12,7 +13,7 @@ from logging import DEBUG
 #from logging import getLogger
 from tempfile import TemporaryDirectory
 #from csv import writer
-#from timetracker.consts import FILENAME_GLOBALCFG
+from timetracker.consts import FILENAME_GLOBALCFG
 #from timetracker.utils import cyan
 #from timetracker.utils import yellow
 #from timetracker.ntcsv import get_ntcsv
@@ -38,11 +39,15 @@ def test_cmd_projects():
         ('lions'  , 'hunting'),
         ('jackels', 'scavenging'),
     ]
+    orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
         basicConfig()
+        fglb = _get_global_config_filename(tmproot)
+        environ['TIMETRACKERCONF'] = fglb
         obj = RunAll(tmproot, userprojs)
         basicConfig(level=DEBUG)
         print(findhome_str(tmproot))
+        _reset_env('TIMETRACKERCONF', orig_fglb, fglb)
         assert obj
 
 
@@ -52,16 +57,14 @@ class RunAll:
 
     def __init__(self, tmproot, userprojs):
         self.dirhome = join(tmproot, 'home')
-        self.cfg1 = join(tmproot, 'dflt.cfg')
         self.userprojs = userprojs
-        self.ups2obj = {e:RunOne(self.cfg1, *e) for e in userprojs}
+        self.ups2obj = {e:RunOne(tmproot, *e) for e in userprojs}
 
 class RunOne:
     """Manage one user and the project"""
 
-    def __init__(self, fcfgdflt, user, projname):
-        self.cfg_global = fcfgdflt
-        self.home = join(dirname(self.cfg_global), user)
+    def __init__(self, tmproot, user, projname):
+        self.home = join(tmproot, user)
         self.user = user
         self.projname = projname
         print(f'\nRunOne({self.home:29}, {user:7}, {projname})')
@@ -69,8 +72,7 @@ class RunOne:
         self.cfg = run_init(self.fcfgproj,
             dircsv=None,
             project=self.projname,
-            dirhome=self.home,
-            fcfg_global=fcfgdflt)
+            dirhome=self.home)
 
     ####dta = get_dt(yearstr='2525', hour=8, minute=30)
     ####_run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))
@@ -150,6 +152,20 @@ class RunOne:
 #        wrcsv = writer(csvfile, lineterminator="\n")
 #        wrcsv.writerow(actual_csvrow)
 #        return csvfile.getvalue().rstrip()
+
+def _reset_env(key, orig_fglb, test_fglb):
+    assert exists(test_fglb), test_fglb
+    assert environ[key] == test_fglb
+    if orig_fglb:
+        environ[key] = orig_fglb
+    else:
+        environ.pop(key)
+    assert environ.get(key) is None
+
+def _get_global_config_filename(tmproot):
+    sharedir = join(tmproot, 'share')
+    makedirs(sharedir)
+    return join(sharedir, FILENAME_GLOBALCFG)
 
 
 if __name__ == '__main__':

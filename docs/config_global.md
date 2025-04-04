@@ -25,6 +25,16 @@ the config file specified by `TIMETRACKERCONF`.
 ## Examples
 
 ### Initialize a timetracker project repo
+#### The sheep decide to start a new project called `grazing`.
+```
+# Version-manage the grazing project:
+$ cd /home/sheep/projects/
+$ git init grazing
+Initialized empty Git repository in /home/sheep/projects/grazing/grazing/.git/
+
+# Time-track the grazing project:
+$ trk init
+Initialized timetracker directory:  /home/sheep/projects/grazing/grazing/.timetracker
 
 ### Example of using multiple global config files
 The sheep and the goats begin to track their time grazing.

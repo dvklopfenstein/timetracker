@@ -8,6 +8,7 @@ from sys import exit as sys_exit
 from os import getcwd
 from os.path import exists
 from logging import debug
+from subprocess import run
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -184,13 +185,20 @@ class Cli:
                  'elapsed time(ex: 10min, -10min, 4hr)')
         return parser
 
-    @staticmethod
-    def _add_subparser_stop(subparsers):
+    def _get_last_log(self):
+        if self.finder.dirgit:
+            res = run(['git', 'log', '-1', '--pretty=%B'],
+                capture_output=True, text=True, check=False)
+            if res.stdout != '':
+                return f'({res.stdout}); invoked w/`-m d`'
+        return None
+
+    def _add_subparser_stop(self, subparsers):
         parser = subparsers.add_parser(name='stop',
             help='Stop timetracking',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-m', '--message', required=True, metavar='TXT',
-            default=f'''("{run_cmd('git log -1 --pretty=%B').strip()}" invoked w/`-m d`''',
+            default=self._get_last_log(),
             help='Message describing the work done in the time unit')
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')

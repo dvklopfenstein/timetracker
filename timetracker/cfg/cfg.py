@@ -8,8 +8,9 @@ from logging import debug
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_filename_globalcfg
-from timetracker.msgs import str_init
-from timetracker.msgs import str_reinit
+#from timetracker.msgs import str_init
+#from timetracker.msgs import str_reinit
+#from timetracker.cmd.utils import run_strinit
 
 
 class Cfg:
@@ -20,17 +21,19 @@ class Cfg:
         self.cfg_glb = None
         debug(f'Cfg exists({int(exists(self.cfg_loc.filename))}) Cfg({self.cfg_loc.filename})')
 
-    def needs_init(self, fcfg_global=None, dirhome=None):
-        """Check for existance of both local and global config to see if init is needed"""
-        fgcfg = self.get_cfgglobal(fcfg_global, dirhome).filename
-        if (exist_loc := exists(self.cfg_loc.filename)) and (exist_glb := exists(fgcfg)):
-            return False
-        if not exist_loc:
-            print(str_init(exist_loc))
-        elif not exist_glb:
-            print(f'Global config, {fgcfg} not found')
-            print(str_reinit())
-        return True
+    ##def needs_init(self, fcfg_global=None, dirhome=None):
+    ##    """Check for existance of both local and global config to see if init is needed"""
+    ##    fgcfg = self.get_cfgglobal(fcfg_global, dirhome, 'need').filename
+    ##    return not exists(self.cfg_loc.filename) or not exists(fgcfg)
+
+    ##    #if (exist_loc := exists(self.cfg_loc.filename)) and (exist_glb := exists(fgcfg)):
+    ##    #    return False
+    ##    #if not exist_loc:
+    ##    #    print(str_init(self.cfg_loc.filename))
+    ##    #elif not exist_glb:
+    ##    #    print(f'Global config, {fgcfg} not found')
+    ##    #    print(str_reinit())
+    ##    #return True
 
     def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Initialize a project, return CfgGlobal"""

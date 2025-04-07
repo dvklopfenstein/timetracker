@@ -18,6 +18,7 @@ from logging import debug
 from logging import warning
 from timetracker.consts import FILENAME_GLOBALCFG
 
+
 def get_abspath(fnam, dirproj, dirhome=None):
     """Get the path of the path fnam relative to dirproj"""
     if isabs(fnam):
@@ -56,7 +57,8 @@ def get_username(name=None):
 
 def run_cmd(cmd):
     """Run a command with output to stdout"""
-    return run(cmd.split(), capture_output=True, text=True, check=True).stdout
+    res = run(cmd.split(), capture_output=True, text=True, check=False)
+    return res.stdout if res.stderr != '' else None
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""

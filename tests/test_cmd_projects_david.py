@@ -2,9 +2,7 @@
 """Test `trk stop --at`"""
 
 from os import environ
-from os import makedirs
 #from os import system
-from os.path import exists
 from os.path import join
 #from io import StringIO
 from logging import basicConfig
@@ -24,6 +22,8 @@ from timetracker.cmd.init import run_init
 from tests.pkgtttest.runfncs import findhome_str
 #from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
+from tests.pkgtttest.mkprojs import getmkdirs_filename
+from tests.pkgtttest.mkprojs import reset_env
 
 #getLogger("timetracker.epoch.epoch").setLevel(DEBUG)
 
@@ -41,14 +41,17 @@ def test_cmd_projects():
     ]
     orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
+        # Initialize all projects for all usernames
         basicConfig()
-        fglb = _get_global_config_filename(tmproot)
+        fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
-        obj = RunAll(tmproot, userprojs)
+        mgr = RunAll(tmproot, userprojs)
         basicConfig(level=DEBUG)
-        print(findhome_str(tmproot))
-        _reset_env('TIMETRACKERCONF', orig_fglb, fglb)
-        assert obj
+        print(findhome_str(tmproot, '-type f'))
+        reset_env('TIMETRACKERCONF', orig_fglb, fglb)
+
+        # Run projects
+        assert mgr
 
 
 # pylint: disable=too-few-public-methods
@@ -58,19 +61,19 @@ class RunAll:
     def __init__(self, tmproot, userprojs):
         self.dirhome = join(tmproot, 'home')
         self.userprojs = userprojs
-        self.ups2obj = {e:RunOne(tmproot, *e) for e in userprojs}
+        self.ups2mgr = {e:MngUsrProj(tmproot, *e) for e in userprojs}
 
-class RunOne:
+class MngUsrProj:
     """Manage one user and the project"""
 
-    def __init__(self, tmproot, user, projname):
+    def __init__(self, tmproot, user, projname, dircsv=None):
         self.home = join(tmproot, user)
         self.user = user
         self.projname = projname
-        print(f'\nRunOne({self.home:29}, {user:7}, {projname})')
+        print(f'\nMngUsrProj({self.home:29}, {user:7}, {projname})')
         self.fcfgproj, _, self.exp = proj_setup(self.home, projname, dircur='dirproj')
         self.cfg = run_init(self.fcfgproj,
-            dircsv=None,
+            dircsv=dircsv,
             project=self.projname,
             dirhome=self.home)
 
@@ -78,28 +81,28 @@ class RunOne:
     ####_run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))
     ####_run(dta, Obj(project, username, dircur='dirdoc',  dirgit01=True))
 
-#def _run(dta, obj):
+#def _run(dta, mgr):
 #    # Test researcher-entered datetime stoptimes
 #    # pylint: disable=line-too-long
-#    obj.chk(dta, '11:30am',               '2525-01-01 08:30:00,3:00:00,,"A,B,C",')
-#    obj.chk(dta, "2525-02-19 17:00:00",   '2525-01-01 08:30:00,"49 days, 8:30:00",,"A,B,C",')
-#    obj.chk(dta, "2525-02-19 05:00:00 pm",'2525-01-01 08:30:00,"49 days, 8:30:00",,"A,B,C",')
-#    obj.chk(dta, "01-01 17:00:00",        '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
-#    obj.chk(dta, "01-01 05:00:00 pm",     '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
+#    mgr.chk(dta, '11:30am',               '2525-01-01 08:30:00,3:00:00,,"A,B,C",')
+#    mgr.chk(dta, "2525-02-19 17:00:00",   '2525-01-01 08:30:00,"49 days, 8:30:00",,"A,B,C",')
+#    mgr.chk(dta, "2525-02-19 05:00:00 pm",'2525-01-01 08:30:00,"49 days, 8:30:00",,"A,B,C",')
+#    mgr.chk(dta, "01-01 17:00:00",        '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
+#    mgr.chk(dta, "01-01 05:00:00 pm",     '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
 #    # https://github.com/dateutil/dateutil/issues/1421 (5pm with a default datetime; 5pm w/no default works fine)
-#    obj.chk(dta, "01-1 5pm",      '2525-01-01 08:30:00,8:30:00,,"A,B,C",') # WORKS w/dataparser (not dateutil)
-#    obj.chk(dta, "01/01 5:00 pm", '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
-#    obj.chk(dta, "1/1 5:30 pm",   '2525-01-01 08:30:00,9:00:00,,"A,B,C",')
+#    mgr.chk(dta, "01-1 5pm",      '2525-01-01 08:30:00,8:30:00,,"A,B,C",') # WORKS w/dataparser (not dateutil)
+#    mgr.chk(dta, "01/01 5:00 pm", '2525-01-01 08:30:00,8:30:00,,"A,B,C",')
+#    mgr.chk(dta, "1/1 5:30 pm",   '2525-01-01 08:30:00,9:00:00,,"A,B,C",')
 #    # Process researcher-entered stop-times containing two ':' as datetimes
-#    obj.chk(dta, "09:30:00",   '2525-01-01 08:30:00,1:00:00,,"A,B,C",')
-#    obj.chk(dta, "09:00:00",   '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
-#    obj.chk(dta, "4:00:00",    None)
+#    mgr.chk(dta, "09:30:00",   '2525-01-01 08:30:00,1:00:00,,"A,B,C",')
+#    mgr.chk(dta, "09:00:00",   '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+#    mgr.chk(dta, "4:00:00",    None)
 #    # Test researcher-entered datetime timedeltas
-#    obj.chk(dta, "30 minutes", '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
-#    obj.chk(dta, "30 min",     '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
-#    obj.chk(dta, "30min",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
-#    obj.chk(dta, "30:00",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
-#    obj.chk(dta, "4 hours",    '2525-01-01 08:30:00,4:00:00,,"A,B,C",')
+#    mgr.chk(dta, "30 minutes", '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+#    mgr.chk(dta, "30 min",     '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+#    mgr.chk(dta, "30min",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+#    mgr.chk(dta, "30:00",      '2525-01-01 08:30:00,0:30:00,,"A,B,C",')
+#    mgr.chk(dta, "4 hours",    '2525-01-01 08:30:00,4:00:00,,"A,B,C",')
 #
 #
 #class Obj(RunBase):
@@ -152,20 +155,6 @@ class RunOne:
 #        wrcsv = writer(csvfile, lineterminator="\n")
 #        wrcsv.writerow(actual_csvrow)
 #        return csvfile.getvalue().rstrip()
-
-def _reset_env(key, orig_fglb, test_fglb):
-    assert exists(test_fglb), test_fglb
-    assert environ[key] == test_fglb
-    if orig_fglb:
-        environ[key] = orig_fglb
-    else:
-        environ.pop(key)
-    assert environ.get(key) is None
-
-def _get_global_config_filename(tmproot):
-    sharedir = join(tmproot, 'share')
-    makedirs(sharedir)
-    return join(sharedir, FILENAME_GLOBALCFG)
 
 
 if __name__ == '__main__':

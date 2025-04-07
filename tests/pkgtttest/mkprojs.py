@@ -1,6 +1,7 @@
 """Create projects in a given temporary directory"""
 
 from os import makedirs
+from os import environ
 from os.path import join
 from os.path import exists
 from os.path import isabs
@@ -30,6 +31,23 @@ def mkdirs(tmp_home):
         dirdoc = join(pdir, 'doc')
         makedirs(dirdoc)
     return projs
+
+
+def getmkdirs_filename(tmproot, dirname, filename):
+    """Get an absolute filename, make dirs if necessary"""
+    sharedir = join(tmproot, dirname)
+    makedirs(sharedir)
+    return join(sharedir, filename)
+
+def reset_env(envvarname, origval, expcurval):
+    """Reset an environmental variable to its original value"""
+    assert exists(expcurval), expcurval
+    assert environ[envvarname] == expcurval
+    if origval:
+        environ[envvarname] = origval
+    else:
+        environ.pop(envvarname)
+    assert environ.get(envvarname) is None
 
 def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
     """Make sub-directories in a temporary directory for use in tests"""
@@ -78,9 +96,9 @@ def findhome(home):
     """Do a find on the given homedir and print using debug logging"""
     debug(findhome_str(home))
 
-def findhome_str(home):
+def findhome_str(home, find_opts=''):
     """Do a find on the given homedir and return results in a string"""
-    return run_cmd(f'find {home}')
+    return run_cmd(f'find {home} {find_opts}')
 
 def run_cmd(cmd, prtcmd=True):
     """Run a command and return the string, with the command repeated"""

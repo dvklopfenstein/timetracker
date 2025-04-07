@@ -39,7 +39,7 @@ class CfgGlobal:
 
     def get_projects(self):
         """Get the projects managed by timetracker"""
-        doc = self._rd_cfg()
+        doc = self.read_doc()
         return doc.get('projects') if doc is not None else None
 
     def wr_doc(self, doc):
@@ -66,7 +66,7 @@ class CfgGlobal:
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
-        doc = self._rd_cfg()
+        doc = self.read_doc()
         assert doc, "Global file should be checked for existence: {self.filename}"
         if self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
@@ -74,10 +74,6 @@ class CfgGlobal:
             print(f'No changes needed to project({project}) config: {self.filename}')
 
     # -------------------------------------------------------------
-    def _rd_cfg(self):
-        """Read a global cfg file; return a doc obj"""
-        return TOMLFile(self.filename).read() if exists(self.filename) else None
-
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
         debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj}'))

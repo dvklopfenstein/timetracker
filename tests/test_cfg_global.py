@@ -74,7 +74,7 @@ def _get_cfgglobal_empty(tmphome):
     cfg_glo = CfgGlobal(join(tmphome, FILENAME_GLOBALCFG))
     assert cfg_glo.filename == join(tmphome, '.timetrackerconfig'), f'{cfg_glo.filename}'
     # pylint: disable=protected-access
-    doc_cur = cfg_glo._rd_cfg()
+    doc_cur = cfg_glo.read_doc()
     assert doc_cur is None
     return cfg_glo
 

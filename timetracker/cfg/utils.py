@@ -58,7 +58,7 @@ def get_username(name=None):
 def run_cmd(cmd):
     """Run a command with output to stdout"""
     res = run(cmd.split(), capture_output=True, text=True, check=False)
-    return res.stdout if res.stderr != '' else None
+    return res.stdout if res.returncode == 0 else None
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""

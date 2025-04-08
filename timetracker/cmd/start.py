@@ -23,17 +23,20 @@ def cli_run_start(fnamecfg, args):
         force=args.force)
         ##activity=args.activity,
 
-def run_start(fnamecfg, name=None, **kwargs):
+def run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND START'))
-    now = kwargs.get('now', datetime.now())
     if str_uninitialized(fnamecfg):
         sys_exit(0)
     cfgproj = CfgProj(fnamecfg)
+    return run_start_opcfg(cfgproj, name, start_at, **kwargs)
+
+def run_start_opcfg(cfgproj, name=None, start_at=None, **kwargs):
+    """Initialize timetracking on a project"""
+    now = kwargs.get('now', datetime.now())
     start_obj = cfgproj.get_starttime_obj(name)
 
     # Print elapsed time, if timer was started
-    start_at = kwargs.get('start_at')
     if start_at is None:
         if start_obj.file_exists():
             start_obj.prtmsg_started01()
@@ -46,10 +49,10 @@ def run_start(fnamecfg, name=None, **kwargs):
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
         #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
-        if not kwargs.get('quiet', False):
-            print(f'Timetracker {_get_msg(start_at, force)}: '
-                  f'{starttime.strftime("%a %I:%M %p")}: {starttime} ')
-                  #f"for project '{cfgproj.project}'")
+        print(f'Timetracker {_get_msg(start_at, force)}: '
+              f'{starttime.strftime("%a %I:%M %p")}: '
+              f'{starttime} ')
+              #f"for project '{cfgproj.project}'")
 
     # Informational message
     elif not force:

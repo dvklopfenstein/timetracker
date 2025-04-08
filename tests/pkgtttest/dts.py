@@ -19,6 +19,8 @@ https://unabridged.merriam-webster.com/unabridged/exordium. Accessed 21 Feb. 202
 https://unabridged.merriam-webster.com/unabridged/terminus. Accessed 21 Feb. 2025.
 """
 
+from itertools import cycle
+from itertools import islice
 from datetime import datetime
 
 
@@ -27,6 +29,9 @@ DTBEGIN = datetime(1412, 1, 6)
 
 # In the year 2525 If man is still alive If woman can survive They may find
 DT2525 = datetime(2525, 1, 1)
+# Put date in middle of month to avoid this issue during test:
+#   https://github.com/scrapinghub/dateparser/issues/1266
+I1266  = datetime(2525, 1, 20)
 
 # In the year 3535 Ain't gonna need to tell the truth, tell no lies
 # Everything you think, do, and say--Is in the pill you took today
@@ -90,3 +95,12 @@ def get_dt(yearstr, hour, minute=0, second=0, microsecond=0):
         minute=minute,
         second=second,
         microsecond=microsecond)
+
+def get_iter_weekday(start_day, stopincl_day):
+    """Get an iter that starts at one weekday and ends at another week day"""
+    weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    idxa = weekdays.index(start_day)
+    idxz = weekdays.index(stopincl_day) + 1
+    if idxz < idxa:
+        idxz += 7
+    return islice(cycle(weekdays), idxa, idxz)

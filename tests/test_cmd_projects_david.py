@@ -12,11 +12,13 @@ from logging import DEBUG
 from tempfile import TemporaryDirectory
 #from csv import writer
 from timetracker.consts import FILENAME_GLOBALCFG
+from timetracker.ntcsv import get_ntcsv
 #from timetracker.utils import cyan
 #from timetracker.utils import yellow
 #from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init
-#from timetracker.cmd.start import run_start
+from timetracker.cmd.start import run_start_opcfg
+from timetracker.cmd.stop import run_stop_opcfg
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
 from tests.pkgtttest.runfncs import findhome_str
@@ -24,6 +26,11 @@ from tests.pkgtttest.runfncs import findhome_str
 from tests.pkgtttest.runfncs import proj_setup
 from tests.pkgtttest.mkprojs import getmkdirs_filename
 from tests.pkgtttest.mkprojs import reset_env
+from tests.pkgtttest.dts import get_iter_weekday
+
+# https://github.com/scrapinghub/dateparser/issues/1266
+#from tests.pkgtttest.dts import DT2525
+from tests.pkgtttest.dts import I1266 as DT2525
 
 #getLogger("timetracker.epoch.epoch").setLevel(DEBUG)
 
@@ -32,13 +39,13 @@ SEP = f'\n{"="*80}\n'
 
 def test_cmd_projects():
     """Test `trk stop --at"""
-    userprojs = [
-        ('david'  , 'shepharding'),
-        ('lambs'  , 'grazing'),
-        ('goats'  , 'grazing'),
-        ('lions'  , 'hunting'),
-        ('jackels', 'scavenging'),
-    ]
+    userprojs = {
+        ('david'  , 'shepharding'): ('Sun', 'Fri', '12am', '12pm'),
+        ('lambs'  , 'grazing'):     ('Mon', 'Fri', '9am', '5pm'),
+        ('goats'  , 'grazing'):     ('Wed', 'Fri', '10am', '4pm'),
+        ('lions'  , 'hunting'):     ('Tue', 'Thu', '11am', '2pm'),
+        ('jackels', 'scavenging'):  ('Sun', 'Fri', '9am', '3pm'),
+    }
     orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
         # Initialize all projects for all usernames
@@ -48,6 +55,9 @@ def test_cmd_projects():
         mgr = RunAll(tmproot, userprojs)
         basicConfig(level=DEBUG)
         print(findhome_str(tmproot, '-type f'))
+        for usrprj, times in userprojs.items():
+            mgr.get_up(usrprj).add_timeslots(*times)
+        #mgr.add_times('lambs', 'grazing', 'Mon', 'Fri', '9am', '5pm')
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
         # Run projects
@@ -63,6 +73,11 @@ class RunAll:
         self.userprojs = userprojs
         self.ups2mgr = {e:MngUsrProj(tmproot, *e) for e in userprojs}
 
+    def get_up(self, user_proj):
+        """Get MngUsrProj for specified usernamd and project"""
+        return self.ups2mgr.get(user_proj)
+
+
 class MngUsrProj:
     """Manage one user and the project"""
 
@@ -76,6 +91,20 @@ class MngUsrProj:
             dircsv=dircsv,
             project=self.projname,
             dirhome=self.home)
+
+    def add_timeslots(self, day0, day1, time0, time1):
+        """Add time slots for every day between day0 and day1 for specified times"""
+        cfg_loc = self.cfg.cfg_loc
+        user = self.user
+        for weekday in get_iter_weekday(day0, day1):
+            start_at = f'{weekday} {time0}'
+            stop_at  = f'{weekday} {time1}'
+            msg = f'{start_at} -- {stop_at}'
+            print('\nADDING TIMESLOT FOR', self.user, msg)
+            run_start_opcfg(cfg_loc, user, start_at, defaultdt=DT2525)
+            ntd = get_ntcsv(msg, activity=None, tags=None)
+            run_stop_opcfg(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525)
+        #run_start_opcfg(self.cfg.cfg_loc, self.user, start_at=f'day
 
     ####dta = get_dt(yearstr='2525', hour=8, minute=30)
     ####_run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))

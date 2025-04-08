@@ -39,7 +39,7 @@ class CfgGlobal:
 
     def get_projects(self):
         """Get the projects managed by timetracker"""
-        doc = self._rd_cfg()
+        doc = self.read_doc()
         return doc.get('projects') if doc is not None else None
 
     def wr_doc(self, doc):
@@ -53,9 +53,11 @@ class CfgGlobal:
             print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
         doc = TOMLFile(self.filename).read()
-        if self._add_project(doc, project, fcfgproj):
+        if (fcfg_proj := self._add_project(doc, project, fcfgproj)):
             self.wr_doc(doc)
-            print(f'Added project {project} to global timetracker config: {self.filename}')
+            print(f'Added project to the global timetracker config: {self.filename}:')
+            print(f'  project: {project}')
+            print(f'  project config: {fcfg_proj}')
         return doc
 
     def read_doc(self):
@@ -64,7 +66,7 @@ class CfgGlobal:
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
-        doc = self._rd_cfg()
+        doc = self.read_doc()
         assert doc, "Global file should be checked for existence: {self.filename}"
         if self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
@@ -72,10 +74,6 @@ class CfgGlobal:
             print(f'No changes needed to project({project}) config: {self.filename}')
 
     # -------------------------------------------------------------
-    def _rd_cfg(self):
-        """Read a global cfg file; return a doc obj"""
-        return TOMLFile(self.filename).read() if exists(self.filename) else None
-
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
         debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj}'))
@@ -85,10 +83,10 @@ class CfgGlobal:
         if self._noproj(doc, project, fcfgproj):
             debug(f'CfgGlobal add_line {project:15} {fcfgproj}')
             doc['projects'].add_line((project, fcfgproj))
-            return True
+            return fcfgproj
         # pylint: disable=unsubscriptable-object
         ##debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
-        return False
+        return None
 
     def _noproj(self, doc, projnew, projcfgname):
         """Test if the project is missing from the global config file"""

@@ -21,6 +21,7 @@
 # Details
 
 ## Unreleased
+* ADDED `projects` command to get a list of projects
 * ADDED ability to specify the global config file from the cli
 * ADDED writing the name of the global config file into the project config file,
         if given on the command line

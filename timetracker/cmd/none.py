@@ -4,9 +4,11 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
+from logging import debug
 from timetracker.msgs import str_uninitialized
 from timetracker.msgs import str_tostart
 from timetracker.cfg.cfg_local import CfgProj
+from timetracker.utils import yellow
 
 
 def cli_run_none(fnamecfg, args):
@@ -16,6 +18,7 @@ def cli_run_none(fnamecfg, args):
 
 def run_none(fnamecfg, name=None):
     """If no Timetracker command is run, print informative messages"""
+    debug(yellow('RUNNING COMMAND NONE'))
     if str_uninitialized(fnamecfg):
         sys_exit(0)
     # Check for start time

@@ -58,13 +58,13 @@ _stop:
 	#find ~/timetrackers/ -type f -name \*.csv
 
 report:
-	trk --trk-dir $(DIRTRK) report -G $(GLOBCFG)
+	trk --trk-dir $(DIRTRK) report
 
 projects:
-	trk --trk-dir $(DIRTRK) projects -G $(GLOBCFG)
+	trk --trk-dir $(DIRTRK) projects
 
 csv:
-	trk --trk-dir $(DIRTRK) csv -G $(GLOBCFG)
+	trk --trk-dir $(DIRTRK) csv
 
 hours:
 	trk --trk-dir $(DIRTRK) hours

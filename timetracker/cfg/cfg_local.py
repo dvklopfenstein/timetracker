@@ -75,10 +75,14 @@ class CfgProj:
             return glob(globpat)
         return None
 
-    @staticmethod
-    def read_cfg(filename):
-        """Read the given config file and return a doc object"""
-        return TOMLFile(filename).read() if exists(filename) else None
+    def read_doc(self):
+        """Read a config file and load it into a TOML document"""
+        return TOMLFile(self.filename).read() if exists(self.filename) else None
+
+    ##@staticmethod
+    ##def read_cfg(filename):
+    ##    """Read the given config file and return a doc object"""
+    ##    return TOMLFile(filename).read() if exists(filename) else None
 
     def set_filename_csv(self, filename_str):
         """Write the config file, replacing [csv][filename] value"""
@@ -153,11 +157,6 @@ class CfgProj:
             dircsv = '.'
         return join(dircsv, self.CSVPAT)
 
-    def _rd_doc(self):
-        """Read a config file and load it into a TOML document"""
-        fin_cfglocal = self.get_filename_cfg()
-        return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
-
     def _read_project_from_cfgfile(self):
         """Read a config file and load it into a TOML document"""
         doc = self._rd_doc()
@@ -200,6 +199,11 @@ class CfgProj:
         debug(pink("CfgProj _wr_cfg(...)  GLOBAL    "
             f"{doc['global_config']['filename'] if 'global_config' in doc else 'NONE'}"))
         debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
+
+    def _rd_doc(self):
+        """Read a config file and load it into a TOML document"""
+        fin_cfglocal = self.get_filename_cfg()
+        return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
 
     #@staticmethod
     #def _strdbg_cfg_global(doc):

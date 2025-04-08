@@ -12,8 +12,8 @@ from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start
-from timetracker.cmd.stop import run_stop
+from timetracker.cmd.start import run_start_opcfg
+from timetracker.cmd.stop import run_stop_opcfg
 from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.runfncs import proj_setup
@@ -66,11 +66,11 @@ class Obj:
             cfgg = cfg.get_cfgglobal(dirhome=tmphome)
             # pylint: disable=unsubscriptable-object
             # pylint: disable=protected-access
-            assert cfgp._rd_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
+            assert cfgp.read_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
             exp_cfg_csv_fname = join(dircsv, fcsv)
             exp_cfg_csv_filename = _get_abscsv(exp.dirproj, dircsv, fcsv, tmphome)
             cfgp.set_filename_csv(exp_cfg_csv_fname)
-            assert cfgp._rd_doc()['csv']['filename'] == exp_cfg_csv_fname
+            assert cfgp.read_doc()['csv']['filename'] == exp_cfg_csv_fname
             #findhome(tmphome)
             assert exists(cfgname), findhome_str(exp.dirhome)
             assert exists(cfgg.filename), findhome_str(exp.dirhome)
@@ -80,15 +80,16 @@ class Obj:
             assert not exists(exp_cfg_csv_filename)
 
             # CMD: START
-            fin_start = run_start(cfgname, self.uname)
+            fin_start = run_start_opcfg(cfgp, self.uname)
             assert exists(fin_start)
             assert not exists(exp_cfg_csv_filename)
 
             # CMD: STOP
-            run_stop(cfgname,
+            res = run_stop_opcfg(cfgp,
                      self.uname,
                      get_ntcsv('stopping', activity=None, tags=None),
                      dirhome=tmphome)
+            print(res)
             assert isabs(exp_cfg_csv_filename), f'SHOULD BE ABSPATH: {exp_cfg_csv_filename}'
             assert exists(exp_cfg_csv_filename), f'SHOULD EXIST: {exp_cfg_csv_filename}'
             #prt_expdirs(exp)

@@ -17,18 +17,19 @@ def cli_run_hours(fnamecfg, args):
     if args.input and exists(args.input):
         _rpt_hours(args.input)
         return
-    run_hours_local(
-        fnamecfg,
-        args.name,
-    )
+    cfg = get_cfg(fnamecfg)
+    run_hours(cfg, args.name)
     #if args.global:
     #    run_hours_global(
     #    )
 
-def run_hours_local(fnamecfg, uname, dirhome=None):  #, name=None, force=False, quiet=False):
+def run_hours(cfg, uname, dirhome=None):
+    """Report the total time in hours spent on project(s)"""
+    run_hours_local(cfg, uname, dirhome)
+
+def run_hours_local(cfg, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     debug(yellow('RUNNING COMMAND TIME'))
-    cfg = get_cfg(fnamecfg)
     fcsv = get_fcsv(cfg, uname, dirhome)
     return _rpt_hours(fcsv) if fcsv is not None else None
 
@@ -39,7 +40,8 @@ def _rpt_hours(fcsv):
     chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
     total_hours = ocsv.read_totaltime_all()
-    print(f'{total_hours} H:M:S or {total_hours.total_seconds()/3600:.3f} hours')
+    print(f'{total_hours.total_seconds()/3600:9.3f} hours or '
+          f'{total_hours} H:M:S')
     return total_hours
 
 

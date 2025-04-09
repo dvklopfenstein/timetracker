@@ -3,18 +3,16 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
 from logging import error
 from datetime import datetime
-from timetracker.cfg.cfg_local  import CfgProj
 from timetracker.cfg.utils import get_shortest_name
-from timetracker.msgs import str_uninitialized
 from timetracker.ntcsv import get_ntcsv
 from timetracker.epoch.epoch import get_dtz
 from timetracker.utils import yellow
 from timetracker.csvrun import wr_stopline
+from timetracker.cmd.common import get_cfg
 
 
 def cli_run_stop(fnamecfg, args):
@@ -30,9 +28,8 @@ def run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND STOP'))
-    if str_uninitialized(fnamecfg):
-        sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
+    cfg = get_cfg(fnamecfg)
+    cfgproj = cfg.cfg_loc
     return run_stop_opcfg(cfgproj, uname, csvfields, stop_at, **kwargs)
 
 def run_stop_opcfg(cfgproj, uname, csvfields, stop_at=None, **kwargs):
@@ -79,7 +76,7 @@ def _msg_stop_complete(fcsv, delta, stoptime):
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     print('Timetracker stopped at: '
           f'{stoptime.strftime("%a %I:%M %p")}: '
-          f'{stoptime} '
+          f'{stoptime}\n'
           f'Elapsed H:M:S {delta} '
           f'appended to {get_shortest_name(fcsv)}')
 

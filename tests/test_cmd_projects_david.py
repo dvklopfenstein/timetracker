@@ -52,12 +52,14 @@ def test_cmd_projects():
         basicConfig()
         fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
+        # Do run_init for each project
         mgr = RunAll(tmproot, userprojs)
         basicConfig(level=DEBUG)
         print(findhome_str(tmproot, '-type f'))
+        # Add time slots for each researcher & project (run_start & run_stop)
         for usrprj, times in userprojs.items():
-            mgr.get_up(usrprj).add_timeslots(*times)
-        #mgr.add_times('lambs', 'grazing', 'Mon', 'Fri', '9am', '5pm')
+            mgr.get_usrproj(usrprj).add_timeslots(*times)
+        # Print hours
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
         # Run projects
@@ -73,7 +75,7 @@ class RunAll:
         self.userprojs = userprojs
         self.ups2mgr = {e:MngUsrProj(tmproot, *e) for e in userprojs}
 
-    def get_up(self, user_proj):
+    def get_usrproj(self, user_proj):
         """Get MngUsrProj for specified usernamd and project"""
         return self.ups2mgr.get(user_proj)
 

@@ -7,14 +7,19 @@ from sys import exit as sys_exit
 from os.path import exists
 
 from timetracker.msgs import str_uninitialized
-from timetracker.cfg.cfg_local  import CfgProj
+from timetracker.cfg.cfg import Cfg
 
 
-def get_fcsv(fnamecfg, uname, dirhome=None):
+def get_cfg(fnamecfg):
     """Get the name of the csv file, if it exists"""
     if str_uninitialized(fnamecfg):
         sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
+    return Cfg(fnamecfg)
+
+def get_fcsv(cfg, uname, dirhome=None):
+    """Get the name of the csv file, if it exists"""
+    assert exists(cfg.cfg_loc.filename)
+    cfgproj = cfg.cfg_loc
     fcsv = cfgproj.get_filename_csv(uname, dirhome)
     if not exists(fcsv):
         _no_csv(fcsv, cfgproj, uname)

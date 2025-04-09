@@ -3,15 +3,13 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
 
 from datetime import datetime
-from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
 from timetracker.epoch.epoch import get_dtz
-from timetracker.cfg.cfg_local  import CfgProj
+from timetracker.cmd.common import get_cfg
 
 
 def cli_run_start(fnamecfg, args):
@@ -26,9 +24,8 @@ def cli_run_start(fnamecfg, args):
 def run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND START'))
-    if str_uninitialized(fnamecfg):
-        sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
+    cfg = get_cfg(fnamecfg)
+    cfgproj = cfg.cfg_loc
     return run_start_opcfg(cfgproj, name, start_at, **kwargs)
 
 def run_start_opcfg(cfgproj, name=None, start_at=None, **kwargs):

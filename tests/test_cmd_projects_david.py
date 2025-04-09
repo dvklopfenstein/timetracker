@@ -19,6 +19,7 @@ from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start_opcfg
 from timetracker.cmd.stop import run_stop_opcfg
+from timetracker.cmd.hours import run_hours
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
 from tests.pkgtttest.runfncs import findhome_str
@@ -60,9 +61,11 @@ def test_cmd_projects():
         for usrprj, times in userprojs.items():
             mgr.get_usrproj(usrprj).add_timeslots(*times)
         # Print hours
-        reset_env('TIMETRACKERCONF', orig_fglb, fglb)
-
+        for usrprj, times in userprojs.items():
+            mgu = mgr.get_usrproj(usrprj)
+            run_hours(mgu.cfg, usrprj[0], mgu.home)
         # Run projects
+        reset_env('TIMETRACKERCONF', orig_fglb, fglb)
         assert mgr
 
 

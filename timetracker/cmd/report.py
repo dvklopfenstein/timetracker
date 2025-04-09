@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from logging import debug
 
+from timetracker.cmd.common import get_cfg
 from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
 from timetracker.csvfile import CsvFile
@@ -37,7 +38,8 @@ def cli_run_report(fnamecfg, args):
 def run_report(fnamecfg, uname, pnum=None, dirhome=None):
     """Report all time units"""
     debug(yellow('RUNNING COMMAND REPORT'))
-    fcsv = get_fcsv(fnamecfg, uname, dirhome)
+    cfg = get_cfg(fnamecfg)
+    fcsv = get_fcsv(cfg, uname, dirhome)
     return _run_io(fcsv, None, pnum) if fcsv is not None else None
 
 def _run_io(fcsv, fout_docx, pnum):

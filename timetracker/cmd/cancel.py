@@ -3,16 +3,14 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
 from os import remove
 from os.path import exists
 from logging import debug
 
 from timetracker.msgs import str_cancelled1
 from timetracker.msgs import str_not_running
-from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
-from timetracker.cfg.cfg_local  import CfgProj
+from timetracker.cmd.common import get_cfg
 
 
 def cli_run_cancel(fnamecfg, args):
@@ -24,9 +22,8 @@ def cli_run_cancel(fnamecfg, args):
 def run_cancel(fnamecfg, name=None):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND CANCEL'))
-    if str_uninitialized(fnamecfg):
-        sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
+    cfg = get_cfg(fnamecfg)
+    cfgproj = cfg.cfg_loc
     start_obj = cfgproj.get_starttime_obj(name)
     fin_start = start_obj.filename
     if exists(fin_start):

@@ -16,15 +16,15 @@ def get_cfg(fnamecfg):
         sys_exit(0)
     return Cfg(fnamecfg)
 
-def get_fcsv(cfg, uname, dirhome=None):
+def get_fcsv(cfg_proj, uname, dirhome=None):
     """Get the name of the csv file, if it exists"""
-    assert exists(cfg.cfg_loc.filename)
-    cfgproj = cfg.cfg_loc
-    fcsv = cfgproj.get_filename_csv(uname, dirhome)
-    if not exists(fcsv):
-        _no_csv(fcsv, cfgproj, uname)
-        return None
-    return fcsv
+    if exists(cfg_proj.filename):
+        fcsv = cfg_proj.get_filename_csv(uname, dirhome)
+        if not exists(fcsv):
+            _no_csv(fcsv, cfg_proj, uname)
+            return None
+        return fcsv
+    return None
 
 def _no_csv(fcsv, cfgproj, uname):
     start_obj = cfgproj.get_starttime_obj(uname)

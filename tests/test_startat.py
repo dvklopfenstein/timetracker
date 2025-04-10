@@ -9,7 +9,7 @@ from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start
+from timetracker.cmd.start import run_start_opcfg
 from tests.pkgtttest.dts import DT2525
 from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
@@ -62,7 +62,7 @@ class Obj(RunBase):
             #findhome(tmphome)
 
             # CMD: START
-            fin_start = run_start(cfgname, self.uname,
+            fin_start = run_start_opcfg(cfg.cfg_loc, self.uname,
                                   start_at=start_at, now=DT2525, defaultdt=DT2525)
             assert exists(fin_start)
             return cfg.cfg_loc.get_starttime_obj(self.uname).read_starttime()

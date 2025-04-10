@@ -10,6 +10,7 @@ from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
+from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start_opcfg
@@ -63,7 +64,7 @@ class Obj:
             # CMD: INIT; CFG PROJECT
             cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
             cfgp = cfg.cfg_loc
-            cfgg = cfg.get_cfgglobal(dirhome=tmphome)
+            cfgg = get_cfgglobal(dirhome=tmphome)
             # pylint: disable=unsubscriptable-object
             # pylint: disable=protected-access
             assert cfgp.read_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)

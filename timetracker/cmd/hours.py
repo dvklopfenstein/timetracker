@@ -18,19 +18,26 @@ def cli_run_hours(fnamecfg, args):
         _rpt_hours(args.input)
         return
     cfg = get_cfg(fnamecfg)
-    run_hours(cfg, args.name)
+    run_hours(cfg, args.name, args.run_global)
     #if args.global:
     #    run_hours_global(
     #    )
 
-def run_hours(cfg, uname, dirhome=None):
+def run_hours(cfg, uname, get_global=False, dirhome=None):
     """Report the total time in hours spent on project(s)"""
-    run_hours_local(cfg, uname, dirhome)
+    if get_global:
+        run_hours_global(cfg, uname, dirhome)
+    else:
+        run_hours_local(cfg, uname, dirhome)
 
-def run_hours_local(cfg, uname, dirhome=None):
+def run_hours_global(cfg, uname, dirhome=None):
+    """Report the total hours spent on all projects by uname"""
+    print('TBD:', cfg, uname, dirhome)
+
+def run_hours_local(cfg_proj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     debug(yellow('RUNNING COMMAND TIME'))
-    fcsv = get_fcsv(cfg, uname, dirhome)
+    fcsv = get_fcsv(cfg_proj, uname, dirhome)
     return _rpt_hours(fcsv) if fcsv is not None else None
 
 #def run_hours_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):

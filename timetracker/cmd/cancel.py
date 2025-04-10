@@ -10,20 +10,18 @@ from logging import debug
 from timetracker.msgs import str_cancelled1
 from timetracker.msgs import str_not_running
 from timetracker.utils import yellow
-from timetracker.cmd.common import get_cfg
+from timetracker.cfg.cfg_local import CfgProj
 
 
 def cli_run_cancel(fnamecfg, args):
     """Initialize timetracking on a project"""
     run_cancel(
-        fnamecfg,
+        CfgProj(fnamecfg),
         args.name)
 
-def run_cancel(fnamecfg, name=None):
+def run_cancel(cfgproj, name=None):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND CANCEL'))
-    cfg = get_cfg(fnamecfg)
-    cfgproj = cfg.cfg_loc
     start_obj = cfgproj.get_starttime_obj(name)
     fin_start = start_obj.filename
     if exists(fin_start):

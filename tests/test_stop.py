@@ -12,7 +12,7 @@
 #from subprocess import run
 from collections import namedtuple
 from pytest import raises
-from timetracker.cmd.stop import run_stop
+from timetracker.cmd.stop import _run_stop
 
 
 #basicConfig(level=DEBUG)
@@ -33,12 +33,12 @@ def test_stop():
     # 1 0
     # 1 1
     #try:
-    #    run_stop(filename_config, csvfields, quiet=quiet, keepstart=keepstart)
+    #    _run_stop(filename_config, csvfields, quiet=quiet, keepstart=keepstart)
     #except SystemExit as err:
     #    print(err)
     #print('TEST PASSED')
     with raises(SystemExit) as excinfo:
-        run_stop(filename_config, 'USER', csvfields, quiet=quiet, keepstart=keepstart)
+        _run_stop(filename_config, 'USER', csvfields, quiet=quiet, keepstart=keepstart)
     assert excinfo.value.code == 0
     print('TEST PASSED')
 

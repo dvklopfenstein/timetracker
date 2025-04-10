@@ -8,6 +8,7 @@ from logging import DEBUG
 from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.cfg_global import get_cfgglobal
 from tests.pkgtttest.consts import sep_test
 from tests.pkgtttest.consts import SEP2
 from tests.pkgtttest.consts import SEP3
@@ -95,7 +96,7 @@ class Run:
     def __init__(self, tmphome, gfname):
         self.tmphome = tmphome
         self.gfname = gfname
-        self.cfg_glb = Cfg.get_cfgglobal(gfname, tmphome)
+        self.cfg_glb = get_cfgglobal(gfname, tmphome)
 
     def prtcfgs(self, cfg):
         """Print the filenames of the local and global filenames"""

@@ -17,14 +17,14 @@ from timetracker.cmd.common import get_cfg
 
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
-    run_stop(
+    _run_stop(
         fnamecfg,
         args.name,
         get_ntcsv(args.message, args.activity, args.tags),
         keepstart=args.keepstart,
         stop_at=args.at)
 
-def run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
+def _run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
     debug(yellow('RUNNING COMMAND STOP'))

@@ -26,8 +26,11 @@ def main():
     """Connect all parts of the timetracker"""
     #from logging import basicConfig, DEBUG
     #basicConfig(level=DEBUG)
+    print('ENTERING Cli')
     obj = Cli()
+    print('ENTERING Cli.run')
     obj.run()
+    print('EXITING  Cli.run')
 
 
 class Cli:
@@ -46,7 +49,7 @@ class Cli:
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        #print(f'TIMETRACKER ARGS: {self.args}')
+        print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -126,8 +129,8 @@ class Cli:
             #help=SUPPRESS)
         ####parser.add_argument('-f', '--file',
         ####    help='Use specified file as the global config file')
-        parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
-            help="A person's alias or username for timetracking")
+        parser.add_argument('--username', metavar='NAME', dest='name', default=self.user,
+            help="A person's alias or username running a timetracking command")
         parser.add_argument('--version', action='store_true',
             help='Print the timetracker version')
         self._add_subparsers(parser)
@@ -223,11 +226,11 @@ class Cli:
         parser = subparsers.add_parser(name='hours',
             help='Report elapsed time in hours',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        #parser.add_argument('--global', action='store_true',
-        #    help='Report the elapsed time in hours on all projects')
         parser.add_argument('-i', '--input', metavar='file.csv',
             default=self.fcsv,
             help='Specify an input csv file')
+        parser.add_argument('-g', '--run_global', action='store_true',
+            help='List all hours for all projects that are listed in the global config file')
         parser.add_argument('-G', '--global-config-file',
             help='Use specified file as the global config file')
         return parser
@@ -251,8 +254,8 @@ class Cli:
         parser = subparsers.add_parser(name='tag',
             help='Show all tags used in this project',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-g', '--global', action='store_true',
-            help='List all tag listed managed in the global config file')
+        parser.add_argument('-g', '--run_global', action='store_true',
+            help='List all tag for projects found in the global config file')
         parser.add_argument('-G', '--global-config-file',
             help='Use specified file as the global config file')
         return parser
@@ -261,8 +264,8 @@ class Cli:
         parser = subparsers.add_parser(name='activity',
             help='Show all activities used in this project',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-g', '--global', action='store_true',
-            help='List all activity listed managed in the global config file')
+        parser.add_argument('-g', '--run_global', action='store_true',
+            help='List all activity for projects found in the global config file')
         parser.add_argument('-G', '--global-config-file',
             help='Use specified file as the global config file')
         return parser

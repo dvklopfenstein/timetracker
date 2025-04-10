@@ -16,8 +16,8 @@ from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start
-from timetracker.cmd.stop import run_stop
+from timetracker.cmd.start import run_start_opcfg
+from timetracker.cmd.stop import run_stop_opcfg
 from tests.pkgtttest.dts import get_dt
 from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
@@ -68,13 +68,13 @@ class Obj(RunBase):
         cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
         fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-        run_init(cfgname, dircsv, self.project, dirhome=tmphome)
-        fin_start = run_start(cfgname, self.uname,
+        cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
+        fin_start = run_start_opcfg(cfg.cfg_loc, self.uname,
             now=dta,
             defaultdt=dta)
         assert exists(fin_start)
         csvfields = get_ntcsv("A,B,C", None, None)
-        dct = run_stop(cfgname, self.uname, csvfields,
+        dct = run_stop_opcfg(cfg.cfg_loc, self.uname, csvfields,
                        dirhome=tmphome,
                        stop_at=stop_at,
                        now=dta,

@@ -5,9 +5,8 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
 from logging import debug
-from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.cfg_local  import CfgProj
-from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.msgs import str_init
 #from timetracker.msgs import str_reinit
 #from timetracker.cmd.utils import run_strinit
@@ -23,7 +22,7 @@ class Cfg:
 
     ##def needs_init(self, fcfg_global=None, dirhome=None):
     ##    """Check for existance of both local and global config to see if init is needed"""
-    ##    fgcfg = self.get_cfgglobal(fcfg_global, dirhome, 'need').filename
+    ##    fgcfg = get_cfgglobal(fcfg_global, dirhome, 'need').filename
     ##    return not exists(self.cfg_loc.filename) or not exists(fgcfg)
 
     ##    #if (exist_loc := exists(self.cfg_loc.filename)) and (exist_glb := exists(fgcfg)):
@@ -40,7 +39,7 @@ class Cfg:
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
-        self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
+        self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
@@ -49,14 +48,9 @@ class Cfg:
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         self._reinit_local(self.cfg_loc, project, dircsv, fcfg_global, dirhome)
-        self.cfg_glb = self.get_cfgglobal(fcfg_global, dirhome)
+        self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
         debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')
         self._reinit_global(self.cfg_glb, project, self.cfg_loc.filename)
-
-    @staticmethod
-    def get_cfgglobal(fcfg=None, dirhome=None):
-        """Get a global configuration object"""
-        return CfgGlobal(get_filename_globalcfg(dirhome) if fcfg is None else fcfg)
 
     @staticmethod
     def _reinit_local(cfg_loc, project, dircsv, fcfg_global, dirhome):

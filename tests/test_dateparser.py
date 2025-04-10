@@ -10,8 +10,10 @@ def test_dateparser():
     base = datetime(2025, 1, 1)
     timestr = 'Sun 9am'
     date = parse(timestr, settings={'RELATIVE_BASE': base})
-    print(f'{base}: BASE DATE')
-    print(f'{date}: {timestr}')
+    print(f'{base}: RELATIVE_BASE')
+    print(f'{date}: "{timestr}"')
+    #assert date == datetime(2024, 12, 29, 9) #1266
+    assert date == datetime(2024, 1, 29, 9)
 
 
 if __name__ == '__main__':

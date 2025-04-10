@@ -14,14 +14,14 @@ from timetracker.cmd.common import get_cfg
 
 def cli_run_start(fnamecfg, args):
     """Initialize timetracking on a project"""
-    run_start(
+    _run_start(
         fnamecfg,
         args.name,
         start_at=args.at,
         force=args.force)
         ##activity=args.activity,
 
-def run_start(fnamecfg, name=None, start_at=None, **kwargs):
+def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND START'))
     cfg = get_cfg(fnamecfg)
@@ -30,6 +30,7 @@ def run_start(fnamecfg, name=None, start_at=None, **kwargs):
 
 def run_start_opcfg(cfgproj, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
+    assert exists(cfgproj.filename)
     now = kwargs.get('now', datetime.now())
     start_obj = cfgproj.get_starttime_obj(name)
 

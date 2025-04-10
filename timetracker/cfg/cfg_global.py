@@ -26,8 +26,14 @@ from tomlkit.toml_file import TOMLFile
 from timetracker.utils import ltblue
 ##from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.utils import has_homedir
+from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath_adj
 #from timetracker.consts import FILENAME_GLOBALCFG
+
+
+def get_cfgglobal(fcfg=None, dirhome=None):
+    """Get a global configuration object"""
+    return CfgGlobal(get_filename_globalcfg(dirhome, fcfg))
 
 
 class CfgGlobal:

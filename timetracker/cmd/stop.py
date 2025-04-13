@@ -62,7 +62,7 @@ def run_stop_opcfg(cfgproj, uname, csvfields, stop_at=None, **kwargs):
         return {'fcsv':fcsv, 'csvline':None}
     csvline = wr_stopline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
     ##csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
-    _msg_stop_complete(fcsv, delta, dtz)
+    _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
 
     # Remove the starttime file
     if not kwargs.get('keepstart', False):
@@ -71,14 +71,15 @@ def run_stop_opcfg(cfgproj, uname, csvfields, stop_at=None, **kwargs):
         print('NOT restarting the timer because `--keepstart` invoked')
     return {'fcsv':fcsv, 'csvline':csvline}
 
-def _msg_stop_complete(fcsv, delta, stoptime):
+def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     """Finish stopping"""
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
-    print('Timetracker stopped at: '
-          f'{stoptime.strftime("%a %I:%M %p")}: '
-          f'{stoptime}\n'
-          f'Elapsed H:M:S {delta} '
-          f'appended to {get_shortest_name(fcsv)}')
+    if not quiet:
+        print('Timetracker stopped at: '
+              f'{stoptime.strftime("%a %I:%M %p")}: '
+              f'{stoptime}\n'
+              f'Elapsed H:M:S {delta} '
+              f'appended to {get_shortest_name(fcsv)}')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

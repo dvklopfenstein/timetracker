@@ -143,10 +143,6 @@ class CfgProj:
         else:
             print(f'No changes needed to global config: {self.filename}')
 
-    def read_doc(self):
-        """Read the doc object"""
-        return TOMLFile(self.filename).read() if exists(self.filename) else None
-
     def get_project_from_filename(self):
         """Get the default project name from the project directory filename"""
         return basename(self.dirproj)

@@ -26,11 +26,11 @@ def main():
     """Connect all parts of the timetracker"""
     #from logging import basicConfig, DEBUG
     #basicConfig(level=DEBUG)
-    print('ENTERING Cli')
+    #print('ENTERING Cli')
     obj = Cli()
-    print('ENTERING Cli.run')
+    #print('ENTERING Cli.run')
     obj.run()
-    print('EXITING  Cli.run')
+    #print('EXITING  Cli.run')
 
 
 class Cli:
@@ -49,7 +49,7 @@ class Cli:
         self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        print(f'TIMETRACKER ARGS: {self.args}')
+        #print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""

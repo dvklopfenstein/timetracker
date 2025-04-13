@@ -11,7 +11,7 @@ from timetracker.cfg.cfg import Cfg
 
 
 def get_cfg(fnamecfg):
-    """Get the name of the csv file, if it exists"""
+    """Get the Cfg object, exit if no CfgProj exists"""
     if str_uninitialized(fnamecfg):
         sys_exit(0)
     return Cfg(fnamecfg)

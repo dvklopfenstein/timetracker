@@ -15,10 +15,11 @@ from timetracker.cfg.cfg_local  import CfgProj
 class Cfg:
     """Configuration manager for timetracker"""
 
-    def __init__(self, fcfg_local):
+    def __init__(self, fcfg_local, cfg_global=None):
         self.cfg_loc = CfgProj(fcfg_local)
-        self.cfg_glb = None
+        self.cfg_glb = cfg_global
         debug(f'Cfg exists({int(exists(self.cfg_loc.filename))}) Cfg({self.cfg_loc.filename})')
+        #debug(f'Cfg exists({int(exists(self.cfg_glb.filename))}) Cfg({self.cfg_glb.filename})')
 
     ##def needs_init(self, fcfg_global=None, dirhome=None):
     ##    """Check for existance of both local and global config to see if init is needed"""
@@ -39,7 +40,8 @@ class Cfg:
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
-        self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
+        if self.cfg_glb is None:
+            self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
 
@@ -48,7 +50,8 @@ class Cfg:
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         self._reinit_local(self.cfg_loc, project, dircsv, fcfg_global, dirhome)
-        self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
+        if self.cfg_glb is None:
+            self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
         debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')
         self._reinit_global(self.cfg_glb, project, self.cfg_loc.filename)
 

@@ -14,8 +14,9 @@ from timetracker.csvfile import CsvFile
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
+    #print(f'ARGS FOR HOURS: {args}')
     if args.input and exists(args.input):
-        _rpt_hours(args.input)
+        _rpt_hours(args.input, args.name)
         return
     cfg = get_cfg(fnamecfg)
     run_hours(cfg, args.name, args.run_global)
@@ -28,7 +29,7 @@ def run_hours(cfg, uname, get_global=False, dirhome=None):
     if get_global:
         run_hours_global(cfg, uname, dirhome)
     else:
-        run_hours_local(cfg, uname, dirhome)
+        run_hours_local(cfg.cfg_loc, uname, dirhome)
 
 def run_hours_global(cfg, uname, dirhome=None):
     """Report the total hours spent on all projects by uname"""
@@ -38,17 +39,22 @@ def run_hours_local(cfg_proj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     debug(yellow('RUNNING COMMAND TIME'))
     fcsv = get_fcsv(cfg_proj, uname, dirhome)
-    return _rpt_hours(fcsv) if fcsv is not None else None
+    return _rpt_hours(fcsv, uname) if fcsv is not None else None
 
 #def run_hours_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
 #    """Report the total time spent on all projects"""
 
-def _rpt_hours(fcsv):
+def _rpt_hours(fcsv, uname):
     chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
     total_hours = ocsv.read_totaltime_all()
-    print(f'{total_hours.total_seconds()/3600:9.3f} hours or '
-          f'{total_hours} H:M:S')
+    txt = [
+        f'{total_hours.total_seconds()/3600:9.3f} hours '
+        ####f'{total_hours} H:M:S'
+    ]
+    if uname is not None:
+        txt.append(f'by {uname:14} ')
+    print(''.join(txt))
     return total_hours
 
 

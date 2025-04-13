@@ -16,6 +16,7 @@ from timetracker.ntcsv import get_ntcsv
 #from timetracker.utils import cyan
 #from timetracker.utils import yellow
 #from timetracker.ntcsv import get_ntcsv
+from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start_opcfg
 from timetracker.cmd.stop import run_stop_opcfg
@@ -41,11 +42,15 @@ SEP = f'\n{"="*80}\n'
 def test_cmd_projects():
     """Test `trk stop --at"""
     userprojs = {
-        ('david'  , 'shepharding'): ('Sun', 'Fri', '12am', '12pm'),
-        ('lambs'  , 'grazing'):     ('Mon', 'Fri', '9am', '5pm'),
-        ('goats'  , 'grazing'):     ('Wed', 'Fri', '10am', '4pm'),
-        ('lions'  , 'hunting'):     ('Tue', 'Thu', '11am', '2pm'),
-        ('jackels', 'scavenging'):  ('Sun', 'Fri', '9am', '3pm'),
+        ('david'  , 'shepharding'): [('Sun', 'Fri', '5am', '11:30pm')],
+        ('lambs'  , 'grazing'):     [('Mon', 'Fri',  '6am',  '8am'),
+                                     ('Mon', 'Fri',  '9am', '10am'),
+                                     ('Mon', 'Fri', '11am', '12pm'),
+                                     ('Mon', 'Fri',  '2am',  '3pm'),
+                                     ('Mon', 'Fri', ' 7pm',  '8pm')],
+        ('goats'  , 'grazing'):     [('Wed', 'Fri', '10am',  '4pm')],
+        ('lions'  , 'hunting'):     [('Mon', 'Fri',  '7pm',  '8pm')],
+        ('jackels', 'scavenging'):  [('Sun', 'Fri',  '9am',  '3pm')],
     }
     orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
@@ -53,40 +58,58 @@ def test_cmd_projects():
         basicConfig()
         fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
-        # Do run_init for each project
-        mgr = RunAll(tmproot, userprojs)
+        # `run_init` on each project
+        mgr = RunAll(tmproot, userprojs, fglb)
         basicConfig(level=DEBUG)
         print(findhome_str(tmproot, '-type f'))
-        # Add time slots for each researcher & project (run_start & run_stop)
+        # `run_start` and `run_stop` the specified times for each researcher & project
         for usrprj, times in userprojs.items():
-            mgr.get_usrproj(usrprj).add_timeslots(*times)
+            mgr.get_usrproj(usrprj).add_timeslots(times)
+        # Check projects listed in CfgGlobal
+        #mgr.chk_projects()
         # Print hours
         for usrprj, times in userprojs.items():
             mgu = mgr.get_usrproj(usrprj)
-            run_hours(mgu.cfg, usrprj[0], mgu.home)
-        # Run projects
+            usr, _ = usrprj
+            run_hours(mgu.cfg, usr, dirhome=mgu.home)
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
         assert mgr
 
 
-# pylint: disable=too-few-public-methods
 class RunAll:
     """Manage all users and their projects"""
 
-    def __init__(self, tmproot, userprojs):
+    def __init__(self, tmproot, userprojs, fcfg_global):
         self.dirhome = join(tmproot, 'home')
         self.userprojs = userprojs
-        self.ups2mgr = {e:MngUsrProj(tmproot, *e) for e in userprojs}
+        self.cfg_global = CfgGlobal(fcfg_global)
+        self.ups2mgr = {e:MngUsrProj(self.dirhome, self.cfg_global, *e) for e in userprojs}
 
     def get_usrproj(self, user_proj):
         """Get MngUsrProj for specified usernamd and project"""
         return self.ups2mgr.get(user_proj)
 
+    def chk_projects(self):
+        """Check the projects"""
+        act_projs = self.cfg_global.get_projects()
+        home = self.dirhome
+        exp_projs = [
+            ['shepharding', join(home, 'david/proj/shepharding/.timetracker/config')],
+            ['grazing',     join(home, 'lambs/proj/grazing/.timetracker/config')],
+            ['grazing',     join(home, 'goats/proj/grazing/.timetracker/config')],
+            ['hunting',     join(home, 'lions/proj/hunting/.timetracker/config')],
+            ['scavenging',  join(home, 'jackels/proj/scavenging/.timetracker/config')],
+        ]
+        assert act_projs == exp_projs, f'\nEXP:\n{exp_projs}\nACT:\n{act_projs}'
 
+
+# pylint: disable=too-few-public-methods
 class MngUsrProj:
     """Manage one user and the project"""
 
-    def __init__(self, tmproot, user, projname, dircsv=None):
+    # pylint: disable=too-many-arguments
+    def __init__(self, tmproot, cfg_global, user, projname, dircsv=None):
+        self.cfg_global = cfg_global
         self.home = join(tmproot, user)
         self.user = user
         self.projname = projname
@@ -95,9 +118,15 @@ class MngUsrProj:
         self.cfg = run_init(self.fcfgproj,
             dircsv=dircsv,
             project=self.projname,
-            dirhome=self.home)
+            dirhome=self.home,
+            cfg_global=cfg_global)
 
-    def add_timeslots(self, day0, day1, time0, time1):
+    def add_timeslots(self, timeslots):
+        """Add time slots for every day between day0 and day1 for specified times"""
+        for day0, day1, time0, time1 in timeslots:
+            self._add_timeslots(day0, day1, time0, time1)
+
+    def _add_timeslots(self, day0, day1, time0, time1):
         """Add time slots for every day between day0 and day1 for specified times"""
         cfg_loc = self.cfg.cfg_loc
         user = self.user
@@ -105,10 +134,10 @@ class MngUsrProj:
             start_at = f'{weekday} {time0}'
             stop_at  = f'{weekday} {time1}'
             msg = f'{start_at} -- {stop_at}'
-            print('\nADDING TIMESLOT FOR', self.user, msg)
-            run_start_opcfg(cfg_loc, user, start_at, defaultdt=DT2525)
+            print('ADDING TIMESLOT FOR', self.user, msg)
+            run_start_opcfg(cfg_loc, user, start_at, defaultdt=DT2525, quiet=True)
             ntd = get_ntcsv(msg, activity=None, tags=None)
-            run_stop_opcfg(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525)
+            run_stop_opcfg(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525, quiet=True)
         #run_start_opcfg(self.cfg.cfg_loc, self.user, start_at=f'day
 
     ####dta = get_dt(yearstr='2525', hour=8, minute=30)

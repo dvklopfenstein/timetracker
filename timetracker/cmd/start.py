@@ -47,17 +47,14 @@ def run_start_opcfg(cfgproj, name=None, start_at=None, **kwargs):
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
         #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
-        print(f'Timetracker {_get_msg(start_at, force)}: '
-              f'{starttime.strftime("%a %I:%M %p")}: '
-              f'{starttime} ')
-              #f"for project '{cfgproj.project}'")
+        if not kwargs.get('quiet', False):
+            print(f'Timetracker {_get_msg(start_at, force)}: '
+                  f'{starttime.strftime("%a %I:%M %p")}: '
+                  f'{starttime} ')
+                  #f"for project '{cfgproj.project}'")
 
     # Informational message
     elif not force:
-        ## if start_at is None:
-        ##     print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
-        ##     print(str_how_to_stop_now())
-        ## else:
         if start_at is not None:
             print(f'Run `trk start --at {start_at} --force` to force restart')
     return start_obj.filename

@@ -59,11 +59,12 @@ class CfgGlobal:
             print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
         doc = TOMLFile(self.filename).read()
-        if (fcfg_proj := self._add_project(doc, project, fcfgproj)):
+        ####if (fcfg_proj := self._add_project(doc, project, fcfgproj)):
+        if self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
             print(f'Added project to the global timetracker config: {self.filename}:')
             print(f'  project: {project}')
-            print(f'  project config: {fcfg_proj}')
+            print(f'  project config: {fcfgproj}')
         return doc
 
     def read_doc(self):

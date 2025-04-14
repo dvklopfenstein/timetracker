@@ -47,7 +47,8 @@ class CsvFile:
         with open(self.fcsv, encoding='utf8') as csvstrm:
             hdr, itr = get_hdr_itr(csvstrm)
             self._chk_hdr(hdr)
-            for row in itr:
+            for idx, row in enumerate(itr, 2):
+                assert len(row) == 10, self._errmsg(row, idx)
                 startdt = dt_from_str(row[2])
                 ret.append(nto(
                     start_datetime=startdt,
@@ -56,6 +57,16 @@ class CsvFile:
                     activity=row[8],
                     tags=row[9]))
         return ret
+
+    def _errmsg(self, row, idx):
+        ret = [
+            f'EXPECTED 10 COLUMNS, GOT {len(row)}',
+            f'LINE {idx} FILE {self.fcsv}',
+            '    HEADERS        VALUE',
+        ]
+        for cnum, (elem, hdr) in enumerate(zip(row, self.hdrs)):
+            ret.append(f'{cnum:2}) {hdr:14} {elem}')
+        return '\n'.join(ret)
 
     def read_totaltime(self):
         """Calculate the total time by parsing the csv"""

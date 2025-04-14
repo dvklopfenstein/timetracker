@@ -107,7 +107,7 @@ class RunAll:
 class MngUsrProj:
     """Manage one user and the project"""
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
     def __init__(self, tmproot, cfg_global, user, projname, dircsv=None):
         self.cfg_global = cfg_global
         self.home = join(tmproot, user)

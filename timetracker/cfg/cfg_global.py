@@ -25,6 +25,7 @@ from tomlkit.toml_file import TOMLFile
 ####from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import ltblue
 ##from timetracker.cfg.utils import get_dirhome
+from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath_adj
@@ -58,9 +59,8 @@ class CfgGlobal:
         if not exists(self.filename):
             print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
-        doc = TOMLFile(self.filename).read()
-        ####if (fcfg_proj := self._add_project(doc, project, fcfgproj)):
-        if self._add_project(doc, project, fcfgproj):
+        doc = read_config(self.filename)
+        if doc is not None and self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
             print(f'Added project to the global timetracker config: {self.filename}:')
             print(f'  project: {project}')
@@ -69,7 +69,7 @@ class CfgGlobal:
 
     def read_doc(self):
         """Read the doc object"""
-        return TOMLFile(self.filename).read() if exists(self.filename) else None
+        return read_config(self.filename)
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
@@ -110,7 +110,7 @@ class CfgGlobal:
         return True
 
     def _wr_project_init(self, project, fcfgproj):
-        doc = self._new_doc()
+        doc = self._get_new_doc()
         doc['projects'].add_line((project, fcfgproj))
         TOMLFile(self.filename).write(doc)
         debug(ltblue(f'CfgGlobal WRINI({self.filename}): {doc["projects"]}'))
@@ -131,12 +131,8 @@ class CfgGlobal:
                 debug(f'CFGGLOBAL XXXXXXXXXXX {projname:20} {pdir}')
         return doc_cur
 
-    def _init_doc(self):
-        return TOMLFile(self.filename).read() if exists(self.filename) else self._new_doc()
-
     @staticmethod
-    def _new_doc():
-        # pylint: disable=duplicate-code
+    def _get_new_doc():
         doc = document()
         doc.add(comment("TimeTracker global configuration file"))
         doc.add(nl())
@@ -144,6 +140,9 @@ class CfgGlobal:
         arr.multiline(True)
         doc["projects"] = arr
         return doc
+
+    ##def _init_doc(self):
+    ##    return TOMLFile(self.filename).read() if exists(self.filename) else self._get_new_doc()
 
     ##def _noproj(self, doc, projnew, projcfgname):
     ##    """Test if the project is missing from the global config file"""

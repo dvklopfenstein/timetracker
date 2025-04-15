@@ -37,6 +37,7 @@ from timetracker.consts import DIRCSV
 
 from timetracker.starttime import Starttime
 from timetracker.utils import pink
+from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_relpath
@@ -52,7 +53,7 @@ class CfgProj:
     def __init__(self, filename):
         self.filename = filename
         self.exists = exists(self.filename)
-        debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
+        print(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
@@ -77,12 +78,7 @@ class CfgProj:
 
     def read_doc(self):
         """Read a config file and load it into a TOML document"""
-        return TOMLFile(self.filename).read() if exists(self.filename) else None
-
-    ##@staticmethod
-    ##def read_cfg(filename):
-    ##    """Read the given config file and return a doc object"""
-    ##    return TOMLFile(filename).read() if exists(filename) else None
+        return read_config(self.filename)
 
     def set_filename_csv(self, filename_str):
         """Write the config file, replacing [csv][filename] value"""
@@ -109,7 +105,7 @@ class CfgProj:
         #    return
         if not exists(self.dircfg):
             makedirs(self.dircfg, exist_ok=True)
-        doc = self._get_doc_new(project, dirhome)
+        doc = self._get_new_doc(project, dirhome)
         doc['csv']['filename'] = self._ini_csv_filename(dircsv)
         if fcfg_global is not None:
             self._add_doc_globalcfgfname(doc, fcfg_global)
@@ -221,7 +217,7 @@ class CfgProj:
         fcsv_abs = self._get_dircsv_absname(dirhome)
         return get_relpath(fcsv_abs, self.dirproj)
 
-    def _get_doc_new(self, project, dirhome):
+    def _get_new_doc(self, project, dirhome):
         assert project is not None and isinstance(project, str)
         doc = document()
         doc.add(comment("TimeTracker project configuration file"))

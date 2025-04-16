@@ -46,7 +46,6 @@ class Cli:
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
-        self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
         #print(f'TIMETRACKER ARGS: {self.args}')
@@ -227,11 +226,10 @@ class Cli:
             help='Report elapsed time in hours',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.fcsv,
             help='Specify an input csv file')
-        parser.add_argument('-g', '--run_global', action='store_true',
+        parser.add_argument('-g', '--global', dest='run_global', action='store_true',
             help='List all hours for all projects that are listed in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -240,13 +238,12 @@ class Cli:
             help='Generate an report for all time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-i', '--input', metavar='file.csv', nargs='*',
-            #default=self.fcsv,
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.docx',
             help='Specify an output file')
         parser.add_argument('-p', '--product', type=float,
             help=SUPPRESS)  # Future feature
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -256,7 +253,7 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--run_global', action='store_true',
             help='List all tag for projects found in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -266,7 +263,7 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--run_global', action='store_true',
             help='List all activity for projects found in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -276,7 +273,7 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
             help='List all projects listed managed in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -287,7 +284,6 @@ class Cli:
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.fcsv,
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.csv',
             default='updated.csv',

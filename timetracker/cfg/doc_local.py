@@ -1,0 +1,246 @@
+"""Local project configuration parser for timetracking.
+
+Uses https://github.com/python-poetry/tomlkit,
+but will switch to tomllib in builtin to standard Python (starting 3.11)
+in a version supported by cygwin, conda, and venv.
+
+"""
+
+__copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
+__author__ = "DV Klopfenstein, PhD"
+
+##from os import remove
+#from os import makedirs
+#from os.path import exists
+#from os.path import basename
+#from os.path import join
+#from os.path import abspath
+###from os.path import relpath
+from os.path import dirname
+from os.path import normpath
+#from logging import debug
+#from glob import glob
+#
+#from tomlkit import comment
+#from tomlkit import document
+#from tomlkit import nl
+#from tomlkit import table
+#from tomlkit.toml_file import TOMLFile
+#
+#from timetracker.consts import DIRTRK
+#from timetracker.consts import DIRCSV
+#
+###from timetracker.cfg.utils import replace_homepath
+###from timetracker.cfg.utils import parse_cfg
+###from timetracker.cfg.utils import chk_isdir
+###from timetracker.cfg.utils import get_dirname_abs
+#
+#from timetracker.starttime import Starttime
+#from timetracker.utils import pink
+from timetracker.cfg.utils import get_username
+from timetracker.cfg.utils import get_abspath
+#from timetracker.cfg.utils import get_relpath
+from timetracker.cfg.utils import replace_envvar
+
+# Added dirhome to wr_ini_file(...) and get_project_csvs(...)
+
+# pylint: disable=too-few-public-methods
+class DocProj:
+    """Local project configuration parser for timetracking"""
+
+    CSVPAT = 'timetracker_PROJECT_$USER$.csv'
+
+    def __init__(self, doc, filename):
+        assert doc is not None
+        self.doc = doc
+        self.dircfg  = normpath(dirname(filename))
+        self.dirproj = dirname(self.dircfg)
+    #    debug(pink(f'DocProj args filename {filename}'))
+
+    def get_filename_csv(self, username=None, dirhome=None):
+        """Get the csv filename by reading the cfg csv pattern and filling in"""
+        username = get_username(username)
+        return self._read_csv_from_cfgfile(username, dirhome)
+
+    #def get_project_csvs(self, dirhome):
+    #    """Get the csv filename by reading the cfg csv pattern and filling in"""
+    #    fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
+    #    if fcsvpat is not None:
+    #        globpat = replace_envvar(fcsvpat, '*')
+    #        return glob(globpat)
+    #    return None
+
+    #def read_doc(self):
+    #    """Read a config file and load it into a TOML document"""
+    #    return TOMLFile(self.filename).read() if exists(self.filename) else None
+
+    #def set_filename_csv(self, filename_str):
+    #    """Write the config file, replacing [csv][filename] value"""
+    #    filenamecfg = self.get_filename_cfg()
+    #    if exists(filenamecfg):
+    #        doc = TOMLFile(filenamecfg).read()
+    #        doc['csv']['filename'] = filename_str
+    #        self._wr_cfg(filenamecfg, doc)
+    #        return
+    #    raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
+
+    #def get_starttime_obj(self, username):
+    #    """Get a Starttime instance"""
+    #    username = get_username(username)
+    #    project = self._read_project_from_cfgfile()
+    #    return Starttime(self.dircfg, project, username)
+
+    #def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
+    #    """Write a new config file"""
+    #    fname = self.get_filename_cfg()
+    #    debug(f'CfgProj wr_ini_file {fname}')
+    #    assert not exists(fname)
+    #    #if exists(fname):
+    #    #    return
+    #    if not exists(self.dircfg):
+    #        makedirs(self.dircfg, exist_ok=True)
+    #    doc = self._get_doc_new(project, dirhome)
+    #    doc['csv']['filename'] = self._ini_csv_filename(dircsv)
+    #    if fcfg_global is not None:
+    #        self._add_doc_globalcfgfname(doc, fcfg_global)
+    #    self._wr_cfg(fname, doc)
+    #    print(f'Initialized timetracker directory: {self.dircfg}')
+
+    #def reinit(self, project, dircsv, fcfg_global=None):
+    #    """Update the cfg file, if needed"""
+    #    fname = self.get_filename_cfg()
+    #    assert exists(fname)   # checked in Cfg.reinit prior to calling
+    #    doc = TOMLFile(fname).read()
+    #    assert 'project' in doc
+    #    assert 'csv' in doc
+    #    assert 'filename' in doc['csv']
+    #    proj_orig = doc.get('project')
+    #    csv_orig = doc['csv'].get('filename')
+    #    chgd = False
+    #    if proj_orig != project:
+    #        print(f'{fname} -> Changed `project` from {proj_orig} to {project}')
+    #        doc['project'] = project
+    #        chgd = True
+    #    csv_new = self._ini_csv_filename(dircsv)
+    #    if csv_orig != csv_new:
+    #        print(f'{fname} -> Changed csv directory from {csv_orig} to {csv_new}')
+    #        doc['csv']['filename'] = self._ini_csv_filename(dircsv)
+    #        chgd = True
+    #    if fcfg_global is not None:
+    #        self._update_doc_globalcfgname(doc, fcfg_global)
+    #    if chgd:
+    #        TOMLFile(fname).write(doc)
+    #    else:
+    #        print(f'No changes needed to global config: {self.filename}')
+
+    #def get_project_from_filename(self):
+    #    """Get the default project name from the project directory filename"""
+    #    return basename(self.dirproj)
+
+    ##-------------------------------------------------------------
+    #def _read_project_from_cfgfile(self):
+    #    """Read a config file and load it into a TOML document"""
+    #    doc = self._rd_doc()
+    #    if doc is not None:
+    #        return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
+    #    return None
+
+    def _read_csv_from_cfgfile(self, username, dirhome):
+        """Read a config file and load it into a TOML document"""
+        fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
+        if fcsvpat:
+            return replace_envvar(fcsvpat, username) if '$' in fcsvpat else fcsvpat
+        return None
+
+    def _read_csvpat_from_cfgfile(self, dirhome):
+        """Read a config file and load it into a TOML document"""
+        doc = self.doc
+        fpat = get_abspath(doc['csv']['filename'], self.dirproj, dirhome)
+        fpat = fpat.replace('PROJECT', doc['project'])
+        return fpat
+
+    #def _read_csvdir_from_cfgfile(self, dirhome):
+    #    """Read a config file and load it into a TOML document"""
+    #    doc = self._rd_doc()
+    #    if doc is not None:
+    #        return get_abspath(dirname(doc['csv']['filename']), self.dirproj, dirhome)
+    #    return None
+
+    #@staticmethod
+    #def _wr_cfg(fname, doc):
+    #    """Write config file"""
+    #    TOMLFile(fname).write(doc)
+    #    # Use `~`, if it makes the path shorter
+    #    ##fcsv = replace_homepath(doc['csv']['filename'])
+    #    ##doc['csv']['filename'] = fcsv
+    #    debug(pink(f'CfgProj _wr_cfg(...)  PROJ:     {doc["project"]}'))
+    #    debug(pink(f"CfgProj _wr_cfg(...)  CSV:      {doc['csv']['filename']}"))
+    #    debug(pink("CfgProj _wr_cfg(...)  GLOBAL    "
+    #        f"{doc['global_config']['filename'] if 'global_config' in doc else 'NONE'}"))
+    #    debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
+
+    #def _rd_doc(self):
+    #    """Read a config file and load it into a TOML document"""
+    #    fin_cfglocal = self.get_filename_cfg()
+    #    return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+
+    ##@staticmethod
+    ##def _strdbg_cfg_global(doc):
+    ##    return doc['global_config']['filename'] if 'global_config' in doc else 'NONE}
+
+    #def _get_dircsv(self, dirhome):
+    #    """Read the project cfg to get the csv dir name for storing time data"""
+    #    fcsv = self._read_csvdir_from_cfgfile(dirhome)
+    #    if fcsv is not None:
+    #        return dirname(fcsv)
+    #    dircsv = get_abspath(DIRCSV, self.dirproj, dirhome)
+    #    return dircsv
+
+    #def _get_dircsv_absname(self, dirhome):
+    #    dircsv = self._get_dircsv(dirhome)
+    #    return get_abspath(dircsv, self.dirproj, dirhome)
+
+    #def _get_dircsv_relname(self, dirhome):
+    #    fcsv_abs = self._get_dircsv_absname(dirhome)
+    #    return get_relpath(fcsv_abs, self.dirproj)
+
+    #def _get_doc_new(self, project, dirhome):
+    #    assert project is not None and isinstance(project, str)
+    #    doc = document()
+    #    doc.add(comment("TimeTracker project configuration file"))
+    #    doc.add(nl())
+    #    doc["project"] = project
+
+    #    # [csv]
+    #    # format = "timetracker_dvklo.csv"
+    #    csv_section = table()
+    #    #csvdir.comment("Directory where the csv file is stored")
+    #    csvpat = self.CSVPAT.replace('PROJECT', project)
+    #    csv_section.add("filename", join(self._get_dircsv_relname(dirhome), csvpat))
+    #    doc.add("csv", csv_section)
+    #    return doc
+
+    #def _update_doc_globalcfgname(self, doc, fcfg_global):
+    #    if 'global_config' not in doc:
+    #        self._add_doc_globalcfgfname(doc, fcfg_global)
+    #    elif 'filename' in doc['global_config']:
+    #        if (cur := doc['global_config']['filename']) != fcfg_global:
+    #            debug(pink(f'CfgProj WAS (fcfg_global={cur})'))
+    #            doc['global_config']['filename'] = fcfg_global
+    #            debug(pink(f'CfgProj NOW (fcfg_global={fcfg_global})'))
+    #    else:
+    #        doc['global_config']['filename'] = fcfg_global
+    #        debug(pink(f'CfgProj SET (fcfg_global={fcfg_global})'))
+
+    #@staticmethod
+    #def _add_doc_globalcfgfname(doc, fcfg_global):
+    #    # [global_config]
+    #    # filename = "/home/uname/myglobal.cfg"
+    #    section = table()
+    #    #csvdir.comment("Directory where the csv file is stored")
+    #    section.add("filename", fcfg_global)
+    #    doc.add("global_config", section)
+    #    debug(pink(f'CfgProj _add_doc_globalcfgfname(fcfg_global={fcfg_global})'))
+
+
+# Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

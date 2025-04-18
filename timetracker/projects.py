@@ -13,7 +13,9 @@ __author__ = "DV Klopfenstein, PhD"
 #from datetime import datetime
 #from datetime import timedelta
 #from logging import debug
-#
+from collections import namedtuple
+
+from timetracker.cfg.tomutils import read_config
 #from timetracker.utils import orange
 #from timetracker.utils import prt_todo
 #from timetracker.consts import DIRTRK
@@ -41,9 +43,40 @@ __author__ = "DV Klopfenstein, PhD"
 # report    | G
 # csvloc    | G
 
+from timetracker.cfg.doc_local import DocProj
 
 
+NTO = namedtuple('NtCsv', 'fcsv project username')
 
+def get_csvs_username(projects, username, dirhome=None):
+    """Get csvs for the given projects for a single username"""
+    assert username is not None
+    ret = []
+    for _, fcfgproj in projects:
+        if (doc := read_config(fcfgproj)) is not None:
+            if (ntd := _get_nt(doc, fcfgproj, username, dirhome)):
+                ret.append(ntd)
+    return ret
+
+def get_ntcsvproj11(fcfgproj, username, dirhome=None):
+    """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
+    assert username is not None
+    if (doc := read_config(fcfgproj)) is not None:
+        return _get_nt(doc, fcfgproj, username, dirhome)
+    return None
+
+def get_ntcsvproj01(fcfgproj, fcsv, username):
+    """Get nt w/fcsv & project -- get project from CfgProj and fcsv from param"""
+    if (doc := read_config(fcfgproj)) is not None:
+        return NTO(filenamecsv=fcsv, project=doc.get('project'), username=username)
+    return None
+
+def _get_nt(doc, fcfgproj, username, dirhome):
+    """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
+    assert username is not None
+    docproj = DocProj(doc, fcfgproj)
+    fcsv = docproj.get_filename_csv(username, dirhome)
+    return NTO(fcsv=fcsv, project=doc.get('project'), username=username)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

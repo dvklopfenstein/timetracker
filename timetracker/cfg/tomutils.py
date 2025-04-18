@@ -12,7 +12,7 @@ def read_config(filename):
     try:
         fptr = open(filename, encoding='utf8')
     except (FileNotFoundError, PermissionError, OSError) as err:
-        print(prt_err(err))
+        prt_err(err)
         #print(f'{type(err).__name__}{err.args}')
     else:
         with fptr:

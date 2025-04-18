@@ -53,7 +53,7 @@ class CfgProj:
     def __init__(self, filename):
         self.filename = filename
         self.exists = exists(self.filename)
-        print(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
+        debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)

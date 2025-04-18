@@ -6,7 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
-from os.path import exists
+#from os.path import exists
 from logging import debug
 from subprocess import run
 
@@ -17,7 +17,7 @@ from timetracker import __version__
 from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
-from timetracker.cfg.cfg_local import CfgProj
+#from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.none import cli_run_none
 from timetracker.cfg.utils import run_cmd
 
@@ -289,5 +289,8 @@ class Cli:
             default='updated.csv',
             help='Specify an output csv file')
 
+
+if __name__ == '__main__':
+    main()
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

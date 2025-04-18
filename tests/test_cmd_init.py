@@ -140,11 +140,10 @@ def _chk_cfg_global(cfg_glb, project, exp_glb_filename, exp_loc_filename):
     assert cfg_glb.filename == exp_glb_filename, \
         f'EXP({exp_glb_filename}) != ACT({cfg_glb.filename})'
     assert exists(cfg_glb.filename), f'SHOULD EXIST: {cfg_glb.filename}'
-    doc_glb = cfg_glb.read_doc()
-    assert doc_glb['projects'] == [
+    projects = cfg_glb.get_projects()
+    assert projects == [
         [project, exp_loc_filename],
     ]
-    print(doc_glb)
 
 # pylint: disable=unknown-option-value
 # pylint: disable=too-many-arguments,too-many-positional-arguments

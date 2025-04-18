@@ -13,6 +13,7 @@ from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 #from timetracker.cfg.utils import get_relpath_adj
 from timetracker.cfg.utils import run_cmd
+from timetracker.cfg.tomutils import read_config
 from tests.pkgtttest.mkprojs import mkdirs
 from tests.pkgtttest.mkprojs import findhome
 
@@ -74,7 +75,7 @@ def _get_cfgglobal_empty(tmphome):
     cfg_glo = CfgGlobal(join(tmphome, FILENAME_GLOBALCFG))
     assert cfg_glo.filename == join(tmphome, '.timetrackerconfig'), f'{cfg_glo.filename}'
     # pylint: disable=protected-access
-    doc_cur = cfg_glo.read_doc()
+    doc_cur = read_config(cfg_glo.filename)
     assert doc_cur is None
     return cfg_glo
 

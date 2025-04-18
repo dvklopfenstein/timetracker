@@ -46,8 +46,9 @@ class CfgGlobal:
 
     def get_projects(self):
         """Get the projects managed by timetracker"""
-        doc = self.read_doc()
-        return doc.get('projects') if doc is not None else None
+        if (doc := read_config(self.filename)):
+            return doc.get('projects')
+        return None
 
     def wr_doc(self, doc):
         """Write a global cfg file"""
@@ -67,18 +68,13 @@ class CfgGlobal:
             print(f'  project config: {fcfgproj}')
         return doc
 
-    def read_doc(self):
-        """Read the doc object"""
-        return read_config(self.filename)
-
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
-        doc = self.read_doc()
-        assert doc, "Global file should be checked for existence: {self.filename}"
-        if self._add_project(doc, project, fcfgproj):
-            self.wr_doc(doc)
-        else:
-            print(f'No changes needed to project({project}) config: {self.filename}')
+        if (doc := read_config(self.filename)):
+            if self._add_project(doc, project, fcfgproj):
+                self.wr_doc(doc)
+            else:
+                print(f'No changes needed to project({project}) config: {self.filename}')
 
     # -------------------------------------------------------------
     def _add_project(self, doc, project, fcfgproj):

@@ -21,11 +21,12 @@ from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start_opcfg
 from timetracker.cmd.stop import run_stop_opcfg
 from timetracker.cmd.hours import run_hours
+from timetracker.cmd.hours import run_hours_global
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
-from tests.pkgtttest.runfncs import findhome_str
 #from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
+from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.mkprojs import getmkdirs_filename
 from tests.pkgtttest.mkprojs import reset_env
 from tests.pkgtttest.dts import get_iter_weekday
@@ -65,6 +66,7 @@ def test_cmd_projects():
         # `run_start` and `run_stop` the specified times for each researcher & project
         for usrprj, times in userprojs.items():
             mgr.get_usrproj(usrprj).add_timeslots(times)
+        print(findhome_str(tmproot, '-type f'))
         # Check projects listed in CfgGlobal
         #mgr.chk_projects()
         # Print hours
@@ -72,6 +74,7 @@ def test_cmd_projects():
             mgu = mgr.get_usrproj(usrprj)
             usr, _ = usrprj
             run_hours(mgu.cfg, usr, dirhome=mgu.home)
+        run_hours_global(mgr.cfg_global, 'lambs')
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
         assert mgr
 
@@ -134,7 +137,7 @@ class MngUsrProj:
             start_at = f'{weekday} {time0}'
             stop_at  = f'{weekday} {time1}'
             msg = f'{start_at} -- {stop_at}'
-            print('ADDING TIMESLOT FOR', self.user, msg)
+            #print('ADDING TIMESLOT FOR', self.user, msg)
             run_start_opcfg(cfg_loc, user, start_at, defaultdt=DT2525, quiet=True)
             ntd = get_ntcsv(msg, activity=None, tags=None)
             run_stop_opcfg(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525, quiet=True)

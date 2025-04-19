@@ -17,11 +17,12 @@ from timetracker.ntcsv import get_ntcsv
 #from timetracker.utils import yellow
 #from timetracker.ntcsv import get_ntcsv
 from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start_opcfg
 from timetracker.cmd.stop import run_stop_opcfg
 from timetracker.cmd.hours import run_hours
-from timetracker.cmd.hours import run_hours_global
+#[from timetracker.cmd.hours import run_hours_global
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
 #from tests.pkgtttest.runfncs import RunBase
@@ -77,10 +78,10 @@ def test_cmd_projects():
         for usrprj, times in userprojs.items():
             mgu = mgr.get_usrproj(usrprj)
             usr, _ = usrprj
-            run_hours(mgu.cfg, usr, dirhome=mgu.home)
+            run_hours(mgr.cfg, usr, dirhome=mgu.home)
 
         # print hours across projects globally
-        run_hours_global(mgr.cfg_global, 'lambs')
+        run_hours(mgr.cfg, 'lambs', dirhome=tmproot)
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
         assert mgr
 
@@ -92,6 +93,7 @@ class RunAll:
         self.dirhome = join(tmproot, 'home')
         self.userprojs = userprojs
         self.cfg_global = CfgGlobal(fcfg_global)
+        self.cfg = Cfg("phoney.cfg", self.cfg_global)
         self.ups2mgr = {e:MngUsrProj(self.dirhome, self.cfg_global, *e) for e in userprojs}
 
     def get_usrproj(self, user_proj):

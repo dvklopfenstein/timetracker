@@ -18,11 +18,24 @@ from tests.pkgtttest.mkprojs import findhome
 basicConfig(level=DEBUG)
 
 
-def test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.acfg'):
+def test_cfg_init_force_p1g1():
+    """Test reinitializing when project is given"""
+    _test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.acfg')
+
+def test_cfg_init_force_p0g1():
+    """Test reinitializing when project is given"""
+    _test_cfg_init_force(project=None, trksubdir='.timetracker', fcfg_glo='.acfg')
+
+def test_cfg_init_force_p0g0():
+    """Test reinitializing when project is given"""
+    _test_cfg_init_force(project=None, trksubdir='.timetracker', fcfg_glo=None)
+
+
+def _test_cfg_init_force(project, trksubdir, fcfg_glo):
     """Test cfg flow"""
     print(f'{SEP2}1) INITIALIZE "HOME" DIRECTORY')
     with TemporaryDirectory() as tmphome:
-        gfname = join(tmphome, fcfg_glo)
+        gfname = join(tmphome, fcfg_glo) if fcfg_glo else None
         run = Run(tmphome, gfname)
 
         # --------------------------------------------------------
@@ -67,11 +80,22 @@ def test_cfg_init_force(project='bread', trksubdir='.timetracker', fcfg_glo='.ac
         run.chk_cfg(cfg, loc=True, glb=True)
 
         # --------------------------------------------------------
-        print(f'\n{sep_test(4)}CFG REINIT TEST 4: rm config: keep all')
-        #run.rm_cfgs(cfg, loc=False, glb=False)
+        print(f'\n{sep_test(4)}CFG REINIT TEST 4: NO rm config: keep all')
+        #run.rm_cfgs(cfg, loc=False, glb=False) # NO rm
         run.prtcfgs(cfg)
 
         print(f'{SEP3}reinitialize {project} project')
+        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        run.prtcfgs(cfg)
+        run.chk_cfg(cfg, loc=True, glb=True)
+
+        # --------------------------------------------------------
+        print(f'\n{sep_test(5)}CFG REINIT TEST 5: NO rm config: keep all & cfg_glb=None')
+        #run.rm_cfgs(cfg, loc=False, glb=False) # NO rm
+        run.prtcfgs(cfg)
+
+        print(f'{SEP3}reinitialize {project} project')
+        cfg.cfg_glb = None
         cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
@@ -108,7 +132,8 @@ class Run:
         # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
         # EXP: apples '~/proj/apples/.timetracker/config'
         # INIT LOCAL PROJECT CONFIG
-        assert self.cfg_glb.filename == gfname
+        if gfname is not None:
+            assert self.cfg_glb.filename == gfname, f'{self.cfg_glb.filename} != {gfname}'
         assert cfg.cfg_loc.trksubdir == trksubdir, (
             f'\nEXP({trksubdir})\n'
             f'ACT({cfg.cfg_loc.trksubdir})\n'
@@ -144,4 +169,6 @@ class Run:
 
 
 if __name__ == '__main__':
-    test_cfg_init_force()
+    test_cfg_init_force_p1g1()
+    test_cfg_init_force_p0g1()
+    test_cfg_init_force_p0g0()

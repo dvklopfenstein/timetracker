@@ -51,6 +51,8 @@ def reset_env(envvarname, origval, expcurval):
 
 def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
     """Make sub-directories in a temporary directory for use in tests"""
+    if project is None:
+        project = 'apples'
     pdir = join(tmphome, f'proj/{project}')
     makedirs(join(pdir, 'doc'))
     if dirgit:

@@ -59,21 +59,27 @@ def test_cmd_projects():
         basicConfig()
         fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
+
         # `run_init` on each project
         mgr = RunAll(tmproot, userprojs, fglb)
         basicConfig(level=DEBUG)
         print(findhome_str(tmproot, '-type f'))
+
         # `run_start` and `run_stop` the specified times for each researcher & project
         for usrprj, times in userprojs.items():
             mgr.get_usrproj(usrprj).add_timeslots(times)
         print(findhome_str(tmproot, '-type f'))
+
         # Check projects listed in CfgGlobal
-        #mgr.chk_projects()
-        # Print hours
+        mgr.chk_projects()
+
+        # print hours, iterating through all users & their projects
         for usrprj, times in userprojs.items():
             mgu = mgr.get_usrproj(usrprj)
             usr, _ = usrprj
             run_hours(mgu.cfg, usr, dirhome=mgu.home)
+
+        # print hours across projects globally
         run_hours_global(mgr.cfg_global, 'lambs')
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
         assert mgr

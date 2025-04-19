@@ -54,7 +54,6 @@ def run_hours_global(cfg_global, uname):
     assert cfg_global is not None
     #print('RUN HOURS GLOBAL START')
     if (projects := cfg_global.get_projects()):
-        #print('hours:run_hours_global PPPPPPPPPPPPPPPPPPPPPPPPP PROJECTS', projects)
         _rpt_hours_projs_uname1(get_csvs_username(projects, uname), uname)
 
 def run_hours_local(cfg_proj, uname, dirhome=None):
@@ -77,8 +76,8 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     print('    hours        username projects')
     print('  -------------- -------- ----------------------')
     for ntd in ntcsvs:
-        total_time = _get_total_time(ntd.fcsv)
-        print(f'{_get_hours_str(total_time)} {username:{uname_len}} {ntd.project}')
+        if (total_time := _get_total_time(ntd.fcsv)):
+            print(f'{_get_hours_str(total_time)} {username:{uname_len}} {ntd.project}')
 
 #def _rpt_hours_uname0(ntd):
 #    assert uname is not None

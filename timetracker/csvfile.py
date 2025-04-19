@@ -37,29 +37,11 @@ class CsvFile:
 
     def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
-        debug('get_ntdata')
-        nto = self.nto
-        with open(self.fcsv, encoding='utf8') as csvstrm:
-            hdrs, itr = get_hdr_itr(csvstrm)
-            self._chk_hdr(hdrs)
-            ret = []
-            for row in itr:
-                ret.append(nto(
-                    start_datetime=dt_from_str(row[0]),
-                    duration=td_from_str(row[1]),
-                    activity=row[2],
-                    message=row[3],
-                    tags=row[4]))
-            return ret
-        return None
+        return self._read_csv(self._get_ntdata)
 
     def read_totaltime_all(self):
         """Calculate the total time by parsing the csv"""
-        return self._read_csv(self._sum_time)
-
-    @staticmethod
-    def _sum_time(csvlines):
-        return sum((td_from_str(row[1]) for row in csvlines), start=timedelta())
+        return self._read_csv(self._sum_time, prt_err)
 
     def wr_stopline(self, dta, delta, csvfields):
         """Write one data line in the csv file"""
@@ -84,23 +66,42 @@ class CsvFile:
         """Write header"""
         print(','.join(self.hdrs), file=prt)
 
+    # ------------------------------------------------------------------
+    def _get_ntdata(self, csvlines):
+        """Get data where start and stop are datetimes; timdelta is calculated from them"""
+        debug('get_ntdata')
+        nto = self.nto
+        def _get_nt(row):
+            return nto(
+                start_datetime=dt_from_str(row[0]),
+                duration=td_from_str(row[1]),
+                activity=row[2],
+                message=row[3],
+                tags=row[4])
+        return [_get_nt(row) for row in csvlines]
+
+    @staticmethod
+    def _sum_time(csvlines):
+        return sum((td_from_str(row[1]) for row in csvlines), start=timedelta())
+
     def _chk_hdr(self, hdrs):
         """Check the file format"""
         if len(hdrs) != 5:
             print('Expected {len(self.hdrs)} hdrs; got {len(hdrs)}: {hdrs}')
 
-    def _read_csv(self, fnc):
+    def _read_csv(self, fnc_csvlines, fnc_err=None):
         """Read a global or project config file only if it exists and is readable"""
         try:
             fptr = open(self.fcsv, encoding='utf8')
         except (FileNotFoundError, PermissionError, OSError) as err:
-            prt_err(err)
+            if fnc_err is not None:
+                fnc_err(err)
             #print(f'{type(err).__name__}{err.args}')
         else:
             with fptr as csvstrm:
                 hdrs, itr = get_hdr_itr(csvstrm)
                 self._chk_hdr(hdrs)
-                return fnc(itr)
+                return fnc_csvlines(itr)
         return None
 
 

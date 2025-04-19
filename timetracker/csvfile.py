@@ -8,7 +8,7 @@ from os.path import exists
 from collections import namedtuple
 from datetime import timedelta
 from logging import debug
-from contextlib import contextmanager
+# https://docs.python.org/3/library/csv.html
 from csv import writer
 
 from timetracker.utils import orange
@@ -55,14 +55,11 @@ class CsvFile:
 
     def read_totaltime_all(self):
         """Calculate the total time by parsing the csv"""
-        if (csvlines := self._read_csv(self._read_all)):
-            return sum((td_from_str(row[1]) for row in csvlines), start=timedelta())
-        return None
+        return self._read_csv(self._sum_time)
 
-    def _read_all(self, csvstrm):
-        hdrs, itr = get_hdr_itr(csvstrm)
-        self._chk_hdr(hdrs)
-        return list(itr)
+    @staticmethod
+    def _sum_time(csvlines):
+        return sum((td_from_str(row[1]) for row in csvlines), start=timedelta())
 
     def wr_stopline(self, dta, delta, csvfields):
         """Write one data line in the csv file"""
@@ -92,19 +89,19 @@ class CsvFile:
         if len(hdrs) != 5:
             print('Expected {len(self.hdrs)} hdrs; got {len(hdrs)}: {hdrs}')
 
-# https://docs.python.org/3/library/contextlib.html#contextlib.contextmanager
-#@contextmanager
-def _read_csv(self, fnc):
-    """Read a global or project config file only if it exists and is readable"""
-    try:
-        fptr = open(self.fcsv, encoding='utf8')
-    except (FileNotFoundError, PermissionError, OSError) as err:
-        prt_err(err)
-        #print(f'{type(err).__name__}{err.args}')
-    else:
-        with fptr:
-            return fnc(fptr)
-    return None
+    def _read_csv(self, fnc):
+        """Read a global or project config file only if it exists and is readable"""
+        try:
+            fptr = open(self.fcsv, encoding='utf8')
+        except (FileNotFoundError, PermissionError, OSError) as err:
+            prt_err(err)
+            #print(f'{type(err).__name__}{err.args}')
+        else:
+            with fptr as csvstrm:
+                hdrs, itr = get_hdr_itr(csvstrm)
+                self._chk_hdr(hdrs)
+                return fnc(itr)
+        return None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

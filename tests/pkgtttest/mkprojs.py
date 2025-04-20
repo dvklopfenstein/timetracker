@@ -41,6 +41,9 @@ def getmkdirs_filename(tmproot, dirname, filename):
 
 def reset_env(envvarname, origval, expcurval):
     """Reset an environmental variable to its original value"""
+    if origval is None:
+        del environ[envvarname]
+        return
     assert exists(expcurval), expcurval
     assert environ[envvarname] == expcurval
     if origval:

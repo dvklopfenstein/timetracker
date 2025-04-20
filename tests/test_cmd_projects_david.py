@@ -10,6 +10,7 @@ from logging import DEBUG
 #from logging import debug
 #from logging import getLogger
 from tempfile import TemporaryDirectory
+from collections import namedtuple
 #from csv import writer
 from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.ntcsv import get_ntcsv
@@ -22,6 +23,7 @@ from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start_opcfg
 from timetracker.cmd.stop import run_stop_opcfg
 from timetracker.cmd.hours import run_hours
+from timetracker.cmd.hours import cli_run_hours
 #[from timetracker.cmd.hours import run_hours_global
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
@@ -75,15 +77,21 @@ def test_cmd_projects():
         mgr.chk_projects()
 
         # print hours, iterating through all users & their projects
-        for usrprj, times in userprojs.items():
-            mgu = mgr.get_usrproj(usrprj)
-            usr, _ = usrprj
-            run_hours(mgr.cfg, usr, dirhome=mgu.home)
+        _run_init_projs(mgr, userprojs)
 
         # print hours across projects globally
         run_hours(mgr.cfg, 'lambs', dirhome=tmproot)
+
+        # print hours across projects globally
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
-        assert mgr
+
+def _run_init_projs(mgr, userprojs):
+    """print hours, iterating through all users & their projects"""
+    for usrprj, _ in userprojs.items():
+        mgu = mgr.get_usrproj(usrprj)
+        usr, _ = usrprj
+        run_hours(mgr.cfg, usr, dirhome=mgu.home)
+        cli_run_hours(mgr.cfg.cfg_loc.filename, mgu.get_args_hours())
 
 
 class RunAll:
@@ -131,6 +139,11 @@ class MngUsrProj:
             project=self.projname,
             dirhome=self.home,
             cfg_global=cfg_global)
+
+    def get_args_hours(self):
+        """Get cli args for run_hours"""
+        nto = namedtuple('NtArgs', 'input name')
+        return nto(input=self.cfg.cfg_loc.filename, name=self.user)
 
     def add_timeslots(self, timeslots):
         """Add time slots for every day between day0 and day1 for specified times"""

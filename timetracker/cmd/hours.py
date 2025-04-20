@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
+from datetime import timedelta
 from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.cfg_global import CfgGlobal
 #from timetracker.cmd.common import get_fcsv
@@ -22,12 +23,13 @@ from timetracker.projects import get_ntcsvproj11
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
-    #print(f'ARGS FOR HOURS: {args}')
-    if args.input and exists(args.input):
-        ntd = get_ntcsvproj01(fnamecfg, args.input, args.name)
+    #print(f'ARGS FOR HOURS: {fnamecfg} {args}')
+    if args.fcsv and exists(args.fcsv):
+        ntd = get_ntcsvproj01(fnamecfg, args.fcsv, args.name)
         if ntd:
             return _rpt_hours_uname1(ntd)
         return None
+    #print(f'ARGS FOR HOURS: {fnamecfg} {args}')
     cfg = Cfg(fnamecfg)
     return run_hours(cfg, args.name, args.run_global, args.global_config_file)
 
@@ -69,17 +71,22 @@ def run_hours_local(cfg_proj, uname, dirhome=None):
 def _rpt_hours_uname1(ntd):
     if ntd and (total_time := _get_total_time(ntd.fcsv)):
         assert ntd.username is not None, ntd
-        print(f'{_get_hours_str(total_time)} by {ntd.username:14} in project {ntd.project}')
+        in_msg = f'project {ntd.project}' if ntd.project else ntd.fcsv
+        print(f'{_get_hours_str(total_time)} by {ntd.username} in {in_msg}')
         return total_time
     return None
 
 def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     assert username is not None
+    total_time = timedelta()
     print('    hours        username projects')
     print('  -------------- -------- ----------------------')
     for ntd in ntcsvs:
-        if (total_time := _get_total_time(ntd.fcsv)):
-            print(f'{_get_hours_str(total_time)} {username:{uname_len}} {ntd.project}')
+        if (total_proj_time := _get_total_time(ntd.fcsv)):
+            total_time += total_proj_time
+            print(f'{_get_hours_str(total_proj_time)} {username:{uname_len}} {ntd.project}')
+            return total_time
+    return None
 
 #def _rpt_hours_uname0(ntd):
 #    assert uname is not None
@@ -88,7 +95,7 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
 #    return total_time
 
 def _get_hours_str(total_time):
-    return f'{total_time.total_seconds()/3600:9.3f} hours '
+    return f'{total_time.total_seconds()/3600:9.3f} hours'
 
 def _get_total_time(fcsv):
     chk_n_convert(fcsv)

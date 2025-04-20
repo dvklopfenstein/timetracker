@@ -67,9 +67,10 @@ def get_ntcsvproj11(fcfgproj, username, dirhome=None):
 
 def get_ntcsvproj01(fcfgproj, fcsv, username):
     """Get nt w/fcsv & project -- get project from CfgProj and fcsv from param"""
-    if (doc := read_config(fcfgproj)) is not None:
-        return NTO(filenamecsv=fcsv, project=doc.get('project'), username=username)
-    return None
+    project = None
+    if (doc := read_config(fcfgproj)):
+        project = doc.get('project')
+    return NTO(fcsv=fcsv, project=project, username=username)
 
 def _get_nt(doc, fcfgproj, username, dirhome):
     """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""

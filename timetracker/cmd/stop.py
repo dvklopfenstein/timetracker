@@ -10,6 +10,7 @@ from datetime import datetime
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.ntcsv import get_ntcsv
 from timetracker.epoch.epoch import get_dtz
+from timetracker.consts import FMTDT_H
 from timetracker.utils import yellow
 from timetracker.csvrun import wr_stopline
 from timetracker.cmd.common import get_cfg
@@ -48,8 +49,10 @@ def run_stop_opcfg(cfgproj, uname, csvfields, stop_at=None, **kwargs):
         return {'fcsv':fcsv, 'csvline':None}
     now = kwargs.get('now', datetime.now())
     dtz = now if stop_at is None else get_dtz(stop_at, now, kwargs.get('defaultdt'))
+    #print('DTZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ', dtz, uname, fcsv)
     if dtz is None:
-        raise RuntimeError("NOT STOPPING TIMER; NO STOP TIME FOUND")
+        raise RuntimeError(f'NO STOP TIME FOUND in "{stop_at}"; '
+                           f'NOT STOPPING TIMER STARTED {dta.strftime(FMTDT_H)}')
     if dtz <= dta:
         error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return {'fcsv':fcsv, 'csvline':None}
@@ -76,7 +79,7 @@ def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
     if not quiet:
         print('Timetracker stopped at: '
-              f'{stoptime.strftime("%a %I:%M %p")}: '
+              f'{stoptime.strftime(FMTDT_H)}: '
               f'{stoptime}\n'
               f'Elapsed H:M:S {delta} '
               f'appended to {get_shortest_name(fcsv)}')

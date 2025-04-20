@@ -7,12 +7,15 @@ from tomlkit import load
 from timetracker.utils import prt_err
 
 
-def read_config(filename):
+def read_config(filename, geterrfnc=None):
     """Read a global or project config file only if it exists and is readable"""
     try:
         fptr = open(filename, encoding='utf8')
     except (FileNotFoundError, PermissionError, OSError) as err:
-        prt_err(err)
+        if geterrfnc:
+            print(geterrfnc(err, filename))
+        else:
+            prt_err(err)
         #print(f'{type(err).__name__}{err.args}')
     else:
         with fptr:

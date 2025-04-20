@@ -53,7 +53,7 @@ def get_csvs_username(projects, username, dirhome=None):
     assert username is not None
     ret = []
     for _, fcfgproj in projects:
-        if (doc := read_config(fcfgproj)) is not None:
+        if (doc := read_config(fcfgproj, _str_err)) is not None:
             if (ntd := _get_nt(doc, fcfgproj, username, dirhome)):
                 ret.append(ntd)
     return ret
@@ -61,14 +61,14 @@ def get_csvs_username(projects, username, dirhome=None):
 def get_ntcsvproj11(fcfgproj, username, dirhome=None):
     """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
     assert username is not None
-    if (doc := read_config(fcfgproj)) is not None:
+    if (doc := read_config(fcfgproj, _str_err)) is not None:
         return _get_nt(doc, fcfgproj, username, dirhome)
     return None
 
 def get_ntcsvproj01(fcfgproj, fcsv, username):
     """Get nt w/fcsv & project -- get project from CfgProj and fcsv from param"""
     project = None
-    if (doc := read_config(fcfgproj)):
+    if (doc := read_config(fcfgproj, _str_err)):
         project = doc.get('project')
     return NTO(fcsv=fcsv, project=project, username=username)
 
@@ -78,6 +78,9 @@ def _get_nt(doc, fcfgproj, username, dirhome):
     docproj = DocProj(doc, fcfgproj)
     fcsv = docproj.get_filename_csv(username, dirhome)
     return NTO(fcsv=fcsv, project=doc.get('project'), username=username)
+
+def _str_err(err, filenamecfg):
+    return f'Note: {err.args[1]}: {filenamecfg}'
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

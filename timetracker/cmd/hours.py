@@ -14,6 +14,7 @@ from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
 from timetracker.cfg.utils import get_filename_globalcfg
 from timetracker.msgs import str_init0
+from timetracker.msgs import str_tostart_epoch
 from timetracker.projects import get_csvs_username
 from timetracker.projects import get_ntcsvproj01
 from timetracker.projects import get_ntcsvproj11
@@ -25,13 +26,10 @@ def cli_run_hours(fnamecfg, args):
     if args.input and exists(args.input):
         ntd = get_ntcsvproj01(fnamecfg, args.input, args.name)
         if ntd:
-            _rpt_hours_uname1(ntd)
-        return
+            return _rpt_hours_uname1(ntd)
+        return None
     cfg = Cfg(fnamecfg)
-    run_hours(cfg, args.name, args.run_global, args.global_config_file)
-    #if args.global:
-    #    run_hours_global(
-    #    )
+    return run_hours(cfg, args.name, args.run_global, args.global_config_file)
 
 def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=None):
     """Report the total time in hours spent on project(s)"""
@@ -44,32 +42,36 @@ def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=Non
                 print(str_init0())
                 sys_exit(0)
             cfg.cfg_glb = CfgGlobal(fglb)
-        run_hours_global(cfg.cfg_glb, uname)
-    else:
-        #print('RUN HOURS LOCAL')
-        run_hours_local(cfg.cfg_loc, uname, dirhome)
+        return run_hours_global(cfg.cfg_glb, uname)
+    #print('RUN HOURS GLOBAL')
+    ret = run_hours_local(cfg.cfg_loc, uname, dirhome)
+    if ret is None:
+        print(str_tostart_epoch())
+    return ret
 
 def run_hours_global(cfg_global, uname):
     """Report the total hours spent on all projects by uname"""
     assert cfg_global is not None
     #print('RUN HOURS GLOBAL START')
     if (projects := cfg_global.get_projects()):
-        _rpt_hours_projs_uname1(get_csvs_username(projects, uname), uname)
+        return _rpt_hours_projs_uname1(get_csvs_username(projects, uname), uname)
+    return None
 
 def run_hours_local(cfg_proj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
-    debug(yellow('RUNNING COMMAND TIME'))
+    debug(yellow('RUNNING COMMAND HOURS local'))
     ntd = get_ntcsvproj11(cfg_proj.filename, uname, dirhome)
-    return _rpt_hours_uname1(ntd) if ntd is not None else None
+    return _rpt_hours_uname1(ntd)
 
 #def run_hours_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
 #    """Report the total time spent on all projects"""
 
 def _rpt_hours_uname1(ntd):
-    assert ntd.username is not None
-    total_time = _get_total_time(ntd.fcsv)
-    print(f'{_get_hours_str(total_time)} by {ntd.username:14} in project {ntd.project}')
-    return total_time
+    if ntd and (total_time := _get_total_time(ntd.fcsv)):
+        assert ntd.username is not None, ntd
+        print(f'{_get_hours_str(total_time)} by {ntd.username:14} in project {ntd.project}')
+        return total_time
+    return None
 
 def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     assert username is not None

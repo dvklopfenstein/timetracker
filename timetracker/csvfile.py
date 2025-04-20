@@ -95,8 +95,9 @@ class CsvFile:
             fptr = open(self.fcsv, encoding='utf8')
         except (FileNotFoundError, PermissionError, OSError) as err:
             if fnc_err is not None:
-                fnc_err(err)
-            #print(f'{type(err).__name__}{err.args}')
+                fnc_err(f'Note: {err.args[1]}: {self.fcsv}')
+                #fnc_err(err)
+                #print(f'{type(err).__name__}{err.args}')
         else:
             with fptr as csvstrm:
                 hdrs, itr = get_hdr_itr(csvstrm)

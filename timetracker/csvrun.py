@@ -45,6 +45,7 @@ def chk_n_convert(fcsv):
         return
     if len(get_hdr(fcsv)) == 5:
         return
+    print(len(get_hdr(fcsv)), 'HHHHHHHHHHHHHHHHHHHHHHHHHH', get_hdr(fcsv), fcsv)
     convert_csv(fcsv)
 
 def convert_csv(csvfilename):

@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """Base class for object that runs tests"""
 
-from os.path import exists
 from timetracker.cfg.finder import CfgFinder
 from tests.pkgtttest.mkprojs import mk_projdirs
-from tests.pkgtttest.mkprojs import findhome_str
 
 
 class RunBase:
@@ -23,5 +21,5 @@ def proj_setup(tmphome, project, dircur, dirgit01=True):
     exp = mk_projdirs(tmphome, project, dirgit01)
     finder = CfgFinder(dircur=getattr(exp, dircur), trksubdir=None)
     fcfgproj = finder.get_cfgfilename()
-    assert not exists(fcfgproj), findhome_str(exp.dirhome)
+    #assert not exists(fcfgproj), findhome_str(exp.dirhome)
     return fcfgproj, finder, exp

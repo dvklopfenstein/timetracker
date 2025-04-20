@@ -57,9 +57,12 @@ def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
     if project is None:
         project = 'apples'
     pdir = join(tmphome, f'proj/{project}')
-    makedirs(join(pdir, 'doc'))
-    if dirgit:
-        makedirs(join(pdir, '.git'))
+    ddir = join(pdir, 'doc')
+    if not exists(ddir):
+        makedirs(ddir)
+    gdir = join(pdir, '.git')
+    if dirgit and not exists(gdir):
+        makedirs(gdir)
     return _get_expdirs(tmphome, project, dirgit, trksubdir)
 
 def _get_expdirs(tmphome, project, dirgit, trksubdir):

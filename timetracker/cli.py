@@ -225,7 +225,7 @@ class Cli:
         parser = subparsers.add_parser(name='hours',
             help='Report elapsed time in hours',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-i', '--input', metavar='file.csv',
+        parser.add_argument('-i', '--input', metavar='file.csv', nargs='*', dest='fcsv',
             help='Specify an input csv file')
         parser.add_argument('-g', '--global', dest='run_global', action='store_true',
             help='List all hours for all projects that are listed in the global config file')

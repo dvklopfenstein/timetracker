@@ -5,6 +5,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
 from os.path import exists
+from collections import namedtuple
 from logging import debug
 from datetime import timedelta
 from itertools import groupby
@@ -21,6 +22,7 @@ from timetracker.projects import get_csvs_username
 from timetracker.projects import get_ntcsvproj01
 from timetracker.projects import get_ntcsvproj11
 
+NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
@@ -45,12 +47,12 @@ def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=Non
                 print(str_init0())
                 sys_exit(0)
             cfg.cfg_glb = CfgGlobal(fglb)
-        return run_hours_global(cfg.cfg_glb, uname)
+        return run_hours_global(cfg.cfg_glb, uname)  # RdCsvs: results errors ntcsvs
     #print('RUN HOURS GLOBAL')
     ret = run_hours_local(cfg.cfg_loc, uname, dirhome)
     if ret is None:
         print(str_tostart_epoch())
-    return ret
+    return ret  # RdCsv: results error
 
 def run_hours_global(cfg_global, uname):
     """Report the total hours spent on all projects by uname"""
@@ -58,14 +60,15 @@ def run_hours_global(cfg_global, uname):
     #print('RUN HOURS GLOBAL START')
     if (projects := cfg_global.get_projects()):
         ntcsvs = get_csvs_username(projects, uname)
-        return _rpt_hours_projs_uname1(ntcsvs, uname)
+        ntres = _rpt_hours_projs_uname1(ntcsvs, uname)
+        return ntres  # RdCsvs: results errors ntcsvs
     return None
 
 def run_hours_local(cfg_proj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     debug(yellow('RUNNING COMMAND HOURS local'))
     ntd = get_ntcsvproj11(cfg_proj.filename, uname, dirhome)
-    return _rpt_hours_uname1(ntd)
+    return _rpt_hours_uname1(ntd)  # nt
 
 #def run_hours_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
 #    """Report the total time spent on all projects"""
@@ -88,16 +91,20 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     # ntcsvtimes: results errors fcsv
     itr = ((_get_total_time(nt.fcsv), nt) for nt in ntcsvs)
     rd01 = {k: list(g) for k, g in groupby(itr, key=lambda t: t[0].results is not None)}
-    if rd01[True]:
-        for nttime, ntcsv in rd01[True]:
+    errnts = rd01.get(False)
+    if (rdnts := rd01.get(True)):
+        for nttime, ntcsv in rdnts:
             if nttime.results:
                 total_time += nttime.results
                 print(f'{_get_hours_str(nttime.results)} {username:{uname_len}} {ntcsv.project}')
-        _rpt_errs_csvread(rd01[False])
-        return total_time
+        _rpt_errs_csvread(errnts)
+        return NTCSVS(results=total_time, errors=errnts, ntcsvs=rdnts)
+    _rpt_errs_csvread(errnts)
     return None
 
 def _rpt_errs_csvread(nts):
+    if not nts:
+        return
     #if nts:
     #    print('CSV files not read:')
     for ntrd, ntcsv in nts:

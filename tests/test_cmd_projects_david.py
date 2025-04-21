@@ -33,7 +33,7 @@ from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.mkprojs import getmkdirs_filename
 from tests.pkgtttest.mkprojs import reset_env
 from tests.pkgtttest.dts import get_iter_weekday
-from tests.pkgtttest.dts import hours2td
+#from tests.pkgtttest.dts import hours2td
 from tests.pkgtttest.dts import td2hours
 
 # https://github.com/scrapinghub/dateparser/issues/1266
@@ -43,36 +43,38 @@ from tests.pkgtttest.dts import I1266 as DT2525
 #getLogger("timetracker.epoch.epoch").setLevel(DEBUG)
 
 SEP = f'\n{"="*80}\n'
+SEP2 = f'\n{"- "*20}\n'
 
 
 def test_cmd_projects():
     """Test `trk stop --at"""
     userprojs = {
-        #('david'  , 'shepherding'): ([('Sun', 'Fri', '5am', '11:30pm')], X),
-        #('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',   '12am')], X),
-        #('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '6am',    '8am'),
-        #                              ('Mon', 'Fri',  '9am',   '10am'),
-        #                              ('Mon', 'Fri', '11am',   '12pm'),
-        #                              ('Mon', 'Fri',  '2am',    '3pm'),
-        #                              ('Mon', 'Fri', ' 7pm',    '8pm')], X),
-        #('goats'  , 'grazing'):     ([('Wed', 'Fri', '10am',    '4pm')], X),
-        #('lions'  , 'hunting'):     ([('Mon', 'Fri',  '7pm',    '8pm')], X),
-        #('jackels', 'scavenging'):  ([('Sun', 'Fri',  '9am',    '3pm')], X),
+        ('david'  , 'shepherding'): ([('Sun', 'Fri', '5am', '11:30pm')], 111.0),
+        ('lambs'  , 'sleeping'):    ([('Mon', 'Sat',  '7pm',   '11pm')],  24.0),
+        ('lambs'  , 'grazing'):     ([('Mon', 'Sat',  '6am',    '8am'),
+                                      ('Mon', 'Sat',  '9am',   '10am'),
+                                      ('Mon', 'Sat', '11am',   '12pm'),
+                                      ('Mon', 'Sat',  '2am',    '3pm'),
+                                      ('Mon', 'Sat', ' 7pm',    '8pm')], 108.0),
+        ('goats'  , 'sleeping'):    ([('Mon', 'Sat',  '6:59pm', '11:59pm')], 30.0),  # 3
+        ('goats'  , 'grazing'):     ([('Wed', 'Fri', '10am',    '4pm')],  18.0),
+        ('lions'  , 'hunting'):     ([('Mon', 'Fri',  '7pm',    '8pm')],   5.0),
+        ('jackels', 'scavenging'):  ([('Sun', 'Fri',  '9am',    '3pm')],  36.0),
         # -------------------------------------------------------
-        ('david'  , 'shepherding'): ([('Mon', 'Fri',  '5am',        '6am')],  5.0),  # 1
-        ('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '7am')], 10.0),  # 2
-        ('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',       '11pm')], 20.0),
-        ('goats'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '8am')], 15.0),  # 3
-        ('goats'  , 'sleeping'):    ([('Mon', 'Fri',  '6:59pm', '11:59pm')], 25.0),  # 3
-        ('lions'  , 'hunting'):     ([('Mon', 'Fri',  '5am',        '9am')], 20.0),  # 4
-        ('jackels', 'scavenging'):  ([('Mon', 'Fri',  '5am',       '10am')], 25.0),  # 5
+        #('david'  , 'shepherding'): ([('Mon', 'Fri',  '5am',        '6am')],  5.0),  # 1
+        #('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '7am')], 10.0),  # 2
+        #('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',       '11pm')], 20.0),
+        #('goats'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '8am')], 15.0),  # 3
+        #('goats'  , 'sleeping'):    ([('Mon', 'Fri',  '6:59pm', '11:59pm')], 25.0),  # 3
+        #('lions'  , 'hunting'):     ([('Mon', 'Fri',  '5am',        '9am')], 20.0),  # 4
+        #('jackels', 'scavenging'):  ([('Mon', 'Fri',  '5am',       '10am')], 25.0),  # 5
     }
     exp_projs = [
         ['shepherding', 'david/proj/shepherding/.timetracker/config'],
-        ['grazing',     'lambs/proj/grazing/.timetracker/config'],
         ['sleeping',    'lambs/proj/sleeping/.timetracker/config'],
-        ['grazing',     'goats/proj/grazing/.timetracker/config'],
+        ['grazing',     'lambs/proj/grazing/.timetracker/config'],
         ['sleeping',    'goats/proj/sleeping/.timetracker/config'],
+        ['grazing',     'goats/proj/grazing/.timetracker/config'],
         ['hunting',     'lions/proj/hunting/.timetracker/config'],
         ['scavenging',  'jackels/proj/scavenging/.timetracker/config'],
     ]
@@ -102,7 +104,7 @@ def test_cmd_projects():
         _run_hoursprojs(mgrglb, prj2mgrprj, userprojs)
 
         print(yellow('Print hours across projects globally'))
-        print(run_hours(mgrglb.cfg, 'lambs', dirhome=tmproot), 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFf')
+        print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(mgrglb.cfg, 'lambs', dirhome=tmproot))
 
         print(yellow('Print hours across projects globally'))
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
@@ -114,16 +116,18 @@ def _run_hoursprojs(mgrglb, prj2mgrprj, userprojs):
         mgrprj = prj2mgrprj[usrprj]
         usr, _ = usrprj
 
-        print('\nRUN run_hours:')
+        print(f'{SEP2}RUN run_hours project({usrprj[0]}) username({usrprj[1]})')
+        # run_hours nt: RdCsvs: results errors ntcsvs
         run1 = run_hours(mgrglb.cfg, usr, dirhome=mgrprj.home)
-        assert td2hours(run1) == _get_total_hours(usr, userprojs), (
-            f'ACT({run1}) != EXP({hours2td(exp_hours)}) '
+        assert td2hours(run1.results) == _get_total_hours(usr, userprojs), (
+            f'ACT({td2hours(run1.results)}) != EXP({_get_total_hours(usr, userprojs)}) '
             f'project({usrprj[0]}) username({usrprj[1]})')
 
-        print('\nRUN cli_run_hours:')
+        print(f'{SEP2}RUN cli_run_hours: project({usrprj[0]}) username({usrprj[1]})')
+        # cli_run_hours nt: RdCsv:  results error
         run2 = cli_run_hours(mgrprj.cfg.cfg_loc.filename, mgrprj.get_args_hours())
         assert td2hours(run2.results) == exp_hours, \
-            f'run_hours({run2}) != cli_run_hours({exp_hours})'
+            f'run_hours({run2.results}) != cli_run_hours({exp_hours}))'
 
 
 def _get_total_hours(usr, userprojs):

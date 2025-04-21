@@ -22,6 +22,7 @@ https://unabridged.merriam-webster.com/unabridged/terminus. Accessed 21 Feb. 202
 from itertools import cycle
 from itertools import islice
 from datetime import datetime
+from datetime import timedelta
 
 
 DTBEGIN = datetime(1412, 1, 6)
@@ -104,3 +105,7 @@ def get_iter_weekday(start_day, stopincl_day):
     if idxz < idxa:
         idxz += 7
     return islice(cycle(weekdays), idxa, idxz)
+
+def hours2td(hours):
+    """Get a timedelta object, given elapsed hours"""
+    return timedelta(seconds=hours*3600)

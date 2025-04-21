@@ -3,24 +3,38 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved'
 __author__ = "DV Klopfenstein, PhD"
 
+from collections import namedtuple
 from tomlkit import load
-from timetracker.utils import prt_err
+from tomlkit import dump
 
 
-def read_config(filename, geterrfnc=None):
+NTRDCFG = namedtuple('RdCfg', 'doc error')
+
+def read_config(filename):
     """Read a global or project config file only if it exists and is readable"""
+    error = None
     try:
         fptr = open(filename, encoding='utf8')
     except (FileNotFoundError, PermissionError, OSError) as err:
-        if geterrfnc:
-            print(geterrfnc(err, filename))
-        else:
-            prt_err(err)
+        error = err
         #print(f'{type(err).__name__}{err.args}')
     else:
         with fptr:
-            return load(fptr)
-    return None
+            return NTRDCFG(doc=load(fptr), error=error)
+    return NTRDCFG(doc=None, error=error)
+
+def write_config(filename, doc, mode='w'):
+    """Read a global or project config file only if it exists and is readable"""
+    error = None
+    try:
+        fptr = open(filename, mode, encoding='utf8')
+    except (PermissionError, OSError) as err:
+        error = err
+        #print(f'{type(err).__name__}{err.args}')
+    else:
+        with fptr:
+            dump(doc, fptr)
+    return error
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

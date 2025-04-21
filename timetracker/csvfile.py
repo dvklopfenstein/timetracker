@@ -12,7 +12,6 @@ from logging import debug
 from csv import writer
 
 from timetracker.utils import orange
-from timetracker.utils import prt_err
 from timetracker.csvutils import get_hdr_itr
 from timetracker.epoch.calc import dt_from_str
 from timetracker.epoch.calc import td_from_str
@@ -30,6 +29,7 @@ class CsvFile:
     ]
 
     nto = namedtuple('TimeData', hdrs)
+    ntrdcsv = namedtuple('RdCsv', 'results error')
 
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
@@ -41,7 +41,7 @@ class CsvFile:
 
     def read_totaltime_all(self):
         """Calculate the total time by parsing the csv"""
-        return self._read_csv(self._sum_time, prt_err)
+        return self._read_csv(self._sum_time)
 
     def wr_stopline(self, dta, delta, csvfields):
         """Write one data line in the csv file"""
@@ -89,21 +89,22 @@ class CsvFile:
         if len(hdrs) != 5:
             print('Expected {len(self.hdrs)} hdrs; got {len(hdrs)}: {hdrs}')
 
-    def _read_csv(self, fnc_csvlines, fnc_err=None):
+    def _read_csv(self, fnc_csvlines):
         """Read a global or project config file only if it exists and is readable"""
+        error = None
         try:
             fptr = open(self.fcsv, encoding='utf8')
         except (FileNotFoundError, PermissionError, OSError) as err:
-            if fnc_err is not None:
-                fnc_err(f'Note: {err.args[1]}: {self.fcsv}')
-                #fnc_err(err)
-                #print(f'{type(err).__name__}{err.args}')
+            error = err
+            #fnc_err(f'Note: {err.args[1]}: {self.fcsv}')
+            ##fnc_err(err)
+            #print(f'{type(err).__name__}{err.args}')
         else:
             with fptr as csvstrm:
                 hdrs, itr = get_hdr_itr(csvstrm)
                 self._chk_hdr(hdrs)
-                return fnc_csvlines(itr)
-        return None
+                return self.ntrdcsv(results=fnc_csvlines(itr), error=error)
+        return self.ntrdcsv(results=None, error=error)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

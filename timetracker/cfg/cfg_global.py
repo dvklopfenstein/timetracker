@@ -14,6 +14,7 @@ from os.path import join
 from os.path import abspath
 from os.path import relpath
 from logging import debug
+from collections import namedtuple
 
 from tomlkit import comment
 from tomlkit import document
@@ -26,6 +27,7 @@ from tomlkit.toml_file import TOMLFile
 from timetracker.utils import ltblue
 ##from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.tomutils import read_config
+from timetracker.cfg.tomutils import write_config
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath_adj
@@ -40,14 +42,17 @@ def get_cfgglobal(fcfg=None, dirhome=None):
 class CfgGlobal:
     """Global configuration parser for timetracking"""
 
+    NTWRCFG = namedtuple('WrCfg', 'doc error')
+
     def __init__(self, filename):
         self.filename = filename
         debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(filename))}) -- {filename}'))
 
     def get_projects(self):
         """Get the projects managed by timetracker"""
-        if (doc := read_config(self.filename)):
-            return doc.get('projects')
+        ntcfg = read_config(self.filename)
+        if ntcfg.doc:
+            return ntcfg.doc.get('projects')
         return None
 
     def wr_doc(self, doc):
@@ -60,17 +65,20 @@ class CfgGlobal:
         if not exists(self.filename):
             print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
-        doc = read_config(self.filename)
+        # ntcfg: doc error
+        ntcfg = read_config(self.filename)
+        doc = ntcfg.doc
         if doc is not None and self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
             print(f'Added project to the global timetracker config: {self.filename}:')
-            print(f'  project: {project}')
-            print(f'  project config: {fcfgproj}')
-        return doc
+            print(f'  project: {project}; config: {fcfgproj}')
+        return ntcfg
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
-        if (doc := read_config(self.filename)):
+        ntcfg = read_config(self.filename)
+        doc = ntcfg.doc
+        if doc:
             if self._add_project(doc, project, fcfgproj):
                 self.wr_doc(doc)
             else:
@@ -108,9 +116,12 @@ class CfgGlobal:
     def _wr_project_init(self, project, fcfgproj):
         doc = self._get_new_doc()
         doc['projects'].add_line((project, fcfgproj))
-        TOMLFile(self.filename).write(doc)
+        ##TOMLFile(self.filename).write(doc)
+        err = write_config(self.filename, doc)
+        if err:
+            print(f'WRITE ERROR {err}')
         debug(ltblue(f'CfgGlobal WRINI({self.filename}): {doc["projects"]}'))
-        return doc
+        return self.NTWRCFG(doc=doc, error=err)
 
     def _get_docprt(self, doc):
         doc_cur = doc.copy()

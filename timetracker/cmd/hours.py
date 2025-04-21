@@ -89,7 +89,7 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     itr = ((_get_total_time(nt.fcsv), nt) for nt in ntcsvs)
     rd01 = {k: list(g) for k, g in groupby(itr, key=lambda t: t[0].results is not None)}
     if rd01[True]:
-        for nttime, ntcsv  in rd01[True]:
+        for nttime, ntcsv in rd01[True]:
             if nttime.results:
                 total_time += nttime.results
                 print(f'{_get_hours_str(nttime.results)} {username:{uname_len}} {ntcsv.project}')
@@ -98,11 +98,14 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     return None
 
 def _rpt_errs_csvread(nts):
-    if nts:
-        print('CSV files not read:')
-    for ntd in nts:
-        assert ntd[0].results is None
-        print(f'{ntd}')
+    #if nts:
+    #    print('CSV files not read:')
+    for ntrd, ntcsv in nts:
+        assert ntrd.results is None
+        errtxt = ntrd.error.args[1]
+        #if True: # errtxt != 'No such file or directory':
+        print(f'INFO: {errtxt}: {ntrd.error.filename}')
+        assert ntcsv.fcsv
         #print(f'{ntd[0].error} {ntd}')
 
 #def _rpt_hours_uname0(ntd):

@@ -109,3 +109,7 @@ def get_iter_weekday(start_day, stopincl_day):
 def hours2td(hours):
     """Get a timedelta object, given elapsed hours"""
     return timedelta(seconds=hours*3600)
+
+def td2hours(tdelta):
+    """Convert a datetime timedelta object to hours in floating point"""
+    return tdelta.total_seconds()/3600

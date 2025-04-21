@@ -67,11 +67,11 @@ class Obj:
             cfgg = get_cfgglobal(dirhome=tmphome)
             # pylint: disable=unsubscriptable-object
             # pylint: disable=protected-access
-            assert cfgp.read_doc()['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
+            assert cfgp.read_doc().doc['csv']['filename'] == join(dircsv, CfgProj.CSVPAT)
             exp_cfg_csv_fname = join(dircsv, fcsv)
             exp_cfg_csv_filename = _get_abscsv(exp.dirproj, dircsv, fcsv, tmphome)
             cfgp.set_filename_csv(exp_cfg_csv_fname)
-            assert cfgp.read_doc()['csv']['filename'] == exp_cfg_csv_fname
+            assert cfgp.read_doc().doc['csv']['filename'] == exp_cfg_csv_fname
             #findhome(tmphome)
             assert exists(cfgname), findhome_str(exp.dirhome)
             assert exists(cfgg.filename), findhome_str(exp.dirhome)

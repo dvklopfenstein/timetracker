@@ -50,7 +50,8 @@ def _chk(csvfile, olddata):
         f'EXP != ACT:\nEXP({csvnew.hdrs})\nACT({get_hdr(csvfile)})'
 
     # Check data length
-    newdata = csvnew.get_ntdata()
+    newdata, errs = csvnew.get_ntdata()
+    print(f'CONFIGFILE READ ERRORS: {errs}')
     assert len(olddata) == len(newdata) - 1, \
         f'LEN EXP({len(olddata)}) != ACT({len(newdata)})\n'
 

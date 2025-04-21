@@ -33,6 +33,8 @@ from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.mkprojs import getmkdirs_filename
 from tests.pkgtttest.mkprojs import reset_env
 from tests.pkgtttest.dts import get_iter_weekday
+from tests.pkgtttest.dts import hours2td
+from tests.pkgtttest.dts import td2hours
 
 # https://github.com/scrapinghub/dateparser/issues/1266
 #from tests.pkgtttest.dts import DT2525
@@ -46,7 +48,7 @@ SEP = f'\n{"="*80}\n'
 def test_cmd_projects():
     """Test `trk stop --at"""
     userprojs = {
-        #('david'  , 'shepharding'): ([('Sun', 'Fri', '5am', '11:30pm')], X),
+        #('david'  , 'shepherding'): ([('Sun', 'Fri', '5am', '11:30pm')], X),
         #('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',   '12am')], X),
         #('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '6am',    '8am'),
         #                              ('Mon', 'Fri',  '9am',   '10am'),
@@ -57,7 +59,7 @@ def test_cmd_projects():
         #('lions'  , 'hunting'):     ([('Mon', 'Fri',  '7pm',    '8pm')], X),
         #('jackels', 'scavenging'):  ([('Sun', 'Fri',  '9am',    '3pm')], X),
         # -------------------------------------------------------
-        ('david'  , 'shepharding'): ([('Mon', 'Fri',  '5am',        '6am')],  5.0),  # 1
+        ('david'  , 'shepherding'): ([('Mon', 'Fri',  '5am',        '6am')],  5.0),  # 1
         ('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '7am')], 10.0),  # 2
         ('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',       '11pm')], 20.0),
         ('goats'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '8am')], 15.0),  # 3
@@ -66,7 +68,7 @@ def test_cmd_projects():
         ('jackels', 'scavenging'):  ([('Mon', 'Fri',  '5am',       '10am')], 25.0),  # 5
     }
     exp_projs = [
-        ['shepharding', 'david/proj/shepharding/.timetracker/config'],
+        ['shepherding', 'david/proj/shepherding/.timetracker/config'],
         ['grazing',     'lambs/proj/grazing/.timetracker/config'],
         ['sleeping',    'lambs/proj/sleeping/.timetracker/config'],
         ['grazing',     'goats/proj/grazing/.timetracker/config'],
@@ -105,15 +107,27 @@ def test_cmd_projects():
         print(yellow('Print hours across projects globally'))
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
+
 def _run_hoursprojs(mgrglb, prj2mgrprj, userprojs):
     """print hours, iterating through all users & their projects"""
-    for usrprj, _ in userprojs.items():
+    for usrprj, (_, exp_hours) in userprojs.items():
         mgrprj = prj2mgrprj[usrprj]
         usr, _ = usrprj
+
+        print('\nRUN run_hours:')
         run1 = run_hours(mgrglb.cfg, usr, dirhome=mgrprj.home)
+        assert td2hours(run1) == _get_total_hours(usr, userprojs), (
+            f'ACT({run1}) != EXP({hours2td(exp_hours)}) '
+            f'project({usrprj[0]}) username({usrprj[1]})')
+
+        print('\nRUN cli_run_hours:')
         run2 = cli_run_hours(mgrprj.cfg.cfg_loc.filename, mgrprj.get_args_hours())
-        if run1 != run2:
-            print(f'run_hours({run1}) != cli_run_hours({run2})')
+        assert td2hours(run2.results) == exp_hours, \
+            f'run_hours({run2}) != cli_run_hours({exp_hours})'
+
+
+def _get_total_hours(usr, userprojs):
+    return sum(e for (u, _), (_, e) in userprojs.items() if u == usr)
 
 
 # pylint: disable=too-few-public-methods

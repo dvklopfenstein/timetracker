@@ -46,7 +46,7 @@ def _run_io(fcsv, fout_docx, pnum):
     """Run input output"""
     chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
-    timedata = ocsv.get_ntdata()
+    timedata, errs = ocsv.get_ntdata()
     #for e in sorted(timedata, key=lambda nt: nt.start_datetime):
     #    print(e)  # TimeData namedtuple
     timefmtd = get_data_formatted(timedata, pnum)
@@ -55,6 +55,9 @@ def _run_io(fcsv, fout_docx, pnum):
         if fout_docx:
             doc = WordDoc(timefmtd)
             doc.write_doc(fout_docx)
+    if errs:
+        for err in errs:
+            print(err)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

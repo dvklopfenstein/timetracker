@@ -130,7 +130,7 @@ def _run_gcfg(project, user):
             exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         # pylint: disable=unsubscriptable-object
-        assert doc_loc['global_config']['filename'] == cfg_top.cfg_glb.filename
+        assert doc_loc.doc['global_config']['filename'] == cfg_top.cfg_glb.filename
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=newgcfg,
             exp_loc_filename=ntdirs.cfglocfilename)
@@ -153,8 +153,8 @@ def _chk_cfg_loc(cfg_loc, project, user, exp_cfg_filename, exp_cfg_csv_filename,
     assert exists(cfg_loc.filename), f'CFG NOT EXIST({cfg_loc.filename})'
     doc_loc = cfg_loc.read_doc()
     print(doc_loc)
-    assert doc_loc['project'] == project
-    assert doc_loc['csv']['filename'] == exp_cfg_csv_filename, \
+    assert doc_loc.doc['project'] == project
+    assert doc_loc.doc['csv']['filename'] == exp_cfg_csv_filename, \
         f"ACT({doc_loc['csv']['filename']}) != EXP({exp_cfg_csv_filename})"
     act_csv = cfg_loc.get_filename_csv(user)
     print(act_csv)

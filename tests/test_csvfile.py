@@ -17,9 +17,10 @@ def test_csvfile():
         fcsv = join(tmphome, 'activities.csv')
         obj = Run(fcsv)
         _pos(obj)
-        assert str(obj.obj.read_totaltime_all()) == "2703168 days, 8:01:06.200003"
+        assert str(obj.obj.read_totaltime_all().results) == "2703168 days, 8:01:06.200003", \
+            str(obj.obj.read_totaltime_all())
         _neg(obj)
-        assert str(obj.obj.read_totaltime_all()) == "0:00:00"
+        assert str(obj.obj.read_totaltime_all().results) == "0:00:00"
 
         # CSV
         system(f'cat {fcsv}')

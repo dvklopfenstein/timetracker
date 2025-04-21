@@ -24,7 +24,7 @@ def read_config(filename):
     return NTRDCFG(doc=None, error=error)
 
 def write_config(filename, doc, mode='w'):
-    """Read a global or project config file only if it exists and is readable"""
+    """Write a global or project config file"""
     error = None
     try:
         fptr = open(filename, mode, encoding='utf8')

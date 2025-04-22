@@ -54,11 +54,21 @@ def get_csvs_username(projects, username, dirhome=None):
     ret = []
     for _, fcfgproj in projects:
         ntcfg = read_config(fcfgproj)
-        doc = ntcfg.doc
-        if doc:
-            if (ntd := _get_nt(doc, fcfgproj, username, dirhome)):
+        if ntcfg.doc:
+            if (ntd := _get_nt_username(ntcfg.doc, fcfgproj, username, dirhome)):
                 ret.append(ntd)
     return ret
+
+#def get_csvs_all(projects, dirhome=None):
+#    """Get csvs for the given projects for a single username"""
+#    ret = []
+#    for _, fcfgproj in projects:
+#        ntcfg = read_config(fcfgproj)
+#        doc = ntcfg.doc
+#        if doc:
+#            if (ntd := _get_nt_all(doc, fcfgproj, dirhome)):
+#                ret.append(ntd)
+#    return ret
 
 def get_ntcsvproj11(fcfgproj, username, dirhome=None):
     """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
@@ -66,7 +76,7 @@ def get_ntcsvproj11(fcfgproj, username, dirhome=None):
     ntcfg = read_config(fcfgproj)
     doc = ntcfg.doc
     if doc:
-        return _get_nt(doc, fcfgproj, username, dirhome)
+        return _get_nt_username(doc, fcfgproj, username, dirhome)
     return None
 
 def get_ntcsvproj01(fcfgproj, fcsv, username):
@@ -78,12 +88,18 @@ def get_ntcsvproj01(fcfgproj, fcsv, username):
         project = doc.get('project')
     return NTO(fcsv=fcsv, project=project, username=username)
 
-def _get_nt(doc, fcfgproj, username, dirhome):
+def _get_nt_username(doc, fcfgproj, username, dirhome):
     """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
     assert username is not None
     docproj = DocProj(doc, fcfgproj)
     fcsv = docproj.get_filename_csv(username, dirhome)
     return NTO(fcsv=fcsv, project=doc.get('project'), username=username)
+
+#def _get_nt_all(doc, fcfgproj, dirhome):
+#    """For all usernames, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
+#    docproj = DocProj(doc, fcfgproj)
+#    fcsvs = docproj.get_filenames_csv(dirhome)
+#    return NTO(fcsv=fcsv, project=doc.get('project'), username=username)
 
 def _str_err(err, filenamecfg):
     return f'Note: {err.args[1]}: {filenamecfg}'

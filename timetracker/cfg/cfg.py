@@ -40,6 +40,7 @@ class Cfg:
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
+        print(f'Initialized timetracker directory: {self.cfg_loc.dircfg}')
         if self.cfg_glb is None:
             self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
@@ -59,6 +60,7 @@ class Cfg:
     def _reinit_local(cfg_loc, project, dircsv, fcfg_global, dirhome):
         if not exists(cfg_loc.filename):
             cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome)
+            print(f'Initialized timetracker directory: {cfg_loc.dircfg}')
         else:
             cfg_loc.reinit(project, dircsv, fcfg_global)
 

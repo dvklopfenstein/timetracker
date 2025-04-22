@@ -37,6 +37,7 @@ from timetracker.consts import DIRCSV
 
 from timetracker.starttime import Starttime
 from timetracker.utils import pink
+from timetracker.cfg.doc_local import DocProj
 from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
@@ -64,9 +65,13 @@ class CfgProj:
 
     def get_filename_csv(self, username=None, dirhome=None):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
-        username = get_username(username)
-        fcsv = self._read_csv_from_cfgfile(username, dirhome)
-        return fcsv if fcsv is not None else None
+        ntcfg = read_config(self.filename)
+        if (doc := ntcfg.doc):
+            return DocProj(doc, self.filename).get_filename_csv(username, dirhome)
+        return None
+        ####username = get_username(username)
+        ####fcsv = self._read_csv_from_cfgfile(username, dirhome)
+        ####return fcsv if fcsv is not None else None
 
     def get_project_csvs(self, dirhome):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
@@ -92,9 +97,9 @@ class CfgProj:
 
     def get_starttime_obj(self, username):
         """Get a Starttime instance"""
-        username = get_username(username)
-        project = self._read_project_from_cfgfile()
-        return Starttime(self.dircfg, project, username)
+        ntcfg = read_config(self.filename)
+        project = ntcfg.doc.get('project') if ntcfg.doc else None
+        return Starttime(self.dircfg, project, get_username(username))
 
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Write a new config file"""
@@ -110,7 +115,7 @@ class CfgProj:
         if fcfg_global is not None:
             self._add_doc_globalcfgfname(doc, fcfg_global)
         self._wr_cfg(fname, doc)
-        print(f'Initialized timetracker directory: {self.dircfg}')
+        ####print(f'Initialized timetracker directory: {self.dircfg}')
 
     def reinit(self, project, dircsv, fcfg_global=None):
         """Update the cfg file, if needed"""
@@ -149,19 +154,19 @@ class CfgProj:
             dircsv = '.'
         return join(dircsv, self.CSVPAT)
 
-    def _read_project_from_cfgfile(self):
-        """Read a config file and load it into a TOML document"""
-        doc = self._rd_doc()
-        if doc is not None:
-            return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
-        return None
+    ####def _read_project_from_cfgfile(self):
+    ####    """Read a config file and load it into a TOML document"""
+    ####    doc = self._rd_doc()
+    ####    if doc is not None:
+    ####        return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
+    ####    return None
 
-    def _read_csv_from_cfgfile(self, username, dirhome):
-        """Read a config file and load it into a TOML document"""
-        fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
-        if fcsvpat:
-            return replace_envvar(fcsvpat, username) if '$' in fcsvpat else fcsvpat
-        return None
+    ####def _read_csv_from_cfgfile(self, username, dirhome):
+    ####    """Read a config file and load it into a TOML document"""
+    ####    fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
+    ####    if fcsvpat:
+    ####        return replace_envvar(fcsvpat, username) if '$' in fcsvpat else fcsvpat
+    ####    return None
 
     def _read_csvpat_from_cfgfile(self, dirhome):
         """Read a config file and load it into a TOML document"""

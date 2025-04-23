@@ -19,7 +19,7 @@ __author__ = "DV Klopfenstein, PhD"
 from os.path import dirname
 from os.path import normpath
 #from logging import debug
-#from glob import glob
+from glob import glob
 #
 #from tomlkit import comment
 #from tomlkit import document
@@ -41,8 +41,8 @@ from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
 #from timetracker.cfg.utils import get_relpath
 from timetracker.cfg.utils import replace_envvar
+from timetracker.cfg.docutils import get_value
 
-# Added dirhome to wr_ini_file(...) and get_project_csvs(...)
 
 # pylint: disable=too-few-public-methods
 class DocProj:
@@ -62,17 +62,13 @@ class DocProj:
         username = get_username(username)
         return self._read_csv_from_cfgfile(username, dirhome)
 
-    #def get_project_csvs(self, dirhome):
-    #    """Get the csv filename by reading the cfg csv pattern and filling in"""
-    #    fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
-    #    if fcsvpat is not None:
-    #        globpat = replace_envvar(fcsvpat, '*')
-    #        return glob(globpat)
-    #    return None
-
-    #def read_doc(self):
-    #    """Read a config file and load it into a TOML document"""
-    #    return TOMLFile(self.filename).read() if exists(self.filename) else None
+    def get_filenames_csv(self, dirhome):
+        """Get the csv filename by reading the cfg csv pattern and filling in"""
+        fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
+        if fcsvpat is not None:
+            globpat = replace_envvar(fcsvpat, '*')
+            return glob(globpat)
+        return None
 
     #def set_filename_csv(self, filename_str):
     #    """Write the config file, replacing [csv][filename] value"""
@@ -154,17 +150,19 @@ class DocProj:
 
     def _read_csvpat_from_cfgfile(self, dirhome):
         """Read a config file and load it into a TOML document"""
-        doc = self.doc
-        fpat = get_abspath(doc['csv']['filename'], self.dirproj, dirhome)
-        fpat = fpat.replace('PROJECT', doc['project'])
-        return fpat
+        ntfpat = get_value(self.doc, 'csv', 'filename')
+        if (fpat := ntfpat.value):
+            ntproj = get_value(self.doc, 'project')
+            if (proj := ntproj.value):
+                fpat = get_abspath(fpat, self.dirproj, dirhome)
+                fpat = fpat.replace('PROJECT', proj)
+                return fpat
+        return None
 
-    #def _read_csvdir_from_cfgfile(self, dirhome):
-    #    """Read a config file and load it into a TOML document"""
-    #    doc = self._rd_doc()
-    #    if doc is not None:
-    #        return get_abspath(dirname(doc['csv']['filename']), self.dirproj, dirhome)
-    #    return None
+    def _read_csvdir_from_cfgfile(self, dirhome):
+        """Read a config file and load it into a TOML document"""
+        fcsvpat = get_value(self.doc, 'csv', 'filename')
+        return get_abspath(fcsvpat, self.dirproj, dirhome) if fcsvpat is not None else None
 
     #@staticmethod
     #def _wr_cfg(fname, doc):
@@ -188,37 +186,6 @@ class DocProj:
     ##def _strdbg_cfg_global(doc):
     ##    return doc['global_config']['filename'] if 'global_config' in doc else 'NONE}
 
-    #def _get_dircsv(self, dirhome):
-    #    """Read the project cfg to get the csv dir name for storing time data"""
-    #    fcsv = self._read_csvdir_from_cfgfile(dirhome)
-    #    if fcsv is not None:
-    #        return dirname(fcsv)
-    #    dircsv = get_abspath(DIRCSV, self.dirproj, dirhome)
-    #    return dircsv
-
-    #def _get_dircsv_absname(self, dirhome):
-    #    dircsv = self._get_dircsv(dirhome)
-    #    return get_abspath(dircsv, self.dirproj, dirhome)
-
-    #def _get_dircsv_relname(self, dirhome):
-    #    fcsv_abs = self._get_dircsv_absname(dirhome)
-    #    return get_relpath(fcsv_abs, self.dirproj)
-
-    #def _get_doc_new(self, project, dirhome):
-    #    assert project is not None and isinstance(project, str)
-    #    doc = document()
-    #    doc.add(comment("TimeTracker project configuration file"))
-    #    doc.add(nl())
-    #    doc["project"] = project
-
-    #    # [csv]
-    #    # format = "timetracker_dvklo.csv"
-    #    csv_section = table()
-    #    #csvdir.comment("Directory where the csv file is stored")
-    #    csvpat = self.CSVPAT.replace('PROJECT', project)
-    #    csv_section.add("filename", join(self._get_dircsv_relname(dirhome), csvpat))
-    #    doc.add("csv", csv_section)
-    #    return doc
 
     #def _update_doc_globalcfgname(self, doc, fcfg_global):
     #    if 'global_config' not in doc:

@@ -17,3 +17,13 @@ def str_get_dirtrk(dirtrk_exp, finder):
         f"EXP: {dirtrk_exp}\n"
         f"ACT: {dirtrk_act}\n"
         f"ACT: {finder}")
+
+def show_file(filename, msg=None):
+    """Print the contents of a file"""
+    with open(filename, encoding='utf8') as ifstrm:
+        if msg:
+            print(msg)
+        #print(f'<<<<<<<<<<<<<<<<<<<<<< {filename} <<<<<<<<<<<')
+        for line in ifstrm:
+            print(line, end='')
+        #print(f'>>>>>>>>>>>>>>>>>>>>>> {filename} >>>>>>>>>>>')

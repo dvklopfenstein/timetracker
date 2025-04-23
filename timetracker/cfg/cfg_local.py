@@ -100,8 +100,11 @@ class CfgProj:
     def get_starttime_obj(self, username):
         """Get a Starttime instance"""
         ntcfg = read_config(self.filename)
-        project = ntcfg.doc.get('project') if ntcfg.doc else None
-        return Starttime(self.dircfg, project, get_username(username))
+        if ntcfg.doc is not None:
+            ntprj = DocProj(ntcfg.doc, self.filename).read_project_from_cfgfile()
+            if (project := ntprj.value):
+                return Starttime(self.dircfg, project, get_username(username))
+        return None
 
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Write a new config file"""

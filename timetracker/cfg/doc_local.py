@@ -80,12 +80,6 @@ class DocProj:
     #        return
     #    raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
 
-    #def get_starttime_obj(self, username):
-    #    """Get a Starttime instance"""
-    #    username = get_username(username)
-    #    project = self._read_project_from_cfgfile()
-    #    return Starttime(self.dircfg, project, username)
-
     #def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
     #    """Write a new config file"""
     #    fname = self.get_filename_cfg()
@@ -134,12 +128,16 @@ class DocProj:
     #    return basename(self.dirproj)
 
     ##-------------------------------------------------------------
-    #def _read_project_from_cfgfile(self):
-    #    """Read a config file and load it into a TOML document"""
-    #    doc = self._rd_doc()
-    #    if doc is not None:
-    #        return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
-    #    return None
+    def read_project_from_cfgfile(self):
+        """Read a config file and load it into a TOML document"""
+        return get_value(self.doc, 'project').value
+        #return ntprj.value)
+        #    return project
+        #return None
+        #doc = self._rd_doc()
+        #if doc is not None:
+        #    return doc.get('project')  # , basename(dirname(dirname(fin_cfglocal))))
+        #return None
 
     def _read_csv_from_cfgfile(self, username, dirhome):
         """Read a config file and load it into a TOML document"""

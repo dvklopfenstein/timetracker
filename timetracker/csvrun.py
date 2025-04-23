@@ -11,6 +11,7 @@ from shutil import copy
 from csv import writer
 from tempfile import TemporaryDirectory
 
+from timetracker.ntcsv import get_ntcsv
 from timetracker.csvfile import CsvFile as CsvFileNew
 from timetracker.csvold  import CsvFile as CsvFileOld
 from timetracker.csvutils import get_hdr
@@ -20,6 +21,8 @@ from timetracker.csvutils import get_hdr
 # pylint: disable=too-many-arguments,too-many-positional-arguments
 def wr_stopline(csvfilename, dta, delta, csvfields, dtz, wr_old=False):
     """Save csv in new format"""
+    if csvfields is None:
+        csvfields = get_ntcsv('NO MESSAGE GIVEN', None, None)
     if wr_old:
         #print('AAAAA INTENTIONALLY MAKING ORIG FMT AAA')
         oldobj = CsvFileOld(csvfilename)

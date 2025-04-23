@@ -10,8 +10,8 @@ from tempfile import TemporaryDirectory
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start_opcfg
-from timetracker.cmd.stop import run_stop_opcfg
+from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
 from timetracker.csvutils import get_hdr
 from timetracker.csvold import CsvFile as CsvFileOld
 from timetracker.csvfile import CsvFile as CsvFileNew
@@ -66,10 +66,10 @@ def _chk(csvfile, olddata):
 # pylint: disable=unknown-option-value
 # pylint: disable=too-many-arguments,too-many-positional-arguments
 def _run(tmphome, cfgproj, username, dta, idx, wr_old):
-    fin_start = run_start_opcfg(cfgproj, username, now=dta, defaultdt=dta)
-    assert exists(fin_start)
+    ostart = run_start(cfgproj, username, now=dta, defaultdt=dta)
+    assert exists(ostart.filename)
     dta += timedelta(minutes=30)
-    dct = run_stop_opcfg(cfgproj, username,
+    dct = run_stop(cfgproj, username,
              get_ntcsv(f"{idx} time", None, None),
              dirhome=tmphome,
              now=dta, defaultdt=dta, wr_old=wr_old)

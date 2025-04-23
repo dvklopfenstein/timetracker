@@ -20,8 +20,8 @@ from timetracker.utils import yellow
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start_opcfg
-from timetracker.cmd.stop import run_stop_opcfg
+from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
 from timetracker.cmd.hours import run_hours
 from timetracker.cmd.hours import cli_run_hours
 #[from timetracker.cmd.hours import run_hours_global
@@ -201,10 +201,10 @@ class MngUsrProj:
             stop_at  = f'{weekday} {time1}'
             msg = f'{start_at} -- {stop_at}'
             #print('ADDING TIMESLOT FOR', self.user, msg)
-            run_start_opcfg(cfg_loc, user, start_at, defaultdt=DT2525, quiet=True)
+            run_start(cfg_loc, user, start_at, defaultdt=DT2525, quiet=True)
             ntd = get_ntcsv(msg, activity=None, tags=None)
-            run_stop_opcfg(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525, quiet=True)
-        #run_start_opcfg(self.cfg.cfg_loc, self.user, start_at=f'day
+            run_stop(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525, quiet=True)
+        #run_start(self.cfg.cfg_loc, self.user, start_at=f'day
 
     ####dta = get_dt(yearstr='2525', hour=8, minute=30)
     ####_run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))

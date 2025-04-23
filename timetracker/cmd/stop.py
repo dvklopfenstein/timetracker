@@ -28,16 +28,19 @@ def cli_run_stop(fnamecfg, args):
 def _run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('RUNNING COMMAND STOP'))
+    debug(yellow('RUNNING COMMAND _STOP'))
     cfg = get_cfg(fnamecfg)
     cfgproj = cfg.cfg_loc
-    return run_stop_opcfg(cfgproj, uname, csvfields, stop_at, **kwargs)
+    return run_stop(cfgproj, uname, csvfields, stop_at, **kwargs)
 
-def run_stop_opcfg(cfgproj, uname, csvfields, stop_at=None, **kwargs):
+def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
+    debug(yellow('RUNNING COMMAND STOP'))
     fcsv = cfgproj.get_filename_csv(uname, kwargs.get('dirhome'))
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
+    if start_obj is None:
+        return None
     dta = start_obj.read_starttime()
     if dta is None:
         # pylint: disable=fixme

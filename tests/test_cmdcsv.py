@@ -7,8 +7,8 @@ from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start_opcfg
-from timetracker.cmd.stop import run_stop_opcfg
+from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
 from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.dts import DTBEGIN
 from tests.pkgtttest.mkprojs import findhome_str
@@ -36,9 +36,9 @@ def test_get_filename_csv():
             cfgfilename = finder.get_cfgfilename()
             cfg = run_init(cfgfilename, dircsv, projname, dirhome=tmphome)
             for idx in range(2, 12, 2):
-                run_start_opcfg(cfg.cfg_loc, username, defaultdt=now, start_at=f'{idx}pm')
+                run_start(cfg.cfg_loc, username, defaultdt=now, start_at=f'{idx}pm')
                 ntcsv = get_ntcsv(f'{projname} {username} {idx}')
-                run_stop_opcfg(cfg.cfg_loc, username, ntcsv, defaultdt=now, stop_at=f'{idx+1}pm')
+                run_stop(cfg.cfg_loc, username, ntcsv, defaultdt=now, stop_at=f'{idx+1}pm')
             print(f'{projname:11} {projdir} {cfgfilename}')
             system(f'cat {cfgfilename}')
         print(findhome_str(tmphome))

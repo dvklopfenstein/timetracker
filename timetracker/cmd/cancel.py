@@ -23,13 +23,12 @@ def run_cancel(cfgproj, name=None):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND CANCEL'))
     start_obj = cfgproj.get_starttime_obj(name)
-    fin_start = start_obj.filename
-    if exists(fin_start):
+    if start_obj and exists(start_obj.filename):
         start_obj.prt_elapsed(f'{str_cancelled1()}; was')
-        remove(fin_start)
-    else:
-        print(str_not_running())
-    return fin_start
+        remove(start_obj.filename)
+        return start_obj.filename
+    print(str_not_running())
+    return None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

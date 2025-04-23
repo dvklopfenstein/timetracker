@@ -13,8 +13,8 @@ from timetracker.utils import cyan
 from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.init import run_init
-from timetracker.cmd.start import run_start_opcfg
-from timetracker.cmd.stop import run_stop_opcfg
+from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
 from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.runfncs import proj_setup
@@ -81,19 +81,19 @@ class Obj:
             assert not exists(exp_cfg_csv_filename)
 
             # CMD: START
-            fin_start = run_start_opcfg(cfgp, self.uname)
-            assert exists(fin_start)
+            ostart = run_start(cfgp, self.uname)
+            assert exists(ostart.filename)
             assert not exists(exp_cfg_csv_filename)
 
             # CMD: STOP
-            res = run_stop_opcfg(cfgp,
+            res = run_stop(cfgp,
                      self.uname,
                      get_ntcsv('stopping', activity=None, tags=None),
                      dirhome=tmphome)
             print(res)
             assert isabs(exp_cfg_csv_filename), f'SHOULD BE ABSPATH: {exp_cfg_csv_filename}'
             assert exists(exp_cfg_csv_filename), f'SHOULD EXIST: {exp_cfg_csv_filename}'
-            assert not exists(fin_start), f'SHOULD NOT EXIST AFTER STOP: {fin_start}'
+            assert not exists(ostart.filename), f'SHOULD NOT EXIST AFTER STOP: {ostart.filename}'
 
 def _get_abscsv(dirproj, dircsv, fcsv, tmphome):
     if '~' not in dircsv:

@@ -2,7 +2,6 @@
 """Test running all commands when timetracker repo is uninitialized"""
 # pylint: disable=duplicate-code
 
-from os.path import join
 from logging import basicConfig
 from logging import DEBUG
 from logging import debug
@@ -11,9 +10,11 @@ from pytest import raises
 from timetracker.utils import cyan
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.start import _run_start
-from timetracker.cmd.stop import run_stop_opcfg
+from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
 from timetracker.cmd.hours import run_hours_local
 from timetracker.cmd.cancel import run_cancel
+from timetracker.cmd.none import run_none
 from timetracker.cmd.csvupdate import run_csvupdate
 from timetracker.cmd.report import run_report
 from timetracker.ntcsv import get_ntcsv
@@ -48,11 +49,13 @@ class Obj(RunBase):
 
             # RUN COMMANDS WHEN timetracker repo IS NOT INIT
             # stop       Stop timetracking
-            ret = run_stop_opcfg(cfg_proj, uname, get_ntcsv('Stop msg', None, None))
-            assert set(ret.values()) == {None}
+            assert run_stop(cfg_proj, uname, get_ntcsv('Stop msg', None, None)) is None
+            #assert set(ret.values()) == {None}
+
+            assert run_none(cfg_proj, uname) is None
 
             # cancel     cancel timetracking
-            assert run_cancel(cfg_proj, uname) == join(fnms.dirtrk, 'start_pumpkin_carver.txt')
+            assert run_cancel(cfg_proj, uname) is None
 
             # time       Report elapsed time
             assert run_hours_local(cfg_proj, uname) is None
@@ -71,6 +74,9 @@ class Obj(RunBase):
             with raises(SystemExit) as excinfo:
                 _run_start(fcfgloc, uname)
             assert excinfo.value.code == 0
+
+            # start
+            assert run_start(cfg_proj, uname) is None
 
 
 if __name__ == '__main__':

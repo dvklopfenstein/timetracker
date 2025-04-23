@@ -23,16 +23,18 @@ def cli_run_start(fnamecfg, args):
 
 def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
-    debug(yellow('RUNNING COMMAND START'))
+    debug(yellow('RUNNING COMMAND _START'))
     cfg = get_cfg(fnamecfg)
     cfgproj = cfg.cfg_loc
-    return run_start_opcfg(cfgproj, name, start_at, **kwargs)
+    return run_start(cfgproj, name, start_at, **kwargs)
 
-def run_start_opcfg(cfgproj, name=None, start_at=None, **kwargs):
+def run_start(cfgproj, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
-    assert exists(cfgproj.filename)
+    debug(yellow('RUNNING COMMAND START'))
     now = kwargs.get('now', datetime.now())
     start_obj = cfgproj.get_starttime_obj(name)
+    if start_obj is None:
+        return None
 
     # Print elapsed time, if timer was started
     if start_at is None:
@@ -57,7 +59,7 @@ def run_start_opcfg(cfgproj, name=None, start_at=None, **kwargs):
     elif not force:
         if start_at is not None:
             print(f'Run `trk start --at {start_at} --force` to force restart')
-    return start_obj.filename
+    return start_obj
 
 def _get_msg(start_at, force):
     if force:

@@ -58,7 +58,7 @@ def run_tag(fcfg_local, fcfg_global, dirhome=None):
 #        print(f'CSV exists({int(exists(fcsv))}) {fcsv}')
 #
 #def _get_proj_all(cfgproj, dirhome):
-#    fcsvs = cfgproj.get_project_csvs(dirhome)
+#    fcsvs = cfgproj.get_filenames_csv(dirhome)
 #    for fcsv in fcsvs:
 #        if fcsv is not None:
 #            print(f'CSV exists({int(exists(fcsv))}) {fcsv}')

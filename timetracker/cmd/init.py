@@ -38,6 +38,7 @@ def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
     debug(f'INIT: project:     {project}')
     debug(f'INIT: dircsv({dircsv})')
     fcfg_global = kwargs.get('fcfg_global')
+    #print('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', fcfg_global)
     _chk_global_cfg(fcfg_global)
     if cfg_loc.exists:
         print(str_tostart())

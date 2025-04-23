@@ -93,7 +93,6 @@ class Obj:
             print(res)
             assert isabs(exp_cfg_csv_filename), f'SHOULD BE ABSPATH: {exp_cfg_csv_filename}'
             assert exists(exp_cfg_csv_filename), f'SHOULD EXIST: {exp_cfg_csv_filename}'
-            #prt_expdirs(exp)
             assert not exists(fin_start), f'SHOULD NOT EXIST AFTER STOP: {fin_start}'
 
 def _get_abscsv(dirproj, dircsv, fcsv, tmphome):

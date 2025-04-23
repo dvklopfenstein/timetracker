@@ -4,7 +4,6 @@ from os import makedirs
 from os import environ
 from os.path import join
 from os.path import exists
-from os.path import isabs
 from subprocess import run
 from logging import debug
 from collections import namedtuple
@@ -82,15 +81,8 @@ def _get_expdirs(tmphome, project, dirgit, trksubdir):
         dirgit=join(dirproj, '.git') if dirgit else None,
         dirtrk=join(dirproj, trksubdir),
         dirdoc=join(dirproj, 'doc'))
-    prt_expdirs(ntexpdirs, "tests/pkgtttest/mkprojs:mk_projdirs")
+    ####prt_expdirs(ntexpdirs, "tests/pkgtttest/mkprojs:mk_projdirs")
     return ntexpdirs
-
-def prt_expdirs(ntexpdirs, name=""):
-    """Print the expected directories and files and if they exist"""
-    for key, expdir in ntexpdirs._asdict().items():
-        debug(f'{name} '
-              f'exists({int(exists(expdir)) if expdir is not None and isabs(expdir) else "."}) '
-              f'{key:14} {expdir}')
 
 ##def mk_projdirs_wcfgs(tmp_home, project, trksubdir='.timetracker'):
 ##    """Make sub-directories & cfgs in a temporary directory for use in tests"""

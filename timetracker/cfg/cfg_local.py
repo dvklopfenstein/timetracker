@@ -67,9 +67,6 @@ class CfgProj:
         if (doc := ntcfg.doc):
             return DocProj(doc, self.filename).get_filename_csv(username, dirhome)
         return None
-        ####username = get_username(username)
-        ####fcsv = self._read_csv_from_cfgfile(username, dirhome)
-        ####return fcsv if fcsv is not None else None
 
     def get_filenames_csv(self, dirhome):
         """Get all csv filenames by reading the cfg csv pattern and globbing `*` username"""
@@ -121,6 +118,7 @@ class CfgProj:
             self._add_doc_globalcfgfname(doc, fcfg_global)
         self._wr_cfg(fname, doc)
         ####print(f'Initialized timetracker directory: {self.dircfg}')
+        return doc
 
     def reinit(self, project, dircsv, fcfg_global=None):
         """Update the cfg file, if needed"""
@@ -241,12 +239,14 @@ class CfgProj:
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
         # pylint: disable=line-too-long
-        #### f'CfgProj {note} . dircsv   {self.dircsv}\n'
+        ntcfg = read_config(self.filename)
+        fcsv = DocProj(ntcfg.doc, self.filename).csv_filename if ntcfg.doc else None
+        assert fcsv is not None, self.filename
         return (
             f'CfgProj {note} . trksdir  {self.trksubdir}\n'
             f'CfgProj {note} {int(exists(self.dircfg))} dircfg   {self.dircfg}\n'
             f'CfgProj {note} {int(exists(self.dirproj))} dirproj  {self.dirproj}\n'
-            f'CfgProj {note} {int(exists(self.get_filename_csv()))} fname csv   {self.get_filename_csv()}\n'
+            f'CfgProj {note} {int(exists(fcsv))} fname csv   {fcsv}\n'
             f'CfgProj {note} {int(exists(self.get_filename_cfg()))} fname cfg   {self.get_filename_cfg()}')
 
 

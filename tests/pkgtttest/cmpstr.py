@@ -20,10 +20,14 @@ def str_get_dirtrk(dirtrk_exp, finder):
 
 def show_file(filename, msg=None):
     """Print the contents of a file"""
+    print(str_file(filename, msg))
+
+def str_file(filename, msg=None):
+    """Get a string containing the contents of a file"""
     with open(filename, encoding='utf8') as ifstrm:
+        txt = []
         if msg:
-            print(msg)
-        #print(f'<<<<<<<<<<<<<<<<<<<<<< {filename} <<<<<<<<<<<')
+            txt.append(f'{msg}\n')
         for line in ifstrm:
-            print(line, end='')
-        #print(f'>>>>>>>>>>>>>>>>>>>>>> {filename} >>>>>>>>>>>')
+            txt.append(line)
+        return ''.join(txt)

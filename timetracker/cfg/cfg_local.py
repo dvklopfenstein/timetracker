@@ -101,9 +101,9 @@ class CfgProj:
         """Get a Starttime instance"""
         ntcfg = read_config(self.filename)
         if ntcfg.doc is not None:
-            ntprj = DocProj(ntcfg.doc, self.filename).read_project_from_cfgfile()
-            if (project := ntprj.value):
-                return Starttime(self.dircfg, project, get_username(username))
+            docproj = DocProj(ntcfg.doc, self.filename)
+            if docproj.project:
+                return Starttime(self.dircfg, docproj.project, get_username(username))
         return None
 
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
@@ -147,7 +147,7 @@ class CfgProj:
         if chgd:
             TOMLFile(fname).write(doc)
         else:
-            print(f'No changes needed to global config: {self.filename}')
+            print(f'No changes needed to local config: {self.filename}')
 
     def get_project_from_filename(self):
         """Get the default project name from the project directory filename"""

@@ -50,6 +50,7 @@ class CfgProj:
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
 
     def __init__(self, filename):
+        assert filename is not None
         self.filename = filename
         self.exists = exists(self.filename)
         debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))

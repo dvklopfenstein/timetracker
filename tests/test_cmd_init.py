@@ -91,7 +91,8 @@ def _run_proj(project, user):
     with TemporaryDirectory() as tmphome:
         newproj = 'pear'
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome, project=newproj)  #force, global_config_file)
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj)  #force, global_config_file)
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
@@ -106,7 +107,9 @@ def _run_csv(project, user):
     with TemporaryDirectory() as tmphome:
         newproj = 'pear'
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome, dircsv=tmphome, project=newproj)
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj,
+            dircsv=tmphome)
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
@@ -122,7 +125,9 @@ def _run_gcfg(project, user):
         newproj = 'pear'
         newgcfg = join(tmphome, 'myglobal.cfg')
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome, dircsv=tmphome, project=newproj,
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj,
+            dircsv=tmphome,
             fcfg_global=newgcfg)
 
         doc_loc = _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,

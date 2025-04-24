@@ -52,6 +52,7 @@ class DocProj:
 
     def __init__(self, doc, filename):
         assert doc is not None
+        assert type(doc).__name__ != 'RdCfg'
         assert filename is not None
         self.doc = doc
         self.dircfg  = normpath(dirname(filename))
@@ -76,7 +77,10 @@ class DocProj:
     def _init_cfg_values(self):
         """Get the config values from the local config as written"""
         doc = self.doc
+        ####print(doc)
         project = get_value(doc, 'project')
+        ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV', project.value)
+        ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVERR', project.error)
         csv_filename = get_value(doc, 'csv', 'filename')
         global_config_filename = get_value(doc, 'global_config', 'filename')
         return project.value, \

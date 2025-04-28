@@ -242,6 +242,8 @@ class Cli:
             help='List all csvs for all projects that are listed in the global config file')
         parser.add_argument('--all', action='store_true',
             help='Use specified file as the global config file')
+        #parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
+        #    help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_report(self, subparsers):

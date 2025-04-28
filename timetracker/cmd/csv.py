@@ -26,10 +26,12 @@ def cli_run_csv(fnamecfg, args):
         args.name,
         args.run_global,
         args.all)
+        #fcfg_global=args.global_config_file)
 
 ##def run_csv(fnamecfg, dircsv, project, dirhome=None, fcfg_global=None):
-def run_csv(cfg, uname, get_global, get_all, dirhome=None): #, fcfg_global=None):
+def run_csv(cfg, uname, get_global, get_all, dirhome=None):  #, **kwargs):
     """Initialize timetracking on a project"""
+    #fcfg_global = kwargs.get('fcfg_global')
     if not get_global and not get_all:
         print(f'00 {get_global=} {get_all=}')
         _get_csvs_local_uname(cfg.cfg_loc, uname, dirhome)

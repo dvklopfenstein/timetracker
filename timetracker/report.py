@@ -13,7 +13,6 @@ __author__ = "DV Klopfenstein, PhD"
 #from datetime import timedelta
 #from datetime import datetime
 #from logging import debug
-#from csv import reader
 
 #from timetracker.utils import orange
 #from timetracker.consts import DIRTRK

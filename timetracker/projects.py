@@ -48,36 +48,27 @@ from timetracker.cfg.doc_local import DocProj
 
 NTO = namedtuple('NtCsv', 'fcsv project username')
 
-def get_csvs_username(projects, username, dirhome=None):
-    """Get csvs for the given projects for a single username"""
-    assert username is not None
-    ret = []
-    for _, fcfgproj in projects:
-        ntcfg = read_config(fcfgproj)
-        if ntcfg.doc:
-            if (ntd := _get_nt_username(ntcfg.doc, fcfgproj, username, dirhome)):
-                ret.append(ntd)
-    return ret
-
-#def get_csvs_all(projects, dirhome=None):
-#    """Get csvs for the given projects for a single username"""
-#    ret = []
-#    for _, fcfgproj in projects:
-#        ntcfg = read_config(fcfgproj)
-#        doc = ntcfg.doc
-#        if doc:
-#            if (ntd := _get_nt_all(doc, fcfgproj, dirhome)):
-#                ret.append(ntd)
-#    return ret
-
-def get_ntcsvproj11(fcfgproj, username, dirhome=None):
-    """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
-    assert username is not None
-    ntcfg = read_config(fcfgproj)
-    doc = ntcfg.doc
-    if doc:
-        return _get_nt_username(doc, fcfgproj, username, dirhome)
-    return None
+####def get_csvs_username(projects, username, dirhome=None):
+####    """Get csvs for the given projects for a single username"""
+####    assert username is not None
+####    ret = []
+####    for _, fcfgproj in projects:
+####        ntcfg = read_config(fcfgproj)
+####        if ntcfg.doc:
+####            if (ntd := _get_nt_username(ntcfg.doc, fcfgproj, username, dirhome)):
+####                ret.append(ntd)
+####    return ret
+####
+#####def get_csvs_all(projects, dirhome=None):
+#####    """Get csvs for the given projects for a single username"""
+#####    ret = []
+#####    for _, fcfgproj in projects:
+#####        ntcfg = read_config(fcfgproj)
+#####        doc = ntcfg.doc
+#####        if doc:
+#####            if (ntd := _get_nt_all(doc, fcfgproj, dirhome)):
+#####                ret.append(ntd)
+#####    return ret
 
 def get_ntcsvproj01(fcfgproj, fcsv, username):
     """Get nt w/fcsv & project -- get project from CfgProj and fcsv from param"""

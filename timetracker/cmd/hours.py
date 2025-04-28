@@ -17,11 +17,11 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.utils import yellow
 from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
+from timetracker.csvget import get_csvs_local_uname
+from timetracker.csvget import get_csvs_global_uname
 from timetracker.msgs import str_init0
 from timetracker.msgs import str_tostart_epoch
-from timetracker.projects import get_csvs_username
 from timetracker.projects import get_ntcsvproj01
-from timetracker.projects import get_ntcsvproj11
 
 NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
@@ -62,7 +62,7 @@ def run_hours_global(cfg_global, uname):
     assert cfg_global is not None
     #print('RUN HOURS GLOBAL START')
     if (projects := cfg_global.get_projects()):
-        ntcsvs = get_csvs_username(projects, uname)
+        ntcsvs = get_csvs_global_uname(projects, uname)
         ntres = _rpt_hours_projs_uname1(ntcsvs, uname)
         return ntres  # RdCsvs: results errors ntcsvs
     return None
@@ -70,7 +70,7 @@ def run_hours_global(cfg_global, uname):
 def run_hours_local(cfg_proj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     debug(yellow('RUNNING COMMAND HOURS local'))
-    ntd = get_ntcsvproj11(cfg_proj.filename, uname, dirhome)
+    ntd = get_csvs_local_uname(cfg_proj.filename, uname, dirhome)
     return _rpt_hours_uname1(ntd)  # nt
 
 #def run_hours_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):

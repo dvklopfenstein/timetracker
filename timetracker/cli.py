@@ -48,7 +48,7 @@ class Cli:
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        #print(f'TIMETRACKER ARGS: {self.args}')
+        print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -142,11 +142,12 @@ class Cli:
         self._add_subparser_stop(subparsers)
         self._add_subparser_cancel(subparsers)
         self._add_subparser_hours(subparsers)
+        self._add_subparser_csv(subparsers)
         self._add_subparser_report(subparsers)
         #self._add_subparser_tag(subparsers)
         #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
-        self._add_subparser_projectsupdate(subparsers)
+        #self._add_subparser_projectsupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -230,6 +231,16 @@ class Cli:
         parser.add_argument('-g', '--global', dest='run_global', action='store_true',
             help='List all hours for all projects that are listed in the global config file')
         parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
+            help='Use specified file as the global config file')
+        return parser
+
+    def _add_subparser_csv(self, subparsers):
+        parser = subparsers.add_parser(name='csv',
+            help='Get a list of csv files containing timetracking data',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-g', '--global', dest='run_global', action='store_true',
+            help='List all csvs for all projects that are listed in the global config file')
+        parser.add_argument('--all', action='store_true',
             help='Use specified file as the global config file')
         return parser
 

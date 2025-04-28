@@ -34,9 +34,9 @@ from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.consts import FILENAME_GLOBALCFG
 
 
-def get_cfgglobal(fcfg=None, dirhome=None):
+def get_cfgglobal(fcfg_explicit=None, dirhome=None, fcfg_doc=None):
     """Get a global configuration object"""
-    return CfgGlobal(get_filename_globalcfg(dirhome, fcfg))
+    return CfgGlobal(get_filename_globalcfg(dirhome, fcfg_explicit, fcfg_doc))
 
 
 class CfgGlobal:

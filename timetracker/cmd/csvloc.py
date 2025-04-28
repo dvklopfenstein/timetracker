@@ -12,6 +12,7 @@ from timetracker.utils import yellow
 from timetracker.cfg.utils import get_filename_globalcfg
 from timetracker.cfg.utils import run_cmd
 from timetracker.cfg.cfg_local import CfgProj
+from timetracker.cfg.doc_local import get_docproj
 
 
 def cli_run_csvloc(fnamecfg, args):
@@ -19,13 +20,15 @@ def cli_run_csvloc(fnamecfg, args):
     run_csvlocate(
         fnamecfg,
         args.csvdir,
-        args.project)
+        args.project,
+        args.global_config_file)
 
-def run_csvlocate(fnamecfg, dircsv, project):
+def run_csvlocate(fnamecfg, dircsv, project, dirhome=None, fcfg_global=None):
     """Initialize timetracking on a project"""
     cfgproj = run_csvlocate_local(fnamecfg, dircsv, project)
     debug(cfgproj.get_desc("new"))
-    dirhome = get_filename_globalcfg()
+    fcfg_doc = get_docproj(cfgproj.filename) if cfgproj else None
+    dirhome = get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc)
     assert dirhome
 
 def run_csvlocate_test(fnamecfg, dircsv, project, dirhome):

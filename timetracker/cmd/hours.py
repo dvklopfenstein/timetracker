@@ -10,12 +10,13 @@ from logging import debug
 from datetime import timedelta
 from itertools import groupby
 from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.utils import get_filename_globalcfg
 from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.doc_local import get_docproj
 #from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
 from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
-from timetracker.cfg.utils import get_filename_globalcfg
 from timetracker.msgs import str_init0
 from timetracker.msgs import str_tostart_epoch
 from timetracker.projects import get_csvs_username
@@ -38,11 +39,13 @@ def cli_run_hours(fnamecfg, args):
 
 def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=None):
     """Report the total time in hours spent on project(s)"""
-    #print('RUN HOURS START')
+    #print('RUN COMMAND HOURS')
     if get_global or not exists(cfg.cfg_loc.filename):
         #print('RUN HOURS GLOBAL')
         if cfg.cfg_glb is None:
-            fglb = get_filename_globalcfg(dirhome, global_config_file)
+            docglb = get_docproj(cfg.cfg_loc.filename)
+            fcfg_gdoc = None if not docglb else docglb.global_config_filename
+            fglb = get_filename_globalcfg(dirhome, global_config_file, fcfg_gdoc)
             if not exists(fglb):
                 print(str_init0())
                 sys_exit(0)
@@ -77,7 +80,7 @@ def _rpt_hours_uname1(ntd):
     if ntd and (nt_total_time := _get_total_time(ntd.fcsv)):
         assert ntd.username is not None, ntd
         if nt_total_time.results is not None:
-            in_msg = f'project {ntd.project}' if ntd.project else ntd.fcsv
+            in_msg = f'project {ntd.project} in {ntd.fcsv}' if ntd.project else ntd.fcsv
             print(f'{_get_hours_str(nt_total_time.results)} by {ntd.username} in {in_msg}')
             return nt_total_time
     return None
@@ -85,8 +88,8 @@ def _rpt_hours_uname1(ntd):
 def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     assert username is not None
     total_time = timedelta()
-    print('    hours        username projects')
-    print('  -------------- -------- ----------------------')
+    print('    hours username project')
+    print('  ------- -------- ----------------------')
     # ntcsvs:     fcsv project username
     # ntcsvtimes: results errors fcsv
     itr = ((_get_total_time(nt.fcsv), nt) for nt in ntcsvs)
@@ -98,6 +101,7 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
                 total_time += nttime.results
                 print(f'{_get_hours_str(nttime.results)} {username:{uname_len}} {ntcsv.project}')
         _rpt_errs_csvread(errnts)
+        print(f'{_get_hours_str(total_time)} {username:{uname_len}} Total hours for all projects')
         return NTCSVS(results=total_time, errors=errnts, ntcsvs=rdnts)
     _rpt_errs_csvread(errnts)
     return None
@@ -122,7 +126,7 @@ def _rpt_errs_csvread(nts):
 #    return total_time
 
 def _get_hours_str(total_time):
-    return f'{total_time.total_seconds()/3600:9.3f} hours'
+    return f'{total_time.total_seconds()/3600:10.3f}'
 
 def _get_total_time(fcsv):
     chk_n_convert(fcsv)

@@ -9,39 +9,20 @@ in a version supported by cygwin, conda, and venv.
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-##from os import remove
-#from os import makedirs
-#from os.path import exists
-#from os.path import basename
-#from os.path import join
-#from os.path import abspath
-###from os.path import relpath
 from os.path import dirname
 from os.path import normpath
-#from logging import debug
 from glob import glob
-#
-#from tomlkit import comment
-#from tomlkit import document
-#from tomlkit import nl
-#from tomlkit import table
-#from tomlkit.toml_file import TOMLFile
-#
-#from timetracker.consts import DIRTRK
-#from timetracker.consts import DIRCSV
-#
-###from timetracker.cfg.utils import replace_homepath
-###from timetracker.cfg.utils import parse_cfg
-###from timetracker.cfg.utils import chk_isdir
-###from timetracker.cfg.utils import get_dirname_abs
-#
-#from timetracker.starttime import Starttime
-#from timetracker.utils import pink
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
-#from timetracker.cfg.utils import get_relpath
 from timetracker.cfg.utils import replace_envvar
+from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.docutils import get_value
+
+
+def get_docproj(filename):
+    """Get a DocProj object, given a global config filename"""
+    ntcfg = read_config(filename)
+    return DocProj(ntcfg.doc, filename) if ntcfg.doc else None
 
 
 # pylint: disable=too-few-public-methods

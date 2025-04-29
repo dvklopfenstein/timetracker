@@ -8,7 +8,7 @@ from tomlkit import load
 from tomlkit import dump
 
 
-NTRDCFG = namedtuple('RdCfg', 'doc error')
+NTRDCFG = namedtuple('RdCfg', 'filename doc error')
 
 def read_config(filename):
     """Read a global or project config file only if it exists and is readable"""
@@ -20,8 +20,8 @@ def read_config(filename):
         #print(f'{type(err).__name__}{err.args}')
     else:
         with fptr:
-            return NTRDCFG(doc=load(fptr), error=error)
-    return NTRDCFG(doc=None, error=error)
+            return NTRDCFG(filename=filename, doc=load(fptr), error=error)
+    return NTRDCFG(filename=filename, doc=None, error=error)
 
 def write_config(filename, doc, mode='w'):
     """Write a global or project config file"""

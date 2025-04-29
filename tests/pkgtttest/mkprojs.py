@@ -51,7 +51,7 @@ def reset_env(envvarname, origval, expcurval):
         environ.pop(envvarname)
     assert environ.get(envvarname) is None
 
-def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
+def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=None):
     """Make sub-directories in a temporary directory for use in tests"""
     if project is None:
         project = 'apples'
@@ -62,6 +62,8 @@ def mk_projdirs(tmphome, project='apples', dirgit=False, trksubdir=DIRTRK):
     gdir = join(pdir, '.git')
     if dirgit and not exists(gdir):
         makedirs(gdir)
+    if trksubdir is None:
+        trksubdir = DIRTRK
     return _get_expdirs(tmphome, project, dirgit, trksubdir)
 
 def _get_expdirs(tmphome, project, dirgit, trksubdir):

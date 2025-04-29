@@ -18,9 +18,10 @@ class RunBase:
         self.dirgit01 = dirgit01
 
 
-def proj_setup(tmphome, project, dircur, dirgit01=True):
+def proj_setup(tmphome, project, dircur, dirgit01=True, trksubdir=None):
     """After creating a tmphome using TemporaryDirectory, create these"""
-    ntexpdirs = mk_projdirs(tmphome, project, dirgit01)
+    ntexpdirs = mk_projdirs(tmphome, project, dirgit01, trksubdir)
+    #prt_expdirs(ntexpdirs)
     finder = CfgFinder(dircur=getattr(ntexpdirs, dircur), trksubdir=None)
     fcfgproj = finder.get_cfgfilename()
     #assert not exists(fcfgproj), findhome_str(exp.dirhome)

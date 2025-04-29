@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 ##from os import getcwd
 ##from os import environ
 from os.path import isabs
+from os.path import isdir
 from os.path import exists
 from os.path import dirname
 ##from os.path import expanduser
@@ -63,6 +64,7 @@ class CfgGlobal:
     def wr_ini_project(self, project, fcfgproj):
         """Add a project if needed & write; return if not"""
         if not exists(self.filename):
+            self._chk_global_dir()
             print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
         # ntcfg: doc error
@@ -85,6 +87,15 @@ class CfgGlobal:
                 print(f'No changes needed to project({project}) config: {self.filename}')
 
     # -------------------------------------------------------------
+    def _chk_global_dir(self):
+        dir_global = dirname(self.filename)
+        if exists(dir_global) and isdir(dir_global) or dir_global == '':
+            return
+        raise NotADirectoryError(f'{dir_global}\n'
+            f'Directory for global config does not exist({dir_global})\n'
+            f'Cannot create global config filename: {self.filename}'
+        )
+
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
         debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj}'))

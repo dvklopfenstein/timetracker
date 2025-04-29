@@ -140,7 +140,7 @@ def _run_gcfg(project, user, newproj, fcfg_glb):
             exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         # pylint: disable=unsubscriptable-object
-        assert doc_loc.doc['global_config']['filename'] == cfg_top.cfg_glb.filename
+        assert doc_loc.global_config_filename == cfg_top.cfg_glb.filename
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=newgcfg,
             exp_loc_filename=ntdirs.cfglocfilename)
@@ -162,7 +162,7 @@ def _run_gcfg_ab(project, user, newproj, fcfg_glba, fcfg_glbb):
             exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         # pylint: disable=unsubscriptable-object
-        assert doc_loc.doc['global_config']['filename'] == cfg_top.cfg_glb.filename
+        assert doc_loc.global_config_filename == cfg_top.cfg_glb.filename
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=newgcfg_a,
             exp_loc_filename=ntdirs.cfglocfilename)

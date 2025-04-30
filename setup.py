@@ -54,7 +54,7 @@ setup(
     # The name of the project on PyPi
     name='timetracker-csv',
     # https://peps.python.org/pep-0440/
-    version='0.4a0',
+    version='0.5a0',
     author='DV Klopfenstein, PhD',
     author_email='dvklopfenstein@protonmail.com',
     packages=PACKAGES,

@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-04-30 v0.5a0**](#release-2025-04-30-v05a0) New command function: projects, hours; began docs
 * [**Release 2025-03-21 v0.4a0**](#release-2025-03-21-v04a0) Added prerequisite, dateparser, to replace dateutil
 * [**Release 2025-03-18 v0.3a8**](#release-2025-03-18-v03a8) Added `--activity` & `--tags` option to `stop' command; Use new concise csv
 * [**Release 2025-03-14 v0.3a4**](#release-2025-03-14-v03a4) Added stop --at test; Added report module
@@ -21,6 +22,8 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-04-21 v0.5a0
 * ADDED `projects` command to get a list of projects
 * ADDED ability to specify the global config file from the cli
 * ADDED writing the name of the global config file into the project config file,

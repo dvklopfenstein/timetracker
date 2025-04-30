@@ -38,6 +38,7 @@
 * ADDED new `epoch` package to manage all time modules
 * ADDED two new test scripts to test how time strings are converted to `datetime` objects by `dateparser` and `dateutils`
 * CHANGED command name `time` to `hours`
+* CHANGED to using EAFP (Easier To Ask For Permission) when reading cfgs and csvs
 
 ## Release 2025-03-21 v0.4a0
 * ADD new prerequisite, dateparser, due to its accuracy and flexibility

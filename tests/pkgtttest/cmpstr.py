@@ -19,6 +19,11 @@ def str_get_dirtrk(dirtrk_exp, finder):
         f"ACT: {dirtrk_act}\n"
         f"ACT: {finder}")
 
+def show_cfgs(cfg):
+    """Print the contents of both the local project and global config file"""
+    show_file(cfg.cfg_loc.filename)
+    show_file(cfg.cfg_glb.filename)
+
 def show_file(filename, msg=None):
     """Print the contents of a file"""
     print(f'CONTENTS OF {filename}: --------------------')

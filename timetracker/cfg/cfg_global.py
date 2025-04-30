@@ -78,6 +78,7 @@ class CfgGlobal:
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
+        debug(ltblue(f'CfgGlobal({self.filename}).reinit: {project=} {fcfgproj=}'))
         ntcfg = read_config(self.filename)
         doc = ntcfg.doc
         if doc:

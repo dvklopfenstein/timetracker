@@ -6,7 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
-from os.path import exists
+#from os.path import exists
 from logging import debug
 from subprocess import run
 
@@ -17,7 +17,7 @@ from timetracker import __version__
 from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
-from timetracker.cfg.cfg_local import CfgProj
+#from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.none import cli_run_none
 from timetracker.cfg.utils import run_cmd
 
@@ -26,8 +26,11 @@ def main():
     """Connect all parts of the timetracker"""
     #from logging import basicConfig, DEBUG
     #basicConfig(level=DEBUG)
+    #print('ENTERING Cli')
     obj = Cli()
+    #print('ENTERING Cli.run')
     obj.run()
+    #print('EXITING  Cli.run')
 
 
 class Cli:
@@ -43,10 +46,9 @@ class Cli:
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
-        self.fcsv = CfgProj(self.fcfg).get_filename_csv() if exists(self.fcfg) else None
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        #print(f'TIMETRACKER ARGS: {self.args}')
+        print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -91,7 +93,8 @@ class Cli:
             sys_exit(0)
         if args.command == 'stop':
             if args.message == 'd':
-                args.message = run_cmd('git log -1 --pretty=%B').strip()
+                msg = run_cmd('git log -1 --pretty=%B')
+                args.message = msg.strip() if msg else None
         return args
 
     def _init_trksubdir(self):
@@ -125,8 +128,8 @@ class Cli:
             #help=SUPPRESS)
         ####parser.add_argument('-f', '--file',
         ####    help='Use specified file as the global config file')
-        parser.add_argument('-u', '--username', metavar='NAME', dest='name', default=self.user,
-            help="A person's alias or username for timetracking")
+        parser.add_argument('--username', metavar='NAME', dest='name', default=self.user,
+            help="A person's alias or username running a timetracking command")
         parser.add_argument('--version', action='store_true',
             help='Print the timetracker version')
         self._add_subparsers(parser)
@@ -139,11 +142,12 @@ class Cli:
         self._add_subparser_stop(subparsers)
         self._add_subparser_cancel(subparsers)
         self._add_subparser_hours(subparsers)
+        self._add_subparser_csv(subparsers)
         self._add_subparser_report(subparsers)
-        self._add_subparser_tag(subparsers)
-        self._add_subparser_activity(subparsers)
+        #self._add_subparser_tag(subparsers)
+        #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
-        self._add_subparser_projectsupdate(subparsers)
+        #self._add_subparser_projectsupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -222,13 +226,24 @@ class Cli:
         parser = subparsers.add_parser(name='hours',
             help='Report elapsed time in hours',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        #parser.add_argument('--global', action='store_true',
-        #    help='Report the elapsed time in hours on all projects')
-        parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.fcsv,
+        parser.add_argument('-i', '--input', metavar='file.csv', nargs='*', dest='fcsv',
             help='Specify an input csv file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-g', '--global', dest='run_global', action='store_true',
+            help='List all hours for all projects that are listed in the global config file')
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
+        return parser
+
+    def _add_subparser_csv(self, subparsers):
+        parser = subparsers.add_parser(name='csv',
+            help='Get a list of csv files containing timetracking data',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-g', '--global', dest='run_global', action='store_true',
+            help='List all csvs for all projects that are listed in the global config file')
+        parser.add_argument('--all', action='store_true',
+            help='Use specified file as the global config file')
+        #parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
+        #    help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_report(self, subparsers):
@@ -236,13 +251,12 @@ class Cli:
             help='Generate an report for all time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-i', '--input', metavar='file.csv', nargs='*',
-            #default=self.fcsv,
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.docx',
             help='Specify an output file')
         parser.add_argument('-p', '--product', type=float,
             help=SUPPRESS)  # Future feature
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -250,9 +264,9 @@ class Cli:
         parser = subparsers.add_parser(name='tag',
             help='Show all tags used in this project',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-g', '--global', action='store_true',
-            help='List all tag listed managed in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-g', '--run_global', action='store_true',
+            help='List all tag for projects found in the global config file')
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -260,9 +274,9 @@ class Cli:
         parser = subparsers.add_parser(name='activity',
             help='Show all activities used in this project',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-g', '--global', action='store_true',
-            help='List all activity listed managed in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-g', '--run_global', action='store_true',
+            help='List all activity for projects found in the global config file')
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -272,7 +286,7 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-g', '--global', action='store_true',
             help='List all projects listed managed in the global config file')
-        parser.add_argument('-G', '--global-config-file',
+        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
 
@@ -283,11 +297,13 @@ class Cli:
         parser.add_argument('-f', '--force', action='store_true',
             help='Over-write the csv indicated in the project `config` by `filename`')
         parser.add_argument('-i', '--input', metavar='file.csv',
-            default=self.fcsv,
             help='Specify an input csv file')
         parser.add_argument('-o', '--output', metavar='file.csv',
             default='updated.csv',
             help='Specify an output csv file')
 
+
+if __name__ == '__main__':
+    main()
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -14,6 +14,7 @@ from tempfile import TemporaryDirectory
 from timetracker.cfg.cfg_local import CfgProj
 #from tests.pkgtttest.mkprojs import RELCSVS
 from tests.pkgtttest.mkprojs import mk_projdirs
+from tests.pkgtttest.mkprojs import findhome_str
 
 
 basicConfig(level=DEBUG)
@@ -42,10 +43,11 @@ def _run_plain(tmphome, project='apple', name='picker'):
     # exists(0) cfglocfilename /tmp/tmpp9wcmtg2/proj/apple/.timetracker/config
     assert not exists(expdirs.cfglocfilename)
     cfgproj = CfgProj(expdirs.cfglocfilename)
-    cfgproj.wr_ini_file(project, dirhome=tmphome)
+    cfgproj.wr_ini_file(project)
     _chk('plain',
          act=cfgproj.get_filename_csv(name),
          exp=join(expdirs.dirproj, f'timetracker_{project}_{name}.csv'))
+    print(findhome_str(tmphome, '-type f'))
 
 def _chk(msg, act, exp):
     assert act == exp, f'{msg}\nEXP: {exp}\nACT: {act}'

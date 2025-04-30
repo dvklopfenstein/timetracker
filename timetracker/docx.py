@@ -17,7 +17,6 @@ from docx.shared import Inches
 #from datetime import timedelta
 #from datetime import datetime
 #from logging import debug
-#from csv import reader
 #
 #from timetracker.utils import orange
 #from timetracker.consts import DIRTRK

@@ -58,7 +58,7 @@ def get_username(name=None):
 def run_cmd(cmd):
     """Run a command with output to stdout"""
     res = run(cmd.split(), capture_output=True, text=True, check=False)
-    return res.stdout if res.stderr != '' else None
+    return res.stdout if res.returncode == 0 else None
 
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
@@ -150,11 +150,15 @@ def get_shortest_name(filename):
     frel = normpath(relpath(filename))
     return fabs if len(fabs) < len(frel) else frel
 
-def get_filename_globalcfg(dirhome=None):
+def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None):
     """Get the home directory, where the global configuration will be stored"""
-    if 'TIMETRACKERCONF' not in environ:
-        return join(expanduser('~') if dirhome is None else dirhome, FILENAME_GLOBALCFG)
-    return environ['TIMETRACKERCONF']
+    if fcfg_cli is None and fcfg_doc is None:  # 00
+        if 'TIMETRACKERCONF' not in environ:
+            return join(expanduser('~') if dirhome is None else dirhome, FILENAME_GLOBALCFG)
+        return environ['TIMETRACKERCONF']
+    if fcfg_cli is not None:                   # 10 & 11
+        return fcfg_cli
+    return fcfg_doc                            # 01
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

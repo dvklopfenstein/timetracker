@@ -3,37 +3,40 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
 from os.path import exists
 from logging import debug
 
 from datetime import datetime
-from timetracker.msgs import str_uninitialized
 from timetracker.utils import yellow
 from timetracker.epoch.epoch import get_dtz
-from timetracker.cfg.cfg_local  import CfgProj
+from timetracker.cmd.common import get_cfg
 
 
 def cli_run_start(fnamecfg, args):
     """Initialize timetracking on a project"""
-    run_start(
+    _run_start(
         fnamecfg,
         args.name,
         start_at=args.at,
         force=args.force)
         ##activity=args.activity,
 
-def run_start(fnamecfg, name=None, **kwargs):
+def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
+    """Initialize timetracking on a project"""
+    debug(yellow('RUNNING COMMAND _START'))
+    cfg = get_cfg(fnamecfg)
+    cfgproj = cfg.cfg_loc
+    return run_start(cfgproj, name, start_at, **kwargs)
+
+def run_start(cfgproj, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
     debug(yellow('RUNNING COMMAND START'))
     now = kwargs.get('now', datetime.now())
-    if str_uninitialized(fnamecfg):
-        sys_exit(0)
-    cfgproj = CfgProj(fnamecfg)
     start_obj = cfgproj.get_starttime_obj(name)
+    if start_obj is None:
+        return None
 
     # Print elapsed time, if timer was started
-    start_at = kwargs.get('start_at')
     if start_at is None:
         if start_obj.file_exists():
             start_obj.prtmsg_started01()
@@ -48,18 +51,15 @@ def run_start(fnamecfg, name=None, **kwargs):
         start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
         if not kwargs.get('quiet', False):
             print(f'Timetracker {_get_msg(start_at, force)}: '
-                  f'{starttime.strftime("%a %I:%M %p")}: {starttime} ')
+                  f'{starttime.strftime("%a %I:%M %p")}: '
+                  f'{starttime} ')
                   #f"for project '{cfgproj.project}'")
 
     # Informational message
     elif not force:
-        ## if start_at is None:
-        ##     print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
-        ##     print(str_how_to_stop_now())
-        ## else:
         if start_at is not None:
             print(f'Run `trk start --at {start_at} --force` to force restart')
-    return start_obj.filename
+    return start_obj
 
 def _get_msg(start_at, force):
     if force:

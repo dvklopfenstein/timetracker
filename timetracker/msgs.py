@@ -7,11 +7,11 @@ from os.path import exists
 from os.path import dirname
 
 
-def str_uninitialized(fnamecfg):
+def str_uninitialized(fcfgloc):
     """Print an init message if the timetracker local configuration does not exist"""
-    if exists(fnamecfg):
+    if exists(fcfgloc):
         return False
-    print(str_init(fnamecfg))
+    print(str_init(fcfgloc))
     return True
 
 def str_tostart():
@@ -52,6 +52,10 @@ def str_notrkrepo(trkdir):
 def str_init_empty_proj(cfglocal):
     """Message upon initializing an empyt timetracking project"""
     return f'Initialized empty Trk repository in {cfglocal.get_filename_cfg()}'
+
+def str_init0():
+    """Simple trk init message"""
+    return 'Run `trk init` to initialize time-tracking'
 
 def str_init(fcfg_loc):
     """Message that occurs when there is no Timetracking config file"""

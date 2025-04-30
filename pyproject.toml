@@ -1,6 +1,6 @@
 [project]
 name = "timetracker-csv"
-version = "0.4a0"
+version = "0.5a0"
 dynamic = [
     "dependencies",
     "scripts",
@@ -16,3 +16,13 @@ dynamic = [
 Homepage = "https://github.com/dvklopfenstein/timetracker"
 Issues = "https://github.com/dvklopfenstein/timetracker/issues"
 
+[tool.pytest.ini_options]
+addopts = "--ignore=tests/test_cmd_projects_judith.py"
+
+[tool.coverage.run]
+source = [
+    "timetracker",
+    ]
+omit = [
+    "tests/test_cmd_projects_judith.py",
+    ]

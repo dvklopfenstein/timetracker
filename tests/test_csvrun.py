@@ -31,14 +31,14 @@ def test_stopat(project='pumpkin', username='carver', dircsv=None):
         # Write in old format
         dta = get_dt(yearstr='2525', hour=8, minute=30)
         for idx in range(10):
-            csvfile, dta = _run(tmphome, cfgname, username, dta, idx, wr_old=True)
+            csvfile, dta = _run(tmphome, cfg.cfg_loc, username, dta, idx, wr_old=True)
         system(f'cat {csvfile}')
         olddata = CsvFileOld(csvfile).get_ntdata()
         for e in olddata:
             print(e)
 
         # Update to the new format, upon adding a new time slot (time 10)
-        csvfile, dta = _run(tmphome, cfgname, username, dta, idx+1, wr_old=False)
+        csvfile, dta = _run(tmphome, cfg.cfg_loc, username, dta, idx+1, wr_old=False)
         system(f'cat {csvfile}')
         _chk(csvfile, olddata)
 
@@ -50,7 +50,8 @@ def _chk(csvfile, olddata):
         f'EXP != ACT:\nEXP({csvnew.hdrs})\nACT({get_hdr(csvfile)})'
 
     # Check data length
-    newdata = csvnew.get_ntdata()
+    newdata, errs = csvnew.get_ntdata()
+    print(f'CONFIGFILE READ ERRORS: {errs}')
     assert len(olddata) == len(newdata) - 1, \
         f'LEN EXP({len(olddata)}) != ACT({len(newdata)})\n'
 
@@ -64,11 +65,11 @@ def _chk(csvfile, olddata):
 
 # pylint: disable=unknown-option-value
 # pylint: disable=too-many-arguments,too-many-positional-arguments
-def _run(tmphome, cfgname, username, dta, idx, wr_old):
-    fin_start = run_start(cfgname, username, now=dta, defaultdt=dta)
-    assert exists(fin_start)
+def _run(tmphome, cfgproj, username, dta, idx, wr_old):
+    ostart = run_start(cfgproj, username, now=dta, defaultdt=dta)
+    assert exists(ostart.filename)
     dta += timedelta(minutes=30)
-    dct = run_stop(cfgname, username,
+    dct = run_stop(cfgproj, username,
              get_ntcsv(f"{idx} time", None, None),
              dirhome=tmphome,
              now=dta, defaultdt=dta, wr_old=wr_old)

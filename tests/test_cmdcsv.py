@@ -34,11 +34,11 @@ def test_get_filename_csv():
         for projname, projdir in projname2projdir.items():
             finder = CfgFinder(projdir)
             cfgfilename = finder.get_cfgfilename()
-            run_init(cfgfilename, dircsv, projname, dirhome=tmphome)
+            cfg = run_init(cfgfilename, dircsv, projname, dirhome=tmphome)
             for idx in range(2, 12, 2):
-                run_start(cfgfilename, username, defaultdt=now, start_at=f'{idx}pm')
+                run_start(cfg.cfg_loc, username, defaultdt=now, start_at=f'{idx}pm')
                 ntcsv = get_ntcsv(f'{projname} {username} {idx}')
-                run_stop(cfgfilename, username, ntcsv, defaultdt=now, stop_at=f'{idx+1}pm')
+                run_stop(cfg.cfg_loc, username, ntcsv, defaultdt=now, stop_at=f'{idx+1}pm')
             print(f'{projname:11} {projdir} {cfgfilename}')
             system(f'cat {cfgfilename}')
         print(findhome_str(tmphome))

@@ -1,33 +1,30 @@
-"""Initialize a timetracker project"""
+"""Do command, `none`"""
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
 from logging import debug
-from timetracker.msgs import str_uninitialized
 from timetracker.msgs import str_tostart
-from timetracker.cfg.cfg_local import CfgProj
 from timetracker.utils import yellow
+from timetracker.cmd.common import get_cfg
 
 
 def cli_run_none(fnamecfg, args):
-    """noneialize timetracking on a project"""
+    """Do command, `none`"""
     # pylint: disable=unused-argument
-    run_none(fnamecfg, args.name)
+    cfg = get_cfg(fnamecfg)
+    run_none(cfg.cfg_loc, args.name)
 
-def run_none(fnamecfg, name=None):
+def run_none(cfg_proj, username=None):
     """If no Timetracker command is run, print informative messages"""
     debug(yellow('RUNNING COMMAND NONE'))
-    if str_uninitialized(fnamecfg):
-        sys_exit(0)
     # Check for start time
-    cfglocal = CfgProj(fnamecfg)
-    ostart = cfglocal.get_starttime_obj(name)
-    if ostart.file_exists():
+    ostart = cfg_proj.get_starttime_obj(username)
+    if ostart is not None and ostart.file_exists():
         ostart.prtmsg_started01()
-    else:
-        print(str_tostart())
+        return ostart
+    print(str_tostart())
+    return None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

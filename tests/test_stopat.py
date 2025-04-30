@@ -68,13 +68,13 @@ class Obj(RunBase):
         cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
         fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-        run_init(cfgname, dircsv, self.project, dirhome=tmphome)
-        fin_start = run_start(cfgname, self.uname,
+        cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
+        ostart = run_start(cfg.cfg_loc, self.uname,
             now=dta,
             defaultdt=dta)
-        assert exists(fin_start)
+        assert exists(ostart.filename)
         csvfields = get_ntcsv("A,B,C", None, None)
-        dct = run_stop(cfgname, self.uname, csvfields,
+        dct = run_stop(cfg.cfg_loc, self.uname, csvfields,
                        dirhome=tmphome,
                        stop_at=stop_at,
                        now=dta,

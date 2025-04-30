@@ -36,6 +36,10 @@ def cyan(txt):
     """Return the text, colored orange"""
     return _color_fg(14, txt)
 
+def prt_err(errmsg):
+    """Colorize errors"""
+    print(_color_fgbg(9, 0, 1, errmsg))
+
 def prt_todo(msg):
     """Return an eye-catching TODO string"""
     print(_color_fgbg(11, 0, 1,

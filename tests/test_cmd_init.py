@@ -44,14 +44,18 @@ TIMETRACKER ARGS: Namespace(
 # from os import makedirs
 from os.path import exists
 from os.path import join
-from collections import namedtuple
 from logging import basicConfig
 from logging import DEBUG
 #from logging import debug
 from tempfile import TemporaryDirectory
+from pytest import raises
 
+from timetracker.utils import yellow
+from timetracker.cfg.doc_local import DocProj
 from timetracker.cmd.init import run_init
+from timetracker.cfg.tomutils import read_config
 
+from tests.pkgtttest.cmpstr import str_file
 from tests.pkgtttest.runfncs import proj_setup
 #from timetracker.cmd.init import run_reinit
 # from tempfile import TemporaryDirectory
@@ -63,88 +67,122 @@ from tests.pkgtttest.runfncs import proj_setup
 basicConfig(level=DEBUG)
 
 SEP = f'\n{"="*80}\n'
-NTO = namedtuple('Args', 'trk_dir name dircsv project force global_config_file')
 
 def test_cmd_init(project='apple', user='picker'):
     """Test the TimeTracker init command"""
     _run_0(project, user)
-    _run_proj(project, user)
-    _run_csv(project, user)
-    _run_gcfg(project, user)
+    _run_proj(   project, user, 'pear')
+    _run_csv(    project, user, 'pear')
+    _run_gcfg(   project, user, 'pear', 'a.cfg')
+    _run_gcfg_ab(project, user, 'pear', 'a.cfg', 'b.cfg')
 
 # ================================================================================
 def _run_0(project, user):
+    print(yellow(f'{SEP}NO PROJECT GIVEN'))
     with TemporaryDirectory() as tmphome:
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
         cfg_top = run_init(fcfgproj, dirhome=tmphome)  # , project, force, global_config_file)
 
         _chk_cfg_loc(cfg_top.cfg_loc, project, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename='./timetracker_PROJECT_$USER$.csv',
+            exp_cfg_csv_filename=f'./timetracker_{project}_$USER$.csv',
             exp_filename_csv=join(ntdirs.dirproj, 'timetracker_apple_picker.csv'))
         _chk_cfg_global(cfg_top.cfg_glb, project,
             exp_glb_filename=join(ntdirs.dirhome, '.timetrackerconfig'),
             exp_loc_filename=ntdirs.cfglocfilename)
 
 # ================================================================================
-def _run_proj(project, user):
+def _run_proj(project, user, newproj):
+    print(yellow(f'{SEP}'), end='')
     with TemporaryDirectory() as tmphome:
-        newproj = 'pear'
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome, project=newproj)  #force, global_config_file)
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj)  #force, global_config_file)
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename='./timetracker_PROJECT_$USER$.csv',
-            exp_filename_csv=join(ntdirs.dirproj, 'timetracker_pear_picker.csv'))
+            exp_cfg_csv_filename=f'./timetracker_{newproj}_$USER$.csv',
+            exp_filename_csv=join(ntdirs.dirproj, f'timetracker_{newproj}_picker.csv'))
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=join(ntdirs.dirhome, '.timetrackerconfig'),
             exp_loc_filename=ntdirs.cfglocfilename)
 
 # ================================================================================
-def _run_csv(project, user):
+def _run_csv(project, user, newproj):
+    print(yellow(f'{SEP}'), end='')
     with TemporaryDirectory() as tmphome:
-        newproj = 'pear'
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome, dircsv=tmphome, project=newproj)
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj,
+            dircsv=tmphome)
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
+            exp_cfg_csv_filename=join(tmphome, f'timetracker_{newproj}_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=join(ntdirs.dirhome, '.timetrackerconfig'),
             exp_loc_filename=ntdirs.cfglocfilename)
 
 # ================================================================================
-def _run_gcfg(project, user):
+def _run_gcfg(project, user, newproj, fcfg_glb):
+    print(yellow(f'{SEP}'), end='')
     with TemporaryDirectory() as tmphome:
-        newproj = 'pear'
-        newgcfg = join(tmphome, 'myglobal.cfg')
+        newgcfg = join(tmphome, fcfg_glb)
         fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome, dircsv=tmphome, project=newproj,
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj,
+            dircsv=tmphome,
             fcfg_global=newgcfg)
 
         doc_loc = _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
+            exp_cfg_csv_filename=join(tmphome, f'timetracker_{newproj}_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         # pylint: disable=unsubscriptable-object
-        assert doc_loc['global_config']['filename'] == cfg_top.cfg_glb.filename
+        assert doc_loc.global_config_filename == cfg_top.cfg_glb.filename
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=newgcfg,
             exp_loc_filename=ntdirs.cfglocfilename)
+
+# ================================================================================
+def _run_gcfg_ab(project, user, newproj, fcfg_glba, fcfg_glbb):
+    print(yellow(f'{SEP}'), end='')
+    with TemporaryDirectory() as tmphome:
+        newgcfg_a = join(tmphome, fcfg_glba)
+        newgcfg_b = join(tmphome, fcfg_glbb)
+        fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+            project=newproj,
+            dircsv=tmphome,
+            fcfg_global=newgcfg_a)
+
+        doc_loc = _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
+            exp_cfg_filename=ntdirs.cfglocfilename,
+            exp_cfg_csv_filename=join(tmphome, f'timetracker_{newproj}_$USER$.csv'),
+            exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
+        # pylint: disable=unsubscriptable-object
+        assert doc_loc.global_config_filename == cfg_top.cfg_glb.filename
+        _chk_cfg_global(cfg_top.cfg_glb, newproj,
+            exp_glb_filename=newgcfg_a,
+            exp_loc_filename=ntdirs.cfglocfilename)
+
+        with raises(SystemExit) as excinfo:
+            run_init(fcfgproj, dirhome=tmphome,
+                project=newproj,
+                dircsv=tmphome,
+                fcfg_global=newgcfg_b)
+            assert excinfo.value.code == 0
 
 # --------------------------------------------------------------------------------
 def _chk_cfg_global(cfg_glb, project, exp_glb_filename, exp_loc_filename):
     assert cfg_glb.filename == exp_glb_filename, \
         f'EXP({exp_glb_filename}) != ACT({cfg_glb.filename})'
     assert exists(cfg_glb.filename), f'SHOULD EXIST: {cfg_glb.filename}'
-    doc_glb = cfg_glb.read_doc()
-    assert doc_glb['projects'] == [
+    projects = cfg_glb.get_projects()
+    assert projects == [
         [project, exp_loc_filename],
     ]
-    print(doc_glb)
 
 # pylint: disable=unknown-option-value
 # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -152,15 +190,16 @@ def _chk_cfg_loc(cfg_loc, project, user, exp_cfg_filename, exp_cfg_csv_filename,
     # Check CfgProj values
     assert cfg_loc.filename == exp_cfg_filename
     assert exists(cfg_loc.filename), f'CFG NOT EXIST({cfg_loc.filename})'
-    doc_loc = cfg_loc.read_doc()
-    print(doc_loc)
-    assert doc_loc['project'] == project
-    assert doc_loc['csv']['filename'] == exp_cfg_csv_filename, \
-        f"ACT({doc_loc['csv']['filename']}) != EXP({exp_cfg_csv_filename})"
+    ntcfg = read_config(cfg_loc.filename)
+    docproj = DocProj(ntcfg.doc, cfg_loc.filename)
+    assert docproj.project == project, (f'ACT({docproj.project}) != EXP({project})\n'
+        f'{str_file(cfg_loc.filename, msg=cfg_loc.filename)}')
+    assert docproj.csv_filename == exp_cfg_csv_filename, \
+        f"ACT({docproj.csv_filename}) != EXP({exp_cfg_csv_filename})"
     act_csv = cfg_loc.get_filename_csv(user)
     print(act_csv)
     assert act_csv == exp_filename_csv
-    return doc_loc
+    return docproj
 
 
 if __name__ == '__main__':

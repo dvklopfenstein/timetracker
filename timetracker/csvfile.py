@@ -8,6 +8,7 @@ from os.path import exists
 from collections import namedtuple
 from datetime import timedelta
 from logging import debug
+# https://docs.python.org/3/library/csv.html
 from csv import writer
 
 from timetracker.utils import orange
@@ -28,6 +29,7 @@ class CsvFile:
     ]
 
     nto = namedtuple('TimeData', hdrs)
+    ntrdcsv = namedtuple('RdCsv', 'results error')
 
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
@@ -35,33 +37,11 @@ class CsvFile:
 
     def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
-        debug('get_ntdata')
-        nto = self.nto
-        with open(self.fcsv, encoding='utf8') as csvstrm:
-            hdrs, itr = get_hdr_itr(csvstrm)
-            self._chk_hdr(hdrs)
-            ret = []
-            for row in itr:
-                ret.append(nto(
-                    start_datetime=dt_from_str(row[0]),
-                    duration=td_from_str(row[1]),
-                    activity=row[2],
-                    message=row[3],
-                    tags=row[4]))
-            return ret
-        return None
+        return self._read_csv(self._get_ntdata)
 
     def read_totaltime_all(self):
         """Calculate the total time by parsing the csv"""
-        return sum((td_from_str(row[1]) for row in self.read_all()), start=timedelta())
-
-    def read_all(self):
-        """Get all the data in the csv file"""
-        with open(self.fcsv, encoding='utf8') as csvstrm:
-            hdrs, itr = get_hdr_itr(csvstrm)
-            self._chk_hdr(hdrs)
-            return list(itr)
-        return None
+        return self._read_csv(self._sum_time)
 
     def wr_stopline(self, dta, delta, csvfields):
         """Write one data line in the csv file"""
@@ -86,10 +66,45 @@ class CsvFile:
         """Write header"""
         print(','.join(self.hdrs), file=prt)
 
+    # ------------------------------------------------------------------
+    def _get_ntdata(self, csvlines):
+        """Get data where start and stop are datetimes; timdelta is calculated from them"""
+        debug('get_ntdata')
+        nto = self.nto
+        def _get_nt(row):
+            return nto(
+                start_datetime=dt_from_str(row[0]),
+                duration=td_from_str(row[1]),
+                activity=row[2],
+                message=row[3],
+                tags=row[4])
+        return [_get_nt(row) for row in csvlines]
+
+    @staticmethod
+    def _sum_time(csvlines):
+        return sum((td_from_str(row[1]) for row in csvlines), start=timedelta())
+
     def _chk_hdr(self, hdrs):
         """Check the file format"""
         if len(hdrs) != 5:
             print('Expected {len(self.hdrs)} hdrs; got {len(hdrs)}: {hdrs}')
+
+    def _read_csv(self, fnc_csvlines):
+        """Read a global or project config file only if it exists and is readable"""
+        error = None
+        try:
+            fptr = open(self.fcsv, encoding='utf8')
+        except (FileNotFoundError, PermissionError, OSError) as err:
+            error = err
+            #fnc_err(f'Note: {err.args[1]}: {self.fcsv}')
+            ##fnc_err(err)
+            #print(f'{type(err).__name__}{err.args}')
+        else:
+            with fptr as csvstrm:
+                hdrs, itr = get_hdr_itr(csvstrm)
+                self._chk_hdr(hdrs)
+                return self.ntrdcsv(results=fnc_csvlines(itr), error=error)
+        return self.ntrdcsv(results=None, error=error)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

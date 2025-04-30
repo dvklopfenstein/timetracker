@@ -10,34 +10,73 @@ from logging import DEBUG
 #from logging import debug
 #from logging import getLogger
 from tempfile import TemporaryDirectory
+from collections import namedtuple
 #from csv import writer
 from timetracker.consts import FILENAME_GLOBALCFG
+from timetracker.ntcsv import get_ntcsv
 #from timetracker.utils import cyan
-#from timetracker.utils import yellow
+from timetracker.utils import yellow
 #from timetracker.ntcsv import get_ntcsv
+from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.init import run_init
-#from timetracker.cmd.start import run_start
+from timetracker.cmd.start import run_start
+from timetracker.cmd.stop import run_stop
+from timetracker.cmd.hours import run_hours
+from timetracker.cmd.hours import cli_run_hours
+#[from timetracker.cmd.hours import run_hours_global
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
-from tests.pkgtttest.runfncs import findhome_str
 #from tests.pkgtttest.runfncs import RunBase
 from tests.pkgtttest.runfncs import proj_setup
+from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.mkprojs import getmkdirs_filename
 from tests.pkgtttest.mkprojs import reset_env
+from tests.pkgtttest.dts import get_iter_weekday
+#from tests.pkgtttest.dts import hours2td
+from tests.pkgtttest.dts import td2hours
+
+# https://github.com/scrapinghub/dateparser/issues/1266
+#from tests.pkgtttest.dts import DT2525
+from tests.pkgtttest.dts import I1266 as DT2525
 
 #getLogger("timetracker.epoch.epoch").setLevel(DEBUG)
 
 SEP = f'\n{"="*80}\n'
+SEP2 = f'\n{"- "*20}\n'
 
 
 def test_cmd_projects():
     """Test `trk stop --at"""
-    userprojs = [
-        ('david'  , 'shepharding'),
-        ('lambs'  , 'grazing'),
-        ('goats'  , 'grazing'),
-        ('lions'  , 'hunting'),
-        ('jackels', 'scavenging'),
+    userprojs = {
+        ('david'  , 'shepherding'): ([('Sun', 'Fri', '5am', '11:30pm')], 111.0),
+        ('lambs'  , 'sleeping'):    ([('Mon', 'Sat',  '7pm',   '11pm')],  24.0),
+        ('lambs'  , 'grazing'):     ([('Mon', 'Sat',  '6am',    '8am'),
+                                      ('Mon', 'Sat',  '9am',   '10am'),
+                                      ('Mon', 'Sat', '11am',   '12pm'),
+                                      ('Mon', 'Sat',  '2am',    '3pm'),
+                                      ('Mon', 'Sat', ' 7pm',    '8pm')], 108.0),
+        ('goats'  , 'sleeping'):    ([('Mon', 'Sat',  '6:59pm', '11:59pm')], 30.0),  # 3
+        ('goats'  , 'grazing'):     ([('Wed', 'Fri', '10am',    '4pm')],  18.0),
+        ('lions'  , 'hunting'):     ([('Mon', 'Fri',  '7pm',    '8pm')],   5.0),
+        ('jackels', 'scavenging'):  ([('Sun', 'Fri',  '9am',    '3pm')],  36.0),
+        # -------------------------------------------------------
+        #('david'  , 'shepherding'): ([('Mon', 'Fri',  '5am',        '6am')],  5.0),  # 1
+        #('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '7am')], 10.0),  # 2
+        #('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',       '11pm')], 20.0),
+        #('goats'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '8am')], 15.0),  # 3
+        #('goats'  , 'sleeping'):    ([('Mon', 'Fri',  '6:59pm', '11:59pm')], 25.0),  # 3
+        #('lions'  , 'hunting'):     ([('Mon', 'Fri',  '5am',        '9am')], 20.0),  # 4
+        #('jackels', 'scavenging'):  ([('Mon', 'Fri',  '5am',       '10am')], 25.0),  # 5
+    }
+    exp_projs = [
+        ['shepherding', 'david/proj/shepherding/.timetracker/config'],
+        ['sleeping',    'lambs/proj/sleeping/.timetracker/config'],
+        ['grazing',     'lambs/proj/grazing/.timetracker/config'],
+        ['sleeping',    'goats/proj/sleeping/.timetracker/config'],
+        ['grazing',     'goats/proj/grazing/.timetracker/config'],
+        ['hunting',     'lions/proj/hunting/.timetracker/config'],
+        ['scavenging',  'jackels/proj/scavenging/.timetracker/config'],
     ]
     orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
@@ -45,28 +84,91 @@ def test_cmd_projects():
         basicConfig()
         fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
-        mgr = RunAll(tmproot, userprojs)
+
+        # `run_init` on each project
+        mgrglb = RunAll(tmproot, userprojs, fglb)
+        prj2mgrprj = {e:MngUsrProj(mgrglb.dirhome, mgrglb.cfg_global, *e) for e in userprojs}
         basicConfig(level=DEBUG)
         print(findhome_str(tmproot, '-type f'))
+
+        print(yellow('`run_start` and `run_stop` to fill each researcher & project'))
+        for usrprj, (times, _) in userprojs.items():
+            mgrprj = prj2mgrprj[usrprj]
+            mgrprj.add_timeslots(times)
+        print(findhome_str(tmproot, '-type f'))
+
+        print(yellow('Check projects listed in CfgGlobal'))
+        mgrglb.chk_projects(exp_projs)
+
+        print(yellow('Print hours, iterating through all users & their projects'))
+        _run_hoursprojs(mgrglb, prj2mgrprj, userprojs)
+
+        print(yellow('Print hours across projects globally'))
+        print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(mgrglb.cfg, 'lambs', dirhome=tmproot))
+
+        print(yellow('Print hours across projects globally'))
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
-        # Run projects
-        assert mgr
+
+def _run_hoursprojs(mgrglb, prj2mgrprj, userprojs):
+    """print hours, iterating through all users & their projects"""
+    for usrprj, (_, exp_hours) in userprojs.items():
+        mgrprj = prj2mgrprj[usrprj]
+        usr, _ = usrprj
+
+        print(f'{SEP2}RUN run_hours project({usrprj[0]}) username({usrprj[1]})')
+        # run_hours nt: RdCsvs: results errors ntcsvs
+        run1 = run_hours(mgrglb.cfg, usr, dirhome=mgrprj.home)
+        assert td2hours(run1.results) == _get_total_hours(usr, userprojs), (
+            f'ACT({td2hours(run1.results)}) != EXP({_get_total_hours(usr, userprojs)}) '
+            f'project({usrprj[0]}) username({usrprj[1]})')
+
+        print(f'{SEP2}RUN cli_run_hours: project({usrprj[0]}) username({usrprj[1]})')
+        # cli_run_hours nt: RdCsv:  results error
+        run2 = cli_run_hours(mgrprj.cfg.cfg_loc.filename, mgrprj.get_args_hours())
+        assert td2hours(run2.results) == exp_hours, \
+            f'run_hours({run2.results}) != cli_run_hours({exp_hours}))'
+
+
+def _get_total_hours(usr, userprojs):
+    return sum(e for (u, _), (_, e) in userprojs.items() if u == usr)
 
 
 # pylint: disable=too-few-public-methods
 class RunAll:
     """Manage all users and their projects"""
 
-    def __init__(self, tmproot, userprojs):
+    def __init__(self, tmproot, userprojs, fcfg_global):
         self.dirhome = join(tmproot, 'home')
         self.userprojs = userprojs
-        self.ups2mgr = {e:MngUsrProj(tmproot, *e) for e in userprojs}
+        self.cfg_global = CfgGlobal(fcfg_global)
+        self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
 
+    def chk_projects(self, exp_projects):
+        """Check the projects"""
+        act_projs = self.cfg_global.get_projects()
+        home = self.dirhome
+        exp_projs = [[prj, join(home, rcfg)] for prj, rcfg in exp_projects]
+        assert act_projs == exp_projs, self._errmsg(act_projs, exp_projs)
+
+    @staticmethod
+    def _errmsg(act_projs, exp_projs):
+        txt = ['\nEXP:',]
+        for prj, fcfg in exp_projs:
+            txt.append(f'  {prj:14} {fcfg}')
+        txt.append('\nACT:',)
+        for prj, fcfg in act_projs:
+            txt.append(f'  {prj:14} {fcfg}')
+        return '\n'.join(txt)
+
+
+# pylint: disable=too-few-public-methods
 class MngUsrProj:
     """Manage one user and the project"""
 
-    def __init__(self, tmproot, user, projname, dircsv=None):
+    # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
+    def __init__(self, tmproot, cfg_global, user, projname, dircsv=None):
+        self.cfg_global = cfg_global
         self.home = join(tmproot, user)
         self.user = user
         self.projname = projname
@@ -75,7 +177,34 @@ class MngUsrProj:
         self.cfg = run_init(self.fcfgproj,
             dircsv=dircsv,
             project=self.projname,
-            dirhome=self.home)
+            dirhome=self.home,
+            cfg_global=cfg_global)
+
+    def get_args_hours(self):
+        """Get cli args for run_hours"""
+        nto = namedtuple('NtArgs', 'fcsv name run_global global_config_file')
+        #fcsv = self.cfg.cfg_loc.get_filename_csv(self.user, dirhome=self.home)
+        #return nto(fcsv=fcsv, name=self.user)
+        return nto(fcsv=None, name=self.user, run_global=False, global_config_file=None)
+
+    def add_timeslots(self, timeslots):
+        """Add time slots for every day between day0 and day1 for specified times"""
+        for (day0, day1, time0, time1) in timeslots:
+            self._add_timeslots(day0, day1, time0, time1)
+
+    def _add_timeslots(self, day0, day1, time0, time1):
+        """Add time slots for every day between day0 and day1 for specified times"""
+        cfg_loc = self.cfg.cfg_loc
+        user = self.user
+        for weekday in get_iter_weekday(day0, day1):
+            start_at = f'{weekday} {time0}'
+            stop_at  = f'{weekday} {time1}'
+            msg = f'{start_at} -- {stop_at}'
+            #print('ADDING TIMESLOT FOR', self.user, msg)
+            run_start(cfg_loc, user, start_at, defaultdt=DT2525, quiet=True)
+            ntd = get_ntcsv(msg, activity=None, tags=None)
+            run_stop(cfg_loc, user, ntd, stop_at,  defaultdt=DT2525, quiet=True)
+        #run_start(self.cfg.cfg_loc, self.user, start_at=f'day
 
     ####dta = get_dt(yearstr='2525', hour=8, minute=30)
     ####_run(dta, Obj(project, username, dircur='dirproj', dirgit01=True))

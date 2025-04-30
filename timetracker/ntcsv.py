@@ -8,7 +8,7 @@ from collections import namedtuple
 
 NTCSV = namedtuple("CsvFields", "message activity tags")
 
-def get_ntcsv(message, activity='', tags=None):
+def get_ntcsv(message, activity=None, tags=None):
     """Get a namedtuple with csv row info: message, activity, & tags"""
     return NTCSV(
         message=message,

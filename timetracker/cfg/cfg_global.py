@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 ##from os import getcwd
 ##from os import environ
 from os.path import isabs
+from os.path import isdir
 from os.path import exists
 from os.path import dirname
 ##from os.path import expanduser
@@ -14,6 +15,7 @@ from os.path import join
 from os.path import abspath
 from os.path import relpath
 from logging import debug
+from collections import namedtuple
 
 from tomlkit import comment
 from tomlkit import document
@@ -25,13 +27,23 @@ from tomlkit.toml_file import TOMLFile
 ####from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import ltblue
 ##from timetracker.cfg.utils import get_dirhome
+from timetracker.cfg.tomutils import read_config
+from timetracker.cfg.tomutils import write_config
 from timetracker.cfg.utils import has_homedir
+from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath_adj
 #from timetracker.consts import FILENAME_GLOBALCFG
 
 
+def get_cfgglobal(fcfg_explicit=None, dirhome=None, fcfg_doc=None):
+    """Get a global configuration object"""
+    return CfgGlobal(get_filename_globalcfg(dirhome, fcfg_explicit, fcfg_doc))
+
+
 class CfgGlobal:
     """Global configuration parser for timetracking"""
+
+    NTWRCFG = namedtuple('WrCfg', 'doc error')
 
     def __init__(self, filename):
         self.filename = filename
@@ -39,8 +51,10 @@ class CfgGlobal:
 
     def get_projects(self):
         """Get the projects managed by timetracker"""
-        doc = self.read_doc()
-        return doc.get('projects') if doc is not None else None
+        ntcfg = read_config(self.filename)
+        if ntcfg.doc:
+            return ntcfg.doc.get('projects')
+        return None
 
     def wr_doc(self, doc):
         """Write a global cfg file"""
@@ -50,30 +64,39 @@ class CfgGlobal:
     def wr_ini_project(self, project, fcfgproj):
         """Add a project if needed & write; return if not"""
         if not exists(self.filename):
+            self._chk_global_dir()
             print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
-        doc = TOMLFile(self.filename).read()
-        if (fcfg_proj := self._add_project(doc, project, fcfgproj)):
+        # ntcfg: doc error
+        ntcfg = read_config(self.filename)
+        doc = ntcfg.doc
+        if doc is not None and self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
             print(f'Added project to the global timetracker config: {self.filename}:')
-            print(f'  project: {project}')
-            print(f'  project config: {fcfg_proj}')
-        return doc
-
-    def read_doc(self):
-        """Read the doc object"""
-        return TOMLFile(self.filename).read() if exists(self.filename) else None
+            print(f'  project: {project}; config: {fcfgproj}')
+        return ntcfg
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
-        doc = self.read_doc()
-        assert doc, "Global file should be checked for existence: {self.filename}"
-        if self._add_project(doc, project, fcfgproj):
-            self.wr_doc(doc)
-        else:
-            print(f'No changes needed to project({project}) config: {self.filename}')
+        debug(ltblue(f'CfgGlobal({self.filename}).reinit: {project=} {fcfgproj=}'))
+        ntcfg = read_config(self.filename)
+        doc = ntcfg.doc
+        if doc:
+            if self._add_project(doc, project, fcfgproj):
+                self.wr_doc(doc)
+            else:
+                print(f'No changes needed to project({project}) config: {self.filename}')
 
     # -------------------------------------------------------------
+    def _chk_global_dir(self):
+        dir_global = dirname(self.filename)
+        if exists(dir_global) and isdir(dir_global) or dir_global == '':
+            return
+        raise NotADirectoryError(f'{dir_global}\n'
+            f'Directory for global config does not exist({dir_global})\n'
+            f'Cannot create global config filename: {self.filename}'
+        )
+
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
         debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj}'))
@@ -103,11 +126,14 @@ class CfgGlobal:
         return True
 
     def _wr_project_init(self, project, fcfgproj):
-        doc = self._new_doc()
+        doc = self._get_new_doc()
         doc['projects'].add_line((project, fcfgproj))
-        TOMLFile(self.filename).write(doc)
+        ##TOMLFile(self.filename).write(doc)
+        err = write_config(self.filename, doc)
+        if err:
+            print(f'WRITE ERROR {err}')
         debug(ltblue(f'CfgGlobal WRINI({self.filename}): {doc["projects"]}'))
-        return doc
+        return self.NTWRCFG(doc=doc, error=err)
 
     def _get_docprt(self, doc):
         doc_cur = doc.copy()
@@ -124,12 +150,8 @@ class CfgGlobal:
                 debug(f'CFGGLOBAL XXXXXXXXXXX {projname:20} {pdir}')
         return doc_cur
 
-    def _init_doc(self):
-        return TOMLFile(self.filename).read() if exists(self.filename) else self._new_doc()
-
     @staticmethod
-    def _new_doc():
-        # pylint: disable=duplicate-code
+    def _get_new_doc():
         doc = document()
         doc.add(comment("TimeTracker global configuration file"))
         doc.add(nl())
@@ -137,6 +159,9 @@ class CfgGlobal:
         arr.multiline(True)
         doc["projects"] = arr
         return doc
+
+    ##def _init_doc(self):
+    ##    return TOMLFile(self.filename).read() if exists(self.filename) else self._get_new_doc()
 
     ##def _noproj(self, doc, projnew, projcfgname):
     ##    """Test if the project is missing from the global config file"""

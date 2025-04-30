@@ -13,6 +13,7 @@ from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_local import CfgProj
 #from timetracker.cfg.utils import get_relpath_adj
 from timetracker.cfg.utils import run_cmd
+from timetracker.cfg.tomutils import read_config
 from tests.pkgtttest.mkprojs import mkdirs
 from tests.pkgtttest.mkprojs import findhome
 
@@ -52,14 +53,15 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
                                                    f'ACT({cfgloc.trksubdir})\n'
                                                    f'{cfgloc}')
             assert cfgloc.dircfg == workdir
-            cfgloc.wr_ini_file(proj, dirhome=tmphome)
+            cfgloc.wr_ini_file(proj)
             assert exists(cfgloc.filename)
             # cat project/.timetracker/config
             filenamecfg_proj = cfgloc.get_filename_cfg()
             debug(f'PROJ CFG: {filenamecfg_proj}')
             #debug(run_cmd(f'cat {filenamecfg_proj}'))
             # ADD PROJECT TO GLOBAL CONFIG AND WRITE
-            doc_glo = cfg_glo.wr_ini_project(proj, filenamecfg_proj)
+            ntcfg = cfg_glo.wr_ini_project(proj, filenamecfg_proj)
+            doc_glo = ntcfg.doc
             assert doc_glo["projects"].unwrap() == exp_projs, (
                 'UNEXPECTED PROJS:\n'
                 f'EXP({exp_projs})\n'
@@ -73,9 +75,9 @@ def _get_cfgglobal_empty(tmphome):
     """Write and get an empty Global Configuration file/object"""
     cfg_glo = CfgGlobal(join(tmphome, FILENAME_GLOBALCFG))
     assert cfg_glo.filename == join(tmphome, '.timetrackerconfig'), f'{cfg_glo.filename}'
-    # pylint: disable=protected-access
-    doc_cur = cfg_glo.read_doc()
-    assert doc_cur is None
+    ntcfg = read_config(cfg_glo.filename)
+    assert ntcfg.doc is None
+    assert ntcfg.error is not None
     return cfg_glo
 
 def test_dirhome():

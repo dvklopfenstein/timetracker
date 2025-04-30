@@ -85,7 +85,7 @@ def _run_0(project, user):
 
         _chk_cfg_loc(cfg_top.cfg_loc, project, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename='./timetracker_PROJECT_$USER$.csv',
+            exp_cfg_csv_filename=f'./timetracker_{project}_$USER$.csv',
             exp_filename_csv=join(ntdirs.dirproj, 'timetracker_apple_picker.csv'))
         _chk_cfg_global(cfg_top.cfg_glb, project,
             exp_glb_filename=join(ntdirs.dirhome, '.timetrackerconfig'),
@@ -101,8 +101,8 @@ def _run_proj(project, user, newproj):
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename='./timetracker_PROJECT_$USER$.csv',
-            exp_filename_csv=join(ntdirs.dirproj, 'timetracker_pear_picker.csv'))
+            exp_cfg_csv_filename=f'./timetracker_{newproj}_$USER$.csv',
+            exp_filename_csv=join(ntdirs.dirproj, f'timetracker_{newproj}_picker.csv'))
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=join(ntdirs.dirhome, '.timetrackerconfig'),
             exp_loc_filename=ntdirs.cfglocfilename)
@@ -118,7 +118,7 @@ def _run_csv(project, user, newproj):
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
+            exp_cfg_csv_filename=join(tmphome, f'timetracker_{newproj}_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         _chk_cfg_global(cfg_top.cfg_glb, newproj,
             exp_glb_filename=join(ntdirs.dirhome, '.timetrackerconfig'),
@@ -137,7 +137,7 @@ def _run_gcfg(project, user, newproj, fcfg_glb):
 
         doc_loc = _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
+            exp_cfg_csv_filename=join(tmphome, f'timetracker_{newproj}_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         # pylint: disable=unsubscriptable-object
         assert doc_loc.global_config_filename == cfg_top.cfg_glb.filename
@@ -159,7 +159,7 @@ def _run_gcfg_ab(project, user, newproj, fcfg_glba, fcfg_glbb):
 
         doc_loc = _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
-            exp_cfg_csv_filename=join(tmphome, 'timetracker_PROJECT_$USER$.csv'),
+            exp_cfg_csv_filename=join(tmphome, f'timetracker_{newproj}_$USER$.csv'),
             exp_filename_csv=join(tmphome, 'timetracker_pear_picker.csv'))
         # pylint: disable=unsubscriptable-object
         assert doc_loc.global_config_filename == cfg_top.cfg_glb.filename

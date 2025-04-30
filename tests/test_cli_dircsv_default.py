@@ -11,7 +11,6 @@ from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
 from timetracker.cfg.cfg_global import get_cfgglobal
-from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.cfg_local import get_docproj
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
@@ -68,7 +67,11 @@ class Obj:
             cfgg = get_cfgglobal(dirhome=tmphome)
             # pylint: disable=unsubscriptable-object
             # pylint: disable=protected-access
-            assert get_docproj(cfgp.filename).csv_filename == join(dircsv, CfgProj.CSVPAT)
+            ####assert get_docproj(cfgp.filename).csv_filename == join(dircsv, CfgProj.CSVPAT), \
+            assert get_docproj(cfgp.filename).csv_filename == \
+                   cfgp._assemble_csv_filepat(dircsv, self.project), (
+                f'{get_docproj(cfgp.filename).csv_filename} != '
+                f'{cfgp._assemble_csv_filepat(dircsv, self.project)}')
             exp_cfg_csv_fname = join(dircsv, fcsv)
             exp_cfg_csv_filename = _get_abscsv(exp.dirproj, dircsv, fcsv, tmphome)
             cfgp.set_filename_csv(exp_cfg_csv_fname)

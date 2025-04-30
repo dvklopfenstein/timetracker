@@ -33,7 +33,7 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
-from timetracker.cfg.utils import get_relpath
+#from timetracker.cfg.utils import get_relpath
 #from timetracker.cfg.utils import replace_envvar
 
 
@@ -89,7 +89,7 @@ class CfgProj:
                 return Starttime(self.dircfg, docproj.project, get_username(username))
         return None
 
-    def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
+    def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
         """Write a new config file"""
         fname = self.get_filename_cfg()
         debug(f'CfgProj wr_ini_file {fname}')
@@ -98,8 +98,9 @@ class CfgProj:
         #    return
         if not exists(self.dircfg):
             makedirs(self.dircfg, exist_ok=True)
-        doc = self._get_new_doc(project, dircsv, dirhome)
-        doc['csv']['filename'] = self._ini_csv_filename(dircsv)
+        if dircsv is None:
+            dircsv = '.'
+        doc = self._get_new_doc(project, dircsv)
         if fcfg_global is not None:
             self._add_doc_globalcfgfname(doc, fcfg_global)
         self._wr_cfg(fname, doc)
@@ -124,10 +125,9 @@ class CfgProj:
             print(f'{fname} -> Changed `project` from {docproj.project} to {project}')
             doc['project'] = project
             chgd = True
-        csv_new = self._ini_csv_filename(dircsv)
-        if docproj.csv_filename != csv_new:
+        if docproj.csv_filename != (csv_new := self._assemble_csv_filepat(dircsv, doc['project'])):
             print(f'{fname} -> Changed csv directory from {docproj.csv} to {csv_new}')
-            doc['csv']['filename'] = self._ini_csv_filename(dircsv)
+            doc['csv']['filename'] = csv_new
             chgd = True
         if docproj.global_config_filename != fcfg_global:
             print(f'{fname} -> Changed global config from '
@@ -148,10 +148,10 @@ class CfgProj:
         return basename(self.dirproj)
 
     #-------------------------------------------------------------
-    def _ini_csv_filename(self, dircsv):
-        if dircsv is None:
+    def _assemble_csv_filepat(self, dircsv, project):
+        if dircsv is None or dircsv == '':
             dircsv = '.'
-        return join(dircsv, self.CSVPAT)
+        return join(dircsv, self.CSVPAT.replace('PROJECT', project))
 
     @staticmethod
     def _wr_cfg(fname, doc):
@@ -183,15 +183,16 @@ class CfgProj:
         dircsv = get_abspath(DIRCSV, self.dirproj, dirhome)
         return dircsv
 
-    def _get_dircsv_absname(self, dirhome):
-        dircsv = self._get_dircsv(dirhome)
-        return get_abspath(dircsv, self.dirproj, dirhome)
+    ##def _get_dircsv_absname(self, dirhome):
+    ##    dircsv = self._get_dircsv(dirhome)
+    ##    return get_abspath(dircsv, self.dirproj, dirhome)
 
-    def _get_dircsv_relname(self, dirhome):
-        fcsv_abs = self._get_dircsv_absname(dirhome)
-        return get_relpath(fcsv_abs, self.dirproj)
+    ##def _get_dircsv_relname(self, dirhome):
+    ##    fcsv_abs = self._get_dircsv_absname(dirhome)
+    ##    return get_relpath(fcsv_abs, self.dirproj)
 
-    def _get_new_doc(self, project, dircsv, dirhome):
+    ##def _get_new_doc(self, project, dircsv, dirhome):
+    def _get_new_doc(self, project, dircsv):
         assert project is not None and isinstance(project, str)
         #assert dircsv
         debug(f'TODO: dircsv={dircsv}')
@@ -204,8 +205,9 @@ class CfgProj:
         # format = "timetracker_architecting_bez.csv"
         csv_section = table()
         #csvdir.comment("Directory where the csv file is stored")
-        csvpat = self.CSVPAT.replace('PROJECT', project)
-        csv_section.add("filename", join(self._get_dircsv_relname(dirhome), csvpat))
+        ##csvpat = self.CSVPAT.replace('PROJECT', project)
+        ##csv_section.add("filename", join(self._get_dircsv_relname(dirhome), csvpat))
+        csv_section.add("filename", self._assemble_csv_filepat(dircsv, project))
         doc.add("csv", csv_section)
         return doc
 

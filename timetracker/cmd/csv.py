@@ -83,7 +83,7 @@ def _get_csvs_global_uname(cfg, uname, dirhome=None):
 #        sys_exit(0)
 #    cfgproj = CfgProj(fnamecfg)
 #    # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-#    cfgproj.wr_ini_file(project, dirhome=dirhome)
+#    cfgproj.wr_ini_file(project)
 #    return cfgproj
 
 

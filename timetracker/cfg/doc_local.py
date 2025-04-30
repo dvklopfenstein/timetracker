@@ -96,21 +96,6 @@ class DocProj:
     #        return
     #    raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
 
-    #def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
-    #    """Write a new config file"""
-    #    fname = self.get_filename_cfg()
-    #    debug(f'CfgProj wr_ini_file {fname}')
-    #    assert not exists(fname)
-    #    #if exists(fname):
-    #    #    return
-    #    if not exists(self.dircfg):
-    #        makedirs(self.dircfg, exist_ok=True)
-    #    doc = self._get_doc_new(project, dirhome)
-    #    doc['csv']['filename'] = self._ini_csv_filename(dircsv)
-    #    if fcfg_global is not None:
-    #        self._add_doc_globalcfgfname(doc, fcfg_global)
-    #    self._wr_cfg(fname, doc)
-    #    print(f'Initialized timetracker directory: {self.dircfg}')
 
     #def reinit(self, project, dircsv, fcfg_global=None):
     #    """Update the cfg file, if needed"""

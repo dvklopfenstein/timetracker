@@ -53,7 +53,7 @@ def test_cfgbase_temp(trksubdir='.timetracker'):
                                                    f'ACT({cfgloc.trksubdir})\n'
                                                    f'{cfgloc}')
             assert cfgloc.dircfg == workdir
-            cfgloc.wr_ini_file(proj, dirhome=tmphome)
+            cfgloc.wr_ini_file(proj)
             assert exists(cfgloc.filename)
             # cat project/.timetracker/config
             filenamecfg_proj = cfgloc.get_filename_cfg()

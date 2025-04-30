@@ -70,7 +70,7 @@ class Cfg:
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         assert project is not None
-        self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome=dirhome)
+        self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
         print(f'Initialized project directory: {self.cfg_loc.dircfg}')
         if self.cfg_glb is None:
             self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
@@ -89,7 +89,7 @@ class Cfg:
         if project is None:
             project = ntdoc.docproj.project
         assert project is not None
-        self._reinit_local(project, dircsv, fcfg_global, dirhome, ntdoc)
+        self._reinit_local(project, dircsv, fcfg_global, ntdoc)
         if self.cfg_glb is None:
             self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
         debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')
@@ -97,10 +97,10 @@ class Cfg:
         return
 
     # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
-    def _reinit_local(self, project, dircsv, fcfg_global, dirhome, docproj):
+    def _reinit_local(self, project, dircsv, fcfg_global, docproj):
         cfg_loc = self.cfg_loc
         if not exists(cfg_loc.filename):
-            cfg_loc.wr_ini_file(project, dircsv, fcfg_global, dirhome)
+            cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
             print(f'Initialized timetracker directory: {cfg_loc.dircfg}')
         else:
             cfg_loc.reinit(project, dircsv, fcfg_global, docproj)

@@ -52,7 +52,7 @@ def test_doc_value(project='tapistry', username='weaver'):
         print(f'LOCAL-DOC:  {ntloc}')
         _chk_key_good(project, get_value(ntloc.doc, 'project'))
         _chk_key_good(
-            "./timetracker_PROJECT_$USER$.csv",
+            f"./timetracker_{project}_$USER$.csv",
             get_value(ntloc.doc, 'csv', 'filename'))
 
         print(f'{SEP}TEST BAD ACCESSES TO CFG FILES')

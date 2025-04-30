@@ -82,6 +82,16 @@ class Cfg:
         debug(yellow(f'Cfg.reinit(project={project}, dirscv={dircsv}, '
                      f'fcfg_global={fcfg_global}, dirhome={dirhome})'))
         assert self.cfg_loc is not None
+
+        self._reinit_local(project, dircsv, fcfg_global, dirhome)
+
+        if self.cfg_glb is None:
+            self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
+        debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')
+        self._reinit_global(self.cfg_glb, self.cfg_loc.filename)
+
+    # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
+    def _reinit_local(self, project, dircsv, fcfg_global, dirhome):
         ntdoc = get_ntdocproj(self.cfg_loc.filename)
         if ntdoc.doc is None:
             self.init(project, dircsv, fcfg_global, dirhome)
@@ -89,28 +99,21 @@ class Cfg:
         if project is None:
             project = ntdoc.docproj.project
         assert project is not None
-        self._reinit_local(project, dircsv, fcfg_global, ntdoc)
-        if self.cfg_glb is None:
-            self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
-        debug(f'REINIT CfgGlobal filename {self.cfg_glb.filename}')
-        self._reinit_global(self.cfg_glb, project, self.cfg_loc.filename)
-        return
-
-    # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
-    def _reinit_local(self, project, dircsv, fcfg_global, docproj):
-        cfg_loc = self.cfg_loc
-        if not exists(cfg_loc.filename):
-            cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
-            print(f'Initialized timetracker directory: {cfg_loc.dircfg}')
+        if not exists(self.cfg_loc.filename):
+            self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
+            print(f'Initialized timetracker directory: {self.cfg_loc.dircfg}')
         else:
-            cfg_loc.reinit(project, dircsv, fcfg_global, docproj)
+            self.cfg_loc.reinit(project, dircsv, fcfg_global, ntdoc)
 
     @staticmethod
-    def _reinit_global(cfg_gbl, project, fcfg_loc):
+    def _reinit_global(cfg_gbl, fcfg_loc):
+        docproj = get_docproj(fcfg_loc)
+        assert docproj is not None
+        assert docproj.project is not None
         if not exists(cfg_gbl.filename):
-            cfg_gbl.wr_ini_project(project, fcfg_loc)
+            cfg_gbl.wr_ini_project(docproj.project, fcfg_loc)
         else:
-            cfg_gbl.reinit(project, fcfg_loc)
+            cfg_gbl.reinit(docproj.project, fcfg_loc)
 
     @staticmethod
     def _needs_reinit_fcsv(docproj, dircsv):

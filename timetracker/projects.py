@@ -15,7 +15,7 @@ __author__ = "DV Klopfenstein, PhD"
 #from logging import debug
 from collections import namedtuple
 
-from timetracker.cfg.tomutils import read_config
+from timetracker.cfg.doc_local import get_docproj
 #from timetracker.utils import orange
 #from timetracker.utils import prt_todo
 #from timetracker.consts import DIRTRK
@@ -73,10 +73,8 @@ NTO = namedtuple('NtCsv', 'fcsv project username')
 def get_ntcsvproj01(fcfgproj, fcsv, username):
     """Get nt w/fcsv & project -- get project from CfgProj and fcsv from param"""
     project = None
-    ntcfg = read_config(fcfgproj)
-    doc = ntcfg.doc
-    if doc:
-        project = doc.get('project')
+    if (docproj := get_docproj(fcfgproj)):
+        project = docproj.project
     return NTO(fcsv=fcsv, project=project, username=username)
 
 def _get_nt_username(doc, fcfgproj, username, dirhome):

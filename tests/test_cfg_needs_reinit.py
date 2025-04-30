@@ -25,9 +25,7 @@ def test_cfg_reinit(project='baking', trksubdir='.chef'):
     with TemporaryDirectory() as tmpdir:
         dirhome = join(tmpdir, 'home')
         _, _, ntexpdirs = proj_setup(dirhome, project,
-                                                 dircur='dirproj',
-                                                 dirgit01=True,
-                                                 trksubdir=trksubdir)
+            dircur='dirproj', dirgit01=True, trksubdir=trksubdir)
         prt_expdirs(ntexpdirs)
 
 

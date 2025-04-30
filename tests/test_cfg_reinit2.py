@@ -31,9 +31,7 @@ def test_cfg_reinit(project='baking', trksubdir='.chef'):
         ntf = _get_filenames(tmpdir)
         dflt_glbcfg = join(ntf.dirhome, FILENAME_GLOBALCFG)
         _, _, ntexpdirs = proj_setup(ntf.dirhome, project,
-                                                 dircur='dirproj',
-                                                 dirgit01=True,
-                                                 trksubdir=trksubdir)
+            dircur='dirproj', dirgit01=True, trksubdir=trksubdir)
         prt_expdirs(ntexpdirs)
 
 

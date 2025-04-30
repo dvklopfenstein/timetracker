@@ -84,11 +84,11 @@ class Cfg:
                      f'fcfg_global={fcfg_global}, dirhome={dirhome})'))
         assert self.cfg_loc is not None
 
-        self._reinit_local(project, dircsv, fcfg_global, dirhome)
-        self._reinit_global(fcfg_global, dirhome, self.cfg_loc.filename)
+        self._reinit_loc_main(project, dircsv, fcfg_global, dirhome)
+        self._reinit_glb_main(fcfg_global, dirhome, self.cfg_loc.filename)
 
     # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
-    def _reinit_local(self, project, dircsv, fcfg_global, dirhome):
+    def _reinit_loc_main(self, project, dircsv, fcfg_global, dirhome):
         ntdoc = get_ntdocproj(self.cfg_loc.filename)
         if ntdoc.doc is None:
             self.init(project, dircsv, fcfg_global, dirhome)
@@ -102,7 +102,7 @@ class Cfg:
         else:
             self.cfg_loc.reinit(project, dircsv, fcfg_global, ntdoc)
 
-    def _reinit_global(self, fcfg_global, dirhome, fcfg_loc):
+    def _reinit_glb_main(self, fcfg_global, dirhome, fcfg_loc):
         docproj = get_docproj(fcfg_loc)
         fcfg_glb = get_filename_globalcfg(dirhome, fcfg_global, docproj.global_config_filename)
         if self.cfg_glb:
@@ -114,14 +114,16 @@ class Cfg:
         ##if self.cfg_glb is None and fcfg_global is None:
         ##    cfg_glb.wr_ini_project(docproj.project, fcfg_loc)
         ##elif self.cfg_glb is not None and fcfg_global is None:
+        self._reinit_glb_expl0(docproj.project, fcfg_global, dirhome, fcfg_loc)
 
+    def _reinit_glb_expl0(self, project, fcfg_global, dirhome, fcfg_loc):
         if self.cfg_glb is None:
             self.cfg_glb = get_cfgglobal(fcfg_global, dirhome)
 
         if not exists(self.cfg_glb.filename):
-            self.cfg_glb.wr_ini_project(docproj.project, fcfg_loc)
+            self.cfg_glb.wr_ini_project(project, fcfg_loc)
         else:
-            self.cfg_glb.reinit(docproj.project, fcfg_loc)
+            self.cfg_glb.reinit(project, fcfg_loc)
 
     @staticmethod
     def _needs_reinit_fcsv(docproj, dircsv):

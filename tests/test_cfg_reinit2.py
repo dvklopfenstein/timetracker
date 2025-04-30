@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Test the TimeTracker global configuration"""
 
-from os import remove
 from os import mkdir
 from os.path import join
 from os.path import exists
@@ -10,7 +9,6 @@ from logging import DEBUG
 from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.consts import FILENAME_GLOBALCFG
-from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.doc_local import get_docproj
 #from timetracker.cmd.init import run_init
 from timetracker.cmd.init import run_reinit
@@ -176,59 +174,6 @@ def _chk_cfgs(cfg, exp_docloc_glbcfg):
         #    ####cfg_glo.wr_cfg()
         #    debug(run_cmd(f'cat {cfg_glo.filename}'))
         #    findhome(trkdir)
-
-class Run:
-    """Test init --force (reinit)"""
-
-    def __init__(self, tmphome, gfname):
-        self.tmphome = tmphome
-        self.gfname = gfname
-        self.cfg_glb = get_cfgglobal(gfname, tmphome)
-
-    def prtcfgs(self, cfg):
-        """Print the filenames of the local and global filenames"""
-        print(f'exists({int(exists(self.cfg_glb.filename))}) {self.cfg_glb.filename}')
-        print(f'exists({int(exists(cfg.cfg_loc.filename))}) {cfg.cfg_loc.filename}')
-
-    def chk_init_proj(self, cfg, ntdirs, trksubdir, gfname):
-        """Check if the project was initialized properly"""
-        # cfgname_proj = /tmp/tmptrz29mh6/proj/apples/.timetracker/config
-        # EXP: apples '~/proj/apples/.timetracker/config'
-        # INIT LOCAL PROJECT CONFIG
-        if gfname is not None:
-            assert self.cfg_glb.filename == gfname, f'{self.cfg_glb.filename} != {gfname}'
-        assert cfg.cfg_loc.trksubdir == trksubdir, (
-            f'\nEXP({trksubdir})\n'
-            f'ACT({cfg.cfg_loc.trksubdir})\n'
-            f'{cfg.cfg_loc}')
-        assert cfg.cfg_loc.dircfg == ntdirs.dirtrk
-        assert exists(self.cfg_glb.filename), f'DOES NOT EXIST({self.cfg_glb.filename})'
-        assert exists(cfg.cfg_loc.filename)
-        ##findhome(tmphome)
-
-    def chk_cfg(self, cfg, loc, glb):
-        """Check the local and global config filename"""
-        # Check if local config exists or not
-        if loc:
-            assert exists(cfg.cfg_loc.filename)
-        else:
-            assert not exists(cfg.cfg_loc.filename)
-        # Check if global config exists or not
-        if glb:
-            assert exists(self.cfg_glb.filename)
-        else:
-            assert not exists(self.cfg_glb.filename)
-
-    def rm_cfgs(self, cfg, loc, glb):
-        """Remove chose config files"""
-        if loc:
-            assert exists(cfg.cfg_loc.filename)
-            remove(cfg.cfg_loc.filename)
-            assert not exists(cfg.cfg_loc.filename)
-        if glb:
-            assert exists(self.cfg_glb.filename)
-            remove(self.cfg_glb.filename)
-            assert not exists(self.cfg_glb.filename)
 
 
 if __name__ == '__main__':

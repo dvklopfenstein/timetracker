@@ -11,6 +11,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import dirname
 from os.path import normpath
+from collections import namedtuple
 from glob import glob
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
@@ -19,11 +20,19 @@ from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.docutils import get_value
 
 
+NTDOC = namedtuple('NtDoc', 'doc docproj')
+
 def get_docproj(filename):
     """Get a DocProj object, given a global config filename"""
     ntcfg = read_config(filename)
     return DocProj(ntcfg.doc, filename) if ntcfg.doc else None
 
+def get_ntdocproj(filename):
+    """Get a DocProj object, given a global config filename"""
+    ntcfg = read_config(filename)
+    if ntcfg.doc is not None:
+        return NTDOC(doc=ntcfg.doc, docproj=DocProj(ntcfg.doc, filename))
+    return ntcfg
 
 # pylint: disable=too-few-public-methods
 class DocProj:
@@ -35,12 +44,19 @@ class DocProj:
         assert doc is not None
         assert type(doc).__name__ != 'RdCfg'
         assert filename is not None
-        self.doc = doc
         self.dircfg  = normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
         #debug(pink(f'DocProj args filename {filename}'))
         self.project, self.csv_filename, self.global_config_filename, self.errors = \
-            self._init_cfg_values()
+            self._init_cfg_values(doc)
+        self.dircsv = dirname(self.csv_filename) if self.csv_filename else None
+
+    def get_abspath_dircsv(self):
+        """Get the absolute pathname for doc['csv']['filename']"""
+        if self.dircsv is not None and self.dirproj is not None:
+            return get_abspath(self.dircsv, self.dirproj)
+        return None
+
 
     def get_filename_csv(self, username=None, dirhome=None):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
@@ -55,9 +71,8 @@ class DocProj:
             return glob(globpat)
         return None
 
-    def _init_cfg_values(self):
+    def _init_cfg_values(self, doc):
         """Get the config values from the local config as written"""
-        doc = self.doc
         ####print(doc)
         project = get_value(doc, 'project')
         ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV', project.value)

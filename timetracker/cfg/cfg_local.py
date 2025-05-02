@@ -126,7 +126,7 @@ class CfgProj:
             doc['project'] = project
             chgd = True
         if docproj.csv_filename != (csv_new := self._assemble_csv_filepat(dircsv, doc['project'])):
-            print(f'{fname} -> Changed csv directory from {docproj.csv} to {csv_new}')
+            print(f'{fname} -> Changed csv directory from {docproj.csv_filename} to {csv_new}')
             doc['csv']['filename'] = csv_new
             chgd = True
         if docproj.global_config_filename != fcfg_global:

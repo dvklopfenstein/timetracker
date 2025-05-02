@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-05-02 v0.5a1**](#release-2025-05-02-v05a1) Fixed bug when forcing a new csv filename in reinit
 * [**Release 2025-04-30 v0.5a0**](#release-2025-04-30-v05a0) New command function: projects, hours; began docs
 * [**Release 2025-03-21 v0.4a0**](#release-2025-03-21-v04a0) Added prerequisite, dateparser, to replace dateutil
 * [**Release 2025-03-18 v0.3a8**](#release-2025-03-18-v03a8) Added `--activity` & `--tags` option to `stop' command; Use new concise csv
@@ -22,6 +23,9 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-05-02 v0.5a1
+* CHANGED local project config user message to print current csv filename 
 
 ## Release 2025-04-21 v0.5a0
 * ADDED `projects` command to get a list of projects

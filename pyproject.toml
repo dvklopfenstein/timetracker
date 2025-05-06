@@ -1,6 +1,9 @@
 [project]
 name = "timetracker-csv"
 version = "0.5a1"
+license = "AGPL-3.0-or-later"
+# Needed for assignment expressions & the walrus operator
+requires-python = '>=3.8'
 dynamic = [
     "dependencies",
     "scripts",
@@ -8,8 +11,20 @@ dynamic = [
     "authors",
     "readme",
     "description",
-    "keywords",
-    "requires-python",
+]
+keywords = [
+    "Linux",
+    "cli",
+    "productivity",
+    "csv",
+    "history",
+    "collaboration",
+    "pandas",
+    "time-tracker",
+    "timetracker",
+    "csv-reading",
+    "csv-export",
+    "timetracking",
 ]
 
 [project.urls]
@@ -26,3 +41,7 @@ source = [
 omit = [
     "tests/test_cmd_projects_judith.py",
     ]
+
+[build-system]
+requires = ["setuptools >= 46.3.0"]
+build-backend = "setuptools.build_meta"

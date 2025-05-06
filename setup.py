@@ -36,19 +36,6 @@ REQUIRES = [
     'python-docx',
 ]
 
-KEYWORDS = [
-    "linux",
-    "cli",
-    "productivity",
-    "csv",
-    "history",
-    "collaboration",
-    "time-tracker",
-    "timetracker",
-    "csv-reading",
-    "csv-export",
-    "timetracking",
-]
 
 setup(
     # The name of the project on PyPi
@@ -68,7 +55,6 @@ setup(
         'Environment :: Console',
         'Intended Audience :: Science/Research',
         'Development Status :: 1 - Planning',
-        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Programming Language :: Python :: 3',
         'Topic :: Office/Business :: Financial :: Spreadsheet',
     ],
@@ -78,9 +64,6 @@ setup(
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     install_requires=REQUIRES,
-    # Needed for assignment expressions & the walrus operator
-    python_requires='>=3.8',
-    keywords=KEYWORDS,
 )
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

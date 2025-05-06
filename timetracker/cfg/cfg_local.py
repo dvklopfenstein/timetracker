@@ -130,7 +130,7 @@ class CfgProj:
             print(f'{fname} -> Changed csv directory from {docproj.csv_filename} to {csv_new}')
             doc['csv']['filename'] = csv_new
             chgd = True
-        if docproj.global_config_filename != fcfg_global:
+        if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
             fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename)
             print(f'{fname} -> Changed the global config filename\n'
                   f'        from: "{fcfgg_orig}"\n'

@@ -56,6 +56,7 @@ class CfgFinder:
           dircur==dirproj    +--+--+--+--
                            1 | .| .| .| .
                              +--+--+--+--
+        Not using in default value
         """
         if realpath(self.dircur) == realpath(self.dirproj):
             return '.'

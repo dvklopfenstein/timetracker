@@ -53,8 +53,12 @@ class Cfg:
         if project is not None and (proj_orig := docproj.project) != project:
             msg.append(f'  * change project from "{proj_orig}" to "{project}"')
         # pylint: disable=line-too-long
-        if fcfg_global is not None and (fcfgg_orig := docproj.global_config_filename) != fcfg_global:
-            msg.append(f'  * change the global config filename from "{fcfgg_orig}" to "{fcfg_global}"')
+        ##if fcfg_global is not None and (fcfgg_orig := docproj.global_config_filename) != fcfg_global:
+        if fcfg_global is not None and \
+            (fcfgg_orig := get_filename_globalcfg(fcfg_doc=docproj.global_config_filename)) != fcfg_global:
+            msg.append(f'  * change the global config filename\n'
+                       f'        from: "{fcfgg_orig}"\n'
+                       f'        to:   "{fcfg_global}"')
         # pylint: disable=fixme
         # TODO: Ensure dircsv is normpathed, abspathed
         if self._needs_reinit_fcsv(docproj, dircsv):

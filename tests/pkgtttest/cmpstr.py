@@ -1,5 +1,6 @@
 """Checks for Finder values"""
 
+from os.path import exists
 from os.path import dirname
 from os.path import join
 from os.path import abspath
@@ -26,8 +27,11 @@ def show_cfgs(cfg):
 
 def show_file(filename, msg=None):
     """Print the contents of a file"""
-    print(f'CONTENTS OF {filename}: --------------------')
-    print(str_file(filename, msg))
+    if exists(filename):
+        print(f'CONTENTS OF {filename}: --------------------')
+        print(str_file(filename, msg))
+    else:
+        print(f'NOT EXIST   {filename}: --------------------')
 
 def str_file(filename, msg=None):
     """Get a string containing the contents of a file"""

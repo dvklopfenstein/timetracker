@@ -48,7 +48,7 @@ class Cli:
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        print(f'TIMETRACKER ARGS: {self.args}')
+        ##print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -168,7 +168,6 @@ class Cli:
             formatter_class=ArgumentDefaultsHelpFormatter)
         # DEFAULTS: dir_csv project
         parser.add_argument('--csvdir',
-            default=self.finder.get_dircsv_default(),
             help='Directory for csv files storing start and stop times')
         parser.add_argument('-p', '--project', default=self.finder.project,
             help="The name of the project to be time tracked")

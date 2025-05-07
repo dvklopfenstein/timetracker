@@ -131,7 +131,8 @@ class CfgProj:
             doc['csv']['filename'] = csv_new
             chgd = True
         if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
-            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename)
+            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename,
+                                                msg="CfgProj.reint")
             print(f'{fname} -> Changed the global config filename\n'
                   f'        from: "{fcfgg_orig}"\n'
                   f'        to:   "{fcfg_global}"')

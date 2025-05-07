@@ -45,7 +45,7 @@ def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=Non
         if cfg.cfg_glb is None:
             docglb = get_docproj(cfg.cfg_loc.filename)
             fcfg_gdoc = None if not docglb else docglb.global_config_filename
-            fglb = get_filename_globalcfg(dirhome, global_config_file, fcfg_gdoc)
+            fglb = get_filename_globalcfg(dirhome, global_config_file, fcfg_gdoc, 'run_hours')
             if not exists(fglb):
                 print(str_init0())
                 sys_exit(0)

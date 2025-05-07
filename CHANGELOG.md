@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* **Release 2025-05-07 v0.5a2** Use pyproject.toml rather than setup.py
 * [**Release 2025-05-02 v0.5a1**](#release-2025-05-02-v05a1) Fixed bug when forcing a new csv filename in reinit
 * [**Release 2025-04-30 v0.5a0**](#release-2025-04-30-v05a0) New command function: projects, hours; began docs
 * [**Release 2025-03-21 v0.4a0**](#release-2025-03-21-v04a0) Added prerequisite, dateparser, to replace dateutil

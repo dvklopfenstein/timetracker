@@ -1,38 +1,68 @@
+[build-system]
+# setuptools min version needed for setuptools.build_meta
+requires = ["setuptools >= 46.3.0"]
+build-backend = "setuptools.build_meta"
+
+
 [project]
 name = "timetracker-csv"
-version = "0.5a1"
+description = "Pandas-friendly time tracking from the CLI"
+version = "0.5a2"
 license = "AGPL-3.0-or-later"
+authors = [
+    {name = 'DV Klopfenstein, PhD', email = 'dvklopfenstein@protonmail.com'},
+]
+readme = {file="README.md", content-type="text/markdown"}
+
 # Needed for assignment expressions & the walrus operator
 requires-python = '>=3.8'
-dynamic = [
-    "dependencies",
-    "scripts",
-    "classifiers",
-    "authors",
-    "readme",
-    "description",
-]
+
 keywords = [
-    "Linux",
-    "cli",
-    "productivity",
-    "csv",
-    "history",
-    "collaboration",
-    "pandas",
-    "time-tracker",
-    "timetracker",
-    "csv-reading",
-    "csv-export",
-    "timetracking",
+  "Linux",
+  "cli",
+  "productivity",
+  "csv",
+  "history",
+  "collaboration",
+  "pandas",
+  "time-tracker",
+  "timetracker",
+  "csv-reading",
+  "csv-export",
+  "timetracking",
 ]
+
+dependencies = [
+  'tomlkit',
+  'pytimeparse2',
+  'dateparser',
+  'python-docx',
+]
+
+# https://pypi.org/classifiers/
+classifiers=[
+  'Programming Language :: Python',
+  'Environment :: Console',
+  'Intended Audience :: Science/Research',
+  'Development Status :: 1 - Planning',
+  'Programming Language :: Python :: 3',
+  'Topic :: Office/Business :: Financial :: Spreadsheet',
+]
+
+
+[project.scripts]
+trk     = "timetracker.cli:main"
+timestr = "timetracker.epoch.cli:main"
+
 
 [project.urls]
 Homepage = "https://github.com/dvklopfenstein/timetracker"
 Issues = "https://github.com/dvklopfenstein/timetracker/issues"
 
+
 [tool.pytest.ini_options]
 addopts = "--ignore=tests/test_cmd_projects_judith.py"
+
 
 [tool.coverage.run]
 source = [
@@ -42,6 +72,5 @@ omit = [
     "tests/test_cmd_projects_judith.py",
     ]
 
-[build-system]
-requires = ["setuptools >= 46.3.0"]
-build-backend = "setuptools.build_meta"
+[tool.setuptools]
+packages = ["timetracker"]

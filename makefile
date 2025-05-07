@@ -86,7 +86,7 @@ defs:
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:
 vim_ver:
-	vim -p timetracker/__init__.py setup.py pyproject.toml CHANGELOG.md
+	vim -p timetracker/__init__.py pyproject.toml CHANGELOG.md
 
 # -----------------------------------------------------------------------------
 clean_build:

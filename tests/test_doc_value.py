@@ -7,7 +7,7 @@ from logging import basicConfig
 from tempfile import TemporaryDirectory
 from timetracker.cfg.doc_local import DocProj
 from timetracker.cfg.tomutils import read_config
-from timetracker.cfg.docutils import get_value
+from timetracker.cfg.docutils import get_ntvalue
 from timetracker.cmd.init import run_init
 from tests.pkgtttest.runfncs import proj_setup
 from tests.pkgtttest.mkprojs import findhome_str
@@ -47,20 +47,20 @@ def test_doc_value(project='tapistry', username='weaver'):
         print(f'GLOBAL-DOC: {ntglb}')
         _chk_key_good(
             [['tapistry', join(dirhome, 'proj/tapistry/.timetracker/config')]],
-            get_value(ntglb.doc, 'projects'))
+            get_ntvalue(ntglb.doc, 'projects'))
         # Check access to local config items
         print(f'LOCAL-DOC:  {ntloc}')
-        _chk_key_good(project, get_value(ntloc.doc, 'project'))
+        _chk_key_good(project, get_ntvalue(ntloc.doc, 'project'))
         _chk_key_good(
             f"./timetracker_{project}_$USER$.csv",
-            get_value(ntloc.doc, 'csv', 'filename'))
+            get_ntvalue(ntloc.doc, 'csv', 'filename'))
 
         print(f'{SEP}TEST BAD ACCESSES TO CFG FILES')
         # Check bad trys to access: NtKey value=None, error=...
-        _chk_key_bad(get_value(ntglb.doc, 'badkey'), "doc['badkey']")
-        _chk_key_bad(get_value(ntloc.doc, 'csv', 'badkey2'), "doc['csv']['badkey']")
-        _chk_key_bad(get_value(ntloc.doc, 'badkey', 'filename'), "doc['badkey']['filename']")
-        _chk_key_bad(get_value(None, 'badkey'), "None['badkey']")
+        _chk_key_bad(get_ntvalue(ntglb.doc, 'badkey'), "doc['badkey']")
+        _chk_key_bad(get_ntvalue(ntloc.doc, 'csv', 'badkey2'), "doc['csv']['badkey']")
+        _chk_key_bad(get_ntvalue(ntloc.doc, 'badkey', 'filename'), "doc['badkey']['filename']")
+        _chk_key_bad(get_ntvalue(None, 'badkey'), "None['badkey']")
         assert ntloc.doc.get('project') == project
         assert ntloc.doc.get('badkey') is None
 

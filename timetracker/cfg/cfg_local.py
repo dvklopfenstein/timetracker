@@ -33,6 +33,7 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
+from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath
 #from timetracker.cfg.utils import replace_envvar
 
@@ -129,9 +130,12 @@ class CfgProj:
             print(f'{fname} -> Changed csv directory from {docproj.csv_filename} to {csv_new}')
             doc['csv']['filename'] = csv_new
             chgd = True
-        if docproj.global_config_filename != fcfg_global:
-            print(f'{fname} -> Changed global config from '
-                  f'{docproj.global_config_filename} to {fcfg_global}')
+        if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
+            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename,
+                                                msg="CfgProj.reint")
+            print(f'{fname} -> Changed the global config filename\n'
+                  f'        from: "{fcfgg_orig}"\n'
+                  f'        to:   "{fcfg_global}"')
             ####doc['global_config']['filename'] = fcfg_global
             self._update_doc_globalcfgname(doc, fcfg_global)
             chgd = True

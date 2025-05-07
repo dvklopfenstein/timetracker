@@ -86,36 +86,7 @@ defs:
 # -----------------------------------------------------------------------------
 # 1) Increase the version number:
 vim_ver:
-	vim -p timetracker/__init__.py setup.py pyproject.toml CHANGELOG.md
-
-# 2) Create wheel - Check PyPi packages are up-to-date: make upgrade
-# https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project
-# universal wheels are pure Python
-#   Needs wheel package to run bdist_wheel: pip3 install wheel
-.PHONY: build
-build:
-	# python3 -m pip install -U pip
-	# python3 -m pip install --user --upgrade setuptools wheel
-	make clean_build
-	$(PYTHON) setup.py sdist
-	$(PYTHON) setup.py bdist_wheel --universal
-	ls -lh dist
-	twine check dist/*
-
-# 3) Upload wheel to https://pypi.org
-# https://pypi.org/manage/account/token/
-# python3 -m pip install --upgrade timetracker
-upload:
-	#twine upload dist/* --verbose
-	twine upload dist/* --repository timetracker-csv --verbose
-
-# https://stackoverflow.com/questions/5667884/how-to-squash-commits-in-git-after-they-have-been-pushed
-# https://stackoverflow.com/questions/35979642/what-is-git-tag-how-to-create-tags-how-to-checkout-git-remote-tags
-upgrade:
-	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install --upgrade setuptools
-	$(PYTHON) -m pip install --upgrade wheel
-	$(PYTHON) -m pip install --upgrade twine
+	vim -p timetracker/__init__.py pyproject.toml CHANGELOG.md
 
 # -----------------------------------------------------------------------------
 clean_build:

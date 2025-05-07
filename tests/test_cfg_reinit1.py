@@ -14,6 +14,7 @@ from tests.pkgtttest.consts import SEP2
 from tests.pkgtttest.consts import SEP3
 from tests.pkgtttest.mkprojs import mk_projdirs
 from tests.pkgtttest.mkprojs import findhome
+from tests.pkgtttest.cmpstr import show_cfgs
 
 basicConfig(level=DEBUG)
 
@@ -65,6 +66,8 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
         run.prtcfgs(cfg)
 
         print(f'{SEP3}reinitialize {project} project')
+        run.prtcfgs(cfg)
+        show_cfgs(cfg)
         cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)

@@ -12,6 +12,9 @@ NTKEYVAL = namedtuple('RdKey', 'value error')
 
 
 def get_value(doc, key, key2=None):
+    get_ntvalue(doc, key, key2).value
+
+def get_ntvalue(doc, key, key2=None):
     """Read a global or project config file only if it exists and is readable"""
     error = None
     try:

@@ -17,7 +17,7 @@ from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.tomutils import read_config
-from timetracker.cfg.docutils import get_value
+from timetracker.cfg.docutils import get_ntvalue
 
 
 NTDOC = namedtuple('NtDoc', 'doc docproj')
@@ -74,11 +74,11 @@ class DocProj:
     def _init_cfg_values(self, doc):
         """Get the config values from the local config as written"""
         ####print(doc)
-        project = get_value(doc, 'project')
+        project = get_ntvalue(doc, 'project')
         ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV', project.value)
         ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVERR', project.error)
-        csv_filename = get_value(doc, 'csv', 'filename')
-        global_config_filename = get_value(doc, 'global_config', 'filename')
+        csv_filename = get_ntvalue(doc, 'csv', 'filename')
+        global_config_filename = get_ntvalue(doc, 'global_config', 'filename')
         return project.value, \
                csv_filename.value, \
                global_config_filename.value, \

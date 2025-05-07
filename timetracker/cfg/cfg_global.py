@@ -37,7 +37,7 @@ from timetracker.cfg.utils import get_filename_globalcfg
 
 def get_cfgglobal(fcfg_explicit=None, dirhome=None, fcfg_doc=None):
     """Get a global configuration object"""
-    return CfgGlobal(get_filename_globalcfg(dirhome, fcfg_explicit, fcfg_doc))
+    return CfgGlobal(get_filename_globalcfg(dirhome, fcfg_explicit, fcfg_doc, "get_cfgglobal"))
 
 
 class CfgGlobal:
@@ -81,11 +81,19 @@ class CfgGlobal:
         debug(ltblue(f'CfgGlobal({self.filename}).reinit: {project=} {fcfgproj=}'))
         ntcfg = read_config(self.filename)
         doc = ntcfg.doc
-        if doc:
+        if doc and 'projects' in doc:
             if self._add_project(doc, project, fcfgproj):
                 self.wr_doc(doc)
             else:
                 print(f'No changes needed to project({project}) config: {self.filename}')
+            return
+        self._err_reinit(ntcfg)
+
+    def _err_reinit(self, ntcfg):
+        if ntcfg.doc is None:
+            print(f'NO `projects` found in global config file: {self.filename}')
+            raise ntcfg.error
+        raise KeyError(f'NO `projects` found in global config file: {self.filename}')
 
     # -------------------------------------------------------------
     def _chk_global_dir(self):
@@ -99,7 +107,7 @@ class CfgGlobal:
 
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
-        debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj}'))
+        debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj})'))
         assert isabs(fcfgproj), f'CfgGlobal._add_project(...) cfg NOT abspath: {fcfgproj}'
         debug(ltblue(f'CfgGlobal {doc}'))
         # If project is not already in global config

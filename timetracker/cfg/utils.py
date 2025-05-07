@@ -13,10 +13,12 @@ from os.path import abspath
 from os.path import normpath
 from os.path import join
 from os.path import commonprefix
+from os.path import split
 from subprocess import run
 from logging import debug
 from logging import warning
 from timetracker.consts import FILENAME_GLOBALCFG
+from timetracker.utils import yellow
 
 
 def get_abspath(fnam, dirproj, dirhome=None):
@@ -150,8 +152,29 @@ def get_shortest_name(filename):
     frel = normpath(relpath(filename))
     return fabs if len(fabs) < len(frel) else frel
 
-def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None):
+def splitall(path):
+    """Split a path into all its parts"""
+    allparts = []
+    while 1:
+        parts = split(path)
+        if parts[0] == path:  # sentinel for absolute paths
+            allparts.insert(0, parts[0])
+            break
+        if parts[1] == path: # sentinel for relative paths
+            allparts.insert(0, parts[1])
+            break
+        path = parts[0]
+        allparts.insert(0, parts[1])
+    return allparts
+
+def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None, msg='TBD'):
     """Get the home directory, where the global configuration will be stored"""
+    debug(yellow(f'get_filename_globalcfg(\n  {dirhome=},\n  {fcfg_cli=},\n  '
+                f'{fcfg_doc=},\n  {msg=})'))
+    # TBD: REMOVE ASSERT
+    if fcfg_doc is not None:
+        assert '.timetracker' not in splitall(fcfg_doc), \
+            f'GLOBAL CONFIG NAME HAS .timetracker {fcfg_doc}'
     if fcfg_cli is None and fcfg_doc is None:  # 00
         if 'TIMETRACKERCONF' not in environ:
             return join(expanduser('~') if dirhome is None else dirhome, FILENAME_GLOBALCFG)

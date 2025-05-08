@@ -73,4 +73,9 @@ omit = [
     ]
 
 [tool.setuptools]
-packages = ["timetracker"]
+packages = [
+  'timetracker',
+  'timetracker.cmd',
+  'timetracker.cfg',
+  'timetracker.epoch',
+]

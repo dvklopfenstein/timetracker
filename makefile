@@ -6,11 +6,11 @@ install:
 	pip install .
 
 py:
-	find tests timetracker bin -name \*.py
+	find tests timetracker -name \*.py
 
 DAYS=-1
 pn:
-	find tests timetracker bin -mtime $(DAYS) -name \*.py
+	find tests timetracker -mtime $(DAYS) -name \*.py
 
 
 DIRTRK = ./.trkr

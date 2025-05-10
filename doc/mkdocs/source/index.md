@@ -15,7 +15,7 @@ Time is saved in
 [pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly
 [CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files
 
-<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
+<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/doc/mkdocs/source/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
 ## Quickstart
 The `name` used by this time tracker is determined

@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "timetracker-csv"
 description = "Pandas-friendly time tracking from the CLI"
-version = "0.5a2"
+version = "0.5a3"
 license = "AGPL-3.0-or-later"
 authors = [
     {name = 'DV Klopfenstein, PhD', email = 'dvklopfenstein@protonmail.com'},
@@ -73,4 +73,9 @@ omit = [
     ]
 
 [tool.setuptools]
-packages = ["timetracker"]
+packages = [
+  'timetracker',
+  'timetracker.cmd',
+  'timetracker.cfg',
+  'timetracker.epoch',
+]

@@ -12,7 +12,7 @@ Time is saved in
 
 CSV files for each project can be combined into a single CSV file for analysis and plotting.
 
-<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/docs/images/stopwatch.png" alt="timetracker" width="750"/></p>
+<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/doc/mkdocs/source/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
 * [Advantages](#advantages)
 * [Quickstart](#quickstart)

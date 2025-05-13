@@ -3,7 +3,11 @@
 
 from os import environ
 #from os import system
+from os.path import exists
 from os.path import join
+from os.path import getsize
+from os.path import splitext
+from os.path import basename
 #from io import StringIO
 from logging import basicConfig
 from logging import DEBUG
@@ -11,24 +15,32 @@ from logging import DEBUG
 #from logging import getLogger
 from tempfile import TemporaryDirectory
 from collections import namedtuple
+from collections import defaultdict
 #from csv import writer
 from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.ntcsv import get_ntcsv
 #from timetracker.utils import cyan
 from timetracker.utils import yellow
 #from timetracker.ntcsv import get_ntcsv
-from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.doc_local import get_docproj
+from timetracker.cfg.cfg_global import CfgGlobal
+from timetracker.cfg.cfg_global import get_cfgglobal
+from timetracker.cfg.docutils import get_value
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from timetracker.cmd.hours import run_hours
 from timetracker.cmd.hours import cli_run_hours
+from timetracker.csvget import get_csv_local_uname
+from timetracker.csvget import get_csvs_global_uname
 #[from timetracker.cmd.hours import run_hours_global
 #from timetracker.cmd.stop import run_stop
 #from tests.pkgtttest.dts import get_dt
 #from tests.pkgtttest.runfncs import RunBase
+from tests.pkgtttest.userprojs import UserProjects
 from tests.pkgtttest.runfncs import proj_setup
+from tests.pkgtttest.mkprojs import get_type2files
 from tests.pkgtttest.mkprojs import findhome_str
 from tests.pkgtttest.mkprojs import getmkdirs_filename
 from tests.pkgtttest.mkprojs import reset_env
@@ -88,6 +100,11 @@ def test_cmd_projects():
         runall = RunAll(tmproot, fglb, userprojs)
         runall.run_setup(exp_projs)
 
+        type2files = get_type2files(runall.dirhome)
+        _prt_projs(runall.prj2mgrprj, runall.dirhome)
+        _test_get_csv_local_uname(runall.prj2mgrprj, runall.dirhome)
+        _test_get_csvs_global_uname(runall.get_user2glbcfg(), runall.dirhome)
+
         #print(yellow('Print hours, iterating through all users & their projects'))
         #runall.run_hoursprojs()
 
@@ -96,6 +113,35 @@ def test_cmd_projects():
 
         #print(yellow('Print hours across projects globally'))
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
+
+def _get_files(dirhome):
+    type2files = defaultdict(list)
+    files = get_files(dirhome)
+    for file in files:
+        print(f'FILE: {getsize(file)} {basename(file)} {file}')
+    return files
+
+def _prt_projs(prj2mgrprj, dirhome):
+    for (user, proj), obj in prj2mgrprj.items():
+        print(f'{dirhome} {user:7} {obj.fcfgproj}')
+
+
+def _test_get_csvs_global_uname(user2glbcfg, dirhome):
+    """TEST get_csvs_global_uname(...)"""
+    for usr, glb_cfg in user2glbcfg.items():
+        print(f'\nUSERNAME: {usr}')
+        projects = glb_cfg.get_projects()
+        nts = get_csvs_global_uname(projects, usr, dirhome)
+        for ntd in nts:
+            print(ntd)
+
+def _test_get_csv_local_uname(prj2mgrprj, dirhome):
+    """TEST get_csv_local_uname(...)"""
+    for (user, proj), obj in prj2mgrprj.items():
+        ntd = get_csv_local_uname(obj.fcfgproj, user, dirhome)
+        assert ntd.exists
+        assert exists(ntd.fcsv)
+        assert ntd.username == user
 
 
 class RunAll:
@@ -108,6 +154,21 @@ class RunAll:
         self.cfg_global = CfgGlobal(fcfg_global)
         self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
         self.prj2mgrprj = {e:MngUsrProj(self.dirhome, self.cfg_global, *e) for e in userprojs}
+
+    def get_user2glbcfg(self):
+        """For each username, get their one global config file"""
+        user2glbcfg = {}
+        for (usr, prj), obj in self.prj2mgrprj.items():
+            docproj = get_docproj(obj.fcfgproj)
+            fcfg_doc = get_value(docproj, 'global_config', 'filename')
+            cfg_glb = get_cfgglobal(dirhome=self.dirhome, fcfg_doc=fcfg_doc)
+            assert cfg_glb is not None
+            if usr not in user2glbcfg:
+                user2glbcfg[usr] = cfg_glb
+            else:
+                assert cfg_glb.filename == user2glbcfg[usr].filename
+        return user2glbcfg
+
 
     def run_setup(self, exp_projs):
         """Initialize and fill timeslots for multiple users and projects"""

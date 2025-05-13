@@ -85,50 +85,50 @@ def test_cmd_projects():
         fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
 
-        print(yellow(f"{SEP}`run_init` on each project"))
         runall = RunAll(tmproot, fglb, userprojs)
-        basicConfig(level=DEBUG)
-        print(findhome_str(tmproot, '-type f'))
+        runall.run_setup(exp_projs)
 
-        print(yellow('`run_start` and `run_stop` to fill each researcher & project'))
-        runall.run_start_stop_all()
-        print(findhome_str(tmproot, '-type f'))
+        #print(yellow('Print hours, iterating through all users & their projects'))
+        #runall.run_hoursprojs()
 
-        print(yellow('Check projects listed in CfgGlobal'))
-        runall.chk_projects(exp_projs)
+        #print(yellow('Print hours across projects globally'))
+        #print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runall.cfg, 'lambs', dirhome=tmproot))
 
-        print(yellow('Print hours, iterating through all users & their projects'))
-        runall.run_hoursprojs()
-
-        print(yellow('Print hours across projects globally'))
-        print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runall.cfg, 'lambs', dirhome=tmproot))
-
-        print(yellow('Print hours across projects globally'))
+        #print(yellow('Print hours across projects globally'))
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
-
-
-
-def _get_total_hours(usr, userprojs):
-    return sum(e for (u, _), (_, e) in userprojs.items() if u == usr)
 
 
 class RunAll:
     """Manage all users and their projects"""
 
     def __init__(self, tmproot, fcfg_global, userprojs):
+        self.tmproot = tmproot
         self.dirhome = join(tmproot, 'home')
         self.userprojs = userprojs
         self.cfg_global = CfgGlobal(fcfg_global)
         self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
         self.prj2mgrprj = {e:MngUsrProj(self.dirhome, self.cfg_global, *e) for e in userprojs}
 
-    def run_start_stop_all(self):
+    def run_setup(self, exp_projs):
+        """Initialize and fill timeslots for multiple users and projects"""
+        print(yellow(f"{SEP}`run_init` on each project"))
+        basicConfig(level=DEBUG)
+        print(findhome_str(self.tmproot, '-type f'))
+
+        print(yellow('`run_start` and `run_stop` to fill each researcher & project'))
+        self._run_start_stop_all()
+        print(findhome_str(self.tmproot, '-type f'))
+
+        print(yellow('Check projects listed in CfgGlobal'))
+        self._chk_projects(exp_projs)
+
+    def _run_start_stop_all(self):
         """`run_start` and `run_stop` to fill each researcher & project"""
         for usrprj, (times, _) in self.userprojs.items():
             mgrprj = self.prj2mgrprj[usrprj]
             mgrprj.add_timeslots(times)
 
-    def chk_projects(self, exp_projects):
+    def _chk_projects(self, exp_projects):
         """Check the projects"""
         act_projs = self.cfg_global.get_projects()
         home = self.dirhome
@@ -141,18 +141,21 @@ class RunAll:
             mgrprj = self.prj2mgrprj[usrprj]
             usr, _ = usrprj
 
-            print(f'{SEP2}RUN run_hours project({usrprj[0]}) username({usrprj[1]})')
+            print(f'{SEP2}run_setup: run_hours project({usrprj[0]}) username({usrprj[1]})')
             # run_hours nt: RdCsvs: results errors ntcsvs
             run1 = run_hours(self.cfg, usr, dirhome=mgrprj.home)
-            assert td2hours(run1.results) == _get_total_hours(usr, self.userprojs), (
-                f'ACT({td2hours(run1.results)}) != EXP({_get_total_hours(usr, self.userprojs)}) '
+            assert td2hours(run1.results) == self._get_total_hours(usr), (
+                f'ACT({td2hours(run1.results)}) != EXP({self._get_total_hours(usr)}) '
                 f'project({usrprj[0]}) username({usrprj[1]})')
 
-            print(f'{SEP2}RUN cli_run_hours: project({usrprj[0]}) username({usrprj[1]})')
+            print(f'{SEP2}run_setup: cli_run_hours: project({usrprj[0]}) username({usrprj[1]})')
             # cli_run_hours nt: RdCsv:  results error
             run2 = cli_run_hours(mgrprj.cfg.cfg_loc.filename, mgrprj.get_args_hours())
             assert td2hours(run2.results) == exp_hours, \
                 f'run_hours({run2.results}) != cli_run_hours({exp_hours}))'
+
+    def _get_total_hours(self, usr):
+        return sum(e for (u, _), (_, e) in self.userprojs.items() if u == usr)
 
     @staticmethod
     def _errmsg(act_projs, exp_projs):

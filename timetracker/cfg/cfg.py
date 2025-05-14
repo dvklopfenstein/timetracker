@@ -81,7 +81,7 @@ class Cfg:
         # TODO: Check global config
         return None
 
-    def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
+    def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None, **kwargs):
         """Initialize a project, return CfgGlobal"""
         debug(yellow(f'Cfg.init(project={project}, dirscv={dircsv}, '
                      f'fcfg_global={fcfg_global}, dirhome={dirhome})'))
@@ -89,11 +89,13 @@ class Cfg:
             project = self.cfg_loc.get_project_from_filename()
         assert project is not None
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
-        print(f'Initialized project directory: {self.cfg_loc.dircfg}')
+        quiet = kwargs.get('quiet', False)
+        if not quiet:
+            print(f'Initialized project directory: {self.cfg_loc.dircfg}')
         if self.cfg_glb is None:
             self.set_cfg_global(fcfg_global, dirhome)
         debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
-        return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename)
+        return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename, quiet=quiet)
 
     def reinit(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""

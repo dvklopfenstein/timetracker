@@ -33,7 +33,7 @@ class CsvFile:
 
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
-        debug(orange(f'Starttime args {int(exists(self.fcsv))} self.fcsv {self.fcsv}'))
+        debug(orange(f'CsvFile: {int(exists(csvfilename))} csvfilename {csvfilename}'))
 
     def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""

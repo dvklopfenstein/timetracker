@@ -40,16 +40,18 @@ def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
     fcfg_global = kwargs.get('fcfg_global')
     ##res = _chk_global_cfg(cfg_loc, project, fcfg_global)
     dirhome = kwargs.get('dirhome')
+    quiet = kwargs.get('quiet')
     if (msg := cfg.needs_reinit(dircsv, project, fcfg_global, dirhome)):
-        print(msg)
-        sys_exit(0)
+        if not quiet:
+            print(msg)
+            sys_exit(0)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
     if not exists(cfg_loc.filename):
         debug('CMD INIT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-        cfg.init(project, dircsv, fcfg_global, dirhome)
+        cfg.init(project, dircsv, fcfg_global, dirhome, quiet=quiet)
         debug('CMD INIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         debug(cfg.cfg_loc.get_desc("ran_init"))
-    else:
+    elif not quiet:
         print(str_tostart())
     return cfg
 

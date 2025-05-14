@@ -14,7 +14,7 @@ from sys import exit as sys_exit
 from timetracker.cfg.cfg import Cfg
 #from timetracker.cfg.cfg_local import CfgProj
 #from timetracker.cfg.doc_local import get_docproj
-from timetracker.csvget import get_csvs_local_uname
+from timetracker.csvget import get_csv_local_uname
 from timetracker.msgs import str_uninitialized
 
 
@@ -34,7 +34,7 @@ def run_csv(cfg, uname, get_global, get_all, dirhome=None):  #, **kwargs):
     #fcfg_global = kwargs.get('fcfg_global')
     if not get_global and not get_all:
         print(f'00 {get_global=} {get_all=}')
-        _get_csvs_local_uname(cfg.cfg_loc, uname, dirhome)
+        _get_csv_local_uname(cfg.cfg_loc, uname, dirhome)
         return
     if not get_global and     get_all:
         print(f'01 {get_global=} {get_all=}')
@@ -52,10 +52,10 @@ def run_csv(cfg, uname, get_global, get_all, dirhome=None):  #, **kwargs):
     #dirhome = get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc, 'csv')
     #assert dirhome
 
-def _get_csvs_local_uname(cfgproj, uname, dirhome=None):
+def _get_csv_local_uname(cfgproj, uname, dirhome=None):
     if str_uninitialized(cfgproj.filename):
         sys_exit(0)
-    res = get_csvs_local_uname(cfgproj.filename, uname, dirhome)
+    res = get_csv_local_uname(cfgproj.filename, uname, dirhome)
     print(res)
 
 def _get_csvs_global_uname(cfg, uname, dirhome=None):

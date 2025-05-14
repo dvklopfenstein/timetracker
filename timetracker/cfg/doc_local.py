@@ -57,18 +57,16 @@ class DocProj:
             return get_abspath(self.dircsv, self.dirproj)
         return None
 
-
     def get_filename_csv(self, username=None, dirhome=None):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
+        assert username is None or '/' not in username
         username = get_username(username)
         return self._get_csvfilename_proj_user(username, dirhome)
 
     def get_filenames_csv(self, dirhome):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
-        fcsvpat = self._get_csvfilename_proj(dirhome)
-        if fcsvpat is not None:
-            globpat = replace_envvar(fcsvpat, '*')
-            return glob(globpat)
+        if (fcsvpat := self._get_csvfilename_proj(dirhome)) is not None:
+            return glob(replace_envvar(fcsvpat, '*'))
         return None
 
     def _init_cfg_values(self, doc):

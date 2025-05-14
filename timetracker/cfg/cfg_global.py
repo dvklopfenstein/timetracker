@@ -61,19 +61,21 @@ class CfgGlobal:
         TOMLFile(self.filename).write(doc)
         debug(ltblue(f'  SSS WROTE: {self.filename}'))
 
-    def wr_ini_project(self, project, fcfgproj):
+    def wr_ini_project(self, project, fcfgproj, quiet=False):
         """Add a project if needed & write; return if not"""
         if not exists(self.filename):
             self._chk_global_dir()
-            print(f'Initialized global timetracker config: {self.filename}')
+            if not quiet:
+                print(f'Initialized global timetracker config: {self.filename}')
             return self._wr_project_init(project, fcfgproj)
         # ntcfg: doc error
         ntcfg = read_config(self.filename)
         doc = ntcfg.doc
         if doc is not None and self._add_project(doc, project, fcfgproj):
             self.wr_doc(doc)
-            print(f'Added project to the global timetracker config: {self.filename}:')
-            print(f'  project: {project}; config: {fcfgproj}')
+            if not quiet:
+                print(f'Added project to the global timetracker config: {self.filename}:')
+                print(f'  project: {project}; config: {fcfgproj}')
         return ntcfg
 
     def reinit(self, project, fcfgproj):

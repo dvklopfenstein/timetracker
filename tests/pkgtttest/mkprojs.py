@@ -1,12 +1,17 @@
 """Create projects in a given temporary directory"""
 
+from os import walk
 from os import makedirs
 from os import environ
 from os.path import join
 from os.path import exists
+from os.path import splitext
+from os.path import basename
 from subprocess import run
 from logging import debug
 from collections import namedtuple
+from collections import defaultdict
+from regex import compile as re_compile
 
 from timetracker.consts import DIRTRK
 
@@ -17,6 +22,8 @@ RELCSVS = [
     "~/filename.csv",
     #"~user/filename.csv",
 ]
+
+CMPPROJ = re_compile(r'^.*/proj/([^/]+)/')
 
 
 def mkdirs(tmp_home):
@@ -110,3 +117,29 @@ def run_cmd(cmd, prtcmd=True):
         txt.append(f'COMMAND: {cmd}\n')
     txt.append(f'{run(cmd.split(), capture_output=True, text=True, check=True).stdout}')
     return ''.join(txt)
+
+def get_files(basedir):
+    """Get files recursively starting from the basedir"""
+    files_all = []
+    for root, _, files_cur in walk(basedir):
+        for file in files_cur:
+            files_all.append(join(root, file))
+    return files_all
+
+def get_type2files(basedir):
+    """Recursively walk dirs to get files & group by type (config, csv)"""
+    type2files = defaultdict(set)
+    files_all = get_files(basedir)
+    for file in files_all:
+        base, ext = splitext(file)
+        if ext:
+            type2files[ext].add(file)
+        else:
+            type2files[basename(base)].add(file)
+    return type2files
+
+def get_projectname(path):
+    """Get proj from: /tmp/tmpxd751piq/home/david/proj/shepherding/"""
+    if (mtch := CMPPROJ.search(path)):
+        return mtch.group(1)
+    return None

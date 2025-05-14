@@ -17,11 +17,11 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.utils import yellow
 from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
-from timetracker.csvget import get_csvs_local_uname
+from timetracker.csvget import get_csv_local_uname
 from timetracker.csvget import get_csvs_global_uname
+from timetracker.csvget import get_ntcsvproj01
 from timetracker.msgs import str_init0
 from timetracker.msgs import str_tostart_epoch
-from timetracker.projects import get_ntcsvproj01
 
 NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
@@ -63,6 +63,8 @@ def run_hours_global(cfg_global, uname):
     #print('RUN HOURS GLOBAL START')
     if (projects := cfg_global.get_projects()):
         ntcsvs = get_csvs_global_uname(projects, uname)
+        ###for ntd in ntcsvs:
+        ###    print(f'PROJECTS[{len(projects)}]{ntd}')
         ntres = _rpt_hours_projs_uname1(ntcsvs, uname)
         return ntres  # RdCsvs: results errors ntcsvs
     return None
@@ -70,7 +72,7 @@ def run_hours_global(cfg_global, uname):
 def run_hours_local(cfg_proj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     debug(yellow('RUNNING COMMAND HOURS local'))
-    ntd = get_csvs_local_uname(cfg_proj.filename, uname, dirhome)
+    ntd = get_csv_local_uname(cfg_proj.filename, uname, dirhome)
     return _rpt_hours_uname1(ntd)  # nt
 
 #def run_hours_global(fnamecfg, uname, **kwargs):  #, name=None, force=False, quiet=False):
@@ -92,14 +94,26 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     print('  ------- -------- ----------------------')
     # ntcsvs:     fcsv project username
     # ntcsvtimes: results errors fcsv
-    itr = ((_get_total_time(nt.fcsv), nt) for nt in ntcsvs)
+    itr = ((_get_total_time(nt.ntcsv.fcsv), nt) for nt in ntcsvs)
+    ###for t in itr:
+    ###    print(f'{t[0].results}')
+    ###    print(f'{t[1]}\n')
+
+    itr = ((_get_total_time(nt.ntcsv.fcsv), nt) for nt in ntcsvs)
     rd01 = {k: list(g) for k, g in groupby(itr, key=lambda t: t[0].results is not None)}
+    ###print(f'GROUUUUUUUUUPED', rd01)
     errnts = rd01.get(False)
+    #print(f'ERRS({len(errnts)})')
     if (rdnts := rd01.get(True)):
+        ###print(f'RDS({len(rdnts)})')
         for nttime, ntcsv in rdnts:
+            ###print(f'TIME: {nttime}')
+            ###print(f'CSV:  {ntcsv}\n')
             if nttime.results:
                 total_time += nttime.results
-                print(f'{_get_hours_str(nttime.results)} {username:{uname_len}} {ntcsv.project}')
+                print(f'{_get_hours_str(nttime.results)} '
+                      f'{username:{uname_len}} '
+                      f'{ntcsv.ntcsv.project}')
         _rpt_errs_csvread(errnts)
         print(f'{_get_hours_str(total_time)} {username:{uname_len}} Total hours for all projects')
         return NTCSVS(results=total_time, errors=errnts, ntcsvs=rdnts)

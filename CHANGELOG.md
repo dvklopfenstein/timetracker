@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* **Release 2025-05-14 v0.5a4** Optimized getting csv files to report locally or globally for a single user
 * **Release 2025-05-08 v0.5a3** Add all timetracker packages
 * **Release 2025-05-07 v0.5a2** Use pyproject.toml rather than setup.py
 * [**Release 2025-05-02 v0.5a1**](#release-2025-05-02-v05a1) Fixed bug when forcing a new csv filename in reinit

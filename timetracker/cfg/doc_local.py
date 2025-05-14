@@ -59,6 +59,7 @@ class DocProj:
 
     def get_filename_csv(self, username=None, dirhome=None):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
+        assert username is None or '/' not in username
         username = get_username(username)
         return self._get_csvfilename_proj_user(username, dirhome)
 

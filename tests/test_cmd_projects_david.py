@@ -57,26 +57,27 @@ def test_cmd_projects():
         fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
         environ['TIMETRACKERCONF'] = fglb
 
-        runall = RunProjs(tmproot, fglb, userprojs)
-        runall.run_setup(exp_projs)
+        runprojs = RunProjs(tmproot, userprojs, fglb)
+        runprojs.run_setup()
+        runprojs.chk_projects(exp_projs)
 
-        #type2files = get_type2files(runall.dirhome)
-        _prt_projs(runall.prj2mgrprj, runall.dirhome)
+        #type2files = get_type2files(runprojs.dirhome)
+        _prt_projs(runprojs.prj2mgrprj, runprojs.dirhome)
 
-        _test_get_csv_local_uname(runall.prj2mgrprj, runall.dirhome)
-        _test_get_csvs_global_uname(runall.get_user2glbcfg(), runall.dirhome)
+        _test_get_csv_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
+        _test_get_csvs_global_uname(runprojs.get_user2glbcfg(), runprojs.dirhome)
 
-        #_test_run_hours_local_uname(runall.prj2mgrprj, runall.dirhome)
+        #_test_run_hours_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
         #print(yellow('Print hours, iterating through all users & their projects'))
-        #runall.run_hoursprojs()
+        #runprojs.run_hoursprojs()
 
         print(yellow('Print hours across projects globally'))
-        print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runall.cfg, 'lambs', dirhome=tmproot))
+        print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runprojs.cfg, 'lambs', dirhome=tmproot))
 
         #print(yellow('Print hours across projects globally'))
         reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
-#def _test_run_hours_local_uname(runall, runall.dirhome):
+#def _test_run_hours_local_uname(runprojs, runprojs.dirhome):
 
 
 def _prt_projs(prj2mgrprj, dirhome):

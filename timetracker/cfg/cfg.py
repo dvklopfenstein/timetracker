@@ -23,6 +23,7 @@ class Cfg:
     """Configuration manager for timetracker"""
 
     def __init__(self, fcfg_local, cfg_global=None):
+        # TBD: param cfgproj
         self.cfg_loc = CfgProj(fcfg_local)
         self.cfg_glb = cfg_global
         debug(f'Cfg exists({int(exists(self.cfg_loc.filename))}) Cfg({self.cfg_loc.filename})')

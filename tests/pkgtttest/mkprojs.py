@@ -138,6 +138,12 @@ def get_type2files(basedir):
             type2files[basename(base)].add(file)
     return type2files
 
+def prt_type2files(basedir):
+    """Print files, grouped by type"""
+    for typ, files in get_type2files(basedir).items():
+        for fname in files:
+            print(f'{typ:6} {fname}')
+
 def get_projectname(path):
     """Get proj from: /tmp/tmpxd751piq/home/david/proj/shepherding/"""
     if (mtch := CMPPROJ.search(path)):

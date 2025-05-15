@@ -13,13 +13,16 @@ NTCFG = namedtuple('NtCfg', 'fcfgproj, ntcsv')
 
 def get_csv_local_uname(fcfgproj, username, dirhome=None):
     """Get csvs in the local project config file for a specific user"""
-    assert username is not None
     if (docproj := get_docproj(fcfgproj)):
-        fcsv = docproj.get_filename_csv(username, dirhome)
-        if path_exists(fcsv):
-            return NTCSV(fcsv=fcsv,
-                         project=docproj.project,
-                         username=username)
+        return get_csv_proj_uname(docproj, username, dirhome)
+    return None
+
+def get_csv_proj_uname(docproj, username, dirhome=None):
+    """Get csvs in the local project config file for a specific user"""
+    assert username is not None
+    fcsv = docproj.get_filename_csv(username, dirhome)
+    if path_exists(fcsv):
+        return NTCSV(fcsv=fcsv, project=docproj.project, username=username)
     return None
 
 def get_csvs_global_uname(projects, username, dirhome=None):

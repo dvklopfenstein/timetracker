@@ -10,6 +10,8 @@ from datetime import datetime
 from timetracker.utils import yellow
 from timetracker.epoch.epoch import get_dtz
 from timetracker.cmd.common import get_cfg
+from timetracker.cmd.common import prtmsg_started01
+from timetracker.cmd.common import prt_elapsed
 
 
 def cli_run_start(fnamecfg, args):
@@ -38,10 +40,9 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
 
     # Print elapsed time, if timer was started
     if start_at is None:
-        if start_obj.file_exists():
-            start_obj.prtmsg_started01()
+        prtmsg_started01(start_obj)
     else:
-        start_obj.prt_elapsed()
+        prt_elapsed(start_obj)
 
     # Set (if not started) or reset (if start is forced) starting time
     force = kwargs.get('force', False)

@@ -17,7 +17,6 @@ from timetracker import __version__
 from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
-#from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.none import cli_run_none
 from timetracker.cfg.utils import run_cmd
 
@@ -249,14 +248,14 @@ class Cli:
         parser = subparsers.add_parser(name='report',
             help='Generate an report for all time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-i', '--input', metavar='file.csv', nargs='*',
-            help='Specify an input csv file')
-        parser.add_argument('-o', '--output', metavar='file.docx',
-            help='Specify an output file')
-        parser.add_argument('-p', '--product', type=float,
-            help=SUPPRESS)  # Future feature
-        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
-            help='Use specified file as the global config file')
+        ##parser.add_argument('-i', '--input', metavar='file.csv', nargs='*',
+        ##    help='Specify an input csv file')
+        ##parser.add_argument('-o', '--output', metavar='file.docx',
+        ##    help='Specify an output file')
+        ##parser.add_argument('-p', '--product', type=float,
+        ##    help=SUPPRESS)  # Future feature
+        ##parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
+        ##    help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_tag(self, subparsers):

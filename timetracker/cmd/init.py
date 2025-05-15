@@ -30,6 +30,7 @@ def cli_run_init(fnamecfg, args):
 
 def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
     """Initialize timetracking on a project"""
+    # TBD: param cfgproj?
     cfg = Cfg(fnamecfg, cfg_global=kwargs.get('cfg_global'))
     # Initialize the local configuration file for a timetracking project
     cfg_loc = cfg.cfg_loc

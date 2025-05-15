@@ -10,6 +10,7 @@ from logging import debug
 from timetracker.msgs import str_cancelled1
 from timetracker.msgs import str_not_running
 from timetracker.utils import yellow
+from timetracker.cmd.common import prt_elapsed
 from timetracker.cfg.cfg_local import CfgProj
 
 
@@ -24,7 +25,7 @@ def run_cancel(cfgproj, name=None):
     debug(yellow('RUNNING COMMAND CANCEL'))
     start_obj = cfgproj.get_starttime_obj(name)
     if start_obj and exists(start_obj.filename):
-        start_obj.prt_elapsed(f'{str_cancelled1()}; was')
+        prt_elapsed(f'{str_cancelled1()}; was', start_obj)
         remove(start_obj.filename)
         return start_obj.filename
     print(str_not_running())

@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* **Release 2025-05-15 v0.5a5** Report command tested and updated; Get csv files for a single user tested and implemented
 * **Release 2025-05-14 v0.5a4** Optimized getting csv files to report locally or globally for a single user
 * **Release 2025-05-08 v0.5a3** Add all timetracker packages
 * **Release 2025-05-07 v0.5a2** Use pyproject.toml rather than setup.py

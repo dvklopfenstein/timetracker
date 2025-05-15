@@ -6,8 +6,6 @@ from tempfile import TemporaryDirectory
 from logging import basicConfig
 from timetracker.utils import yellow
 from timetracker.ntcsv import NTCSV
-from timetracker.cfg.finder import CfgFinder
-from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cmd.report import run_report_cli
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
@@ -15,8 +13,6 @@ from timetracker.cmd.stop import run_stop
 from timetracker.cmd.none import run_none
 from tests.pkgtttest.runprojs import RunProjs
 from tests.pkgtttest.runfncs import get_cfgproj
-from tests.pkgtttest.mkprojs import get_type2files
-from tests.pkgtttest.cmpstr import show_file
 
 
 USERPROJS = {
@@ -49,27 +45,27 @@ def test_report_nocsv(username='rando'):
 
         tobj = RunTest(cfgproj, tmproot, username)
 
-        print(yellow(f'\nTEST: `trk report` when there is NO timetracker repo'))
+        print(yellow('\nTEST: `trk report` when there is NO timetracker repo'))
         ntcsv = tobj.run_report()
         assert ntcsv is None
 
-        print(yellow(f'\nTEST: `trk report` when there IS a timetracker repo'))
+        print(yellow('\nTEST: `trk report` when there IS a timetracker repo'))
         run_init(cfgproj.filename)
         ntcsv = tobj.run_report()
         tobj.chk_filenotfounderror(ntcsv)
 
-        print(yellow(f'\nTEST: `trk report` when timetracker is started, but no csv file yet'))
+        print(yellow('\nTEST: `trk report` when timetracker is started, but no csv file yet'))
         tobj.start_x2()
         ntcsv = tobj.run_report()
         tobj.chk_filenotfounderror(ntcsv)
 
-        print(yellow(f'\nTEST: `trk report` after timetracker is stopped'))
+        print(yellow('\nTEST: `trk report` after timetracker is stopped'))
         csvfields = NTCSV(message='Testing writing csv', activity='', tags='')
         run_stop(cfgproj, username, csvfields)
         ntcsv = tobj.run_report()
         assert ntcsv.error is None
 
-        print(yellow(f'\nTEST: `trk`'))
+        print(yellow('\nTEST: `trk`'))
         assert run_none(cfgproj, username) is not None
 
 
@@ -86,6 +82,7 @@ class RunTest:
         return run_report_cli(self.cfgproj, self.username, pnum=None, dirhome=self.tmproot)
 
     def start_x2(self):
+        """Run `trk start` twice"""
         ostrt1 = run_start(self.cfgproj, self.username)
         assert exists(ostrt1.filename)
         assert ostrt1.read_starttime() is not None
@@ -94,6 +91,7 @@ class RunTest:
         return ostrt1
 
     def chk_filenotfounderror(self, ntcsv):
+        """Test to see that a proper FileNotFoundError is produced"""
         assert ntcsv.results is None
         assert ntcsv.error.errno == 2
         assert ntcsv.error.strerror == 'No such file or directory'

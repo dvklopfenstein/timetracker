@@ -5,24 +5,27 @@ __author__ = "DV Klopfenstein, PhD"
 
 from logging import debug
 
-from timetracker.cmd.common import get_cfg
-from timetracker.cmd.common import get_fcsv
+from timetracker.cfg.cfg_local import CfgProj
+from timetracker.cfg.doc_local import get_docproj
 from timetracker.utils import yellow
+from timetracker.cmd.common import no_csv
 from timetracker.csvfile import CsvFile
 from timetracker.docx import WordDoc
 from timetracker.epoch.text import get_data_formatted
 from timetracker.csvrun import chk_n_convert
-from timetracker.report import Report
+from timetracker.report import prt_basic
+from timetracker.msgs import str_init
 
 
-def cli_run_report(fnamecfg, args):
+def cli_run_report(fcfgproj, args):
     """Report all time units"""
-    if args.input is None:
-        run_report(fnamecfg, args.name, pnum=args.product)
-    elif len(args.input) == 1:
-        _run_io(args.input[0], args.output, pnum=args.product)
-    else:
-        raise RuntimeError('TIME TO IMPLEMENT')
+    ##if args.input is None:
+    cfgproj = CfgProj(fcfgproj)
+    run_report_cli(cfgproj, args.name, pnum=args.product)
+    ##elif len(args.input) == 1:
+    ##    _run_io(args.input[0], args.output, pnum=args.product)
+    ##else:
+    ##    raise RuntimeError('TIME TO IMPLEMENT')
     ##if args.input and exists(args.input):
     ##    print(args.input)
     ##if args.input and args.output and exists(args.input):
@@ -35,29 +38,30 @@ def cli_run_report(fnamecfg, args):
     ##    fout=args.output,
     ##)
 
-def run_report(fnamecfg, uname, pnum=None, dirhome=None):
+def run_report_cli(cfgproj, username, pnum=None, fout_docx=None, dirhome=None):
     """Report all time units"""
     debug(yellow('RUNNING COMMAND REPORT'))
-    cfg = get_cfg(fnamecfg)
-    fcsv = get_fcsv(cfg, uname, dirhome)
-    return _run_io(fcsv, None, pnum) if fcsv is not None else None
+    if (docproj := get_docproj(cfgproj.filename)):
+        fcsv = docproj.get_filename_csv(username, dirhome)
+        ntcsv = run_report(fcsv, fout_docx, pnum) if fcsv is not None else None
+        if ntcsv.results is None:
+            no_csv(fcsv, cfgproj, username)
+        return ntcsv
+    print(str_init(cfgproj.filename))
+    return None
 
-def _run_io(fcsv, fout_docx, pnum):
+def run_report(fcsv, fout_docx, pnum):
     """Run input output"""
     chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
-    timedata, errs = ocsv.get_ntdata()
-    #for e in sorted(timedata, key=lambda nt: nt.start_datetime):
-    #    print(e)  # TimeData namedtuple
-    timefmtd = get_data_formatted(timedata, pnum)
-    if timefmtd:
-        Report(timefmtd).prt_basic()
+    ntcsv = ocsv.get_ntdata()
+    if ntcsv.results:
+        timefmtd = get_data_formatted(ntcsv.results, pnum)
+        prt_basic(timefmtd)
         if fout_docx:
             doc = WordDoc(timefmtd)
             doc.write_doc(fout_docx)
-    if errs:
-        for err in errs:
-            print(err)
+    return ntcsv
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

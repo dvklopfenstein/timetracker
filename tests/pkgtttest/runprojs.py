@@ -9,7 +9,7 @@ from timetracker.ntcsv import get_ntcsv
 from timetracker.utils import yellow
 from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.doc_local import get_docproj
-from timetracker.cfg.cfg_global import CfgGlobal
+#from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.docutils import get_value
 from timetracker.cmd.init import run_init
@@ -20,7 +20,8 @@ from timetracker.cmd.hours import cli_run_hours
 from tests.pkgtttest.consts import SEP1
 from tests.pkgtttest.consts import SEP3
 from tests.pkgtttest.runfncs import proj_setup
-from tests.pkgtttest.mkprojs import findhome_str
+from tests.pkgtttest.userprojs import UserProjects
+from tests.pkgtttest.mkprojs import prt_type2files
 from tests.pkgtttest.dts import get_iter_weekday
 from tests.pkgtttest.dts import td2hours
 from tests.pkgtttest.dts import I1266 as DT2525
@@ -29,11 +30,13 @@ from tests.pkgtttest.dts import I1266 as DT2525
 class RunProjs:
     """Manage all users and their projects"""
 
-    def __init__(self, tmproot, fcfg_global, userprojs):
+    ##def __init__(self, tmproot, userprojs, fcfg_global=None):
+    def __init__(self, tmproot, userprojs, fcfg_explicit=None, fcfg_doc=None):
         self.tmproot = tmproot
         self.dirhome = join(tmproot, 'home')
-        self.userprojs = userprojs
-        self.cfg_global = CfgGlobal(fcfg_global)
+        self.ups = UserProjects(userprojs)
+        ##self.cfg_global = CfgGlobal(fcfg_global)
+        self.cfg_global = get_cfgglobal(fcfg_explicit, self.dirhome, fcfg_doc)
         self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
         self.prj2mgrprj = {e:MngUsrProj(self.dirhome, self.cfg_global, *e) for e in userprojs}
 
@@ -51,26 +54,25 @@ class RunProjs:
                 assert cfg_glb.filename == user2glbcfg[usr].filename
         return user2glbcfg
 
-    def run_setup(self, exp_projs):
+    def run_setup(self):
         """Initialize and fill timeslots for multiple users and projects"""
         print(yellow(f"{SEP1}`run_init` on each project"))
         basicConfig(level=DEBUG)
-        print(findhome_str(self.tmproot, '-type f'))
+        prt_type2files(self.tmproot)
 
         print(yellow('`run_start` and `run_stop` to fill each researcher & project'))
         self._run_start_stop_all()
-        print(findhome_str(self.tmproot, '-type f'))
+        prt_type2files(self.tmproot)
 
         print(yellow('Check projects listed in CfgGlobal'))
-        self._chk_projects(exp_projs)
 
     def _run_start_stop_all(self):
         """`run_start` and `run_stop` to fill each researcher & project"""
-        for usrprj, (times, _) in self.userprojs.items():
+        for usrprj, (times, _) in self.ups.userprojs.items():
             mgrprj = self.prj2mgrprj[usrprj]
             mgrprj.add_timeslots(times)
 
-    def _chk_projects(self, exp_projects):
+    def chk_projects(self, exp_projects):
         """Check the projects"""
         act_projs = self.cfg_global.get_projects()
         home = self.dirhome
@@ -79,7 +81,7 @@ class RunProjs:
 
     def run_hoursprojs(self):
         """print hours, iterating through all users & their projects"""
-        for usrprj, (_, exp_hours) in self.userprojs.items():
+        for usrprj, (_, exp_hours) in self.ups.userprojs.items():
             mgrprj = self.prj2mgrprj[usrprj]
             usr, _ = usrprj
 
@@ -97,7 +99,7 @@ class RunProjs:
                 f'run_hours({run2.results}) != cli_run_hours({exp_hours}))'
 
     def _get_total_hours(self, usr):
-        return sum(e for (u, _), (_, e) in self.userprojs.items() if u == usr)
+        return sum(e for (u, _), (_, e) in self.ups.userprojs.items() if u == usr)
 
     @staticmethod
     def _errmsg(act_projs, exp_projs):

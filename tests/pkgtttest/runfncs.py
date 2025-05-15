@@ -4,8 +4,14 @@
 from os.path import isabs
 from os.path import exists
 from timetracker.cfg.finder import CfgFinder
+from timetracker.cfg.cfg_local import CfgProj
 from tests.pkgtttest.mkprojs import mk_projdirs
 
+def get_cfgproj(dirhome):
+    """Get a CfgProj, given dirhome"""
+    finder = CfgFinder(dirhome)
+    fcfgproj = finder.get_cfgfilename()
+    return CfgProj(fcfgproj)
 
 class RunBase:
     """Base class for object that runs tests"""

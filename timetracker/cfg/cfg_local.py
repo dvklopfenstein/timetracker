@@ -62,7 +62,7 @@ class CfgProj:
             return docproj.get_filename_csv(username, dirhome)
         return None
 
-    def get_filenames_csv(self, dirhome):
+    def get_filenames_csv(self, dirhome=None):
         """Get all csv filenames by reading the cfg csv pattern and globbing `*` username"""
         if (docproj := get_docproj(self.filename)):
             return docproj.get_filenames_csv(dirhome)

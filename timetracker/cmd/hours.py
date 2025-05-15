@@ -13,7 +13,6 @@ from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.utils import get_filename_globalcfg
 from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.doc_local import get_docproj
-#from timetracker.cmd.common import get_fcsv
 from timetracker.utils import yellow
 from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile

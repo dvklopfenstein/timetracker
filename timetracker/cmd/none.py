@@ -7,6 +7,7 @@ from logging import debug
 from timetracker.msgs import str_tostart
 from timetracker.utils import yellow
 from timetracker.cmd.common import get_cfg
+from timetracker.cmd.common import prtmsg_started01
 
 
 def cli_run_none(fnamecfg, args):
@@ -20,8 +21,8 @@ def run_none(cfg_proj, username=None):
     debug(yellow('RUNNING COMMAND NONE'))
     # Check for start time
     ostart = cfg_proj.get_starttime_obj(username)
-    if ostart is not None and ostart.file_exists():
-        ostart.prtmsg_started01()
+    if ostart is not None:
+        prtmsg_started01(ostart)
         return ostart
     print(str_tostart())
     return None

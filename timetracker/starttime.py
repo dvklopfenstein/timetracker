@@ -15,17 +15,10 @@ from datetime import timedelta
 from logging import debug
 
 from timetracker.utils import orange
-from timetracker.utils import prt_todo
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
 from timetracker.consts import FMTDT_H
 from timetracker.cfg.utils import get_username
-from timetracker.msgs import str_tostart_epoch
-from timetracker.msgs import str_how_to_stop_now
-from timetracker.msgs import str_started_epoch
-from timetracker.msgs import str_not_running
-from timetracker.msgs import str_no_time_recorded
-from timetracker.epoch.epoch import str_arg_epoch
 
 # 2025-01-21 17:09:47.035936
 
@@ -44,30 +37,6 @@ class Starttime:
         debug(f'Starttime args . project  {project}')
         debug(f'Starttime args . name     {name}')
         debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
-
-    def file_exists(self):
-        """Retrun True if starttime file exists, False otherwise"""
-        return exists(self.filename)
-
-    def prtmsg_started_csv(self, fcsv):
-        """Print message depending on if a csv file containing elapsed time exists"""
-        if self.file_exists():
-            self.prtmsg_started01()
-        else:
-            print(str_no_time_recorded(fcsv))
-
-    def prtmsg_started01(self):
-        """Print message depending if timer is started or not"""
-        assert exists(self.filename), f'FILE MUST EXIST prtmsg_started01: {self.filename}'
-        dtstart = self._read_starttime()
-        hms = self._hms_from_startfile(dtstart)
-        hms1 = hms is not None
-        if hms1 and hms <= self.min_trigger:
-            self._prtmsg_basic(dtstart, hms)
-        elif hms1:
-            self._prtmsg_triggered(dtstart, hms)
-        else:
-            prt_todo('TODO: STARTFILE WITH NO HMS')
 
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
@@ -90,64 +59,43 @@ class Starttime:
             f'CfgProj {note} {int(exists(self.filename))} '
             f'fname start {self.filename}')
 
-    def read_starttime(self):
-        """Get datetime from a starttime file"""
-        return self._read_starttime() if exists(self.filename) else None
-
-    def prt_elapsed(self, msg='Timer running;'):
-        """Print elapsed time if timer is started"""
-        # Print elapsed time, if timer was started
-        if exists(self.filename):
-            dtstart = self._read_starttime()
-            hms = self._hms_from_startfile(dtstart)
-            #return self._prt_elapsed_hms(hms, msg) if hms is not None else str_not_running()
-            # pylint: disable=line-too-long
-            return self._prt_startdt_n_elapsed(dtstart, hms, msg) if hms is not None else str_not_running()
-        return None
-
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""
         fstart = self.filename
         if exists(fstart):
             remove(fstart)
 
-    def _prtmsg_basic(self, dta, hms):
-        self._str_started_n_running(dta, hms)
-        print(str_how_to_stop_now())
-
-    def _prtmsg_triggered(self, dta, hms):
-        self._str_started_n_running(dta, hms)
-        print(str_started_epoch())
-        print(str_arg_epoch(dta, desc=' after start'))
-        self._prtmsg_basic(dta, hms)
-        print(str_started_epoch())
-        print(str_tostart_epoch())
-
-    def _read_starttime(self):
-        with open(self.filename, encoding='utf8') as ifstrm:
-            for line in ifstrm:
-                line = line.strip()
-                # pylint: disable=line-too-long
-                assert len(line) == 26, f'len({line})={len(line)}; EXPFMT: 2025-01-22 04:05:00.086891'
-                return datetime.strptime(line, FMTDT)
+    def read_starttime(self):
+        """Read the starttime"""
+        error = None
+        try:
+            fptr = open(self.filename, encoding='utf8')
+        except (FileNotFoundError, PermissionError, OSError) as err:
+            error = err
+        else:
+            with fptr:
+                for line in fptr:
+                    line = line.strip()
+                    assert len(line) == 26, \
+                        f'len({line})={len(line)}; EXPFMT: 2025-01-22 04:05:00.086891'
+                    assert error is None
+                    return datetime.strptime(line, FMTDT)
         return None
 
-    def _str_started_n_running(self, dta, hms):
-        self._prt_elapsed_hms(
-            hms,
-            f'Timer started on {dta.strftime(FMTDT_H)} and running')
-
-    def _prt_elapsed_hms(self, hms, msg):
-        print(f'{msg} H:M:S {hms} '
-              f"for '{self.project}' ID={self.name}")
-
-    def _prt_startdt_n_elapsed(self, startdt, hms, msg):
-        msg = f'{msg} started {startdt.strftime(FMTDT_H)}; running'
-        self._prt_elapsed_hms(hms, msg)
-
-    def _hms_from_startfile(self, dtstart):
+    def hms_from_startfile(self, dtstart):
         """Get the elapsed time starting from time in a starttime file"""
         return datetime.now() - dtstart if dtstart is not None else None
+
+    def str_elapsed_hms(self, hms, msg):
+        """Get a string describing the elapsed time"""
+        return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+
+    def str_started_n_running(self, dta, hms):
+        """Return a string detailing how long the timer has been running"""
+        msg = self.str_elapsed_hms(
+              hms,
+              f'Timer started on {dta.strftime(FMTDT_H)} and running')
+        print(msg)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

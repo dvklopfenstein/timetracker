@@ -37,7 +37,7 @@ def _get_nto(has_activity, has_tags, pnum):
 
 def get_fstr(has_activity, has_tags, pnum):
     """Get formatting for printing to stdout"""
-    lst = ['{Day:3}', '{Date:10}', '{Span:>5}', '{Total:5}']
+    lst = ['{Day:3}', '{Date:10}', '{Start:8}', '{Span:>5}', '{Total:5}']
     if pnum:
         lst.append('{Sum:5}')
     if has_activity:
@@ -48,7 +48,7 @@ def get_fstr(has_activity, has_tags, pnum):
     return ' '.join(lst)
 
 def _get_nto_fieldnames(has_activity, has_tags, pnum):
-    lst = ['Day', 'Date', 'Span', 'Total']
+    lst = ['Day', 'Date', 'Start', 'Span', 'Total']
     if pnum:
         lst.append('Sum')
     if has_activity:
@@ -80,7 +80,8 @@ def _get_dfmttd_at010(nto, nts):
     debug(white('timetext: _get_dfmttd_at010'))
     tot = timedelta()
     return [nto._make(_nttxt(ntd) +
-        (str_td(tot:=tot+ntd.duration), ntd.activity, ntd.message))
+        (str_td(tot:=tot+ntd.duration),
+         ntd.activity, ntd.message))
         for ntd in nts]
 
 def _get_dfmttd_at001(nto, nts):
@@ -100,10 +101,10 @@ def _get_dfmttd_at011(nto, nts):
         for ntd in nts]
 
 def _nttxt(ntd):
-    weekday = ntd.start_datetime.strftime('%a')
-    startdt = ntd.start_datetime.strftime('%Y-%m-%d')  ### FMTDT12HM)
-    span = str_td(ntd.duration)
-    return (weekday, startdt, f'{span}')
+    return (ntd.start_datetime.strftime('%a'),       # weekday
+            ntd.start_datetime.strftime('%Y-%m-%d'), # FMTDT12HM
+            ntd.start_datetime.strftime('%I:%M %p'),
+            f'{str_td(ntd.duration)}')               # span (HH:MM)
 
 FUNCS = {
     ( True, False, False): _get_dfmttd_at100,

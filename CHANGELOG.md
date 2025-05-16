@@ -28,6 +28,7 @@
 # Details
 
 ## Unreleased
+* ADDED start time to `report` stdout
 
 ## Release 2025-05-16 v0.5a6
 * ADDED `trk project` option, `--exists` to mark which projects exist

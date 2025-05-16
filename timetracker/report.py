@@ -4,7 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 
-FMT_STDOUT = '{Day:3}  {Date:10}  {Span:5}  {Total:>7}  {Description}'
+FMT_STDOUT = '{Day:3}  {Date:10}  {Start:8}  {Span:5}  {Total:>7}  {Description}'
 
 def prt_basic(timefmtd):
     """Prints a basic time report to stdout"""

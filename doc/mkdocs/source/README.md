@@ -17,7 +17,6 @@ Time is saved in
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/doc/mkdocs/source/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
-<<<<<<< HEAD
 ## Contents
 * [Quickstart](installation.md)
 * [Overview](overview.md)

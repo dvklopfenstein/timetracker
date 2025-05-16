@@ -27,6 +27,9 @@
 # Details
 
 ## Unreleased
+* ADDED `trk project` option, `--exists` to mark which projects exist
+* ADDED `trk project` option, `--rm-missing` to
+         remove projects that do not exist from the list in the global config
 
 ## Release 2025-05-15 v0.5a5
 * ADDED Add functions (and tests) to get local project csvs

@@ -49,7 +49,7 @@ class Cfg:
             self.set_cfg_global(fcfg_global, dirhome)
         return self.cfg_glb.get_projects()
 
-    def set_cfg_global(self, fcfg_global, dirhome=None):
+    def set_cfg_global(self, fcfg_global=None, dirhome=None):
         """Create and set `cfg_glb` with a CfgGlobal object"""
         fcfg_doc = get_value(get_docproj(self.cfg_loc.filename), 'global_config', 'filename')
         self.cfg_glb = get_cfgglobal(fcfg_global, dirhome, fcfg_doc)

@@ -13,7 +13,6 @@ from timetracker.cfg.cfg import Cfg
 
 def cli_run_projects(fnamecfg, args):
     """Stop the timer and record this time unit"""
-    print(f'ARGS: {args}')
     cfg = Cfg(fnamecfg)
     cfg.set_cfg_global()
     run_projects(cfg, args.exists, args.rm_missing)

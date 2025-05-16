@@ -39,6 +39,8 @@ def prtmsg_started01(startobj):
     dtstart = startobj.read_starttime()
     if dtstart:
         _prtmsg_started01(startobj, dtstart)
+    else:
+        print(str_tostart())
 
 def _prtmsg_started01(startobj, dtstart):
     hms = startobj.hms_from_startfile(dtstart)

@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-05-16 v0.5a6**](#release-2025-05-16-v05a6) Add options to `projects` command; Fix `report` command
 * [**Release 2025-05-15 v0.5a5**](#release-2025-05-15-v05a5) Report command tested and updated; Get csv files for a single user tested and implemented
 * **Release 2025-05-14 v0.5a4** Optimized getting csv files to report locally or globally for a single user
 * **Release 2025-05-08 v0.5a3** Add all timetracker packages
@@ -27,6 +28,12 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-05-16 v0.5a6
+* ADDED `trk project` option, `--exists` to mark which projects exist
+* ADDED `trk project` option, `--rm-missing` to
+         remove projects that do not exist from the list in the global config
+* FIXED `trk report` by removing an obsolete param
 
 ## Release 2025-05-15 v0.5a5
 * ADDED Add functions (and tests) to get local project csvs

@@ -21,7 +21,7 @@ def cli_run_report(fcfgproj, args):
     """Report all time units"""
     ##if args.input is None:
     cfgproj = CfgProj(fcfgproj)
-    run_report_cli(cfgproj, args.name, pnum=args.product)
+    run_report_cli(cfgproj, args.name)
     ##elif len(args.input) == 1:
     ##    _run_io(args.input[0], args.output, pnum=args.product)
     ##else:
@@ -38,25 +38,25 @@ def cli_run_report(fcfgproj, args):
     ##    fout=args.output,
     ##)
 
-def run_report_cli(cfgproj, username, pnum=None, fout_docx=None, dirhome=None):
+def run_report_cli(cfgproj, username, fout_docx=None, dirhome=None):
     """Report all time units"""
     debug(yellow('RUNNING COMMAND REPORT'))
     if (docproj := get_docproj(cfgproj.filename)):
         fcsv = docproj.get_filename_csv(username, dirhome)
-        ntcsv = run_report(fcsv, fout_docx, pnum) if fcsv is not None else None
+        ntcsv = run_report(fcsv, fout_docx) if fcsv is not None else None
         if ntcsv.results is None:
             no_csv(fcsv, cfgproj, username)
         return ntcsv
     print(str_init(cfgproj.filename))
     return None
 
-def run_report(fcsv, fout_docx, pnum):
+def run_report(fcsv, fout_docx):
     """Run input output"""
     chk_n_convert(fcsv)
     ocsv = CsvFile(fcsv)
     ntcsv = ocsv.get_ntdata()
     if ntcsv.results:
-        timefmtd = get_data_formatted(ntcsv.results, pnum)
+        timefmtd = get_data_formatted(ntcsv.results)
         prt_basic(timefmtd)
         if fout_docx:
             doc = WordDoc(timefmtd)

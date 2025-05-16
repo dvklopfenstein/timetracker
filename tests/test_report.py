@@ -11,6 +11,7 @@ from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
 from timetracker.cmd.none import run_none
+from timetracker.epoch.text import get_data_formatted
 from tests.pkgtttest.runprojs import RunProjs
 from tests.pkgtttest.runfncs import get_cfgproj
 
@@ -33,10 +34,14 @@ def test_report():
         orun.run_setup()
         for (uname, proj), pobj in orun.prj2mgrprj.items():
             print(yellow(f'\nUNAME({uname}) PROJECT({proj})'))
-            ntcsv = run_report_cli(pobj.cfg.cfg_loc, uname, pnum=None, dirhome=orun.dirhome)
+            ntcsv = run_report_cli(pobj.cfg.cfg_loc, uname, dirhome=orun.dirhome)
             assert ntcsv.error is None
             assert len(ntcsv.results) == 5
-            # test content
+            # test pnum
+            for ntd in get_data_formatted(ntcsv.results):
+                assert 'Sum' not in ntd._fields
+            for ntd in get_data_formatted(ntcsv.results, pnum=True):
+                assert 'Sum' in ntd._fields
 
 def test_report_nocsv(username='rando'):
     """Test the report command when there is no csv"""
@@ -79,7 +84,7 @@ class RunTest:
 
     def run_report(self):
         """Run `run_report`"""
-        return run_report_cli(self.cfgproj, self.username, pnum=None, dirhome=self.tmproot)
+        return run_report_cli(self.cfgproj, self.username, dirhome=self.tmproot)
 
     def start_x2(self):
         """Run `trk start` twice"""
@@ -103,4 +108,4 @@ class RunTest:
 
 if __name__ == '__main__':
     test_report()
-    #test_report_nocsv()
+    test_report_nocsv()

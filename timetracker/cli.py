@@ -248,14 +248,6 @@ class Cli:
         parser = subparsers.add_parser(name='report',
             help='Generate an report for all time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        ##parser.add_argument('-i', '--input', metavar='file.csv', nargs='*',
-        ##    help='Specify an input csv file')
-        ##parser.add_argument('-o', '--output', metavar='file.docx',
-        ##    help='Specify an output file')
-        ##parser.add_argument('-p', '--product', type=float,
-        ##    help=SUPPRESS)  # Future feature
-        ##parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
-        ##    help='Use specified file as the global config file')
         return parser
 
     def _add_subparser_tag(self, subparsers):
@@ -282,10 +274,10 @@ class Cli:
         parser = subparsers.add_parser(name='projects',
             help='Show all projects and the locations of their csv files',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-g', '--global', action='store_true',
-            help='List all projects listed managed in the global config file')
-        parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
-            help='Use specified file as the global config file')
+        parser.add_argument('-e', '--exists', action='store_true',
+            help='Add text indicating if the project exists')
+        parser.add_argument('--rm-missing', action='store_true',
+            help='Removes projects from the global config that do not exist')
         return parser
 
     def _add_subparser_projectsupdate(self, subparsers):

@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-05-18 v0.5a7**](#release-2025-05-18-v05a7) Add starttime to `report`; Bug fix in `cancel`
 * [**Release 2025-05-16 v0.5a6**](#release-2025-05-16-v05a6) Add options to `projects` command; Fix `report` command
 * [**Release 2025-05-15 v0.5a5**](#release-2025-05-15-v05a5) Report command tested and updated; Get csv files for a single user tested and implemented
 * **Release 2025-05-14 v0.5a4** Optimized getting csv files to report locally or globally for a single user
@@ -28,6 +29,10 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-05-18 v0.5a7
+* ADDED start time to `report` stdout
+* FIXED incorrect param order in `cancel`
 
 ## Release 2025-05-16 v0.5a6
 * ADDED `trk project` option, `--exists` to mark which projects exist

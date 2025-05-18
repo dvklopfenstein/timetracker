@@ -246,7 +246,7 @@ class Cli:
 
     def _add_subparser_report(self, subparsers):
         parser = subparsers.add_parser(name='report',
-            help='Generate an report for all time units and include cumulative time',
+            help='Generate a project report for time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
         return parser
 

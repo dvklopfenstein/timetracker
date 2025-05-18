@@ -25,7 +25,7 @@ def run_cancel(cfgproj, name=None):
     debug(yellow('RUNNING COMMAND CANCEL'))
     start_obj = cfgproj.get_starttime_obj(name)
     if start_obj and exists(start_obj.filename):
-        prt_elapsed(f'{str_cancelled1()}; was', start_obj)
+        prt_elapsed(start_obj, f'{str_cancelled1()}; was')
         remove(start_obj.filename)
         return start_obj.filename
     print(str_not_running())

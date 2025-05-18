@@ -10,10 +10,7 @@ class UserProjects:
 
     def __init__(self, userprojs):
         self.userprojs = userprojs
-
-    def get_users(self):
-        """Get the set of all users"""
-        return set(usr for (usr, prj) in self.userprojs)
+        self.usernames = self.__init_users()
 
     def get_projects(self):
         """Get the set of all users"""
@@ -41,3 +38,7 @@ class UserProjects:
             for prj in projects:
                 cfgs.add(join(dirhome, usr, 'proj', prj, '.timetracker/config'))
         return cfgs
+
+    def __init_users(self):
+        """Get the set of all users"""
+        return sorted(set(usr for (usr, prj) in self.userprojs))

@@ -126,6 +126,11 @@ def get_files(basedir):
             files_all.append(join(root, file))
     return files_all
 
+def prt_files(basedir):
+    """Print files in basedir and below"""
+    for fname in get_files(basedir):
+        print(fname)
+
 def get_type2files(basedir):
     """Recursively walk dirs to get files & group by type (config, csv)"""
     type2files = defaultdict(set)

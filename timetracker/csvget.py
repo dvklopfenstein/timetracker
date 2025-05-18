@@ -28,6 +28,8 @@ def get_csv_proj_uname(docproj, username, dirhome=None):
 def get_csvs_global_uname(projects, username, dirhome=None):
     """Get csvs in projects listed in a global config file for a specific user"""
     ret = []
+    if not projects:
+        return ret
     for _, fcfgproj in projects:
         if (ntcsv := get_csv_local_uname(fcfgproj, username, dirhome)) is not None:
             ret.append(NTCFG(fcfgproj=fcfgproj, ntcsv=ntcsv))

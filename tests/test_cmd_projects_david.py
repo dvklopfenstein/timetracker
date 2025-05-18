@@ -46,6 +46,8 @@ def test_cmd_projects():
         runprojs.run_setup()
         runprojs.prt_userfiles()
         runprojs.chk_proj_configs(exp_projs)
+        runprojs.push()
+        runprojs.upstream.prt_files()
 
         prt = True
         _test_get_csv_local_uname(runprojs.prj2mgrprj, prt)

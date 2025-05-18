@@ -2,6 +2,8 @@
 """Create and manage a set of user timetracker projects"""
 
 from os.path import join
+from os.path import dirname
+from os.path import relpath
 from logging import basicConfig
 from logging import DEBUG
 from collections import namedtuple
@@ -19,7 +21,9 @@ from tests.pkgtttest.consts import SEP1
 from tests.pkgtttest.consts import SEP3
 from tests.pkgtttest.runfncs import proj_setup
 from tests.pkgtttest.userprojs import UserProjects
+from tests.pkgtttest.upstream import Upstream
 from tests.pkgtttest.mkprojs import get_type2files
+from tests.pkgtttest.mkprojs import get_files
 from tests.pkgtttest.mkprojs import prt_files
 from tests.pkgtttest.dts import get_iter_weekday
 from tests.pkgtttest.dts import td2hours
@@ -36,6 +40,16 @@ class RunProjs:
         ####self.cfg_global = get_cfgglobal(fcfg_explicit, self.dirhome, fcfg_doc)
         ####self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
         self.prj2mgrprj = {(usr,prj):MngUsrProj(self.dirhome, usr, prj) for usr, prj in userprojs}
+        self.upstream = Upstream(join(self.tmproot, 'upstream'))
+
+    def push(self):
+        """Simulate a git-like push"""
+        for (_, prj), obj in self.prj2mgrprj.items():
+            dirproj = dirname(dirname(obj.cfg.cfg_loc.filename))
+            files = get_files(dirproj)
+            for absfname in files:
+                relfname = relpath(absfname, dirproj)
+                self.upstream.push(prj, absfname, relfname)
 
     def prt_userfiles(self):
         """Print files for each username"""

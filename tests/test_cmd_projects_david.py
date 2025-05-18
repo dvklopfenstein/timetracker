@@ -50,14 +50,11 @@ def test_cmd_projects():
         ['hunting',     'lions/proj/hunting/.timetracker/config'],
         ['scavenging',  'jackels/proj/scavenging/.timetracker/config'],
     ]
-    orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
         # Initialize all projects for all usernames
         basicConfig()
-        fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
-        environ['TIMETRACKERCONF'] = fglb
 
-        runprojs = RunProjs(tmproot, userprojs, fglb)
+        runprojs = RunProjs(tmproot, userprojs)
         runprojs.run_setup()
         runprojs.chk_projects(exp_projs)
 
@@ -74,8 +71,6 @@ def test_cmd_projects():
         print(yellow('Print hours across projects globally'))
         print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runprojs.cfg, 'lambs', dirhome=tmproot))
 
-        #print(yellow('Print hours across projects globally'))
-        reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
 #def _test_run_hours_local_uname(runprojs, runprojs.dirhome):
 

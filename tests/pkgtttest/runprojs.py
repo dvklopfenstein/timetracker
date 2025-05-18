@@ -7,9 +7,7 @@ from logging import DEBUG
 from collections import namedtuple
 from timetracker.ntcsv import get_ntcsv
 from timetracker.utils import yellow
-from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.doc_local import get_docproj
-#from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.docutils import get_value
 from timetracker.cmd.init import run_init
@@ -21,7 +19,8 @@ from tests.pkgtttest.consts import SEP1
 from tests.pkgtttest.consts import SEP3
 from tests.pkgtttest.runfncs import proj_setup
 from tests.pkgtttest.userprojs import UserProjects
-from tests.pkgtttest.mkprojs import prt_type2files
+from tests.pkgtttest.mkprojs import get_type2files
+from tests.pkgtttest.mkprojs import prt_files
 from tests.pkgtttest.dts import get_iter_weekday
 from tests.pkgtttest.dts import td2hours
 from tests.pkgtttest.dts import I1266 as DT2525
@@ -30,15 +29,20 @@ from tests.pkgtttest.dts import I1266 as DT2525
 class RunProjs:
     """Manage all users and their projects"""
 
-    ##def __init__(self, tmproot, userprojs, fcfg_global=None):
-    def __init__(self, tmproot, userprojs, fcfg_explicit=None, fcfg_doc=None):
+    def __init__(self, tmproot, userprojs):
         self.tmproot = tmproot
         self.dirhome = join(tmproot, 'home')
         self.ups = UserProjects(userprojs)
-        ##self.cfg_global = CfgGlobal(fcfg_global)
-        self.cfg_global = get_cfgglobal(fcfg_explicit, self.dirhome, fcfg_doc)
-        self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
-        self.prj2mgrprj = {e:MngUsrProj(self.dirhome, self.cfg_global, *e) for e in userprojs}
+        ####self.cfg_global = get_cfgglobal(fcfg_explicit, self.dirhome, fcfg_doc)
+        ####self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
+        self.prj2mgrprj = {(usr,prj):MngUsrProj(self.dirhome, usr, prj) for usr, prj in userprojs}
+
+    def prt_userfiles(self):
+        """Print files for each username"""
+        for uname in self.ups.usernames:
+            print(f'FILES FOR USERNAME: {uname}:')
+            userhome = join(self.dirhome, uname)
+            prt_files(userhome)
 
     def get_user2glbcfg(self):
         """For each username, get their one global config file"""
@@ -46,7 +50,7 @@ class RunProjs:
         for (usr, _), obj in self.prj2mgrprj.items():
             docproj = get_docproj(obj.fcfgproj)
             fcfg_doc = get_value(docproj, 'global_config', 'filename')
-            cfg_glb = get_cfgglobal(dirhome=self.dirhome, fcfg_doc=fcfg_doc)
+            cfg_glb = get_cfgglobal(dirhome=obj.home, fcfg_doc=fcfg_doc)
             assert cfg_glb is not None
             if usr not in user2glbcfg:
                 user2glbcfg[usr] = cfg_glb
@@ -58,11 +62,9 @@ class RunProjs:
         """Initialize and fill timeslots for multiple users and projects"""
         print(yellow(f"{SEP1}`run_init` on each project"))
         basicConfig(level=DEBUG)
-        prt_type2files(self.tmproot)
 
         print(yellow('`run_start` and `run_stop` to fill each researcher & project'))
         self._run_start_stop_all()
-        prt_type2files(self.tmproot)
 
         print(yellow('Check projects listed in CfgGlobal'))
 
@@ -72,12 +74,12 @@ class RunProjs:
             mgrprj = self.prj2mgrprj[usrprj]
             mgrprj.add_timeslots(times)
 
-    def chk_projects(self, exp_projects):
+    def chk_proj_configs(self, exp_fcfgprojs):
         """Check the projects"""
-        act_projs = self.cfg_global.get_projects()
-        home = self.dirhome
-        exp_projs = [[prj, join(home, rcfg)] for prj, rcfg in exp_projects]
-        assert act_projs == exp_projs, self._errmsg(act_projs, exp_projs)
+        type2files = get_type2files(self.tmproot)
+        exp_fcfgprojs = set(join(self.dirhome, f) for f in exp_fcfgprojs)
+        act_fcfgprojs = set(type2files['config'])
+        assert set(act_fcfgprojs) == set(exp_fcfgprojs), self._errmsg(act_fcfgprojs, exp_fcfgprojs)
 
     def run_hoursprojs(self):
         """print hours, iterating through all users & their projects"""
@@ -87,7 +89,7 @@ class RunProjs:
 
             print(f'{SEP3}run_setup: run_hours project({usrprj[0]}) username({usrprj[1]})')
             # run_hours nt: RdCsvs: results errors ntcsvs
-            run1 = run_hours(self.cfg, usr, dirhome=mgrprj.home)
+            run1 = run_hours(mgrprj.cfg, usr, dirhome=mgrprj.home)
             assert td2hours(run1.results) == self._get_total_hours(usr), (
                 f'ACT({td2hours(run1.results)}) != EXP({self._get_total_hours(usr)}) '
                 f'project({usrprj[0]}) username({usrprj[1]})')
@@ -102,13 +104,13 @@ class RunProjs:
         return sum(e for (u, _), (_, e) in self.ups.userprojs.items() if u == usr)
 
     @staticmethod
-    def _errmsg(act_projs, exp_projs):
+    def _errmsg(act_fcfgprojs, exp_fcfgprojs):
         txt = ['\nEXP:',]
-        for prj, fcfg in exp_projs:
-            txt.append(f'  {prj:14} {fcfg}')
+        for fcfg in sorted(exp_fcfgprojs):
+            txt.append(f'  {fcfg}')
         txt.append('\nACT:',)
-        for prj, fcfg in act_projs:
-            txt.append(f'  {prj:14} {fcfg}')
+        for fcfg in sorted(act_fcfgprojs):
+            txt.append(f'  {fcfg}')
         return '\n'.join(txt)
 
 
@@ -117,18 +119,18 @@ class MngUsrProj:
     """Manage one user and the project"""
 
     # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
-    def __init__(self, tmproot, cfg_global, user, projname, dircsv=None):
-        self.cfg_global = cfg_global
+    def __init__(self, tmproot, user, projname, dircsv=None):
         self.home = join(tmproot, user)
         self.user = user
         self.projname = projname
+        self.cfg_global = get_cfgglobal(None, self.home, fcfg_doc=None)
         ##print(f'\nMngUsrProj({self.home:29}, {user:7}, {projname})')
         self.fcfgproj, _, self.exp = proj_setup(self.home, projname, dircur='dirproj')
         self.cfg = run_init(self.fcfgproj,
             dircsv=dircsv,
             project=self.projname,
             dirhome=self.home,
-            cfg_global=cfg_global,
+            cfg_global=self.cfg_global,
             quiet=True)
 
     def get_args_hours(self):

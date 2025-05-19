@@ -42,8 +42,8 @@ class RunProjs:
         self.prj2mgrprj = {(usr,prj):MngUsrProj(self.dirhome, usr, prj) for usr, prj in userprojs}
         self.upstream = Upstream(join(self.tmproot, 'upstream'))
 
-    def push(self):
-        """Simulate a git-like push"""
+    def all_push(self):
+        """simulate a git-like push"""
         for (_, prj), obj in self.prj2mgrprj.items():
             dirproj = dirname(dirname(obj.cfg.cfg_loc.filename))
             files = get_files(dirproj)
@@ -51,8 +51,15 @@ class RunProjs:
                 relfname = relpath(absfname, dirproj)
                 self.upstream.push(prj, absfname, relfname)
 
+    def all_pull(self):
+        """simulate a git-like pull"""
+        for (_, prj), obj in self.prj2mgrprj.items():
+            dirproj = dirname(dirname(obj.cfg.cfg_loc.filename))
+            self.upstream.pull(prj, dirproj)
+
     def prt_userfiles(self):
         """Print files for each username"""
+        print('\nFILES FOR ALL USERNAMES:')
         for uname in self.ups.usernames:
             print(f'FILES FOR USERNAME: {uname}:')
             userhome = join(self.dirhome, uname)

@@ -1,6 +1,8 @@
 """Mock Upstream git-like object"""
 
 from os import makedirs
+from os.path import exists
+from os.path import relpath
 from os.path import join
 from os.path import dirname
 from shutil import copy
@@ -15,6 +17,28 @@ class Upstream:
         makedirs(dirupstream, exist_ok=True)
         #self.nto = namedtuple('NtFile'
         self.proj2obj = {}
+
+    def prt_files(self):
+        """Print the files in upstream"""
+        files = get_files(self.dirupstream)
+        print(f'\nFILES[{len(files)}] IN UPSTREAM {self.dirupstream}:')
+        for fname in files:
+            print(fname)
+
+    def pull(self, project, diruser):
+        """Mimic a git 'pull' for a file"""
+        if project not in self.proj2obj:
+            return
+        updir = self._get_project_dir(project)
+        files = get_files(updir)
+        for repo_absfilename in files:
+            repo_relfilename = relpath(repo_absfilename, updir)
+            user_absfilename = join(diruser, repo_relfilename)
+            if not exists(user_absfilename):
+                makedirs(dirname(user_absfilename), exist_ok=True)
+                copy(repo_absfilename, user_absfilename)
+            else:
+                assert cmp(repo_absfilename, user_absfilename)
 
     def push(self, project, absfilename, relfilename):
         """Add/update and upstream project and 'push' a file"""
@@ -39,9 +63,5 @@ class Upstream:
     def _get_fname_upstream(self, project, relfilename):
         return join(self.dirupstream, project, relfilename)
 
-    def prt_files(self):
-        """Print the files in upstream"""
-        files = get_files(self.dirupstream)
-        print(f'FILES[{len(files)}] IN UPSTREAM {self.dirupstream}:')
-        for fname in files:
-            print(fname)
+    def _get_project_dir(self, project):
+        return join(self.dirupstream, project)

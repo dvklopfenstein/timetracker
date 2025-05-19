@@ -57,9 +57,9 @@ class RunProjs:
             dirproj = dirname(dirname(obj.cfg.cfg_loc.filename))
             self.upstream.pull(prj, dirproj)
 
-    def prt_userfiles(self):
+    def prt_userfiles(self, msg='FILES FOR ALL USERNAMES'):
         """Print files for each username"""
-        print('\nFILES FOR ALL USERNAMES:')
+        print(f'\n{msg}:')
         for uname in self.ups.usernames:
             print(f'FILES FOR USERNAME: {uname}:')
             userhome = join(self.dirhome, uname)

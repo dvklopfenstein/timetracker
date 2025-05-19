@@ -9,6 +9,7 @@ from timetracker.utils import yellow
 #from timetracker.cmd.hours import run_hours
 from timetracker.csvget import get_csv_local_uname
 from timetracker.csvget import get_csvs_global_uname
+from timetracker.csvget import get_csvs_local_all
 from tests.pkgtttest.runprojs import RunProjs
 from tests.pkgtttest.mkprojs import get_projectname
 
@@ -77,6 +78,8 @@ def test_cmd_projects(prt=True):
         _test_get_csv_local_uname(runprojs.prj2mgrprj, prt)
         # Find csvs for one user in all projects
         _test_get_csvs_global_uname(runprojs.get_user2glbcfg(), runprojs.dirhome, prt)
+        # Find csv for one user in one project
+        _test_get_csvs_local_all(runprojs.prj2mgrprj, prt)
 
         #_test_run_hours_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
         #print(yellow('Print hours, iterating through all users & their projects'))
@@ -127,6 +130,26 @@ def _test_get_csv_local_uname(prj2mgrprj, prt=False):
             assert ntd.project == get_projectname(obj.fcfgproj)
             assert ntd.project == proj
             assert ntd.fcsv == exp_fcsv, f'fcsv: ACT != EXP\nACT({ntd.fcsv})\nEXP({exp_fcsv})'
+
+def _test_get_csvs_local_all(prj2mgrprj, prt=False):
+    """TEST get_csv_local_uname(...)"""
+    print(yellow('\nTEST get_csvs_local_all(...)'))
+    for (user, proj), obj in prj2mgrprj.items():
+        nts = get_csvs_local_all(obj.fcfgproj, obj.home)
+        if nts is not None:
+            for ntd in nts:
+                if prt:
+                    print(f'{user:7} {proj} {ntd}')
+            print('')
+        #        print(f'TEST {user}: get_csv_local_uname({obj.fcfgproj}, {user}, {obj.home})')
+        #        print(f'{ntd}\n')
+        #    assert exists(ntd.fcsv)
+        #    exp_fcsv = join(obj.fcfgproj.replace('.timetracker/config', ''),
+        #                    f'timetracker_{ntd.project}_{user}.csv')
+        #    assert ntd.username == user
+        #    assert ntd.project == get_projectname(obj.fcfgproj)
+        #    assert ntd.project == proj
+        #    assert ntd.fcsv == exp_fcsv, f'fcsv: ACT != EXP\nACT({ntd.fcsv})\nEXP({exp_fcsv})'
 
 
 if __name__ == '__main__':

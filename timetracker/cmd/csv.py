@@ -62,8 +62,6 @@ def _get_csvs_global_uname(cfg, uname, dirhome=None):
     assert cfg
     assert uname
     assert dirhome
-    #res = get_ntcsvproj01(cfg.cfg_loc.filename, uname, dirhome)
-    #assert res
 
 #def _run_csvlocate_test(fnamecfg, dircsv, project, dirhome):
 #    """Initialize timetracking on a test project"""

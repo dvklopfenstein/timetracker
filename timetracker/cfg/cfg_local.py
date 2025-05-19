@@ -28,7 +28,6 @@ from timetracker.consts import DIRTRK
 from timetracker.consts import DIRCSV
 
 from timetracker.starttime import Starttime
-from timetracker.utils import pink
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
 from timetracker.cfg.utils import get_username
@@ -47,7 +46,7 @@ class CfgProj:
         assert filename is not None
         self.filename = filename
         self.exists = exists(self.filename)
-        debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
+        debug('CfgProj args %d filename %s', exists(filename), filename)
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
@@ -93,7 +92,7 @@ class CfgProj:
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
         """Write a new config file"""
         fname = self.get_filename_cfg()
-        debug(f'CfgProj wr_ini_file {fname}')
+        debug('CfgProj wr_ini_file %s', fname)
         assert not exists(fname)
         #if exists(fname):
         #    return
@@ -164,11 +163,11 @@ class CfgProj:
         # Use `~`, if it makes the path shorter
         ##fcsv = replace_homepath(doc['csv']['filename'])
         ##doc['csv']['filename'] = fcsv
-        debug(pink(f'CfgProj _wr_cfg(...)  PROJ:     {doc["project"]}'))
-        debug(pink(f"CfgProj _wr_cfg(...)  CSV:      {doc['csv']['filename']}"))
-        debug(pink("CfgProj _wr_cfg(...)  GLOBAL    "
-            f"{doc['global_config']['filename'] if 'global_config' in doc else 'NONE'}"))
-        debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
+        debug('CfgProj _wr_cfg(...)  PROJ:     %s', doc["project"])
+        debug("CfgProj _wr_cfg(...)  CSV:      %s", doc['csv']['filename'])
+        debug("CfgProj _wr_cfg(...)  GLOBAL    %s",
+              doc['global_config']['filename'] if 'global_config' in doc else 'NONE')
+        debug('CfgProj _wr_cfg(...)  WROTE:    %s', fname)
 
     def _rd_doc(self):
         """Read a config file and load it into a TOML document"""
@@ -199,7 +198,7 @@ class CfgProj:
     def _get_new_doc(self, project, dircsv):
         assert project is not None and isinstance(project, str)
         #assert dircsv
-        debug(f'TODO: dircsv={dircsv}')
+        debug('TODO: dircsv=%s', dircsv)
         doc = document()
         doc.add(comment("TimeTracker project configuration file"))
         doc.add(nl())
@@ -220,12 +219,12 @@ class CfgProj:
             self._add_doc_globalcfgfname(doc, fcfg_global)
         elif 'filename' in doc['global_config']:
             if (cur := doc['global_config']['filename']) != fcfg_global:
-                debug(pink(f'CfgProj WAS (fcfg_global={cur})'))
+                debug('CfgProj WAS (fcfg_global=%s', cur)
                 doc['global_config']['filename'] = fcfg_global
-                debug(pink(f'CfgProj NOW (fcfg_global={fcfg_global})'))
+                debug('CfgProj NOW (fcfg_global=%s', fcfg_global)
         else:
             doc['global_config']['filename'] = fcfg_global
-            debug(pink(f'CfgProj SET (fcfg_global={fcfg_global})'))
+            debug('CfgProj SET (fcfg_global=%s)', fcfg_global)
 
     @staticmethod
     def _add_doc_globalcfgfname(doc, fcfg_global):
@@ -235,7 +234,7 @@ class CfgProj:
         #csvdir.comment("Directory where the csv file is stored")
         section.add("filename", fcfg_global)
         doc.add("global_config", section)
-        debug(pink(f'CfgProj _add_doc_globalcfgfname(fcfg_global={fcfg_global})'))
+        debug('CfgProj _add_doc_globalcfgfname(fcfg_global=%s)', fcfg_global)
 
     #-------------------------------------------------------------
     def get_desc(self, note=' set'):

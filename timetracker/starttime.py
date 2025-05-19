@@ -14,7 +14,6 @@ from datetime import datetime
 from datetime import timedelta
 from logging import debug
 
-from timetracker.utils import orange
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
 from timetracker.consts import FMTDT_H
@@ -33,23 +32,24 @@ class Starttime:
         self.project = basename(dirname(self.dircfg)) if project is None else project
         self.name = get_username(name) if name is None else name
         self.filename = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        debug(orange(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}'))
-        debug(f'Starttime args . project  {project}')
-        debug(f'Starttime args . name     {name}')
-        debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
+        debug('Starttime args %d dircfg %s', exists(dircfg), dircfg)
+        debug('Starttime args . project  %s', project)
+        debug('Starttime args . name     %s', name)
+        debug('Starttime var  %d name     %s', exists(self.filename), self.filename)
 
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
         if starttime is not None:
             with open(self.filename, 'w', encoding='utf8') as prt:
-                prt.write(f'{starttime.strftime(FMTDT)}')
+                ststr = starttime.strftime(FMTDT)
+                prt.write(f'{ststr}')
                 if activity:
                     prt.write(f'\nAC {activity}')
                 if tags:
                     for tag in tags:
                         prt.write(f'\nTG {tag}')
-                debug(f'  WROTE START: {starttime.strftime(FMTDT)}')
-                debug(f'  WROTE FILE:  {self.filename}')
+                debug('  WROTE START: %s', ststr)
+                debug('  WROTE FILE:  %s', self.filename)
                 return
         raise RuntimeError("NOT WRITING START TIME; NO START TIME FOUND")
 

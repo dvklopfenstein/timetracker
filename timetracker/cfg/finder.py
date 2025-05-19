@@ -13,7 +13,6 @@ from os.path import basename
 from os.path import normpath
 from os.path import realpath
 from logging import debug
-from timetracker.utils import white
 from timetracker.consts import DIRTRK
 
 
@@ -23,7 +22,7 @@ class CfgFinder:
     def __init__(self, dircur, trksubdir=None):
         self.dircur = dircur
         self.trksubdir = trksubdir if trksubdir is not None else DIRTRK
-        debug(white(f'CfgFinder {self.dircur}=dircur {self.trksubdir}=trksubdir'))
+        debug('CfgFinder %s=dircur %s=trksubdir', self.dircur, self.trksubdir)
         # Existing directory (ex: ./timetracker) or None if dir not exist
         self.dirtrk = _get_abspathtrk(dircur, self.trksubdir)
         self.dirgit = _get_abspathtrk(dircur, '.git')
@@ -31,7 +30,6 @@ class CfgFinder:
         self.dirtrk_pathname = self._init_dirtrk()
         self.dirproj = dirname(self.dirtrk_pathname)
         self.project = self._init_project()
-        debug(white(self.get_desc()))
 
     def get_dirtrk(self):
         """Get the project tracking directory that is or will be tracked"""
@@ -98,7 +96,6 @@ class CfgFinder:
 
 def _get_abspathtrk(path, trksubdir):
     """Get .timetracker/ proj dir by searching up parent path"""
-    ##debug(f'CfgFinder path       {path}')
     trkabsdir, found = _finddirtrk(path, trksubdir)
     return trkabsdir if found else None
 
@@ -107,10 +104,8 @@ def _finddirtrk(path, trksubdir):
     path = abspath(path)
     trkdir = join(path, trksubdir)
     if exists(trkdir):
-        ##debug(f'CfgFinder path       {path}')
         return normpath(trkdir), True
     while not ismount(path):
-        ##debug(f'PATHWALK: {path}')
         trkdir = join(path, trksubdir)
         if exists(trkdir):
             return normpath(trkdir), True

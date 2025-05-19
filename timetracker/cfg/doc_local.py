@@ -11,6 +11,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import dirname
 from os.path import normpath
+from os.path import basename
 from collections import namedtuple
 from glob import glob
 from timetracker.cfg.utils import get_username
@@ -68,6 +69,19 @@ class DocProj:
         if (fcsvpat := self._get_csvfilename_proj(dirhome)) is not None:
             return glob(replace_envvar(fcsvpat, '*'))
         return None
+
+    def get_csv_username(self, fcsv):
+        """Using the csv pattern in the project config, determine the username"""
+        bname = basename(self.csv_filename)
+        pc0 = bname.find('$')
+        if pc0 == -1:
+            return None
+        pc1 = bname.rfind('$')
+        pf0 = fcsv.find(bname[:pc0])
+        if pf0 == -1 or pc1 == -1:
+            return None
+        pf1 = len(bname) - pc1 - 1
+        return fcsv[pc0+pf0:-pf1]
 
     def _init_cfg_values(self, doc):
         """Get the config values from the local config as written"""

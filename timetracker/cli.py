@@ -51,9 +51,9 @@ class Cli:
 
     def run(self):
         """Run timetracker"""
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN ARGS: {self.args}')
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {self.fcfg}')
+        debug('Cli RUNNNNNNNNNNNNNNNNNN ARGS:    %s', self.args)
+        debug('Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  %s', self.finder.get_dirtrk())
+        debug('Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: %s', self.fcfg)
         if self.args.command is not None:
             FNCS[self.args.command](self.fcfg, self.args)
         else:
@@ -61,20 +61,20 @@ class Cli:
 
     def _adjust_args(self, given_args):
         """Replace config default values with researcher-specified values"""
-        debug(f'ARGV: {sys_argv}')
+        debug('ARGV: %s', sys_argv)
         ret = []
         args = sys_argv[1:] if given_args is None else given_args
         optname = None
         for elem in args:
             if optname == '--at':
-                #debug(f' --at opt was({elem})')
+                #debug(' --at opt was(%s)', elem)
                 elem = self._adjust_opt_at(elem)
-                #debug(f' --at opt now({elem})')
+                #debug(' --at opt now(%s)', elem)
                 optname = None
             ret.append(elem)
             if elem == '--at':
                 optname = elem
-            #debug(f'ADJUST_ARGS>>({elem})')
+            #debug('ADJUST_ARGS>>(%s)', elem)
         return ret
 
     @staticmethod
@@ -86,7 +86,7 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        debug(f'TIMETRACKER ARGS: {args}')
+        debug('TIMETRACKER ARGS: %s', args)
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
@@ -100,7 +100,7 @@ class Cli:
         found = False
         for arg in sys_argv:
             if found:
-                debug(f'Cli FOUND: argv --trk-dir {arg}')
+                debug('Cli FOUND: argv --trk-dir %s', arg)
                 return arg
             if arg == '--trk-dir':
                 found = True
@@ -146,7 +146,6 @@ class Cli:
         #self._add_subparser_tag(subparsers)
         #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
-        #self._add_subparser_projectsupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -279,18 +278,6 @@ class Cli:
         parser.add_argument('--rm-missing', action='store_true',
             help='Removes projects from the global config that do not exist')
         return parser
-
-    def _add_subparser_projectsupdate(self, subparsers):
-        parser = subparsers.add_parser(name='csvupdate',
-            help='Update values in csv columns containing weekday, am/pm, and duration',
-            formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-f', '--force', action='store_true',
-            help='Over-write the csv indicated in the project `config` by `filename`')
-        parser.add_argument('-i', '--input', metavar='file.csv',
-            help='Specify an input csv file')
-        parser.add_argument('-o', '--output', metavar='file.csv',
-            default='updated.csv',
-            help='Specify an output csv file')
 
 
 if __name__ == '__main__':

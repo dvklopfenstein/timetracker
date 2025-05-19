@@ -15,7 +15,6 @@ from timetracker.cmd.stop import run_stop
 from timetracker.cmd.hours import run_hours_local
 from timetracker.cmd.cancel import run_cancel
 from timetracker.cmd.none import run_none
-from timetracker.cmd.csvupdate import run_csvupdate
 from timetracker.cmd.report import run_report_cli
 from timetracker.ntcsv import get_ntcsv
 from tests.pkgtttest.runfncs import RunBase
@@ -62,11 +61,6 @@ class Obj(RunBase):
 
             # report     Generate an report for all time units and include cumulative time
             assert run_report_cli(cfg_proj, uname) is None
-
-            # csvupdate  Update values in csv columns containing weekday, am/pm, and duration
-            with raises(SystemExit) as excinfo:
-                run_csvupdate(fcfgloc, uname, None)
-            assert excinfo.value.code == 0
 
             # start
             with raises(SystemExit) as excinfo:

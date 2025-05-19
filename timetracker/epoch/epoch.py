@@ -11,7 +11,6 @@ https://github.com/scrapinghub/dateparser
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from logging import debug
 from datetime import datetime
 from datetime import timedelta
 from pytimeparse2 import parse as pyt2_parse_secs
@@ -21,7 +20,6 @@ from timetracker.epoch.calc import RoundTime
 from timetracker.consts import FMTDT_H
 from timetracker.utils import white
 from timetracker.utils import yellow
-from timetracker.utils import cyan
 
 
 def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
@@ -72,12 +70,10 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     if dto is not None:
         return dto
     try:
-        debug(cyan(f'CCCCCCCCCCCCCC Using dateparser.parser({elapsed_or_dt}, default={defaultdt})'))
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
         dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
         if dto is None:
             print(f'warning: text({elapsed_or_dt}) could not be converted to a datetime object')
-        debug(f'dto({dto})')
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print('ERROR FROM', white('python-dateparser: '), yellow(f'{err}'))
@@ -87,9 +83,7 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
 def get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""
     if elapsed_or_dt.count(':') != 2:
-        debug(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
         secs = _conv_timedelta(elapsed_or_dt)
-        debug(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
         if secs is not None:
             return dta + timedelta(seconds=secs)
     return None

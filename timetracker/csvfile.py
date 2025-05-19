@@ -11,7 +11,6 @@ from logging import debug
 # https://docs.python.org/3/library/csv.html
 from csv import writer
 
-from timetracker.utils import orange
 from timetracker.csvutils import get_hdr_itr
 from timetracker.epoch.calc import dt_from_str
 from timetracker.epoch.calc import td_from_str
@@ -33,7 +32,7 @@ class CsvFile:
 
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
-        debug(orange(f'CsvFile: {int(exists(csvfilename))} csvfilename {csvfilename}'))
+        debug('CsvFile: %d csvfilename %s', exists(csvfilename), csvfilename)
 
     def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""

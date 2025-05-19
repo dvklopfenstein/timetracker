@@ -18,7 +18,6 @@ from subprocess import run
 from logging import debug
 from logging import warning
 from timetracker.consts import FILENAME_GLOBALCFG
-from timetracker.utils import yellow
 
 
 def get_abspath(fnam, dirproj, dirhome=None):
@@ -39,13 +38,11 @@ def get_relpath(absfilename, dirproj, dirhome=None):
         isabs(dirhome)
     absfilename = normpath(absfilename)
     if has_homedir(absfilename, dirproj):
-        #debug('HAS_PROJDIR')
         return relpath(absfilename, dirproj)
     rpth = relpath(absfilename, dirproj)
     diruser = expanduser('~') if dirhome is None else dirhome
     if has_homedir(absfilename, diruser):
         hpth = f'~/{absfilename[len(diruser)+1:]}'
-        #debug(f'EXAMINE HOMEDIR: {absfilename} {diruser} {hpth}')
         return rpth if len(rpth) < len(hpth) else hpth
     return rpth
 
@@ -73,14 +70,10 @@ def has_homedir(projdir, homedir):
     assert homedir == abspath(homedir)
     assert projdir == abspath(projdir)
     homedir = abspath(homedir)
-    ##debug(f'has_homedir      homedir {homedir}')
-    ##debug(f'has_homedir      projdir {projdir}')
     #if commonpath([homedir]) == commonpath([homedir, abspath(projdir)]):
     if homedir == commonprefix([homedir, abspath(projdir)]):
         # `projdir` is under `homedir`
-        ##debug('has_homedir  has_homedir True')
         return True
-    ##debug('has_homedir  has_homedir False')
     return False
 
 def replace_envvar(fpat, username):
@@ -91,10 +84,6 @@ def replace_envvar(fpat, username):
     ptb = fpat.find('$', pt1)
     envkey = fpat[pt1:ptb]
     envval = username if envkey == 'USER' else environ.get(envkey)
-    ##debug(f'CFG FNAME: {fpat}')
-    ##debug(f'CFG {pta}')
-    ##debug(f'CFG {ptb}')
-    ##debug(f'CFG ENV:   {envkey} = {envval}')
     return fpat[:pta] + envval + fpat[ptb+1:]
 
 def get_filename_abs(fname):
@@ -103,8 +92,8 @@ def get_filename_abs(fname):
 
 def chk_isdir(dname, prefix=''):
     """Check that a file or directory exists"""
-    debug(f'{prefix}: INFO exists({int(exists(dname))}) {dname}')
-    debug(f'{prefix}: INFO  isdir({int(isdir(dname))}) {dname}')
+    debug('%s: INFO exists(%s) %s', prefix, exists(dname), dname)
+    debug('%s: INFO  isdir(%s) %s', prefix, exists(dname), dname)
     if isdir(dname):
         return True
     warning(f'Directory does not exist: {dname}')
@@ -118,8 +107,8 @@ def replace_homepath(fname):
     fname = abspath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
-    debug(f'replace_homepath UPDATE FNAME: {fname}')
-    debug(f'replace_homepath UPDATE HOME:  {home_str}')
+    debug('replace_homepath UPDATE FNAME: %s', fname)
+    debug('replace_homepath UPDATE HOME:  %s', home_str)
     return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
 def get_dirhome(dirhome):
@@ -169,8 +158,9 @@ def splitall(path):
 
 def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None, msg='TBD'):
     """Get the home directory, where the global configuration will be stored"""
-    debug(yellow(f'get_filename_globalcfg(\n  {dirhome=},\n  {fcfg_cli=},\n  '
-                f'{fcfg_doc=},\n  {msg=})'))
+    debug('get_filename_globalcfg(\n  dirhome=%2,\n  fcfg_cli=%s,\n  '
+          'fcfg_doc=%s,\n  msg=%s)',
+          dirhome, fcfg_cli, fcfg_doc, msg)
     # TBD: REMOVE ASSERT
     if fcfg_doc is not None:
         assert '.timetracker' not in splitall(fcfg_doc), \

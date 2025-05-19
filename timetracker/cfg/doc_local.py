@@ -47,7 +47,6 @@ class DocProj:
         assert filename is not None
         self.dircfg  = normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
-        #debug(pink(f'DocProj args filename {filename}'))
         self.project, self.csv_filename, self.global_config_filename, self.errors = \
             self._init_cfg_values(doc)
         self.dircsv = dirname(self.csv_filename) if self.csv_filename else None
@@ -85,10 +84,7 @@ class DocProj:
 
     def _init_cfg_values(self, doc):
         """Get the config values from the local config as written"""
-        ####print(doc)
         project = get_ntvalue(doc, 'project')
-        ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV', project.value)
-        ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVERR', project.error)
         csv_filename = get_ntvalue(doc, 'csv', 'filename')
         global_config_filename = get_ntvalue(doc, 'global_config', 'filename')
         return project.value, \
@@ -167,11 +163,6 @@ class DocProj:
     #    # Use `~`, if it makes the path shorter
     #    ##fcsv = replace_homepath(doc['csv']['filename'])
     #    ##doc['csv']['filename'] = fcsv
-    #    debug(pink(f'CfgProj _wr_cfg(...)  PROJ:     {doc["project"]}'))
-    #    debug(pink(f"CfgProj _wr_cfg(...)  CSV:      {doc['csv']['filename']}"))
-    #    debug(pink("CfgProj _wr_cfg(...)  GLOBAL    "
-    #        f"{doc['global_config']['filename'] if 'global_config' in doc else 'NONE'}"))
-    #    debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
 
     #def _rd_doc(self):
     #    """Read a config file and load it into a TOML document"""
@@ -188,12 +179,9 @@ class DocProj:
     #        self._add_doc_globalcfgfname(doc, fcfg_global)
     #    elif 'filename' in doc['global_config']:
     #        if (cur := doc['global_config']['filename']) != fcfg_global:
-    #            debug(pink(f'CfgProj WAS (fcfg_global={cur})'))
     #            doc['global_config']['filename'] = fcfg_global
-    #            debug(pink(f'CfgProj NOW (fcfg_global={fcfg_global})'))
     #    else:
     #        doc['global_config']['filename'] = fcfg_global
-    #        debug(pink(f'CfgProj SET (fcfg_global={fcfg_global})'))
 
     #@staticmethod
     #def _add_doc_globalcfgfname(doc, fcfg_global):
@@ -203,7 +191,6 @@ class DocProj:
     #    #csvdir.comment("Directory where the csv file is stored")
     #    section.add("filename", fcfg_global)
     #    doc.add("global_config", section)
-    #    debug(pink(f'CfgProj _add_doc_globalcfgfname(fcfg_global={fcfg_global})'))
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

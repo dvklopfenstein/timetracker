@@ -3,14 +3,10 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-##from os import getcwd
-##from os import environ
 from os.path import isabs
 from os.path import isdir
 from os.path import exists
 from os.path import dirname
-##from os.path import expanduser
-##from os.path import basename
 from os.path import join
 from os.path import abspath
 from os.path import relpath
@@ -23,16 +19,10 @@ from tomlkit import nl
 from tomlkit import array
 from tomlkit.toml_file import TOMLFile
 
-##from timetracker.cfg.utils import replace_homepath
-####from timetracker.consts import FILENAME_GLOBALCFG
-from timetracker.utils import ltblue
-##from timetracker.cfg.utils import get_dirhome
 from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.tomutils import write_config
 from timetracker.cfg.utils import has_homedir
 from timetracker.cfg.utils import get_filename_globalcfg
-#from timetracker.cfg.utils import get_relpath_adj
-#from timetracker.consts import FILENAME_GLOBALCFG
 
 
 def get_cfgglobal(fcfg_explicit=None, dirhome=None, fcfg_doc=None):
@@ -47,7 +37,7 @@ class CfgGlobal:
 
     def __init__(self, filename):
         self.filename = filename
-        debug(ltblue(f'CfgGlobal CONFIG: exists({int(exists(filename))}) -- {filename}'))
+        debug('CfgGlobal CONFIG: exists(%d) -- %s', exists(filename), filename)
 
     def get_projects(self):
         """Get the projects managed by timetracker"""
@@ -71,7 +61,7 @@ class CfgGlobal:
     def wr_doc(self, doc):
         """Write a global cfg file"""
         TOMLFile(self.filename).write(doc)
-        debug(ltblue(f'  SSS WROTE: {self.filename}'))
+        debug('  WROTE: %s', self.filename)
 
     def wr_ini_project(self, project, fcfgproj, quiet=False):
         """Add a project if needed & write; return if not"""
@@ -92,7 +82,7 @@ class CfgGlobal:
 
     def reinit(self, project, fcfgproj):
         """Read the global config file & only change `project` & `csv.filename`"""
-        debug(ltblue(f'CfgGlobal({self.filename}).reinit: {project=} {fcfgproj=}'))
+        debug('CfgGlobal(%s).reinit: project=%s fcfgproj=%s', self.filename, project, fcfgproj)
         ntcfg = read_config(self.filename)
         doc = ntcfg.doc
         if doc and 'projects' in doc:
@@ -121,28 +111,26 @@ class CfgGlobal:
 
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
-        debug(ltblue(f'CfgGlobal _add_project({project}, {fcfgproj})'))
+        debug('CfgGlobal _add_project(%s, %s)', project, fcfgproj)
         assert isabs(fcfgproj), f'CfgGlobal._add_project(...) cfg NOT abspath: {fcfgproj}'
-        debug(ltblue(f'CfgGlobal {doc}'))
+        debug('CfgGlobal %s', doc)
         # If project is not already in global config
         if self._noproj(doc, project, fcfgproj):
-            debug(f'CfgGlobal add_line {project:15} {fcfgproj}')
+            debug('CfgGlobal add_line %15s %s', project, fcfgproj)
             doc['projects'].add_line((project, fcfgproj))
             return fcfgproj
-        # pylint: disable=unsubscriptable-object
-        ##debug(f"PROJECT {project} IN GLOBAL PROJECTS: {doc['projects'].as_string()}")
         return None
 
     def _noproj(self, doc, projnew, projcfgname):
         """Test if the project is missing from the global config file"""
         for projname, cfgname in doc['projects']:
-            debug(f'CfgGlobal {projname:15} {cfgname}')
+            debug('CfgGlobal %15s %s', projname, cfgname)
             if projname == projnew:
                 if cfgname == projcfgname:
                     # Project is already in the global config file
                     return False
-                debug(f'OLD cfgname: {cfgname}')
-                debug(f'NEW cfgname: {projcfgname}')
+                debug('OLD cfgname: %s', cfgname)
+                debug('NEW cfgname: %s', projcfgname)
                 return True
         # Project is not in global config file
         return True
@@ -154,7 +142,6 @@ class CfgGlobal:
         err = write_config(self.filename, doc)
         if err:
             print(f'WRITE ERROR {err}')
-        debug(ltblue(f'CfgGlobal WRINI({self.filename}): {doc["projects"]}'))
         return self.NTWRCFG(doc=doc, error=err)
 
     def _get_docprt(self, doc):
@@ -169,7 +156,7 @@ class CfgGlobal:
                 ##pdir = join('~', pdir)
                 pdir = join('~', relpath(abspath(projdir), dirhome))
                 doc_cur['projects'][idx] = [projname, pdir]
-                debug(f'CFGGLOBAL XXXXXXXXXXX {projname:20} {pdir}')
+                debug('CFGGLOBAL XXXXXXXXXXX %20s %s', projname, pdir)
         return doc_cur
 
     def _get_new_doc(self):

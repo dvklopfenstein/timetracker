@@ -7,11 +7,8 @@ __author__ = "DV Klopfenstein, PhD"
 from os.path import exists
 from collections import namedtuple
 from datetime import timedelta
-from logging import debug
 from logging import warning
 from csv import writer
-
-from timetracker.utils import orange
 from timetracker.csvutils import get_hdr_itr
 from timetracker.epoch.calc import dt_from_str
 
@@ -37,11 +34,9 @@ class CsvFile:
 
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
-        debug(orange(f'Starttime args {int(exists(self.fcsv))} self.fcsv {self.fcsv}'))
 
     def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
-        debug('get_ntdata')
         ret = []
         nto = namedtuple('TimeDataOrig', 'start_datetime duration activity message tags')
         with open(self.fcsv, encoding='utf8') as csvstrm:
@@ -106,7 +101,7 @@ class CsvFile:
         # https://stackoverflow.com/questions/46803405/python-timedelta-object-with-negative-values
         if delta.days < 0:
             row = ','.join(row)
-            warning(f'Warning: Ignoring negative time delta in {self.fcsv}[{rownum}]: {row}')
+            warning('Warning: Ignoring negative time delta in %s[%d]: %d', self.fcsv, rownum, row)
 
     def _chk_hdr(self, hdrs):
         """Check the file format"""

@@ -11,7 +11,6 @@ from timetracker.cfg.utils import get_shortest_name
 from timetracker.ntcsv import get_ntcsv
 from timetracker.epoch.epoch import get_dtz
 from timetracker.consts import FMTDT_H
-from timetracker.utils import yellow
 from timetracker.csvrun import wr_stopline
 from timetracker.cmd.common import get_cfg
 
@@ -28,14 +27,14 @@ def cli_run_stop(fnamecfg, args):
 def _run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('RUNNING COMMAND _STOP'))
+    debug('RUNNING COMMAND _STOP')
     cfg = get_cfg(fnamecfg)
     cfgproj = cfg.cfg_loc
     return run_stop(cfgproj, uname, csvfields, stop_at, **kwargs)
 
 def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
-    debug(yellow('RUNNING COMMAND STOP'))
+    debug('RUNNING COMMAND STOP')
     fcsv = cfgproj.get_filename_csv(uname, kwargs.get('dirhome'))
     # Get the elapsed time
     start_obj = cfgproj.get_starttime_obj(uname)
@@ -62,7 +61,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     delta = dtz - dta
 
     # Append the timetracker file with this time unit
-    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    debug('STOP: CSVFILE   exists(%d) %s', exists(fcsv), fcsv)
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
         return {'fcsv':fcsv, 'csvline':None}
@@ -79,7 +78,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
 
 def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     """Finish stopping"""
-    debug(yellow(f'STOP: CSVFILE   exists({int(exists(fcsv))}) {fcsv}'))
+    debug('STOP: CSVFILE   exists(%d) %s', exists(fcsv), fcsv)
     if not quiet:
         print('Timetracker stopped at: '
               f'{stoptime.strftime(FMTDT_H)}: '

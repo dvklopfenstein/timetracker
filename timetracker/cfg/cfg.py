@@ -12,11 +12,6 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
 from timetracker.cfg.docutils import get_value
 from timetracker.cfg.utils import get_filename_globalcfg
-from timetracker.utils import yellow
-#from timetracker.msgs import str_tostart
-#from timetracker.msgs import str_init
-#from timetracker.msgs import str_reinit
-#from timetracker.cmd.utils import run_strinit
 
 
 class Cfg:
@@ -26,22 +21,8 @@ class Cfg:
         # TBD: param cfgproj
         self.cfg_loc = CfgProj(fcfg_local)
         self.cfg_glb = cfg_global
-        debug(f'Cfg exists({int(exists(self.cfg_loc.filename))}) Cfg({self.cfg_loc.filename})')
-        #debug(f'Cfg exists({int(exists(self.cfg_glb.filename))}) Cfg({self.cfg_glb.filename})')
-
-    ##def needs_init(self, fcfg_global=None, dirhome=None):
-    ##    """Check for existance of both local and global config to see if init is needed"""
-    ##    fgcfg = get_cfgglobal(fcfg_global, dirhome, 'need').filename
-    ##    return not exists(self.cfg_loc.filename) or not exists(fgcfg)
-
-    ##    #if (exist_loc := exists(self.cfg_loc.filename)) and (exist_glb := exists(fgcfg)):
-    ##    #    return False
-    ##    #if not exist_loc:
-    ##    #    print(str_init(self.cfg_loc.filename))
-    ##    #elif not exist_glb:
-    ##    #    print(f'Global config, {fgcfg} not found')
-    ##    #    print(str_reinit())
-    ##    #return True
+        # pylint: disable=line-too-long
+        debug('Cfg exists(%d) Cfg(%s)', int(exists(self.cfg_loc.filename)), self.cfg_loc.filename)
 
     def get_projects(self, dirhome=None, fcfg_global=None):
         """Get a list of projects from the global config file"""
@@ -56,7 +37,8 @@ class Cfg:
 
     def needs_reinit(self, dircsv, project, fcfg_global, dirhome=None):
         """Check to see if CfgProj needs to be re-initialized"""
-        debug(yellow(f'Cfg.needs_reinit({dircsv=}, {project=}, {fcfg_global=}, {dirhome=})'))
+        debug('Cfg.needs_reinit(dircsv=%s, project=%s, fcfg_global=%s, dirhome=%s)',
+              dircsv, project, fcfg_global, dirhome)
         if dircsv is None and project is None and fcfg_global is None:
             return None
         docproj = get_docproj(self.cfg_loc.filename)
@@ -84,8 +66,8 @@ class Cfg:
 
     def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None, **kwargs):
         """Initialize a project, return CfgGlobal"""
-        debug(yellow(f'Cfg.init(project={project}, dirscv={dircsv}, '
-                     f'fcfg_global={fcfg_global}, dirhome={dirhome})'))
+        debug('Cfg.init(project=%s, dirscv=%s, fcfg_global=%s, dirhome=%s)',
+              project, dircsv, fcfg_global, dirhome)
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         assert project is not None
@@ -95,20 +77,18 @@ class Cfg:
             print(f'Initialized project directory: {self.cfg_loc.dircfg}')
         if self.cfg_glb is None:
             self.set_cfg_global(fcfg_global, dirhome)
-        debug(f'INIT CfgGlobal filename {self.cfg_glb.filename}')
+        debug('INIT CfgGlobal filename %s', self.cfg_glb.filename)
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename, quiet=quiet)
 
     def reinit(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
-        debug(yellow(f'Cfg.reinit(project={project}, dirscv={dircsv}, '
-                     f'fcfg_global={fcfg_global}, dirhome={dirhome})'))
+        debug('Cfg.init(project=%s, dirscv=%s, fcfg_global=%s, dirhome=%s)',
+              project, dircsv, fcfg_global, dirhome)
         assert self.cfg_loc is not None
 
         # pylint: disable=line-too-long
-        ##debug(yellow(f"Cfg._reinit fcfg_glb_cur={self._get_fcfg_glb(dirhome, fcfg_global, 'DEBUG reinit.cur')}"))
         self._reinit_loc_main(project, dircsv, fcfg_global, dirhome)
 
-        ##debug(yellow(f"Cfg._reinit fcfg_glb_new={self._get_fcfg_glb(dirhome, fcfg_global, 'DEBUG reinit.new')}"))
         self._reinit_glb_main(fcfg_global, dirhome, self.cfg_loc.filename)
 
     def _get_fcfg_glb(self, dirhome, fcfg_global, msg):
@@ -137,17 +117,13 @@ class Cfg:
         fcfg_glb = get_filename_globalcfg(dirhome, fcfg_global, docproj.global_config_filename, "Cfg._reinit_glb_main")
         assert fcfg_glb is not None
         if self.cfg_glb:
-            debug(yellow(f'_reinit_global {self.cfg_glb.filename=}'))
-        debug(yellow(f'_reinit_global {fcfg_global=}'))
-        debug(yellow(f'_reinit_global {fcfg_glb=}'))
+            debug('_reinit_global %s', self.cfg_glb.filename)
+        debug('_reinit_global fcfg_global=%s', fcfg_global)
+        debug('_reinit_global fcfg_glb=%s', fcfg_glb)
         assert docproj is not None
         assert docproj.project is not None
-        ##if self.cfg_glb is None and fcfg_global is None:
-        ##    cfg_glb.wr_ini_project(docproj.project, fcfg_loc)
-        ##elif self.cfg_glb is not None and fcfg_global is None:
-        ####self._reinit_glb_exp0(docproj.project, fcfg_global, dirhome, fcfg_loc, docproj)
-        ####def _reinit_glb_exp0(self, project, fcfg_global, dirhome, fcfg_loc, docproj):
-        debug(yellow(f'_reinit_glb_exp0(\n  {docproj.project=},\n  {fcfg_global=},\n  {dirhome=},\n  {fcfg_loc=})'))
+        debug('_reinit_glb_exp0(\n  docproj.project=%s,\n  fcfg_global=%s,\n  dirhome=%s,\n  fcfg_loc=%s)',
+            docproj.project, fcfg_global, dirhome, fcfg_loc)
         if self.cfg_glb is None:
             self.cfg_glb = CfgGlobal(fcfg_glb)
 
@@ -158,10 +134,6 @@ class Cfg:
 
     @staticmethod
     def _needs_reinit_fcsv(docproj, dircsv):
-        ##print(f'_needs_reinit_fcsv: docproj.dircsv               {docproj.dircsv}')
-        ##print(f'_needs_reinit_fcsv: docproj.get_abspath_dircsv() {docproj.get_abspath_dircsv()}')
-        ##print(f'_needs_reinit_fcsv: dircsv                       {dircsv}')
-        ##print(f'_needs_reinit_fcsv: dirhome                      {dirhome}')
         if dircsv is None:
             return False
         if docproj.dircsv == dircsv:

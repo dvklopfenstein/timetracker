@@ -42,12 +42,17 @@ def test_cmd_projects():
         # Initialize all projects for all usernames
         basicConfig()
 
+        # Initialize all projects for all usernames
         runprojs = RunProjs(tmproot, userprojs)
         runprojs.run_setup()
         runprojs.prt_userfiles()
         runprojs.chk_proj_configs(exp_projs)
-        runprojs.push()
+
+        # Mimic git push and pull
+        runprojs.all_push()
         runprojs.upstream.prt_files()
+        runprojs.all_pull()
+        runprojs.prt_userfiles()
 
         prt = True
         _test_get_csv_local_uname(runprojs.prj2mgrprj, prt)

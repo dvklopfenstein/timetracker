@@ -26,7 +26,7 @@ NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
-    #print(f'ARGS FOR HOURS: {fnamecfg} {args}')
+    print(f'ARGS FOR HOURS: {fnamecfg} {args}')
     if args.fcsv and exists(args.fcsv):
         ntd = get_ntcsvproj01(fnamecfg, args.fcsv, args.name)
         if ntd:
@@ -93,12 +93,12 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     print('  ------- -------- ----------------------')
     # ntcsvs:     fcsv project username
     # ntcsvtimes: results errors fcsv
-    itr = ((_get_total_time(nt.ntcsv.fcsv), nt) for nt in ntcsvs)
+    itr = ((_get_total_time(nt.fcsv), nt) for nt in ntcsvs)
     ###for t in itr:
     ###    print(f'{t[0].results}')
     ###    print(f'{t[1]}\n')
 
-    itr = ((_get_total_time(nt.ntcsv.fcsv), nt) for nt in ntcsvs)
+    itr = ((_get_total_time(nt.fcsv), nt) for nt in ntcsvs)
     rd01 = {k: list(g) for k, g in groupby(itr, key=lambda t: t[0].results is not None)}
     ###print(f'GROUUUUUUUUUPED', rd01)
     errnts = rd01.get(False)
@@ -112,7 +112,7 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
                 total_time += nttime.results
                 print(f'{_get_hours_str(nttime.results)} '
                       f'{username:{uname_len}} '
-                      f'{ntcsv.ntcsv.project}')
+                      f'{ntcsv.project}')
         _rpt_errs_csvread(errnts)
         print(f'{_get_hours_str(total_time)} {username:{uname_len}} Total hours for all projects')
         return NTCSVS(results=total_time, errors=errnts, ntcsvs=rdnts)

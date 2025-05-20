@@ -28,17 +28,21 @@ class Upstream:
     def pull(self, project, diruser):
         """Mimic a git 'pull' for a file"""
         if project not in self.proj2obj:
-            return
+            return None
         updir = self._get_project_dir(project)
         files = get_files(updir)
+        copies = []
         for repo_absfilename in files:
             repo_relfilename = relpath(repo_absfilename, updir)
             user_absfilename = join(diruser, repo_relfilename)
             if not exists(user_absfilename):
                 makedirs(dirname(user_absfilename), exist_ok=True)
+                print(f'copy({repo_absfilename}, {user_absfilename}')
                 copy(repo_absfilename, user_absfilename)
+                copies.append(user_absfilename)
             else:
                 assert cmp(repo_absfilename, user_absfilename)
+        return copies
 
     def push(self, project, absfilename, relfilename):
         """Add/update and upstream project and 'push' a file"""

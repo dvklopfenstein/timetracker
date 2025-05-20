@@ -119,9 +119,8 @@ def _test_get_csvs_global_uname(user2glbcfg, dirhome, prt=False):
             if prt:
                 print(ntcsv)
             assert ntcsv.username == usr
-            ##assert ntd.ntcsv.project == get_projectname(ntd.fcfgproj)
-            ##assert ntd.ntcsv.fcsv == exp_fcsv
-        print('')
+        if prt:
+            print('')
     return usr2ntcsvs
 
 def _test_get_csvs_global_all(user2glbcfg, dirhome, prt=False):
@@ -134,16 +133,10 @@ def _test_get_csvs_global_all(user2glbcfg, dirhome, prt=False):
             print(f'USERNAME: {usr}')
         nts = get_csvs_global_all(projects, dirhome)
         usr2ntcsvs[usr] = set(nts)
-        for ntcsv in nts:
-            #usr2ntcsvs[usr].add(ntcsv)
-            ##exp_fcsv = join(ntcsv.fcfgproj.replace('.timetracker/config', ''),
-            ##                f'timetracker_{ntcsv.ntcsv.project}_{usr}.csv')
-            if prt:
+        if prt:
+            for ntcsv in nts:
                 print(ntcsv)
-            ##assert ntcsv.ntcsv.username == usr
-            ##assert ntcsv.ntcsv.project == get_projectname(ntcsv.fcfgproj)
-            ##assert ntcsv.ntcsv.fcsv == exp_fcsv
-        print('')
+            print('')
     return usr2ntcsvs
 
 def _test_get_csv_local_uname(prj2mgrprj, prt=False):
@@ -178,15 +171,6 @@ def _test_get_csvs_local_all(prj2mgrprj, prt=False):
                 if prt:
                     print(f'{user:7} {proj} {ntd}')
             print('')
-        #        print(f'TEST {user}: get_csv_local_uname({obj.fcfgproj}, {user}, {obj.home})')
-        #        print(f'{ntd}\n')
-        #    assert exists(ntd.fcsv)
-        #    exp_fcsv = join(obj.fcfgproj.replace('.timetracker/config', ''),
-        #                    f'timetracker_{ntd.project}_{user}.csv')
-        #    assert ntd.username == user
-        #    assert ntd.project == get_projectname(obj.fcfgproj)
-        #    assert ntd.project == proj
-        #    assert ntd.fcsv == exp_fcsv, f'fcsv: ACT != EXP\nACT({ntd.fcsv})\nEXP({exp_fcsv})'
     return usrprj2ntcsvs
 
 

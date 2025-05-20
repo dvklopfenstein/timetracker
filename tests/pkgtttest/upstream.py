@@ -15,7 +15,6 @@ class Upstream:
     def __init__(self, dirupstream):
         self.dirupstream = dirupstream
         makedirs(dirupstream, exist_ok=True)
-        #self.nto = namedtuple('NtFile'
         self.proj2obj = {}
 
     def prt_files(self):

@@ -77,7 +77,8 @@ class ExpCsvs:
                 return ntcsv
         return None
 
-    def _err(self, act, exp):
+    @staticmethod
+    def _err(act, exp):
         errmsg = [f'ACT[{len(act)}] != EXP[{len(exp)}]',]
         errmsg.append('ACT:')
         for idx, elem in enumerate(sorted(act)):

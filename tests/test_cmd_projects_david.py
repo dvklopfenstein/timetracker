@@ -90,7 +90,8 @@ def test_cmd_projects(prt=True):
         expobj.chk_get_csvs_local_all(act_csvs)
 
         # Find csv for one user in one project
-        ###_test_get_csv_local_uname(runprojs.prj2mgrprj, prt)
+        act_csvs = _test_get_csv_local_uname(runprojs.prj2mgrprj, prt)
+        expobj.chk_get_csvs_local_uname(act_csvs)
 
         #_test_run_hours_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
         #print(yellow('Print hours, iterating through all users & their projects'))
@@ -148,9 +149,10 @@ def _test_get_csvs_global_all(user2glbcfg, dirhome, prt=False):
 def _test_get_csv_local_uname(prj2mgrprj, prt=False):
     """TEST get_csv_local_uname(...)"""
     print(yellow('\nTEST get_csv_local_uname(...)'))
-    usrprj2ntcsvs = {}
+    usrprj2ntcsv = {}
     for (user, proj), obj in prj2mgrprj.items():
         ntd = get_csv_local_uname(obj.fcfgproj, user, obj.home)
+        usrprj2ntcsv[(user, proj)] = ntd
         if ntd is not None:
             if prt:
                 print(f'{user}: get_csv_local_uname({obj.fcfgproj}, {user}, {obj.home})')
@@ -162,7 +164,7 @@ def _test_get_csv_local_uname(prj2mgrprj, prt=False):
             assert ntd.project == get_projectname(obj.fcfgproj)
             assert ntd.project == proj
             assert ntd.fcsv == exp_fcsv, f'fcsv: ACT != EXP\nACT({ntd.fcsv})\nEXP({exp_fcsv})'
-    return usrprj2ntcsvs
+    return usrprj2ntcsv
 
 def _test_get_csvs_local_all(prj2mgrprj, prt=False):
     """TEST get_csv_local_uname(...)"""

@@ -12,9 +12,9 @@ class ExpCsvs:
     def __init__(self, orig_ntcsvs, pull_copies):
         self.exp_ntcsvs = orig_ntcsvs + self._init_ntcsvs(pull_copies, orig_ntcsvs)
 
-    def chk_get_csvs_global_all(self, key2ntcsvs):
+    def chk_get_csvs_global_all(self, usr2ntcsvs):
         """Check the csvs resulting from `get_csvs_global_uname`"""
-        for usr_act, ntcsvs_act in key2ntcsvs.items():
+        for usr_act, ntcsvs_act in usr2ntcsvs.items():
             ntcsvs_exp = self._exp_get_csvs_global_all(usr_act)
             fcsvs_exp = set(nt.fcsv for nt in ntcsvs_exp)
             fcsvs_act = set(nt.fcsv for nt in ntcsvs_act)
@@ -23,9 +23,9 @@ class ExpCsvs:
                 assert usr_act in ntcsv.fcsv, f'FILE OUTSIDE OF ACCOUNT({usr_act}): {ntcsv.fcsv}'
                 #print(f'GLB ALL ACT {usr_act:7} {ntcsv}')
 
-    def chk_get_csvs_global_uname(self, key2ntcsvs):
+    def chk_get_csvs_global_uname(self, usr2ntcsvs):
         """Check the csvs resulting from `get_csvs_global_uname`"""
-        for usr_act, ntcsvs_act in key2ntcsvs.items():
+        for usr_act, ntcsvs_act in usr2ntcsvs.items():
             ntcsvs_exp = self._exp_get_csvs_global_uname(usr_act)
             assert ntcsvs_act == ntcsvs_exp, self._err(ntcsvs_act, ntcsvs_exp)
             for ntcsv in ntcsvs_act:
@@ -42,6 +42,12 @@ class ExpCsvs:
             for ntcsv in ntcsvs_act:
                 assert usr_act in ntcsv.fcsv, f'FILE OUTSIDE OF ACCOUNT({usr_act}): {ntcsv.fcsv}'
                 #print(f'GLB ALL ACT {usr_act:7} {ntcsv}')
+
+    def chk_get_csvs_local_uname(self, usrprj2ntcsv):
+        """Check the csvs resulting from `get_csvs_global_uname`"""
+        for (usr_act, prj_act), ntcsv_act in usrprj2ntcsv.items():
+            ntcsv_exp = self._exp_get_csvs_local_uname(usr_act, prj_act)
+            assert ntcsv_act == ntcsv_exp, self._err([ntcsv_act], [ntcsv_exp])
 
     # -------------------------------------------------------------------------------
     def _exp_get_csvs_global_uname(self, uname):
@@ -64,6 +70,12 @@ class ExpCsvs:
             if ntcsv.fcsv is not None and f'home/{login}/proj/{project}' in ntcsv.fcsv:
                 nts.add(ntcsv)
         return nts
+
+    def _exp_get_csvs_local_uname(self, login, project):
+        for ntcsv in self._exp_get_csvs_local_all(login, project):
+            if ntcsv.fcsv is not None and f'_{login}.csv' in ntcsv.fcsv:
+                return ntcsv
+        return None
 
     def _err(self, act, exp):
         errmsg = [f'ACT[{len(act)}] != EXP[{len(exp)}]',]

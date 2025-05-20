@@ -4,7 +4,6 @@
 from os.path import exists
 from os.path import join
 from logging import basicConfig
-from collections import defaultdict
 from tempfile import TemporaryDirectory
 from timetracker.utils import yellow
 #from timetracker.cmd.hours import run_hours
@@ -78,22 +77,20 @@ def test_cmd_projects(prt=True):
             runprojs.prt_userfiles('FILES AFTER PUSH/PULL', True)
 
         expobj = ExpCsvs(runprojs.orig_ntcsvs, pull_copies)
-        # Find csv for one user in one project
-        ###_test_get_csv_local_uname(runprojs.prj2mgrprj, prt)
-
-        #### Find csvs for one user in all projects
-        #key2ntcsvs = _test_get_csvs_global_uname(runprojs.get_user2glbcfg(), runprojs.dirhome, prt)
-        ###expobj.chk_get_csvs_global_uname(key2ntcsvs)
-        ###return
-
-        #### Find csvs for all users in one project
-        ###_test_get_csvs_local_all(runprojs.prj2mgrprj, prt)
-
-        #### Find csvs for all users in all projects
+        # Find csvs for all users in all projects
         act_csvs = _test_get_csvs_global_all(runprojs.get_user2glbcfg(), runprojs.dirhome, prt)
         expobj.chk_get_csvs_global_all(act_csvs)
-        return
 
+        # Find csvs for one user in all projects
+        act_csvs = _test_get_csvs_global_uname(runprojs.get_user2glbcfg(), runprojs.dirhome, prt)
+        expobj.chk_get_csvs_global_uname(act_csvs)
+
+        # Find csvs for all users in one project
+        act_csvs = _test_get_csvs_local_all(runprojs.prj2mgrprj, prt)
+        expobj.chk_get_csvs_local_all(act_csvs)
+
+        # Find csv for one user in one project
+        ###_test_get_csv_local_uname(runprojs.prj2mgrprj, prt)
 
         #_test_run_hours_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
         #print(yellow('Print hours, iterating through all users & their projects'))
@@ -109,34 +106,35 @@ def test_cmd_projects(prt=True):
 def _test_get_csvs_global_uname(user2glbcfg, dirhome, prt=False):
     """TEST get_csvs_global_uname(...)"""
     print(yellow('\nTEST get_csvs_global_uname(...)'))
-    usrprj2ntcsvs = defaultdict(set)
+    usr2ntcsvs = {}
     for usr, glb_cfg in user2glbcfg.items():
         projects = glb_cfg.get_projects()
         if prt:
             print(f'USERNAME: {usr}')
         # NtCsv: fcsv project username
         nts = get_csvs_global_uname(projects, usr, dirhome)
+        usr2ntcsvs[usr] = set(nts)
         for ntcsv in nts:
-            usrprj2ntcsvs[(usr, ntcsv.project)].add(ntcsv)
             if prt:
-                print(f'TEST {usr:7} get_csvs_global_uname {ntcsv}')
+                print(ntcsv)
             assert ntcsv.username == usr
             ##assert ntd.ntcsv.project == get_projectname(ntd.fcfgproj)
             ##assert ntd.ntcsv.fcsv == exp_fcsv
         print('')
-    return dict(usrprj2ntcsvs)
+    return usr2ntcsvs
 
 def _test_get_csvs_global_all(user2glbcfg, dirhome, prt=False):
     """TEST get_csvs_global_all(...)"""
     print(yellow('\nTEST get_csvs_global_all(...)'))
-    usr2ntcsvs = defaultdict(set)
+    usr2ntcsvs = {}
     for usr, glb_cfg in user2glbcfg.items():
         projects = glb_cfg.get_projects()
         if prt:
             print(f'USERNAME: {usr}')
         nts = get_csvs_global_all(projects, dirhome)
+        usr2ntcsvs[usr] = set(nts)
         for ntcsv in nts:
-            usr2ntcsvs[usr].add(ntcsv)
+            #usr2ntcsvs[usr].add(ntcsv)
             ##exp_fcsv = join(ntcsv.fcfgproj.replace('.timetracker/config', ''),
             ##                f'timetracker_{ntcsv.ntcsv.project}_{usr}.csv')
             if prt:
@@ -145,7 +143,7 @@ def _test_get_csvs_global_all(user2glbcfg, dirhome, prt=False):
             ##assert ntcsv.ntcsv.project == get_projectname(ntcsv.fcfgproj)
             ##assert ntcsv.ntcsv.fcsv == exp_fcsv
         print('')
-    return dict(usr2ntcsvs)
+    return usr2ntcsvs
 
 def _test_get_csv_local_uname(prj2mgrprj, prt=False):
     """TEST get_csv_local_uname(...)"""
@@ -155,7 +153,7 @@ def _test_get_csv_local_uname(prj2mgrprj, prt=False):
         ntd = get_csv_local_uname(obj.fcfgproj, user, obj.home)
         if ntd is not None:
             if prt:
-                print(f'TEST {user}: get_csv_local_uname({obj.fcfgproj}, {user}, {obj.home})')
+                print(f'{user}: get_csv_local_uname({obj.fcfgproj}, {user}, {obj.home})')
                 print(f'{ntd}\n')
             assert exists(ntd.fcsv)
             exp_fcsv = join(obj.fcfgproj.replace('.timetracker/config', ''),
@@ -173,6 +171,7 @@ def _test_get_csvs_local_all(prj2mgrprj, prt=False):
     for (user, proj), obj in prj2mgrprj.items():
         nts = get_csvs_local_all(obj.fcfgproj, obj.home)
         if nts is not None:
+            usrprj2ntcsvs[(user, proj)] = set(nts)
             for ntd in nts:
                 if prt:
                     print(f'{user:7} {proj} {ntd}')

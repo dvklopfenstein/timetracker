@@ -37,10 +37,9 @@ class RunProjs:
         self.tmproot = tmproot
         self.dirhome = join(tmproot, 'home')
         self.ups = UserProjects(userprojs)
-        ####self.cfg_global = get_cfgglobal(fcfg_explicit, self.dirhome, fcfg_doc)
-        ####self.cfg = Cfg("phoneyproj.cfg", self.cfg_global)
         self.prj2mgrprj = {(usr,prj):MngUsrProj(self.dirhome, usr, prj) for usr, prj in userprojs}
         self.upstream = Upstream(join(self.tmproot, 'upstream'))
+        self.orig_ntcsvs = self.ups.get_expcsvs(self.tmproot)
 
     def all_push(self):
         """simulate a git-like push"""
@@ -53,17 +52,22 @@ class RunProjs:
 
     def all_pull(self):
         """simulate a git-like pull"""
+        pull_copies_all = []
         for (_, prj), obj in self.prj2mgrprj.items():
             dirproj = dirname(dirname(obj.cfg.cfg_loc.filename))
-            self.upstream.pull(prj, dirproj)
+            pull_copies_cur = self.upstream.pull(prj, dirproj)
+            pull_copies_all.extend(pull_copies_cur)
+        return pull_copies_all
 
-    def prt_userfiles(self, msg='FILES FOR ALL USERNAMES'):
+    def prt_userfiles(self, msg='FILES FOR ALL USERNAMES', prefix='USERFILE: '):
         """Print files for each username"""
+        if prefix:
+            prefix = f'{msg}: '
         print(f'\n{msg}:')
         for uname in self.ups.usernames:
             print(f'FILES FOR USERNAME: {uname}:')
             userhome = join(self.dirhome, uname)
-            prt_files(userhome)
+            prt_files(userhome, prefix)
 
     def get_user2glbcfg(self):
         """For each username, get their one global config file"""

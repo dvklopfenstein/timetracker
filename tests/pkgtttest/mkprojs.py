@@ -90,16 +90,7 @@ def _get_expdirs(tmphome, project, dirgit, trksubdir):
         dirgit=join(dirproj, '.git') if dirgit else None,
         dirtrk=join(dirproj, trksubdir),
         dirdoc=join(dirproj, 'doc'))
-    ####prt_expdirs(ntexpdirs, "tests/pkgtttest/mkprojs:mk_projdirs")
     return ntexpdirs
-
-##def mk_projdirs_wcfgs(tmp_home, project, trksubdir='.timetracker'):
-##    """Make sub-directories & cfgs in a temporary directory for use in tests"""
-##    ##dirproj = mk_projdirs(tmp_home, project)
-##    ntexpdirs = mk_projdirs(tmp_home, project)
-##    fname_cfgproj = join(ntexpdirs.dirproj, trksubdir, 'config')
-##    cfg = run_init(fname_cfgproj, '.', project, dirhome=tmp_home)
-##    return ntexpdirs.dirproj, cfg.cfg_loc, cfg.cfg_glb
 
 def findhome(home):
     """Do a find on the given homedir and print using debug logging"""
@@ -126,10 +117,10 @@ def get_files(basedir):
             files_all.append(join(root, file))
     return files_all
 
-def prt_files(basedir):
+def prt_files(basedir, prefix=''):
     """Print files in basedir and below"""
     for fname in get_files(basedir):
-        print(fname)
+        print(f'{prefix}{fname}')
 
 def get_type2files(basedir):
     """Recursively walk dirs to get files & group by type (config, csv)"""

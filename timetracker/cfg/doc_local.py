@@ -19,6 +19,7 @@ from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.docutils import get_ntvalue
+from timetracker.starttime import Starttime
 
 
 NTDOC = namedtuple('NtDoc', 'doc docproj')
@@ -45,16 +46,17 @@ class DocProj:
         assert doc is not None
         assert type(doc).__name__ != 'RdCfg'
         assert filename is not None
+        self.filename = filename
         self.dircfg  = normpath(dirname(filename))
-        self.dirproj = dirname(self.dircfg)
         self.project, self.csv_filename, self.global_config_filename, self.errors = \
             self._init_cfg_values(doc)
         self.dircsv = dirname(self.csv_filename) if self.csv_filename else None
 
     def get_abspath_dircsv(self):
         """Get the absolute pathname for doc['csv']['filename']"""
-        if self.dircsv is not None and self.dirproj is not None:
-            return get_abspath(self.dircsv, self.dirproj)
+        dirproj = dirname(self.dircfg)
+        if self.dircsv is not None and dirproj is not None:
+            return get_abspath(self.dircsv, dirproj)
         return None
 
     def get_filename_csv(self, username=None, dirhome=None):
@@ -93,6 +95,18 @@ class DocProj:
                {'project': project.error,
                 'csv_filename': csv_filename.error,
                 'global_config_filename': global_config_filename.error}
+
+    def timer_started(self, username):
+        """Return True if the timer is started, False otherwise"""
+        if (startobj := self.get_startobj(username)):
+            return startobj.started()
+        return False
+
+    def get_startobj(self, username):
+        """Get a Starttime object"""
+        if self.project:
+            return Starttime(self.dircfg, self.project, get_username(username))
+        return None
 
     #def set_filename_csv(self, filename_str):
     #    """Write the config file, replacing [csv][filename] value"""
@@ -134,7 +148,7 @@ class DocProj:
 
     #def get_project_from_filename(self):
     #    """Get the default project name from the project directory filename"""
-    #    return basename(self.dirproj)
+    #    return basename(dirproj)
 
     ##-------------------------------------------------------------
     def _get_csvfilename_proj_user(self, username, dirhome):
@@ -147,14 +161,15 @@ class DocProj:
     def _get_csvfilename_proj(self, dirhome):
         """Read a config file and load it into a TOML document"""
         if self.csv_filename and self.project:
-            fpat = get_abspath(self.csv_filename, self.dirproj, dirhome)
+            fpat = get_abspath(self.csv_filename, dirname(self.dircfg), dirhome)
             return fpat.replace('PROJECT', self.project)
         return None
 
-    def _get_csv_filename(self, dirhome):
-        """Read a config file and load it into a TOML document"""
-        fcsvpat = self.csv_filename
-        return get_abspath(fcsvpat, self.dirproj, dirhome) if fcsvpat is not None else None
+    ####def _get_csv_filename(self, dirhome):
+    ####    """Read a config file and load it into a TOML document"""
+    ####    fcsvpat = self.csv_filename
+    ####    return get_abspath(fcsvpat, dirname(self.dircfg), dirhome) \
+    ####        if fcsvpat is not None else None
 
     #@staticmethod
     #def _wr_cfg(fname, doc):

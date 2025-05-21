@@ -37,10 +37,10 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     debug('RUNNING COMMAND STOP')
     fcsv = cfgproj.get_filename_csv(uname, kwargs.get('dirhome'))
     # Get the elapsed time
-    start_obj = cfgproj.get_starttime_obj(uname)
-    if start_obj is None:
+    startobj = cfgproj.get_starttime_obj(uname)
+    if startobj is None:
         return None
-    dta = start_obj.read_starttime()
+    dta = startobj.read_starttime()
     if dta is None:
         # pylint: disable=fixme
         # TODO: Check for local .timetracker/config file
@@ -71,7 +71,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
 
     # Remove the starttime file
     if not kwargs.get('keepstart', False):
-        start_obj.rm_starttime()
+        startobj.rm_starttime()
     else:
         print('NOT restarting the timer because `--keepstart` invoked')
     return {'fcsv':fcsv, 'csvline':csvline}

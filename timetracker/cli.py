@@ -226,7 +226,9 @@ class Cli:
         parser.add_argument('-i', '--input', metavar='file.csv', nargs='*', dest='fcsv',
             help='Specify an input csv file')
         parser.add_argument('-g', '--global', dest='run_global', action='store_true',
-            help='List all hours for all projects that are listed in the global config file')
+            help=f'List hours for all projects for {self.user}')
+        parser.add_argument('-u', '--all-users', dest='all_users', action='store_true',
+            help='List hours for all projects for all usernames')
         parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser

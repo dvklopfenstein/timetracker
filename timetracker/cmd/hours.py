@@ -18,6 +18,7 @@ from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
 from timetracker.csvget import get_csv_doc_uname
 from timetracker.csvget import get_csvs_global_uname
+from timetracker.csvget import get_csvs_global_all
 from timetracker.csvget import get_ntcsvproj01
 from timetracker.msgs import str_init0
 from timetracker.msgs import str_tostart
@@ -28,16 +29,17 @@ NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
-    #print(f'ARGS FOR HOURS: {fnamecfg} {args}')
+    print(f'ARGS FOR HOURS: {fnamecfg} {args}')
     if args.fcsv and exists(args.fcsv):
         ntd = get_ntcsvproj01(fnamecfg, args.fcsv, args.name)
         if ntd:
             return _rpt_hours_uname1(ntd)
         return None
     cfg = Cfg(fnamecfg)
-    return run_hours(cfg, args.name, args.run_global, args.global_config_file)
+    return run_hours(cfg, args.name, args.run_global, args.all_users,
+        global_config_file=args.global_config_file)
 
-def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=None):
+def run_hours(cfg, uname, get_global=False, all_users=False, **kws):
     """Report the total time in hours spent on project(s)"""
     ##print(f'RUN COMMAND HOURS: exists({exists(cfg.cfg_loc.filename)}) {cfg.cfg_loc.filename}')
     if get_global or not exists(cfg.cfg_loc.filename):
@@ -45,15 +47,22 @@ def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=Non
         if cfg.cfg_glb is None:
             docglb = get_docproj(cfg.cfg_loc.filename)
             fcfg_gdoc = None if not docglb else docglb.global_config_filename
-            fglb = get_filename_globalcfg(dirhome, global_config_file, fcfg_gdoc)
+            fglb = get_filename_globalcfg(
+                kws.get('dirhome'),
+                kws.get('global_config_file'),
+                fcfg_gdoc)
             if not exists(fglb):
                 print(str_init0())
                 sys_exit(0)
             cfg.cfg_glb = CfgGlobal(fglb)
-        return run_hours_global(cfg.cfg_glb, uname)  # RdCsvs: results errors ntcsvs
+        if not all_users:
+            # RdCsvs: results errors ntcsvs
+            return run_hours_global_uname(cfg.cfg_glb, uname)
+        return run_hours_global_all(cfg.cfg_glb)
     ##print('RUN HOURS LOCAL')
     cfgproj = cfg.cfg_loc
     docproj = get_docproj(cfgproj.filename)
+    dirhome = kws.get('dirhome')
     ntd = get_csv_doc_uname(docproj, uname, dirhome)
     return _run_hours_local(docproj, ntd, uname, dirhome)
 
@@ -70,7 +79,7 @@ def _run_hours_local(docproj, ntd, uname, dirhome):
     # None or NtCsv(fcsv project username)
     return ntd
 
-def run_hours_global(cfg_global, uname):
+def run_hours_global_uname(cfg_global, uname):
     """Report the total hours spent on all projects by uname"""
     assert cfg_global is not None
     #print('RUN HOURS GLOBAL START')
@@ -78,7 +87,19 @@ def run_hours_global(cfg_global, uname):
         ntcsvs = get_csvs_global_uname(projects, uname)
         ###for ntd in ntcsvs:
         ###    print(f'PROJECTS[{len(projects)}]{ntd}')
-        ntres = _rpt_hours_projs_uname1(ntcsvs, uname)
+        ntres = _rpt_hours_projs_uname1(ntcsvs)
+        return ntres  # RdCsvs: results errors ntcsvs
+    return None
+
+def run_hours_global_all(cfg_global):
+    """Report the total hours spent on all projects by uname"""
+    assert cfg_global is not None
+    print('RUN HOURS GLOBAL START')
+    if (projects := cfg_global.get_projects()):
+        ntcsvs = get_csvs_global_all(projects)
+        ###for ntd in ntcsvs:
+        ###    print(f'PROJECTS[{len(projects)}]{ntd}')
+        ntres = _rpt_hours_projs_uname1(ntcsvs)
         return ntres  # RdCsvs: results errors ntcsvs
     return None
 
@@ -101,8 +122,7 @@ def _rpt_hours_uname1(ntd):
             return nt_total_time
     return None
 
-def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
-    assert username is not None
+def _rpt_hours_projs_uname1(ntcsvs, uname_len=21):
     total_time = timedelta()
     print('    hours username project')
     print('  ------- -------- ----------------------')
@@ -121,15 +141,20 @@ def _rpt_hours_projs_uname1(ntcsvs, username, uname_len=8):
     if (rdnts := rd01.get(True)):
         ###print(f'RDS({len(rdnts)})')
         for nttime, ntcsv in rdnts:
-            ###print(f'TIME: {nttime}')
-            ###print(f'CSV:  {ntcsv}\n')
+            ##print(f'TIME: {nttime}')
+            ##print(f'CSV:  {ntcsv}\n')
             if nttime.results:
                 total_time += nttime.results
+                # -------- TODO START ---------------------
+                username = ntcsv.username if ntcsv.username else "TBD"
+                if len(username) > 50:
+                    username = 'dvklo'
+                # -------- TODO STOP ----------------------
                 print(f'{_get_hours_str(nttime.results)} '
                       f'{username:{uname_len}} '
                       f'{ntcsv.project}')
         _rpt_errs_csvread(errnts)
-        print(f'{_get_hours_str(total_time)} {username:{uname_len}} Total hours for all projects')
+        print(f'{_get_hours_str(total_time)} all{" "*(uname_len-3)} Total hours for all projects')
         return NTCSVS(results=total_time, errors=errnts, ntcsvs=rdnts)
     _rpt_errs_csvread(errnts)
     return None

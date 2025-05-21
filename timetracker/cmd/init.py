@@ -4,8 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
-from os.path import exists
-from logging import debug
+##from logging import debug
 from timetracker.cfg.cfg import Cfg
 from timetracker.msgs import str_tostart
 
@@ -33,10 +32,10 @@ def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
     cfg = Cfg(fnamecfg, cfg_global=kwargs.get('cfg_global'))
     # Initialize the local configuration file for a timetracking project
     cfg_loc = cfg.cfg_loc
-    debug('RUNNING COMMAND INIT')
-    debug('INIT: fnamecfg:    %s', cfg_loc.filename)
-    debug('INIT: project:     %s', project)
-    debug('INIT: dircsv(%s)', dircsv)
+    ##debug('RUNNING COMMAND INIT')
+    ##debug('INIT: fnamecfg:    %s', cfg_loc.filename)
+    ##debug('INIT: project:     %s', project)
+    ##debug('INIT: dircsv(%s)', dircsv)
     fcfg_global = kwargs.get('fcfg_global')
     ##res = _chk_global_cfg(cfg_loc, project, fcfg_global)
     dirhome = kwargs.get('dirhome')
@@ -46,7 +45,7 @@ def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
             print(msg)
             sys_exit(0)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
-    if not exists(cfg_loc.filename):
+    if not cfg_loc.file_exists():
         cfg.init(project, dircsv, fcfg_global, dirhome, quiet=quiet)
     elif not quiet:
         print(str_tostart())

@@ -3,8 +3,6 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os.path import exists
-from logging import debug
 from logging import error
 from datetime import datetime
 from timetracker.cfg.utils import get_shortest_name
@@ -26,15 +24,11 @@ def cli_run_stop(fnamecfg, args):
 
 def _run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
-    # Get the starting time, if the timer is running
-    debug('RUNNING COMMAND _STOP')
     cfg = get_cfg(fnamecfg)
-    cfgproj = cfg.cfg_loc
-    return run_stop(cfgproj, uname, csvfields, stop_at, **kwargs)
+    return run_stop(cfg.cfg_loc, uname, csvfields, stop_at, **kwargs)
 
 def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
-    debug('RUNNING COMMAND STOP')
     fcsv = cfgproj.get_filename_csv(uname, kwargs.get('dirhome'))
     # Get the elapsed time
     startobj = cfgproj.get_starttime_obj(uname)
@@ -51,7 +45,6 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
         return {'fcsv':fcsv, 'csvline':None}
     now = kwargs.get('now', datetime.now())
     dtz = now if stop_at is None else get_dtz(stop_at, now, kwargs.get('defaultdt'))
-    #print('DTZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ', dtz, uname, fcsv)
     if dtz is None:
         raise RuntimeError(f'NO STOP TIME FOUND in "{stop_at}"; '
                            f'NOT STOPPING TIMER STARTED {dta.strftime(FMTDT_H)}')
@@ -61,12 +54,10 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     delta = dtz - dta
 
     # Append the timetracker file with this time unit
-    debug('STOP: CSVFILE   exists(%d) %s', exists(fcsv), fcsv)
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
         return {'fcsv':fcsv, 'csvline':None}
     csvline = wr_stopline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
-    ##csvline = CsvFile(fcsv).wr_stopline(dta, dtz, delta, csvfields)
     _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
 
     # Remove the starttime file
@@ -78,7 +69,6 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
 
 def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     """Finish stopping"""
-    debug('STOP: CSVFILE   exists(%d) %s', exists(fcsv), fcsv)
     if not quiet:
         print('Timetracker stopped at: '
               f'{stoptime.strftime(FMTDT_H)}: '

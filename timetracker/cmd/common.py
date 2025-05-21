@@ -26,9 +26,8 @@ def get_cfg(fnamecfg):
 
 def no_csv(fcsv, cfgproj, uname):
     """Messages to print if there is no csv file"""
-    startobj = cfgproj.get_starttime_obj(uname)
     print(str_no_time_recorded(fcsv))
-    if startobj:
+    if (startobj := cfgproj.get_starttime_obj(uname)):
         prtmsg_started01(startobj)
     else:
         print(str_tostart())
@@ -36,8 +35,7 @@ def no_csv(fcsv, cfgproj, uname):
 # ---------------------------------------------------------
 def prtmsg_started01(startobj):
     """Print message depending if timer is started or not"""
-    dtstart = startobj.read_starttime()
-    if dtstart:
+    if (dtstart := startobj.read_starttime()):
         _prtmsg_started01(startobj, dtstart)
     else:
         print(str_tostart())
@@ -67,19 +65,14 @@ def _prtmsg_basic(startobj, dta, hms):
     print(str_how_to_stop_now())
 
 # ---------------------------------------------------------
-def prt_elapsed(startobj, msg='Timer running;'):
+def prt_elapsed(startobj, pretxt='Timer running;'):
     """Print elapsed time if timer is started"""
-    # Print elapsed time, if timer was started
-    dtstart = startobj.read_starttime()
-    if dtstart is not None:
-        hms = startobj.hms_from_startfile(dtstart)
-        # pylint: disable=line-too-long
-        return _prt_startdt_n_elapsed(startobj, dtstart, hms, msg) if hms is not None else str_not_running()
-    return None
-
-def _prt_startdt_n_elapsed(startobj, startdt, hms, msg):
-    msg = f'{msg} started {startdt.strftime(FMTDT_H)}; running'
-    print(startobj.str_elapsed_hms(hms, msg))
+    if (dtstart := startobj.read_starttime()) is not None:
+        if (hms := startobj.hms_from_startfile(dtstart)) is not None:
+            msg = f'{pretxt} started {dtstart.strftime(FMTDT_H)}; running'
+            print(startobj.str_elapsed_hms(hms, msg))
+        else:
+            print(str_not_running())
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

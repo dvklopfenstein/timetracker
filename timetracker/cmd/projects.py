@@ -5,8 +5,6 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import dirname
 from os.path import exists
-from logging import debug
-from timetracker.utils import yellow
 from timetracker.msgs import str_init
 from timetracker.cfg.cfg import Cfg
 
@@ -20,7 +18,6 @@ def cli_run_projects(fnamecfg, args):
 
 def run_projects(cfg, show_exists=False, rm_missing=False):
     """Show the projects listed in the global config"""
-    debug(yellow('RUNNING COMMAND PROJECTS'))
     cfg_glb = cfg.cfg_glb
     if exists(cfg_glb.filename):
         if not rm_missing:

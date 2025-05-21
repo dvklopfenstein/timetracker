@@ -3,12 +3,10 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os.path import exists
-
 from datetime import datetime
 from timetracker.epoch.epoch import get_dtz
 from timetracker.cmd.common import get_cfg
-from timetracker.cmd.common import prtmsg_started01
+from timetracker.cmd.common import prtmsg_start_01
 from timetracker.cmd.common import prt_elapsed
 
 
@@ -35,14 +33,15 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
         return None
 
     # Print elapsed time, if timer was started
+    force = kwargs.get('force', False)
     if start_at is None:
-        prtmsg_started01(startobj)
+        if (dtstart := startobj.read_starttime()):
+            prtmsg_start_01(startobj, dtstart, force)
     else:
         prt_elapsed(startobj)
 
     # Set (if not started) or reset (if start is forced) starting time
-    force = kwargs.get('force', False)
-    if not exists(startobj.filename) or force:
+    if not startobj.started() or force:
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
         #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
         startobj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))

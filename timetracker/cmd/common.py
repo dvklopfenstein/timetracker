@@ -36,33 +36,42 @@ def no_csv(fcsv, cfgproj, uname):
 def prtmsg_started01(startobj):
     """Print message depending if timer is started or not"""
     if (dtstart := startobj.read_starttime()):
-        _prtmsg_started01(startobj, dtstart)
+        prtmsg_start_01(startobj, dtstart)
     else:
         print(str_tostart())
 
-def _prtmsg_started01(startobj, dtstart):
+def prtmsg_start_01(startobj, dtstart, force=False):
+    """Print message depending if timer is started or not; no starting instructions"""
     hms = startobj.hms_from_startfile(dtstart)
     hms1 = hms is not None
     if hms1 and hms <= startobj.min_trigger:
-        _prtmsg_basic(startobj, dtstart, hms)
+        _prtmsg_basic(startobj, dtstart, hms, force)
     elif hms1:
-        _prtmsg_triggered(startobj, dtstart, hms)
+        _prtmsg_triggered(startobj, dtstart, hms, force)
     else:
         prt_todo('TODO: STARTFILE WITH NO HMS')
 
-def _prtmsg_triggered(startobj, dta, hms):
+def _prtmsg_triggered(startobj, dta, hms, force):
     """Print message info regarding triggered (started) timer"""
-    startobj.str_started_n_running(dta, hms)
+    _prt_started_n_running(startobj, dta, hms)
     print(str_started_epoch())
     print(str_arg_epoch(dta, desc=' after start'))
-    _prtmsg_basic(startobj, dta, hms)
+    _prtmsg_basic(startobj, dta, hms, force)
     print(str_started_epoch())
     print(str_tostart_epoch())
 
-def _prtmsg_basic(startobj, dta, hms):
+def _prtmsg_basic(startobj, dta, hms, force):
     """Print basic start time message"""
-    startobj.str_started_n_running(dta, hms)
-    print(str_how_to_stop_now())
+    _prt_started_n_running(startobj, dta, hms)
+    if not force:
+        print(str_how_to_stop_now())
+
+def _prt_started_n_running(startobj, dta, hms):
+    """Return a string detailing how long the timer has been running"""
+    msg = startobj.str_elapsed_hms(
+          hms,
+          f'Timer started on {dta.strftime(FMTDT_H)} and running')
+    print(msg)
 
 # ---------------------------------------------------------
 def prt_elapsed(startobj, pretxt='Timer running;'):

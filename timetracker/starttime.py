@@ -12,11 +12,10 @@ from os.path import dirname
 from os.path import normpath
 from datetime import datetime
 from datetime import timedelta
-from logging import debug
+##from logging import debug
 
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
-from timetracker.consts import FMTDT_H
 from timetracker.cfg.utils import get_username
 
 # 2025-01-21 17:09:47.035936
@@ -25,17 +24,17 @@ from timetracker.cfg.utils import get_username
 class Starttime:
     """Local project configuration parser for timetracking"""
 
-    min_trigger = timedelta(hours=5)
+    min_trigger = timedelta(hours=10)
 
     def __init__(self, dircfg, project=None, name=None):
         self.dircfg  = abspath(DIRTRK) if dircfg is None else normpath(dircfg)
         self.project = basename(dirname(self.dircfg)) if project is None else project
         self.name = get_username(name) if name is None else name
         self.filename = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        debug('Starttime args %d dircfg %s', exists(dircfg), dircfg)
-        debug('Starttime args . project  %s', project)
-        debug('Starttime args . name     %s', name)
-        debug('Starttime var  %d name     %s', exists(self.filename), self.filename)
+        ##debug('Starttime args %d dircfg %s', exists(dircfg), dircfg)
+        ##debug('Starttime args . project  %s', project)
+        ##debug('Starttime args . name     %s', name)
+        ##debug('Starttime var  %d name     %s', exists(self.filename), self.filename)
 
     def started(self):
         """Return True if the timer is starte, False if not"""
@@ -52,8 +51,8 @@ class Starttime:
                 if tags:
                     for tag in tags:
                         prt.write(f'\nTG {tag}')
-                debug('  WROTE START: %s', ststr)
-                debug('  WROTE FILE:  %s', self.filename)
+                ##debug('  WROTE START: %s', ststr)
+                ##debug('  WROTE FILE:  %s', self.filename)
                 return
         raise RuntimeError("NOT WRITING START TIME; NO START TIME FOUND")
 
@@ -93,13 +92,6 @@ class Starttime:
     def str_elapsed_hms(self, hms, msg):
         """Get a string describing the elapsed time"""
         return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
-
-    def str_started_n_running(self, dta, hms):
-        """Return a string detailing how long the timer has been running"""
-        msg = self.str_elapsed_hms(
-              hms,
-              f'Timer started on {dta.strftime(FMTDT_H)} and running')
-        print(msg)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

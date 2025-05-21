@@ -30,22 +30,22 @@ def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
 def run_start(cfgproj, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
     now = kwargs.get('now', datetime.now())
-    start_obj = cfgproj.get_starttime_obj(name)
-    if start_obj is None:
+    startobj = cfgproj.get_starttime_obj(name)
+    if startobj is None:
         return None
 
     # Print elapsed time, if timer was started
     if start_at is None:
-        prtmsg_started01(start_obj)
+        prtmsg_started01(startobj)
     else:
-        prt_elapsed(start_obj)
+        prt_elapsed(startobj)
 
     # Set (if not started) or reset (if start is forced) starting time
     force = kwargs.get('force', False)
-    if not exists(start_obj.filename) or force:
+    if not exists(startobj.filename) or force:
         starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
         #assert isinstance(starttime, datetime), f'NOT A datetime: {starttime}'
-        start_obj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
+        startobj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
         if not kwargs.get('quiet', False):
             print(f'Timetracker {_get_msg(start_at, force)}: '
                   f'{starttime.strftime("%a %I:%M %p")}: '
@@ -56,7 +56,7 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
     elif not force:
         if start_at is not None:
             print(f'Run `trk start --at {start_at} --force` to force restart')
-    return start_obj
+    return startobj
 
 def _get_msg(start_at, force):
     if force:

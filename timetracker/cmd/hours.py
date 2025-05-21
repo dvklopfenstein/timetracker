@@ -28,7 +28,7 @@ NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
-    ##print(f'ARGS FOR HOURS: {fnamecfg} {args}')
+    #print(f'ARGS FOR HOURS: {fnamecfg} {args}')
     if args.fcsv and exists(args.fcsv):
         ntd = get_ntcsvproj01(fnamecfg, args.fcsv, args.name)
         if ntd:
@@ -53,20 +53,20 @@ def run_hours(cfg, uname, get_global=False, global_config_file=None, dirhome=Non
         return run_hours_global(cfg.cfg_glb, uname)  # RdCsvs: results errors ntcsvs
     ##print('RUN HOURS LOCAL')
     cfgproj = cfg.cfg_loc
-    fcfgproj = cfgproj.filename
-    docproj = get_docproj(fcfgproj)
+    docproj = get_docproj(cfgproj.filename)
     ntd = get_csv_doc_uname(docproj, uname, dirhome)
-    ##ret = run_hours_local(cfg.cfg_loc, uname, dirhome)
-    ##if ret is None:
+    return _run_hours_local(docproj, ntd, uname, dirhome)
+
+def _run_hours_local(docproj, ntd, uname, dirhome):
     if docproj is None or ntd is None:
-        print(str_no_local_hours(fcfgproj, uname))
-        if cfgproj.timer_started(docproj, uname):
+        print(str_no_local_hours(docproj.filename, uname))
+        if docproj.timer_started(uname):
             print(str_how_to_stop_now())
         else:
             print(str_tostart())
     else:
         # None or RdCsv: results=timedelta/None, error=None,etc
-        return run_hours_local(docproj, uname, dirhome)
+        return _get_hours_local(docproj, uname, dirhome)
     # None or NtCsv(fcsv project username)
     return ntd
 
@@ -82,7 +82,7 @@ def run_hours_global(cfg_global, uname):
         return ntres  # RdCsvs: results errors ntcsvs
     return None
 
-def run_hours_local(docproj, uname, dirhome=None):
+def _get_hours_local(docproj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     ##debug(yellow('RUNNING COMMAND HOURS local'))
     ntd = get_csv_doc_uname(docproj, uname, dirhome)

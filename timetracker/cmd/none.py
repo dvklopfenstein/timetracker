@@ -20,10 +20,9 @@ def run_none(cfg_proj, username=None):
     """If no Timetracker command is run, print informative messages"""
     debug(yellow('RUNNING COMMAND NONE'))
     # Check for start time
-    ostart = cfg_proj.get_starttime_obj(username)
-    if ostart is not None:
-        prtmsg_started01(ostart)
-        return ostart
+    if (startobj := cfg_proj.get_starttime_obj(username)) is not None:
+        prtmsg_started01(startobj)
+        return startobj
     print(str_tostart())
     return None
 

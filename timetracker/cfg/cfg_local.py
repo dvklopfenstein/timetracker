@@ -27,10 +27,8 @@ from tomlkit.toml_file import TOMLFile
 from timetracker.consts import DIRTRK
 from timetracker.consts import DIRCSV
 
-from timetracker.starttime import Starttime
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
-from timetracker.cfg.utils import get_username
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath
@@ -85,20 +83,14 @@ class CfgProj:
     def get_starttime_obj(self, username):
         """Get a Starttime instance"""
         if (docproj := get_docproj(self.filename)):
-            return self._get_starttime_doc(docproj, username)
+            return docproj.get_startobj(username)
         return None
 
     def timer_started(self, docproj, username):
         """Return True if the timer is started, False if not"""
-        if docproj and (startobj := self._get_starttime_doc(docproj, username)):
+        if docproj and (startobj := docproj.get_startobj(username)):
             return startobj.started()
         return False
-
-    def _get_starttime_doc(self, docproj, username):
-        """Get a Starttime object, given a cfgdoc"""
-        if docproj.project:
-            return Starttime(self.dircfg, docproj.project, get_username(username))
-        return None
 
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
         """Write a new config file"""

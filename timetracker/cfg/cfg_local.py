@@ -43,11 +43,15 @@ class CfgProj:
     def __init__(self, filename):
         assert filename is not None
         self.filename = filename
-        self.exists = exists(self.filename)
+        ####self.exists = exists(self.filename)
         debug('CfgProj args %d filename %s', exists(filename), filename)
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
+
+    def file_exists(self):
+        """Return True if config file exists and False otherwise"""
+        return exists(self.filename)
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""

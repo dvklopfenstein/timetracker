@@ -40,7 +40,7 @@ def run_csv(cfg, uname, get_global, get_all, dirhome=None):  #, **kwargs):
     #cfgproj = _run_csvlocate_local(fnamecfg, dircsv, project)
     #debug(cfgproj.get_desc("new"))
     #fcfg_doc = get_docproj(cfgproj.filename) if cfgproj else None
-    #dirhome = get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc, 'csv')
+    #dirhome = get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc)
     #assert dirhome
 
 def _get_csv_local_uname(cfgproj, uname, dirhome=None):

@@ -37,6 +37,10 @@ class Starttime:
         debug('Starttime args . name     %s', name)
         debug('Starttime var  %d name     %s', exists(self.filename), self.filename)
 
+    def started(self):
+        """Return True if the timer is starte, False if not"""
+        return exists(self.filename)
+
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
         if starttime is not None:

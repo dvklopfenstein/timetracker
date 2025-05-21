@@ -4,7 +4,6 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
-from os.path import isdir
 from os.path import isabs
 from os.path import exists
 from os.path import expanduser
@@ -15,8 +14,7 @@ from os.path import join
 from os.path import commonprefix
 from os.path import split
 from subprocess import run
-from logging import debug
-from logging import warning
+##from logging import debug
 from timetracker.consts import FILENAME_GLOBALCFG
 
 
@@ -90,15 +88,6 @@ def get_filename_abs(fname):
     """Get the absolute filename"""
     return abspath(expanduser(fname))
 
-def chk_isdir(dname, prefix=''):
-    """Check that a file or directory exists"""
-    debug('%s: INFO exists(%s) %s', prefix, exists(dname), dname)
-    debug('%s: INFO  isdir(%s) %s', prefix, exists(dname), dname)
-    if isdir(dname):
-        return True
-    warning(f'Directory does not exist: {dname}')
-    return False
-
 def replace_homepath(fname):
     """Replace expanded home dir with '~' if using '~' is shorter"""
     # pylint: disable=fixme
@@ -107,8 +96,8 @@ def replace_homepath(fname):
     fname = abspath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
-    debug('replace_homepath UPDATE FNAME: %s', fname)
-    debug('replace_homepath UPDATE HOME:  %s', home_str)
+    ##debug('replace_homepath UPDATE FNAME: %s', fname)
+    ##debug('replace_homepath UPDATE HOME:  %s', home_str)
     return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
 def get_dirhome(dirhome):
@@ -156,11 +145,11 @@ def splitall(path):
         allparts.insert(0, parts[1])
     return allparts
 
-def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None, msg='TBD'):
+def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None):
     """Get the home directory, where the global configuration will be stored"""
-    debug('get_filename_globalcfg(\n  dirhome=%2,\n  fcfg_cli=%s,\n  '
-          'fcfg_doc=%s,\n  msg=%s)',
-          dirhome, fcfg_cli, fcfg_doc, msg)
+    ####debug('get_filename_globalcfg(\n  dirhome=%2,\n  fcfg_cli=%s,\n  '
+    ####      'fcfg_doc=%s,\n  msg=%s)',
+    ####      dirhome, fcfg_cli, fcfg_doc, msg)
     # TBD: REMOVE ASSERT
     if fcfg_doc is not None:
         assert '.timetracker' not in splitall(fcfg_doc), \

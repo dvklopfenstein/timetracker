@@ -50,7 +50,7 @@ class Cfg:
         # pylint: disable=line-too-long
         ##if fcfg_global is not None and (fcfgg_orig := docproj.global_config_filename) != fcfg_global:
         if fcfg_global is not None and \
-            (fcfgg_orig := get_filename_globalcfg(fcfg_doc=docproj.global_config_filename, msg="Cfg.needs_reinit")) != fcfg_global:
+            (fcfgg_orig := get_filename_globalcfg(fcfg_doc=docproj.global_config_filename)) != fcfg_global:
             msg.append(f'  * change the global config filename\n'
                        f'        from: "{fcfgg_orig}"\n'
                        f'        to:   "{fcfg_global}"')
@@ -91,11 +91,6 @@ class Cfg:
 
         self._reinit_glb_main(fcfg_global, dirhome, self.cfg_loc.filename)
 
-    def _get_fcfg_glb(self, dirhome, fcfg_global, msg):
-        docproj = get_docproj(self.cfg_loc.filename)
-        fcfg_doc = docproj.global_config_filename if docproj else None
-        return get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc, msg)
-
     # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
     def _reinit_loc_main(self, project, dircsv, fcfg_global, dirhome):
         ntdoc = get_ntdocproj(self.cfg_loc.filename)
@@ -114,7 +109,7 @@ class Cfg:
     def _reinit_glb_main(self, fcfg_global, dirhome, fcfg_loc):
         docproj = get_docproj(fcfg_loc)
         # pylint: disable=line-too-long
-        fcfg_glb = get_filename_globalcfg(dirhome, fcfg_global, docproj.global_config_filename, "Cfg._reinit_glb_main")
+        fcfg_glb = get_filename_globalcfg(dirhome, fcfg_global, docproj.global_config_filename)
         assert fcfg_glb is not None
         if self.cfg_glb:
             debug('_reinit_global %s', self.cfg_glb.filename)

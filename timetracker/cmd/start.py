@@ -4,10 +4,8 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os.path import exists
-from logging import debug
 
 from datetime import datetime
-from timetracker.utils import yellow
 from timetracker.epoch.epoch import get_dtz
 from timetracker.cmd.common import get_cfg
 from timetracker.cmd.common import prtmsg_started01
@@ -25,14 +23,12 @@ def cli_run_start(fnamecfg, args):
 
 def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
-    debug(yellow('RUNNING COMMAND _START'))
     cfg = get_cfg(fnamecfg)
     cfgproj = cfg.cfg_loc
     return run_start(cfgproj, name, start_at, **kwargs)
 
 def run_start(cfgproj, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
-    debug(yellow('RUNNING COMMAND START'))
     now = kwargs.get('now', datetime.now())
     start_obj = cfgproj.get_starttime_obj(name)
     if start_obj is None:
@@ -64,7 +60,7 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
 
 def _get_msg(start_at, force):
     if force:
-        return "reset to"
+        return "start reset to"
     return "started now" if start_at is None else "started at"
 
 

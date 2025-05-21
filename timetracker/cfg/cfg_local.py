@@ -85,8 +85,19 @@ class CfgProj:
     def get_starttime_obj(self, username):
         """Get a Starttime instance"""
         if (docproj := get_docproj(self.filename)):
-            if docproj.project:
-                return Starttime(self.dircfg, docproj.project, get_username(username))
+            return self._get_starttime_doc(docproj, username)
+        return None
+
+    def timer_started(self, docproj, username):
+        """Return True if the timer is started, False if not"""
+        if docproj and (startobj := self._get_starttime_doc(docproj, username)):
+            return startobj.started()
+        return False
+
+    def _get_starttime_doc(self, docproj, username):
+        """Get a Starttime object, given a cfgdoc"""
+        if docproj.project:
+            return Starttime(self.dircfg, docproj.project, get_username(username))
         return None
 
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
@@ -130,8 +141,7 @@ class CfgProj:
             doc['csv']['filename'] = csv_new
             chgd = True
         if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
-            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename,
-                                                msg="CfgProj.reint")
+            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename)
             print(f'{fname} -> Changed the global config filename\n'
                   f'        from: "{fcfgg_orig}"\n'
                   f'        to:   "{fcfg_global}"')

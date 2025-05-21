@@ -29,7 +29,7 @@ def run_tag(fcfg_local, fcfg_global, dirhome=None):
     print('The `tag` command is coming soon. If you need it sooner, open an issue at:')
     print('https://github.com/dvklopfenstein/timetracker/issues/new/choose')
     # pylint: disable=line-too-long
-    #filename_globalcfg = get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc, 'run_tag') if file is None else file
+    #filename_globalcfg = get_filename_globalcfg(dirhome, fcfg_global, fcfg_doc) if file is None else file
     #if not exists(filename_globalcfg):
     #    print(str_init(fcfg_local))
     #    return

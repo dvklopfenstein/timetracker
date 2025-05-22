@@ -70,9 +70,13 @@ def str_reinit():
     """How to re-initialize"""
     return 'Run `trk init` with `--force` to re-initialize'
 
-def str_no_local_hours(fcfgproj, uname):
+def str_no_local_hours_uname(fcfgproj, uname):
     """No hours found in project for uname"""
     return f'No hours found for {uname} through project config: {fcfgproj}'
+
+def str_no_local_hours_all(fcfgproj):
+    """No hours found in project for anyone"""
+    return f'No hours found through project config: {fcfgproj}'
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

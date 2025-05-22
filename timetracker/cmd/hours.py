@@ -17,19 +17,21 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
 from timetracker.csvget import get_csv_doc_uname
+#from timetracker.csvget import get_csvs_local_all # NEXT TBD
 from timetracker.csvget import get_csvs_global_uname
 from timetracker.csvget import get_csvs_global_all
 from timetracker.csvget import get_ntcsvproj01
 from timetracker.msgs import str_init0
 from timetracker.msgs import str_tostart
-from timetracker.msgs import str_no_local_hours
+from timetracker.msgs import str_no_local_hours_uname
+from timetracker.msgs import str_no_local_hours_all
 from timetracker.msgs import str_how_to_stop_now
 
 NTCSVS = namedtuple('RdCsvs', 'results errors ntcsvs')
 
 def cli_run_hours(fnamecfg, args):
     """Report the total time in hours spent on a project"""
-    print(f'ARGS FOR HOURS: {fnamecfg} {args}')
+    #print(f'ARGS FOR HOURS: {fnamecfg} {args}')
     if args.fcsv and exists(args.fcsv):
         ntd = get_ntcsvproj01(fnamecfg, args.fcsv, args.name)
         if ntd:
@@ -63,21 +65,39 @@ def run_hours(cfg, uname, get_global=False, all_users=False, **kws):
     cfgproj = cfg.cfg_loc
     docproj = get_docproj(cfgproj.filename)
     dirhome = kws.get('dirhome')
-    ntd = get_csv_doc_uname(docproj, uname, dirhome)
-    return _run_hours_local(docproj, ntd, uname, dirhome)
+    if not all_users:
+        ntd = get_csv_doc_uname(docproj, uname, dirhome)
+        return _run_hours_local_uname(docproj, ntd, uname, dirhome)
+    return _run_hours_local_all(docproj, dirhome)
 
-def _run_hours_local(docproj, ntd, uname, dirhome):
+def _run_hours_local_uname(docproj, ntd, uname, dirhome):
     if docproj is None or ntd is None:
-        print(str_no_local_hours(docproj.filename, uname))
+        print(str_no_local_hours_uname(docproj.filename, uname))
         if docproj.timer_started(uname):
             print(str_how_to_stop_now())
         else:
             print(str_tostart())
     else:
         # None or RdCsv: results=timedelta/None, error=None,etc
-        return _get_hours_local(docproj, uname, dirhome)
+        return _get_hours_local_uname(docproj, uname, dirhome)
     # None or NtCsv(fcsv project username)
     return ntd
+
+def _run_hours_local_all(docproj, dirhome):
+    if docproj is None:
+        print(str_no_local_hours_all(docproj.filename))
+        ####if docproj.timer_started(uname):
+        ####    print(str_how_to_stop_now())
+        ####else:
+        ####    print(str_tostart())
+    else:
+        # None or RdCsv: results=timedelta/None, error=None,etc
+        csvs = docproj.get_filenames_csv(dirhome)
+        for csv in csvs:
+            print(csv)
+        #return _get_hours_local_uname(docproj, uname, dirhome)
+    # None or NtCsv(fcsv project username)
+    # return ntd
 
 def run_hours_global_uname(cfg_global, uname):
     """Report the total hours spent on all projects by uname"""
@@ -103,7 +123,7 @@ def run_hours_global_all(cfg_global):
         return ntres  # RdCsvs: results errors ntcsvs
     return None
 
-def _get_hours_local(docproj, uname, dirhome=None):
+def _get_hours_local_uname(docproj, uname, dirhome=None):
     """Report the total time in hours spent on a project"""
     ##debug(yellow('RUNNING COMMAND HOURS local'))
     ntd = get_csv_doc_uname(docproj, uname, dirhome)

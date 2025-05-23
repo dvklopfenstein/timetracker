@@ -63,6 +63,9 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     '# Today\n'
     )
 
+def get_now():
+    """Get the date and time as of right now"""
+    return datetime.now()
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
@@ -73,7 +76,7 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
         dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
         if dto is None:
-            print(f'warning: text({elapsed_or_dt}) could not be converted to a datetime object')
+            print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print('ERROR FROM', white('python-dateparser: '), yellow(f'{err}'))

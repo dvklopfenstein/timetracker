@@ -4,10 +4,10 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from logging import error
-from datetime import datetime
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.ntcsv import get_ntcsv
 from timetracker.epoch.epoch import get_dtz
+from timetracker.epoch.epoch import get_now
 from timetracker.consts import FMTDT_H
 from timetracker.csvrun import wr_stopline
 from timetracker.cmd.common import get_cfg
@@ -43,7 +43,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
               'Do `trk start` to begin tracking time ')
               #f'for project, {cfgproj.project}')
         return {'fcsv':fcsv, 'csvline':None}
-    now = kwargs.get('now', datetime.now())
+    now = get_now() if 'now' not in kwargs else kwargs['now']
     dtz = now if stop_at is None else get_dtz(stop_at, now, kwargs.get('defaultdt'))
     if dtz is None:
         raise RuntimeError(f'NO STOP TIME FOUND in "{stop_at}"; '

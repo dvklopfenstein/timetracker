@@ -42,19 +42,18 @@ class Starttime:
 
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
-        if starttime is not None:
-            with open(self.filename, 'w', encoding='utf8') as prt:
-                ststr = starttime.strftime(FMTDT)
-                prt.write(f'{ststr}')
-                if activity:
-                    prt.write(f'\nAC {activity}')
-                if tags:
-                    for tag in tags:
-                        prt.write(f'\nTG {tag}')
-                ##debug('  WROTE START: %s', ststr)
-                ##debug('  WROTE FILE:  %s', self.filename)
-                return
-        raise RuntimeError("NOT WRITING START TIME; NO START TIME FOUND")
+        assert starttime is not None
+        with open(self.filename, 'w', encoding='utf8') as prt:
+            ststr = starttime.strftime(FMTDT)
+            prt.write(f'{ststr}')
+            if activity:
+                prt.write(f'\nAC {activity}')
+            if tags:
+                for tag in tags:
+                    prt.write(f'\nTG {tag}')
+            ##debug('  WROTE START: %s', ststr)
+            ##debug('  WROTE FILE:  %s', self.filename)
+            return
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""

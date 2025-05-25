@@ -13,6 +13,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
 from datetime import timedelta
+from timeit import default_timer
 from pytimeparse2 import parse as pyt2_parse_secs
 from dateparser import parse as dateparser_parserdt
 from dateparser.conf import SettingValidationError
@@ -74,7 +75,9 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
         return dto
     try:
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
+        tic = default_timer()
         dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
+        print(f'{timedelta(seconds=(default_timer()-tic))} dateparser')
         if dto is None:
             print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
         return dto
@@ -93,7 +96,10 @@ def get_dt_from_td(elapsed_or_dt, dta):
 
 def _conv_timedelta(elapsed_or_dt):
     try:
-        return pyt2_parse_secs(elapsed_or_dt)
+        tic = default_timer()
+        ret = pyt2_parse_secs(elapsed_or_dt)
+        print(f'{timedelta(seconds=(default_timer()-tic))} pytimeparse2')
+        return ret
     except TypeError as err:
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
                             'TO A timedelta object') from err

@@ -38,8 +38,8 @@ class Recorder:
             error('NOT WRITING ELAPSED TIME; NO STARTING TIME FOUND')
             return
         toc = default_timer()
-        dtx = datetime.now()
         delta = f'{timedelta(seconds=toc-tic)}'
+        dtx = datetime.now()
         tags = ''
         if not exists(self.csv):
             self._wr_csvhdrs()

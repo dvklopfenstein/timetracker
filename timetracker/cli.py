@@ -7,8 +7,7 @@ from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
 #from os.path import exists
-from logging import debug
-from subprocess import run
+#from logging import debug
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -18,7 +17,7 @@ from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.none import cli_run_none
-from timetracker.cfg.utils import run_cmd
+from timetracker.proc import get_log1
 
 
 def main():
@@ -47,13 +46,13 @@ class Cli:
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        ##print(f'TIMETRACKER ARGS: {self.args}')
+        #print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
-        debug('Cli RUNNNNNNNNNNNNNNNNNN ARGS:    %s', self.args)
-        debug('Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  %s', self.finder.get_dirtrk())
-        debug('Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: %s', self.fcfg)
+        ##debug('Cli RUNNNNNNNNNNNNNNNNNN ARGS:    %s', self.args)
+        ##debug('Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  %s', self.finder.get_dirtrk())
+        ##debug('Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: %s', self.fcfg)
         if self.args.command is not None:
             FNCS[self.args.command](self.fcfg, self.args)
         else:
@@ -61,7 +60,7 @@ class Cli:
 
     def _adjust_args(self, given_args):
         """Replace config default values with researcher-specified values"""
-        debug('ARGV: %s', sys_argv)
+        ##debug('ARGV: %s', sys_argv)
         ret = []
         args = sys_argv[1:] if given_args is None else given_args
         optname = None
@@ -86,21 +85,22 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        debug('TIMETRACKER ARGS: %s', args)
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
         if args.command == 'stop':
             if args.message == 'd':
-                msg = run_cmd('git log -1 --pretty=%B')
-                args.message = msg.strip() if msg else None
+                args.message = get_log1()
+        elif args.command == 'init':
+            if (dirgit := self.finder.dirgit) is not None:
+                args.dirgit = dirgit
         return args
 
     def _init_trksubdir(self):
         found = False
         for arg in sys_argv:
             if found:
-                debug('Cli FOUND: argv --trk-dir %s', arg)
+                ##debug('Cli FOUND: argv --trk-dir %s', arg)
                 return arg
             if arg == '--trk-dir':
                 found = True
@@ -125,8 +125,6 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
-        ####parser.add_argument('-f', '--file',
-        ####    help='Use specified file as the global config file')
         parser.add_argument('--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username running a timetracking command")
         parser.add_argument('--version', action='store_true',
@@ -173,6 +171,7 @@ class Cli:
             help='Reinitialize the project: Add missing config files & keep existing')
         parser.add_argument('-G', '--global-config-file', metavar='FILE',
             help='Use specified file as the global config file')
+        parser.add_argument( '--dirgit', help=SUPPRESS)
         return parser
 
     @staticmethod
@@ -188,10 +187,9 @@ class Cli:
 
     def _get_last_log(self):
         if self.finder.dirgit:
-            res = run(['git', 'log', '-1', '--pretty=%B'],
-                capture_output=True, text=True, check=False)
-            if res.stdout != '':
-                return f'({res.stdout}); invoked w/`-m d`'
+            rsp = get_log1()
+            if rsp.stdout != '':
+                return f'({rsp.stdout}); invoked w/`-m d`'
         return None
 
     def _add_subparser_stop(self, subparsers):

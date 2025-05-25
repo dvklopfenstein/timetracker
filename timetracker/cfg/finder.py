@@ -94,6 +94,7 @@ class CfgFinder:
             return normpath(join(dirname(dirgit), self.trksubdir))
         return normpath(join(self.dircur, self.trksubdir))
 
+
 def _get_abspathtrk(path, trksubdir):
     """Get .timetracker/ proj dir by searching up parent path"""
     trkabsdir, found = _finddirtrk(path, trksubdir)

@@ -77,7 +77,7 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
         tic = default_timer()
         dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
-        print(f'{timedelta(seconds=(default_timer()-tic))} dateparser')
+        print(f'{timedelta(seconds=(default_timer()-tic))} dateparser   parse({elapsed_or_dt})')
         if dto is None:
             print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
         return dto
@@ -98,7 +98,7 @@ def _conv_timedelta(elapsed_or_dt):
     try:
         tic = default_timer()
         ret = pyt2_parse_secs(elapsed_or_dt)
-        print(f'{timedelta(seconds=(default_timer()-tic))} pytimeparse2')
+        print(f'{timedelta(seconds=(default_timer()-tic))} pytimeparse2 parse({elapsed_or_dt})')
         return ret
     except TypeError as err:
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '

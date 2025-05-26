@@ -6,6 +6,7 @@ from os.path import dirname
 from logging import DEBUG
 from logging import basicConfig
 from tempfile import TemporaryDirectory
+from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cmd.init import run_init
@@ -24,27 +25,39 @@ def test_cfg_reinit(project='baking', trksubdir='.chef'):
     print(f'{SEP2}1) INITIALIZE "HOME" DIRECTORY')
     with TemporaryDirectory() as tmpdir:
         dirhome = join(tmpdir, 'home')
-        _, _, ntexpdirs = proj_setup(dirhome, project,
+        _, finder, ntexpdirs = proj_setup(dirhome, project,
             dircur='dirproj', dirgit01=True, trksubdir=trksubdir)
         prt_expdirs(ntexpdirs)
 
 
         # --------------------------------------------------------
-        print(f'{SEP2}1) Initialize the {project} project using REINIT')
-        cfg = run_init(ntexpdirs.cfglocfilename,
-                       dircsv=None,
-                       project=project,
-                       dirhome=dirhome)
+        print(f'{SEP2}2) Initialize the {project} project using REINIT')
+        cfg = Cfg(ntexpdirs.cfglocfilename)
+        run_init(cfg,
+                 finder.dirgit,
+                 dircsv=None,
+                 project=project,
+                 dirhome=dirhome)
         findhome(tmpdir)
         docproj = get_docproj(cfg.cfg_loc.filename)
         print(get_abspath(dirname(docproj.csv_filename), ntexpdirs.dirproj, dirhome))
         print(cfg.cfg_loc.get_filename_csv())
+        # --------------------------------------------------------
+        print(f'{SEP2}2a) SHOW PROJECT & GLOBAL CONFIG')
         show_cfgs(cfg)
+        assert docproj.project == project, \
+            f'PROJECT EXP({project}) != ACT({docproj.project})'
+        assert docproj.dircsv == '.', \
+            f'DIRCSV EXP(".") != ACT({docproj.dircsv})'
+
 
         # --------------------------------------------------------
+        print(f'{SEP2}3) CHECK REINIT RESULT')
         # N: Needs reinit
         # Y: No action required, nothing changed
         chk = Chk(cfg, dirhome)
+        print(cyan(f'DIRPROJ: {ntexpdirs.dirproj}'))
+        print(cyan(f'DIRHOME: {ntexpdirs.dirhome}'))
         chk.needs_reinit('N', dircsv=None, project=None, fcfg_global=None)
         chk.needs_reinit('Y', dircsv=None, project=None, fcfg_global=join(dirhome, 'a.cfg'))
         chk.needs_reinit('Y', dircsv=None, project='eating', fcfg_global=None)
@@ -65,11 +78,12 @@ class Chk:
         res = self.cfg.needs_reinit(dircsv, project, fcfg_global, self.dirhome)
         print(res)
         if exp == 'N':
-            assert res is None
-            print(cyan('Does NOT need reinit\n'))
+            print(cyan('EXPECTED: Does NOT need reinit'))
+            assert res is None, f'RESULT: {res}'
         else:
+            print(cyan('EXPECTED: NEEDS reinit'))
             assert res is not None
-            print(cyan('NEEDS reinit\n'))
+        print('')
 
 
 if __name__ == '__main__':

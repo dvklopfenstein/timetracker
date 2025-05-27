@@ -2,6 +2,6 @@
 
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved'
 __author__ = 'DV Klopfenstein, PhD'
-__version__ = '0.5a9'
+__version__ = '0.6a0'
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved

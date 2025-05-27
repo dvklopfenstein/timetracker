@@ -168,7 +168,7 @@ class Cli:
             help='Reinitialize the project: Add missing config files & keep existing')
         parser.add_argument('-G', '--global-config-file', metavar='FILE',
             help='Use specified file as the global config file')
-        parser.add_argument('--no-git-add', action='store_true',
+        parser.add_argument('-A', '--no-git-add', action='store_true',
             help='Do not run `git add` on newly created local project timetracker files')
         parser.add_argument( '--dirgit', help=SUPPRESS, default=self.finder.dirgit)
         return parser

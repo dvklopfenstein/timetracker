@@ -41,12 +41,20 @@ dependencies = [
 
 # https://pypi.org/classifiers/
 classifiers=[
+  'Intended Audience :: Science/Research',
+  'Topic :: Office/Business :: Financial :: Spreadsheet',
   'Programming Language :: Python',
   'Environment :: Console',
-  'Intended Audience :: Science/Research',
   'Development Status :: 2 - Pre-Alpha',
-  'Programming Language :: Python :: 3',
-  'Topic :: Office/Business :: Financial :: Spreadsheet',
+  'Programming Language :: Python :: 3.9',
+  'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12',
+  'Programming Language :: Python :: 3.13',
+  'Operating System :: POSIX :: Linux',
+  'Operating System :: POSIX',
+  'Operating System :: Unix',
+  'Operating System :: MacOS',
 ]
 
 

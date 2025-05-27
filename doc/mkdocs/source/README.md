@@ -53,7 +53,7 @@ Time is saved in
 
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
-### 1) Initialize a timetracker project
+### 1) [Initialize a timetracker project](usage_basic.md#initialize-a-project)
 ```
 $ trk init
 Initialized timetracker directory: /PROJDIR/.timetracker

@@ -81,11 +81,10 @@ Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
 
 ### Initializing prepares the local project for time tracking
 Initializing creates
-a local project timetracker-csv config file and
-a timetracker `.gitignore` file to ignore temporary timetracker working files.
+a local project timetracker-csv
+`config` file and a `.gitignore` file, which causes git to ignore temporary timetracker working files.
 Both files are stored in the `.timetracker` directory at the project root.
 ```sh
-# The local project timetracker-csv files
 $ pwd
 /home/bez/projects/meetinghouse
 
@@ -95,8 +94,7 @@ $ find .timetracker/ -type f
 ```
 
 See the [advanced usage](usage_advanced.md#initializing-runs-git-add)
-for initialization options
-such as `--no-git-add`.
+more information about initialization and its options.
 
 
 ### Initializing adds the local project to the global config file

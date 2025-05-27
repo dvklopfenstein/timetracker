@@ -38,6 +38,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
     with TemporaryDirectory() as tmphome:
         gfname = join(tmphome, fcfg_glo) if fcfg_glo else None
         run = Run(tmphome, gfname)
+        dirgit = None
 
         # --------------------------------------------------------
         print(f'{SEP2}2) Create local project directories')
@@ -46,7 +47,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
 
         print(f'{SEP2}3) Initialize the {project} project')
         cfg = Cfg(ntdirs.cfglocfilename)  # , gfname, tmphome)
-        cfg.init(project, fcfg_global=gfname, dirhome=tmphome)
+        cfg.init(dirgit, project, fcfg_global=gfname, dirhome=tmphome)
         run.chk_init_proj(cfg, ntdirs, trksubdir, gfname)
         findhome(tmphome)
 
@@ -56,7 +57,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
         run.prtcfgs(cfg)
 
         print(f'{SEP3}reinitialize {project} project')
-        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        cfg.reinit(dirgit, project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
@@ -68,7 +69,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
         print(f'{SEP3}reinitialize {project} project')
         run.prtcfgs(cfg)
         show_cfgs(cfg)
-        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        cfg.reinit(dirgit, project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
@@ -78,7 +79,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
         run.prtcfgs(cfg)
 
         print(f'{SEP3}reinitialize {project} project')
-        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        cfg.reinit(dirgit, project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
@@ -88,7 +89,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
         run.prtcfgs(cfg)
 
         print(f'{SEP3}reinitialize {project} project')
-        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        cfg.reinit(dirgit, project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 
@@ -99,7 +100,7 @@ def _test_cfg_init_force(project, trksubdir, fcfg_glo):
 
         print(f'{SEP3}reinitialize {project} project')
         cfg.cfg_glb = None
-        cfg.reinit(project, fcfg_global=gfname, dirhome=tmphome)
+        cfg.reinit(dirgit, project, fcfg_global=gfname, dirhome=tmphome)
         run.prtcfgs(cfg)
         run.chk_cfg(cfg, loc=True, glb=True)
 

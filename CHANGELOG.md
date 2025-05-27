@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-05-27 v0.5a8**](#release-2025-05-27-v05a8) Added functions to collect various groups of csv files
 * [**Release 2025-05-18 v0.5a7**](#release-2025-05-18-v05a7) Add starttime to `report`; Bug fix in `cancel`
 * [**Release 2025-05-16 v0.5a6**](#release-2025-05-16-v05a6) Add options to `projects` command; Fix `report` command
 * [**Release 2025-05-15 v0.5a5**](#release-2025-05-15-v05a5) Report command tested and updated; Get csv files for a single user tested and implemented
@@ -29,12 +30,15 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-05-27 v0.5a8
 * ADDED `trk hours` options `--global` to show hours for all projects for a single username
 * ADDED `trk hours` options `--global` `--all-users` for hours for all projects for all usernames
 * ADDED function get_csv_local_uname
 * ADDED function get_csvs_local_all
 * ADDED function get_csvs_global_uname
 * ADDED function get_csvs_global_all
+* ADDED running `git add .timetracker/config .timetracker/.gitignore` during initialization
 * FIXED exit gracefully if `start --at` datetime cannot be parsed
 
 ## Release 2025-05-18 v0.5a7

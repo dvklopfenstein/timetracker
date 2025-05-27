@@ -3,7 +3,9 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+from os import system
 from os.path import exists
+from os.path import relpath
 from logging import debug
 from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.cfg_global import CfgGlobal
@@ -12,7 +14,7 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
 from timetracker.cfg.docutils import get_value
 from timetracker.cfg.utils import get_filename_globalcfg
-from timetracker.proc import git_commit_file
+from timetracker.proc import git_add
 
 
 class Cfg:
@@ -70,19 +72,27 @@ class Cfg:
         # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
         ##print(f'Cfg.init(\n  {dirgit=},\n  {project=},\n  {dircsv=},\n'  # DVK
         ##      f'  {fcfg_global=},\n  {dirhome=},\n  {kwargs})')
-        debug(dirgit)
-        if project is None:
-            project = self.cfg_loc.get_project_from_filename()
-        assert project is not None
-        self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
-        git_commit_file(self.cfg_loc.filename, "Added project config file to repo")
-        quiet = kwargs.get('quiet', False)
-        if not quiet:
-            print(f'Initialized project directory: {self.cfg_loc.dircfg}')
+        project = self._get_project(project)
+        quiet = kwargs.get('quiet')
+        self._init_localproj(dirgit, project, dircsv, fcfg_global, quiet,
+                             kwargs.get('no_git_add', False))
         if self.cfg_glb is None:
             self.set_cfg_global(fcfg_global, dirhome)
         debug('INIT CfgGlobal filename %s', self.cfg_glb.filename)
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename, quiet=quiet)
+
+    def _init_localproj(self, dirgit, project, dircsv, fcfg_global, quiet, no_git_add):
+        """Initialize local project"""
+        # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
+        ntcfg = self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
+        ntgit = self.cfg_loc.wr_gitignore()
+        if dirgit is not None and not no_git_add:
+            files = self._git_add(ntcfg, ntgit)
+            if files:
+                filestr = ' '.join(relpath(f) for f in files)
+                print(f'Ran `git add {filestr}`')
+        if not quiet:
+            print(f'Initialized project directory: {self.cfg_loc.dircfg}')
 
     def reinit(self, dirgit, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
@@ -94,6 +104,24 @@ class Cfg:
         # pylint: disable=line-too-long
         self._reinit_loc_main(dirgit, project, dircsv, fcfg_global, dirhome)
         self._reinit_glb_main(fcfg_global, dirhome, self.cfg_loc.filename)
+
+    def _get_project(self, project):
+        if project is None:
+            project = self.cfg_loc.get_project_from_filename()
+        assert project is not None
+        return project
+
+    def _git_add(self, ntcfg, ntgit):
+        files = []
+        if ntcfg.error is None:
+            files.append(ntcfg.filename)
+        if ntgit.error is None:
+            files.append(ntgit.filename)
+        if files:
+            ntrsp = git_add(files)
+            if ntrsp is not None and ntrsp.returncode == 0:
+                return files
+        return None
 
     # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
     def _reinit_loc_main(self, dirgit, project, dircsv, fcfg_global, dirhome):

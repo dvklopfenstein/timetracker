@@ -19,12 +19,14 @@ def cli_run_init(fnamecfg, args):
             args.csvdir,
             project=args.project,
             trk_dir=args.trk_dir,
-            fcfg_global=args.global_config_file)
+            fcfg_global=args.global_config_file,
+            no_git_add=args.no_git_add)
     return cfg.reinit(
         args.dirgit,
         args.project,
         args.csvdir,
-        fcfg_global=args.global_config_file)
+        fcfg_global=args.global_config_file,
+        no_git_add=args.no_git_add)
 
 def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
     """Initialize timetracking on a project"""
@@ -44,7 +46,8 @@ def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
             sys_exit(0)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
     if not cfg_loc.file_exists():
-        cfg.init(dirgit, project, dircsv, fcfg_global, dirhome, quiet=quiet)
+        cfg.init(dirgit, project, dircsv, fcfg_global, dirhome, quiet=quiet,
+                 no_git_add=kwargs.get('no_git_add', False))
     elif not quiet:
         print(str_tostart())
     return cfg

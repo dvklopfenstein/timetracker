@@ -17,6 +17,7 @@ from os.path import abspath
 from os.path import dirname
 from os.path import normpath
 from logging import debug
+from collections import namedtuple
 
 from tomlkit import comment
 from tomlkit import document
@@ -29,6 +30,7 @@ from timetracker.consts import DIRCSV
 
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
+from timetracker.cfg.tomutils import write_config
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath
@@ -39,6 +41,7 @@ class CfgProj:
     """Local project configuration parser for timetracking"""
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
+    NTFILE = namedtuple('NtFile', 'filename error')
 
     def __init__(self, filename):
         assert filename is not None
@@ -80,8 +83,7 @@ class CfgProj:
         if exists(filenamecfg):
             doc = TOMLFile(filenamecfg).read()
             doc['csv']['filename'] = filename_str
-            self._wr_cfg(filenamecfg, doc)
-            return
+            return self._wr_cfg(filenamecfg, doc)
         raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
 
     def get_starttime_obj(self, username):
@@ -99,10 +101,7 @@ class CfgProj:
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
         """Write a new config file"""
         fname = self.get_filename_cfg()
-        debug('CfgProj wr_ini_file %s', fname)
         assert not exists(fname)
-        #if exists(fname):
-        #    return
         if not exists(self.dircfg):
             makedirs(self.dircfg, exist_ok=True)
         if dircsv is None:
@@ -110,9 +109,28 @@ class CfgProj:
         doc = self._get_new_doc(project, dircsv)
         if fcfg_global is not None:
             self._add_doc_globalcfgfname(doc, fcfg_global)
-        self._wr_cfg(fname, doc)
-        ####print(f'Initialized timetracker directory: {self.dircfg}')
-        return doc
+        return self.NTFILE(filename=fname, error=self._wr_cfg(fname, doc))
+
+    def wr_gitignore(self):
+        """Add .gitignore file in .timetracker/ directory"""
+        error = None
+        fname = join(self.dircfg, '.gitignore')
+        try:
+            fptr = open(fname, 'w', encoding='utf-8')
+        except (PermissionError, OSError) as err:
+            error = err
+        else:
+            with fptr:
+                fptr.write('start_*.txt')
+        return self.NTFILE(filename=fname, error=error)
+
+    ##def wr_gitignore(self, start=None):
+    ##    """Add .gitignore file in .timetracker/ directory"""
+    ##    fname = join(self.dircfg, '.gitignore')
+    ##    with open(fname, 'w', encoding='utf-8') as prt:
+    ##        prt.write(f'start_*.txt')
+    ##    ##return relpath(fname, start)
+    ##    return fname
 
     def reinit(self, project, dircsv, fcfg_global=None, ntdoc=None):
         """Update the cfg file, if needed"""
@@ -165,7 +183,7 @@ class CfgProj:
     @staticmethod
     def _wr_cfg(fname, doc):
         """Write config file"""
-        TOMLFile(fname).write(doc)
+        ret = write_config(fname, doc)
         # Use `~`, if it makes the path shorter
         ##fcsv = replace_homepath(doc['csv']['filename'])
         ##doc['csv']['filename'] = fcsv
@@ -174,6 +192,7 @@ class CfgProj:
         debug("CfgProj _wr_cfg(...)  GLOBAL    %s",
               doc['global_config']['filename'] if 'global_config' in doc else 'NONE')
         debug('CfgProj _wr_cfg(...)  WROTE:    %s', fname)
+        return ret
 
     def _rd_doc(self):
         """Read a config file and load it into a TOML document"""

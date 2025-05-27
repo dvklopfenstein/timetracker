@@ -7,16 +7,20 @@ from subprocess import run
 from shutil import which
 from collections import namedtuple
 
+WHICH_GIT = which('git')
 
 def get_gitusername():
     """Get the git user.name from the config"""
     cmd = 'git config user.name'.split()
     return _run_git_cmd(cmd).stdout
 
-def git_commit_file(filename, message):
-    """git commit a file"""
-    cmd = ['git', 'commit', filename, '-m', message]
-    return _run_git_cmd(cmd)
+def git_add(files):
+    """git add file(s) in file string (filestr)"""
+    if WHICH_GIT is not None:
+        cmd = ['git', 'add'] + files + ['-f']
+        res = _run_git_cmd(cmd)
+        return res
+    return None
 
 def get_log1():
     """Get the last git log with pretty print"""
@@ -25,7 +29,7 @@ def get_log1():
 
 def _run_git_cmd(cmdlst):
     """Run a git command"""
-    if which('git') is not None:
+    if WHICH_GIT is not None:
         #print(f'CMD: {cmdlst}')
         rsp = run(cmdlst, capture_output=True, check=False)
         #print(f'RSP: {dir(rsp)}')

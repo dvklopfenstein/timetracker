@@ -17,7 +17,7 @@ Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
 If the project is git-managed, timetracker runs:
 `git add .timetracker/config .timetracker/.gitignore`.
 Use the `--no-git-add` option inhibit running `git add`.
-```
+```sh
 $ trk init --no-git-add
 Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
 Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
@@ -25,14 +25,14 @@ Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
 ```
 
 If you wish to "unadd" the timetracker files, do:
-```
+```sh
 $ git reset .timetracker/.gitignore
 $ git reset .timetracker/config
 ```
 
 ## Restarting the timer
 To restart the timer, use the `--force` option with the `trk start` command.
-```
+```sh
 trk 
 Timer started on Tue 2025-04-01 05:08:24 AM and running H:M:S 3:39:16.348502 for 'trk' ID=bez
 Run `trk stop -m "task description"` to stop tracking now and record this time unit
@@ -44,7 +44,7 @@ Timetracker reset to: Tue 08:00 AM: 2025-04-01 08:00:00
 
 ## Cancel the timer
 To cancel the timer, use the `cancel` command.
-```
+```sh
 $ trk init
 Run `trk start` to start tracking
 
@@ -60,7 +60,7 @@ Timer is canceled; was started Tue 2025-04-01 07:00:00 AM; running H:M:S 1:56:59
 Specify a project timetracking directory
 other than `.timetracker` using the `--trk-dir` option.
 
-```
+```sh
 trk --trk-dir ./.trkr
 Timer started on Tue 2025-04-01 05:08:24 AM and running H:M:S 3:39:16.348502 for 'trk' ID=bez
 Run `trk stop -m "task description"` to stop tracking now and record this time unit

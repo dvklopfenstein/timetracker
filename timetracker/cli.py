@@ -46,7 +46,7 @@ class Cli:
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        print(f'TIMETRACKER ARGS: {self.args}')
+        ##print(f'TIMETRACKER ARGS: {self.args}')  # DVK
 
     def run(self):
         """Run timetracker"""

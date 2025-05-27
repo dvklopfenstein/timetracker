@@ -67,9 +67,10 @@ class Cfg:
 
     def init(self, dirgit, project=None, dircsv=None, fcfg_global=None, dirhome=None, **kwargs):
         """Initialize a project, return CfgGlobal"""
-        # pylint: disable=too-many-arguments
-        print(f'Cfg.init(\n  {dirgit=},\n  {project=},\n  {dircsv=},\n'
-              f'  {fcfg_global=},\n  {dirhome=},\n  {kwargs})')
+        # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
+        ##print(f'Cfg.init(\n  {dirgit=},\n  {project=},\n  {dircsv=},\n'  # DVK
+        ##      f'  {fcfg_global=},\n  {dirhome=},\n  {kwargs})')
+        debug(dirgit)
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         assert project is not None
@@ -85,9 +86,9 @@ class Cfg:
 
     def reinit(self, dirgit, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
-        # pylint: disable=too-many-arguments
-        print(f'Cfg.reinit(\n  {dirgit=},\n  {project=},\n  '
-              f'{dircsv=},\n  {fcfg_global=},\n  {dirhome=})')
+        # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
+        ##print(f'Cfg.reinit(\n  {dirgit=},\n  {project=},\n  '  # DVK
+        ##      f'{dircsv=},\n  {fcfg_global=},\n  {dirhome=})')
         assert self.cfg_loc is not None
 
         # pylint: disable=line-too-long

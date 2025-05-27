@@ -73,19 +73,31 @@ To begin, initialize your project for timetracking:
 ```sh
 # Initialize project for timetracking
 $ trk init
-Initialized timetracker directory: /home/bez/projects/meetinghouse/.timetracker
+Ran `git add .timetracker/config .timetracker/.gitignore`
+Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
+Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
+  project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
 ```
 
-Initializing creates a local timetracker-csv config file for one project
-which is stored in the `.timetracker` directory at the project root.
+### Initializing prepares the local project for time tracking
+Initializing creates
+a local project timetracker-csv
+`config` file and a `.gitignore` file, which causes git to ignore temporary timetracker working files.
+Both files are stored in the `.timetracker` directory at the project root.
 ```sh
-# The local project timetracker-csv config file
 $ pwd
 /home/bez/projects/meetinghouse
 
 $ find .timetracker/ -type f
+.timetracker/.gitignore
 .timetracker/config
 ```
+
+See the [advanced usage](usage_advanced.md#initializing-runs-git-add)
+more information about initialization and its options.
+
+
+### Initializing adds the local project to the global config file
 Initializing a timetracked project 
 adds your project into a list containing
 all of your timetracked projects

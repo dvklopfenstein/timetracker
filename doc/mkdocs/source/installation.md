@@ -19,12 +19,15 @@ $ pip install .
 
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.
-### 1) Initialize a timetracker project
+### [1) Initialize a timetracker project](usage_basic.md#initialize-a-project)
 ```sh
 $ cd /home/bez/projects/meetinghouse
 
 $ trk init
-Initialized timetracker directory: /home/bez/projects/meetinghouse/.timetracker
+Ran `git add .timetracker/config .timetracker/.gitignore`
+Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
+Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
+  project: meetinghouse; config: /home/bez/projects/meetinghouse/.timetracker/config
 ```
 ### 2) Start the timer
 ```sh

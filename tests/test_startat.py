@@ -8,6 +8,7 @@ from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
 from timetracker.utils import yellow
+from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from tests.pkgtttest.dts import DT2525
@@ -55,10 +56,11 @@ class Obj(RunBase):
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN(start_at={start_at})'))
         with TemporaryDirectory() as tmphome:
-            cfgname, _, _ = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
+            cfgname, finder, _ = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
 
             # CMD: INIT; CFG PROJECT
-            cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
+            cfg = Cfg(cfgname)
+            run_init(cfg, finder.dirgit, dircsv, self.project, dirhome=tmphome)
             #findhome(tmphome)
 
             # CMD: START

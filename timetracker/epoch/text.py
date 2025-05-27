@@ -7,7 +7,6 @@ from collections import namedtuple
 from datetime import timedelta
 from logging import debug
 from timetracker.epoch.calc import str_td
-from timetracker.utils import white
 
 
 # ---------------------------------------------------------------------
@@ -32,7 +31,7 @@ def _has_activity_tags(timedata):
 
 def _get_nto(has_activity, has_tags, pnum):
     flds = _get_nto_fieldnames(has_activity, has_tags, pnum)
-    debug(f'REPORT FIELDS: {flds}')
+    debug('REPORT FIELDS: %s', flds)
     return namedtuple('TimeText', flds)
 
 def get_fstr(has_activity, has_tags, pnum):
@@ -61,7 +60,7 @@ def _get_nto_fieldnames(has_activity, has_tags, pnum):
 
 def _get_dfmttd_at100(nto, nts, pho=350):
     # pylint: disable=protected-access
-    debug(white('timetext: _get_dfmttd_at100'))
+    debug('timetext: _get_dfmttd_at100')
     tot = timedelta()
     return [nto._make(_nttxt(ntd) +
         (str_td(tot:=tot+ntd.duration), f'{pho/3600*tot.total_seconds():0.0f}', ntd.message))
@@ -69,7 +68,7 @@ def _get_dfmttd_at100(nto, nts, pho=350):
 
 def _get_dfmttd_at000(nto, nts):
     # pylint: disable=protected-access
-    debug(white('timetext: _get_dfmttd_at000'))
+    debug('timetext: _get_dfmttd_at000')
     tot = timedelta()
     return [nto._make(_nttxt(ntd) +
         (str_td(tot:=tot+ntd.duration), ntd.message))
@@ -77,7 +76,7 @@ def _get_dfmttd_at000(nto, nts):
 
 def _get_dfmttd_at010(nto, nts):
     # pylint: disable=protected-access
-    debug(white('timetext: _get_dfmttd_at010'))
+    debug('timetext: _get_dfmttd_at010')
     tot = timedelta()
     return [nto._make(_nttxt(ntd) +
         (str_td(tot:=tot+ntd.duration),
@@ -86,7 +85,7 @@ def _get_dfmttd_at010(nto, nts):
 
 def _get_dfmttd_at001(nto, nts):
     # pylint: disable=protected-access
-    debug(white('timetext: _get_dfmttd_at001'))
+    debug('timetext: _get_dfmttd_at001')
     tot = timedelta()
     return [nto._make(_nttxt(ntd) +
         (str_td(tot:=tot+ntd.duration), ntd.message, ntd.tags))
@@ -94,7 +93,7 @@ def _get_dfmttd_at001(nto, nts):
 
 def _get_dfmttd_at011(nto, nts):
     # pylint: disable=protected-access
-    debug(white('timetext: _get_dfmttd_at011'))
+    debug('timetext: _get_dfmttd_at011')
     tot = timedelta()
     return [nto._make(_nttxt(ntd) +
         (str_td(tot:=tot+ntd.duration), ntd.activity, ntd.message, ntd.tags))

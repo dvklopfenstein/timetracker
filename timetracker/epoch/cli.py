@@ -4,11 +4,10 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
-from logging import debug
-from datetime import datetime
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from timetracker.epoch.epoch import get_dtz
+from timetracker.epoch.epoch import get_now
 from timetracker.epoch.calc import dt_from_str
 
 
@@ -22,12 +21,10 @@ def main(arglist=None):
 def run(arglist=None, fnc=None):
     """CLI for examining how strings are converted to a datetime object"""
     args = _get_args(arglist)
-    debug(f'ARGS: {args}')
-    now = datetime.now()
+    now = get_now()
     if args.now is not None:
         now = fnc(args.now, now)
     defaultdt = None if args.defaultdt is None else dt_from_str(args.defaultdt)
-    debug(f'DEFAULTDT: {type(defaultdt)}')
     dto = fnc(args.timetext, now, defaultdt)
     if dto is not None:
         ret = _prt(dto, f'<- "{args.timetext}"', args.formatcode)

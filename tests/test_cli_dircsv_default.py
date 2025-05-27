@@ -10,6 +10,7 @@ from logging import DEBUG
 from logging import debug
 from tempfile import TemporaryDirectory
 from timetracker.utils import cyan
+from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.cfg_local import get_docproj
 from timetracker.cmd.init import run_init
@@ -55,14 +56,15 @@ class Obj:
         debug(cyan(f'\n{"="*100}'))
         debug(cyan(f'RUN: dircsv({dircsv}) csv({fcsv}) EXPCSV({expcsv})'))
         with TemporaryDirectory() as tmphome:
-            cfgname, _, exp = proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
+            cfgname, finder, exp = proj_setup(tmphome, self.project, self.dircurattr, self.dirgit01)
+            cfg = Cfg(cfgname)
             #exp = mk_projdirs(tmphome, self.project, self.dirgit01)
             #finder = CfgFinder(dircur=getattr(exp, self.dircurattr), trksubdir=None)
             #cfgname = finder.get_cfgfilename()
             #assert not exists(cfgname), findhome_str(exp.dirhome)
 
             # CMD: INIT; CFG PROJECT
-            cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
+            run_init(cfg, finder.dirgit, dircsv, self.project, dirhome=tmphome)
             cfgp = cfg.cfg_loc
             cfgg = get_cfgglobal(dirhome=tmphome)
             # pylint: disable=unsubscriptable-object

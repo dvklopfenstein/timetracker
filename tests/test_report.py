@@ -6,6 +6,7 @@ from tempfile import TemporaryDirectory
 from logging import basicConfig
 from timetracker.utils import yellow
 from timetracker.ntcsv import NTCSV
+from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.report import run_report_cli
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
@@ -47,6 +48,7 @@ def test_report_nocsv(username='rando'):
     """Test the report command when there is no csv"""
     with TemporaryDirectory() as tmproot:
         cfgproj = get_cfgproj(tmproot)
+        dirgit = None
 
         tobj = RunTest(cfgproj, tmproot, username)
 
@@ -55,7 +57,8 @@ def test_report_nocsv(username='rando'):
         assert ntcsv is None
 
         print(yellow('\nTEST: `trk report` when there IS a timetracker repo'))
-        run_init(cfgproj.filename)
+        cfg = Cfg(cfgproj.filename)
+        run_init(cfg, dirgit)
         ntcsv = tobj.run_report()
         tobj.chk_filenotfounderror(ntcsv)
 

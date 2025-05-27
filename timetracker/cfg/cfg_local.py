@@ -17,6 +17,7 @@ from os.path import abspath
 from os.path import dirname
 from os.path import normpath
 from logging import debug
+from collections import namedtuple
 
 from tomlkit import comment
 from tomlkit import document
@@ -27,11 +28,9 @@ from tomlkit.toml_file import TOMLFile
 from timetracker.consts import DIRTRK
 from timetracker.consts import DIRCSV
 
-from timetracker.starttime import Starttime
-from timetracker.utils import pink
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
-from timetracker.cfg.utils import get_username
+from timetracker.cfg.tomutils import write_config
 from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.utils import get_relpath
@@ -42,15 +41,20 @@ class CfgProj:
     """Local project configuration parser for timetracking"""
 
     CSVPAT = 'timetracker_PROJECT_$USER$.csv'
+    NTFILE = namedtuple('NtFile', 'filename error')
 
     def __init__(self, filename):
         assert filename is not None
         self.filename = filename
-        self.exists = exists(self.filename)
-        debug(pink(f'CfgProj args {int(exists(filename))} filename {filename}'))
+        ####self.exists = exists(self.filename)
+        debug('CfgProj args %d filename %s', exists(filename), filename)
         self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
         self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
         self.dirproj = dirname(self.dircfg)
+
+    def file_exists(self):
+        """Return True if config file exists and False otherwise"""
+        return exists(self.filename)
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""
@@ -79,24 +83,25 @@ class CfgProj:
         if exists(filenamecfg):
             doc = TOMLFile(filenamecfg).read()
             doc['csv']['filename'] = filename_str
-            self._wr_cfg(filenamecfg, doc)
-            return
+            return self._wr_cfg(filenamecfg, doc)
         raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
 
     def get_starttime_obj(self, username):
         """Get a Starttime instance"""
         if (docproj := get_docproj(self.filename)):
-            if docproj.project:
-                return Starttime(self.dircfg, docproj.project, get_username(username))
+            return docproj.get_startobj(username)
         return None
+
+    def timer_started(self, docproj, username):
+        """Return True if the timer is started, False if not"""
+        if docproj and (startobj := docproj.get_startobj(username)):
+            return startobj.started()
+        return False
 
     def wr_ini_file(self, project=None, dircsv=None, fcfg_global=None):
         """Write a new config file"""
         fname = self.get_filename_cfg()
-        debug(f'CfgProj wr_ini_file {fname}')
         assert not exists(fname)
-        #if exists(fname):
-        #    return
         if not exists(self.dircfg):
             makedirs(self.dircfg, exist_ok=True)
         if dircsv is None:
@@ -104,9 +109,28 @@ class CfgProj:
         doc = self._get_new_doc(project, dircsv)
         if fcfg_global is not None:
             self._add_doc_globalcfgfname(doc, fcfg_global)
-        self._wr_cfg(fname, doc)
-        ####print(f'Initialized timetracker directory: {self.dircfg}')
-        return doc
+        return self.NTFILE(filename=fname, error=self._wr_cfg(fname, doc))
+
+    def wr_gitignore(self):
+        """Add .gitignore file in .timetracker/ directory"""
+        error = None
+        fname = join(self.dircfg, '.gitignore')
+        try:
+            fptr = open(fname, 'w', encoding='utf-8')
+        except (PermissionError, OSError) as err:
+            error = err
+        else:
+            with fptr:
+                fptr.write('start_*.txt')
+        return self.NTFILE(filename=fname, error=error)
+
+    ##def wr_gitignore(self, start=None):
+    ##    """Add .gitignore file in .timetracker/ directory"""
+    ##    fname = join(self.dircfg, '.gitignore')
+    ##    with open(fname, 'w', encoding='utf-8') as prt:
+    ##        prt.write(f'start_*.txt')
+    ##    ##return relpath(fname, start)
+    ##    return fname
 
     def reinit(self, project, dircsv, fcfg_global=None, ntdoc=None):
         """Update the cfg file, if needed"""
@@ -131,8 +155,7 @@ class CfgProj:
             doc['csv']['filename'] = csv_new
             chgd = True
         if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
-            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename,
-                                                msg="CfgProj.reint")
+            fcfgg_orig = get_filename_globalcfg(fcfg_doc=docproj.global_config_filename)
             print(f'{fname} -> Changed the global config filename\n'
                   f'        from: "{fcfgg_orig}"\n'
                   f'        to:   "{fcfg_global}"')
@@ -160,15 +183,16 @@ class CfgProj:
     @staticmethod
     def _wr_cfg(fname, doc):
         """Write config file"""
-        TOMLFile(fname).write(doc)
+        ret = write_config(fname, doc)
         # Use `~`, if it makes the path shorter
         ##fcsv = replace_homepath(doc['csv']['filename'])
         ##doc['csv']['filename'] = fcsv
-        debug(pink(f'CfgProj _wr_cfg(...)  PROJ:     {doc["project"]}'))
-        debug(pink(f"CfgProj _wr_cfg(...)  CSV:      {doc['csv']['filename']}"))
-        debug(pink("CfgProj _wr_cfg(...)  GLOBAL    "
-            f"{doc['global_config']['filename'] if 'global_config' in doc else 'NONE'}"))
-        debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
+        debug('CfgProj _wr_cfg(...)  PROJ:     %s', doc["project"])
+        debug("CfgProj _wr_cfg(...)  CSV:      %s", doc['csv']['filename'])
+        debug("CfgProj _wr_cfg(...)  GLOBAL    %s",
+              doc['global_config']['filename'] if 'global_config' in doc else 'NONE')
+        debug('CfgProj _wr_cfg(...)  WROTE:    %s', fname)
+        return ret
 
     def _rd_doc(self):
         """Read a config file and load it into a TOML document"""
@@ -199,7 +223,7 @@ class CfgProj:
     def _get_new_doc(self, project, dircsv):
         assert project is not None and isinstance(project, str)
         #assert dircsv
-        debug(f'TODO: dircsv={dircsv}')
+        debug('TODO: dircsv=%s', dircsv)
         doc = document()
         doc.add(comment("TimeTracker project configuration file"))
         doc.add(nl())
@@ -220,12 +244,12 @@ class CfgProj:
             self._add_doc_globalcfgfname(doc, fcfg_global)
         elif 'filename' in doc['global_config']:
             if (cur := doc['global_config']['filename']) != fcfg_global:
-                debug(pink(f'CfgProj WAS (fcfg_global={cur})'))
+                debug('CfgProj WAS (fcfg_global=%s', cur)
                 doc['global_config']['filename'] = fcfg_global
-                debug(pink(f'CfgProj NOW (fcfg_global={fcfg_global})'))
+                debug('CfgProj NOW (fcfg_global=%s', fcfg_global)
         else:
             doc['global_config']['filename'] = fcfg_global
-            debug(pink(f'CfgProj SET (fcfg_global={fcfg_global})'))
+            debug('CfgProj SET (fcfg_global=%s)', fcfg_global)
 
     @staticmethod
     def _add_doc_globalcfgfname(doc, fcfg_global):
@@ -235,7 +259,7 @@ class CfgProj:
         #csvdir.comment("Directory where the csv file is stored")
         section.add("filename", fcfg_global)
         doc.add("global_config", section)
-        debug(pink(f'CfgProj _add_doc_globalcfgfname(fcfg_global={fcfg_global})'))
+        debug('CfgProj _add_doc_globalcfgfname(fcfg_global=%s)', fcfg_global)
 
     #-------------------------------------------------------------
     def get_desc(self, note=' set'):

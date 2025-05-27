@@ -5,6 +5,7 @@ from os.path import join
 from os.path import exists
 from logging import basicConfig
 from tempfile import TemporaryDirectory
+from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.doc_local import DocProj
 from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.docutils import get_ntvalue
@@ -24,11 +25,12 @@ def test_doc_value(project='tapistry', username='weaver'):
     with TemporaryDirectory() as tmproot:
         basicConfig()
         dirhome = join(tmproot, 'home')
-        fcfgproj, _, expdirs = proj_setup(dirhome, project, dircur='dirproj') # finder
+        fcfgproj, finder, expdirs = proj_setup(dirhome, project, dircur='dirproj') # finder
+        cfg = Cfg(fcfgproj)
         prt_expdirs(expdirs)
 
         # Initialize all projects for all usernames
-        cfg = run_init(fcfgproj,
+        run_init(cfg, finder.dirgit,
             dircsv=None,
             project=project,
             dirhome=dirhome)

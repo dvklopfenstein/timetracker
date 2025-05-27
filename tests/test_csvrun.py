@@ -9,6 +9,7 @@ from datetime import timedelta
 from tempfile import TemporaryDirectory
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
+from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
@@ -24,8 +25,9 @@ def test_stopat(project='pumpkin', username='carver', dircsv=None):
     #basicConfig(level=DEBUG)
 
     with TemporaryDirectory() as tmphome:
-        cfgname, _, _ = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg = run_init(cfgname, dircsv, project, dirhome=tmphome)  # cfgg
+        cfgname, finder, _ = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg = Cfg(cfgname)
+        run_init(cfg, finder.dirgit, dircsv, project, dirhome=tmphome)  # cfgg
         assert cfgname == cfg.cfg_loc.filename, f'{cfgname} != {cfg.cfg_loc.filename}'
 
         # Write in old format

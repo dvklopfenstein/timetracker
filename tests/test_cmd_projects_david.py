@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 """Test `trk stop --at`"""
 
-from os import environ
 from os.path import exists
 from os.path import join
 from logging import basicConfig
-#from logging import DEBUG
 from tempfile import TemporaryDirectory
-from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import yellow
-from timetracker.cmd.hours import run_hours
+#from timetracker.cmd.hours import run_hours
 from timetracker.csvget import get_csv_local_uname
 from timetracker.csvget import get_csvs_global_uname
+from timetracker.csvget import get_csvs_local_all
+from timetracker.csvget import get_csvs_global_all
 from tests.pkgtttest.runprojs import RunProjs
-from tests.pkgtttest.mkprojs import getmkdirs_filename
-from tests.pkgtttest.mkprojs import reset_env
 from tests.pkgtttest.mkprojs import get_projectname
+from tests.pkgtttest.expcsvs import ExpCsvs
 
 
-def test_cmd_projects():
+def test_cmd_projects(prt=True):
     """Test `trk stop --at"""
     userprojs = {
         ('david'  , 'shepherding'): ([('Sun', 'Fri', '5am', '11:30pm')], 111.0),
+        ('david'  , 'sleeping'):    ([],   0.0),
+        ('david'  , 'grazing'):     ([],   0.0),
+        ('david'  , 'hunting'):     ([],   0.0),
+
         ('lambs'  , 'sleeping'):    ([('Mon', 'Sat',  '7pm',   '11pm')],  24.0),
         ('lambs'  , 'grazing'):     ([('Mon', 'Sat',  '6am',    '8am'),
                                       ('Mon', 'Sat',  '9am',   '10am'),
@@ -30,95 +32,146 @@ def test_cmd_projects():
                                       ('Mon', 'Sat', ' 7pm',    '8pm')], 108.0),
         ('goats'  , 'sleeping'):    ([('Mon', 'Sat',  '6:59pm', '11:59pm')], 30.0),  # 3
         ('goats'  , 'grazing'):     ([('Wed', 'Fri', '10am',    '4pm')],  18.0),
+
         ('lions'  , 'hunting'):     ([('Mon', 'Fri',  '7pm',    '8pm')],   5.0),
-        ('jackels', 'scavenging'):  ([('Sun', 'Fri',  '9am',    '3pm')],  36.0),
-        # -------------------------------------------------------
-        #('david'  , 'shepherding'): ([('Mon', 'Fri',  '5am',        '6am')],  5.0),  # 1
-        #('lambs'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '7am')], 10.0),  # 2
-        #('lambs'  , 'sleeping'):    ([('Mon', 'Fri',  '7pm',       '11pm')], 20.0),
-        #('goats'  , 'grazing'):     ([('Mon', 'Fri',  '5am',        '8am')], 15.0),  # 3
-        #('goats'  , 'sleeping'):    ([('Mon', 'Fri',  '6:59pm', '11:59pm')], 25.0),  # 3
-        #('lions'  , 'hunting'):     ([('Mon', 'Fri',  '5am',        '9am')], 20.0),  # 4
-        #('jackels', 'scavenging'):  ([('Mon', 'Fri',  '5am',       '10am')], 25.0),  # 5
+        ('lions'  , 'sleeping'):    ([],   0.0),
+        ('lions'  , 'grazing'):     ([],   0.0),
+        ('lions'  , 'shepherding'): ([],   0.0),
+        ##('jackels', 'scavenging'):  ([('Sun', 'Fri',  '9am',    '3pm')],  36.0),
     }
+
     exp_projs = [
-        ['shepherding', 'david/proj/shepherding/.timetracker/config'],
-        ['sleeping',    'lambs/proj/sleeping/.timetracker/config'],
-        ['grazing',     'lambs/proj/grazing/.timetracker/config'],
-        ['sleeping',    'goats/proj/sleeping/.timetracker/config'],
-        ['grazing',     'goats/proj/grazing/.timetracker/config'],
-        ['hunting',     'lions/proj/hunting/.timetracker/config'],
-        ['scavenging',  'jackels/proj/scavenging/.timetracker/config'],
+        'david/proj/shepherding/.timetracker/config',
+        'david/proj/sleeping/.timetracker/config',
+        'david/proj/grazing/.timetracker/config',
+        'david/proj/hunting/.timetracker/config',
+
+        'lambs/proj/sleeping/.timetracker/config',
+        'lambs/proj/grazing/.timetracker/config',
+
+        'goats/proj/sleeping/.timetracker/config',
+        'goats/proj/grazing/.timetracker/config',
+
+        'lions/proj/hunting/.timetracker/config',
+        'lions/proj/sleeping/.timetracker/config',
+        'lions/proj/grazing/.timetracker/config',
+        'lions/proj/shepherding/.timetracker/config',
+        ##'jackels/proj/scavenging/.timetracker/config',
     ]
-    orig_fglb = environ.get('TIMETRACKERCONF')
     with TemporaryDirectory() as tmproot:
         # Initialize all projects for all usernames
         basicConfig()
-        fglb = getmkdirs_filename(tmproot, 'share', FILENAME_GLOBALCFG)
-        environ['TIMETRACKERCONF'] = fglb
 
-        runprojs = RunProjs(tmproot, userprojs, fglb)
+        # Initialize all projects for all usernames
+        runprojs = RunProjs(tmproot, userprojs)
         runprojs.run_setup()
-        runprojs.chk_projects(exp_projs)
+        if prt:
+            runprojs.prt_userfiles('FILES BEFORE PUSH/PULL', True)
+        runprojs.chk_proj_configs(exp_projs)
 
-        #type2files = get_type2files(runprojs.dirhome)
-        _prt_projs(runprojs.prj2mgrprj, runprojs.dirhome)
+        # Mimic git push and pull
+        runprojs.all_push()
+        pull_copies = runprojs.all_pull()
+        if prt:
+            runprojs.upstream.prt_files()
+            runprojs.prt_userfiles('FILES AFTER PUSH/PULL', True)
 
-        _test_get_csv_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
-        _test_get_csvs_global_uname(runprojs.get_user2glbcfg(), runprojs.dirhome)
+        expobj = ExpCsvs(runprojs.orig_ntcsvs, pull_copies)
+        # Find csvs for all users in all projects
+        act_csvs = _test_get_csvs_global_all(runprojs.get_user2glbcfg(), runprojs.dirhome, prt)
+        expobj.chk_get_csvs_global_all(act_csvs)
+
+        # Find csvs for one user in all projects
+        act_csvs = _test_get_csvs_global_uname(runprojs.get_user2glbcfg(), runprojs.dirhome, prt)
+        expobj.chk_get_csvs_global_uname(act_csvs)
+
+        # Find csvs for all users in one project
+        act_csvs = _test_get_csvs_local_all(runprojs.prj2mgrprj, prt)
+        expobj.chk_get_csvs_local_all(act_csvs)
+
+        # Find csv for one user in one project
+        act_csvs = _test_get_csv_local_uname(runprojs.prj2mgrprj, prt)
+        expobj.chk_get_csvs_local_uname(act_csvs)
 
         #_test_run_hours_local_uname(runprojs.prj2mgrprj, runprojs.dirhome)
         #print(yellow('Print hours, iterating through all users & their projects'))
         #runprojs.run_hoursprojs()
 
-        print(yellow('Print hours across projects globally'))
-        print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runprojs.cfg, 'lambs', dirhome=tmproot))
+        ##print(yellow('Print hours across projects globally'))
+        ##print('FFFFFFFFFFFFFFFFFFFFFFFFFFFF', run_hours(runprojs.cfg, 'lambs', dirhome=tmproot))
 
-        #print(yellow('Print hours across projects globally'))
-        reset_env('TIMETRACKERCONF', orig_fglb, fglb)
 
 #def _test_run_hours_local_uname(runprojs, runprojs.dirhome):
 
 
-def _prt_projs(prj2mgrprj, dirhome):
-    for (user, proj), obj in prj2mgrprj.items():
-        print(f'{dirhome} {user:7} {proj:11} {obj.fcfgproj}')
-
-
-def _test_get_csvs_global_uname(user2glbcfg, dirhome):
+def _test_get_csvs_global_uname(user2glbcfg, dirhome, prt=False):
     """TEST get_csvs_global_uname(...)"""
     print(yellow('\nTEST get_csvs_global_uname(...)'))
+    usr2ntcsvs = {}
     for usr, glb_cfg in user2glbcfg.items():
-        print(f'USERNAME: {usr}')
         projects = glb_cfg.get_projects()
+        if prt:
+            print(f'USERNAME: {usr}')
+        # NtCsv: fcsv project username
         nts = get_csvs_global_uname(projects, usr, dirhome)
-        for ntd in nts:
-            exp_fcsv = join(ntd.fcfgproj.replace('.timetracker/config', ''),
-                            f'timetracker_{ntd.ntcsv.project}_{usr}.csv')
-            print(ntd)
-            assert ntd.ntcsv.username == usr
-            assert ntd.ntcsv.project == get_projectname(ntd.fcfgproj)
-            assert ntd.ntcsv.fcsv == exp_fcsv
-            #assert ntd.project == get_projectname(obj.fcfgproj)
-        ##assert projects == [nt.fcfgproj for nt in nts], (f'ACT != EXP\n'
-        ##                                                 f'ACT: {projects}\n'
-        ##                                                 f'EXP: {[nt.fcfgproj for nt in nts]}\n')
-        print('')
+        usr2ntcsvs[usr] = set(nts)
+        for ntcsv in nts:
+            if prt:
+                print(ntcsv)
+            assert ntcsv.username == usr
+        if prt:
+            print('')
+    return usr2ntcsvs
 
-def _test_get_csv_local_uname(prj2mgrprj, dirhome):
+def _test_get_csvs_global_all(user2glbcfg, dirhome, prt=False):
+    """TEST get_csvs_global_all(...)"""
+    print(yellow('\nTEST get_csvs_global_all(...)'))
+    usr2ntcsvs = {}
+    for usr, glb_cfg in user2glbcfg.items():
+        projects = glb_cfg.get_projects()
+        if prt:
+            print(f'USERNAME: {usr}')
+        nts = get_csvs_global_all(projects, dirhome)
+        usr2ntcsvs[usr] = set(nts)
+        if prt:
+            for ntcsv in nts:
+                print(ntcsv)
+            print('')
+    return usr2ntcsvs
+
+def _test_get_csv_local_uname(prj2mgrprj, prt=False):
     """TEST get_csv_local_uname(...)"""
     print(yellow('\nTEST get_csv_local_uname(...)'))
+    usrprj2ntcsv = {}
     for (user, proj), obj in prj2mgrprj.items():
-        ntd = get_csv_local_uname(obj.fcfgproj, user, dirhome)
-        ##print(f'TEST get_csv_local_uname({obj.fcfgproj}, {user}, {dirhome})')
-        ##print(f'{ntd}\n')
-        assert exists(ntd.fcsv)
-        exp_fcsv = join(obj.fcfgproj.replace('.timetracker/config', ''),
-                        f'timetracker_{ntd.project}_{user}.csv')
-        assert ntd.username == user
-        assert ntd.project == get_projectname(obj.fcfgproj)
-        assert ntd.project == proj
-        assert ntd.fcsv == exp_fcsv, f'fcsv: ACT != EXP\nACT({ntd.fcsv})\nEXP({exp_fcsv})'
+        ntd = get_csv_local_uname(obj.fcfgproj, user, obj.home)
+        usrprj2ntcsv[(user, proj)] = ntd
+        if ntd is not None:
+            if prt:
+                print(f'{user}: get_csv_local_uname({obj.fcfgproj}, {user}, {obj.home})')
+                print(f'{ntd}\n')
+            assert exists(ntd.fcsv)
+            exp_fcsv = join(obj.fcfgproj.replace('.timetracker/config', ''),
+                            f'timetracker_{ntd.project}_{user}.csv')
+            assert ntd.username == user
+            assert ntd.project == get_projectname(obj.fcfgproj)
+            assert ntd.project == proj
+            assert ntd.fcsv == exp_fcsv, f'fcsv: ACT != EXP\nACT({ntd.fcsv})\nEXP({exp_fcsv})'
+    return usrprj2ntcsv
+
+def _test_get_csvs_local_all(prj2mgrprj, prt=False):
+    """TEST get_csv_local_uname(...)"""
+    print(yellow('\nTEST get_csvs_local_all(...)'))
+    usrprj2ntcsvs = {}
+    for (user, proj), obj in prj2mgrprj.items():
+        nts = get_csvs_local_all(obj.fcfgproj, obj.home)
+        if nts is not None:
+            usrprj2ntcsvs[(user, proj)] = set(nts)
+            for ntd in nts:
+                if prt:
+                    print(f'{user:7} {proj} {ntd}')
+            print('')
+    return usrprj2ntcsvs
 
 
 if __name__ == '__main__':

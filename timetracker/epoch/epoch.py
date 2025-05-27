@@ -11,9 +11,9 @@ https://github.com/scrapinghub/dateparser
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from logging import debug
 from datetime import datetime
 from datetime import timedelta
+from timeit import default_timer
 from pytimeparse2 import parse as pyt2_parse_secs
 from dateparser import parse as dateparser_parserdt
 from dateparser.conf import SettingValidationError
@@ -21,7 +21,6 @@ from timetracker.epoch.calc import RoundTime
 from timetracker.consts import FMTDT_H
 from timetracker.utils import white
 from timetracker.utils import yellow
-from timetracker.utils import cyan
 
 
 def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
@@ -65,6 +64,9 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     '# Today\n'
     )
 
+def get_now():
+    """Get the date and time as of right now"""
+    return datetime.now()
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
@@ -72,12 +74,12 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     if dto is not None:
         return dto
     try:
-        debug(cyan(f'CCCCCCCCCCCCCC Using dateparser.parser({elapsed_or_dt}, default={defaultdt})'))
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
+        tic = default_timer()
         dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
+        print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({elapsed_or_dt})')
         if dto is None:
-            print(f'warning: text({elapsed_or_dt}) could not be converted to a datetime object')
-        debug(f'dto({dto})')
+            print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print('ERROR FROM', white('python-dateparser: '), yellow(f'{err}'))
@@ -87,16 +89,17 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
 def get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""
     if elapsed_or_dt.count(':') != 2:
-        debug(cyan(f'AAAAAAAAAAAAAA Using pytimeparse2({elapsed_or_dt}) + {dta}'))
         secs = _conv_timedelta(elapsed_or_dt)
-        debug(cyan(f'BBBBBBBBBBBBBB secs = {secs}'))
         if secs is not None:
             return dta + timedelta(seconds=secs)
     return None
 
 def _conv_timedelta(elapsed_or_dt):
     try:
-        return pyt2_parse_secs(elapsed_or_dt)
+        tic = default_timer()
+        ret = pyt2_parse_secs(elapsed_or_dt)
+        print(f'{timedelta(seconds=default_timer()-tic)} pytimeparse2 parse({elapsed_or_dt})')
+        return ret
     except TypeError as err:
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
                             'TO A timedelta object') from err

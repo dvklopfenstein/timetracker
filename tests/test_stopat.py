@@ -15,6 +15,8 @@ from timetracker.consts import FILENAME_GLOBALCFG
 from timetracker.utils import cyan
 from timetracker.utils import yellow
 from timetracker.ntcsv import get_ntcsv
+from timetracker.cfg.cfg import Cfg
+from timetracker.cfg.cfg_global import CfgGlobal
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
@@ -65,10 +67,11 @@ class Obj(RunBase):
 
     def _run(self, dta, stop_at, tmphome, dircsv=None):
         """Run init, stop --at, stop"""
-        cfgname, _, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
+        cfgname, finder, exp = proj_setup(tmphome, self.project, self.dircur, self.dirgit01)
         # pylint: disable=unused-variable
         fcfgg = join(exp.dirhome, FILENAME_GLOBALCFG)
-        cfg = run_init(cfgname, dircsv, self.project, dirhome=tmphome)
+        cfg = Cfg(cfgname, CfgGlobal(fcfgg))
+        run_init(cfg, finder.dirgit, dircsv, self.project, dirhome=tmphome)
         ostart = run_start(cfg.cfg_loc, self.uname,
             now=dta,
             defaultdt=dta)

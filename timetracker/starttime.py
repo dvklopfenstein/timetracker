@@ -12,12 +12,10 @@ from os.path import dirname
 from os.path import normpath
 from datetime import datetime
 from datetime import timedelta
-from logging import debug
+##from logging import debug
 
-from timetracker.utils import orange
 from timetracker.consts import DIRTRK
 from timetracker.consts import FMTDT
-from timetracker.consts import FMTDT_H
 from timetracker.cfg.utils import get_username
 
 # 2025-01-21 17:09:47.035936
@@ -26,32 +24,36 @@ from timetracker.cfg.utils import get_username
 class Starttime:
     """Local project configuration parser for timetracking"""
 
-    min_trigger = timedelta(hours=5)
+    min_trigger = timedelta(hours=10)
 
     def __init__(self, dircfg, project=None, name=None):
         self.dircfg  = abspath(DIRTRK) if dircfg is None else normpath(dircfg)
         self.project = basename(dirname(self.dircfg)) if project is None else project
         self.name = get_username(name) if name is None else name
         self.filename = join(self.dircfg, f'start_{self.project}_{self.name}.txt')
-        debug(orange(f'Starttime args {int(exists(dircfg))} dircfg {dircfg}'))
-        debug(f'Starttime args . project  {project}')
-        debug(f'Starttime args . name     {name}')
-        debug(f'Starttime var  {int(exists(self.filename))} name     {self.filename}')
+        ##debug('Starttime args %d dircfg %s', exists(dircfg), dircfg)
+        ##debug('Starttime args . project  %s', project)
+        ##debug('Starttime args . name     %s', name)
+        ##debug('Starttime var  %d name     %s', exists(self.filename), self.filename)
+
+    def started(self):
+        """Return True if the timer is starte, False if not"""
+        return exists(self.filename)
 
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
-        if starttime is not None:
-            with open(self.filename, 'w', encoding='utf8') as prt:
-                prt.write(f'{starttime.strftime(FMTDT)}')
-                if activity:
-                    prt.write(f'\nAC {activity}')
-                if tags:
-                    for tag in tags:
-                        prt.write(f'\nTG {tag}')
-                debug(f'  WROTE START: {starttime.strftime(FMTDT)}')
-                debug(f'  WROTE FILE:  {self.filename}')
-                return
-        raise RuntimeError("NOT WRITING START TIME; NO START TIME FOUND")
+        assert starttime is not None
+        with open(self.filename, 'w', encoding='utf8') as prt:
+            ststr = starttime.strftime(FMTDT)
+            prt.write(f'{ststr}')
+            if activity:
+                prt.write(f'\nAC {activity}')
+            if tags:
+                for tag in tags:
+                    prt.write(f'\nTG {tag}')
+            ##debug('  WROTE START: %s', ststr)
+            ##debug('  WROTE FILE:  %s', self.filename)
+            return
 
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
@@ -89,13 +91,6 @@ class Starttime:
     def str_elapsed_hms(self, hms, msg):
         """Get a string describing the elapsed time"""
         return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
-
-    def str_started_n_running(self, dta, hms):
-        """Return a string detailing how long the timer has been running"""
-        msg = self.str_elapsed_hms(
-              hms,
-              f'Timer started on {dta.strftime(FMTDT_H)} and running')
-        print(msg)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -9,41 +9,61 @@ from timetracker.cfg.doc_local import get_docproj
 
 
 NTCSV = namedtuple('NtCsv', 'fcsv project username')
-NTCFG = namedtuple('NtCfg', 'fcfgproj, ntcsv')
+####NTCFG = namedtuple('NtCfg', 'fcfgproj, ntcsv')
 
 def get_csv_local_uname(fcfgproj, username, dirhome=None):
-    """Get csvs in the local project config file for a specific user"""
+    """Get csvs in the local project config file for a specific username"""
     if (docproj := get_docproj(fcfgproj)):
-        return get_csv_proj_uname(docproj, username, dirhome)
+        return get_csv_doc_uname(docproj, username, dirhome)
     return None
 
-def get_csv_proj_uname(docproj, username, dirhome=None):
-    """Get csvs in the local project config file for a specific user"""
+def get_csvs_global_uname(projects, username, dirhome=None):
+    """Get csvs in projects listed in a global config file for a specific username"""
+    ret = []
+    if not projects:
+        return ret
+    for _, fcfgproj in projects:
+        if (ntcsv := get_csv_local_uname(fcfgproj, username, dirhome)) is not None:
+            ret.append(ntcsv)
+    return ret
+
+def get_csvs_local_all(fcfgproj, dirhome=None):
+    """Get csvs in the local project config file for a all usernamess"""
+    if (docproj := get_docproj(fcfgproj)):
+        return _get_csv_proj_all(docproj, dirhome)
+    return None
+
+def get_csvs_global_all(projects, dirhome=None):
+    """Get csvs in projects listed in a global config file for a specific username"""
+    ret = []
+    if not projects:
+        return ret
+    for _, fcfgproj in projects:
+        if (ntcsvs := get_csvs_local_all(fcfgproj, dirhome)) is not None:
+            ret.extend(ntcsvs)
+    return ret
+
+def get_csv_doc_uname(docproj, username, dirhome=None):
+    """Get a csv from a project TOMLFile for the specified username"""
     assert username is not None
     fcsv = docproj.get_filename_csv(username, dirhome)
     if path_exists(fcsv):
         return NTCSV(fcsv=fcsv, project=docproj.project, username=username)
     return None
 
-def get_csvs_global_uname(projects, username, dirhome=None):
-    """Get csvs in projects listed in a global config file for a specific user"""
-    ret = []
-    for _, fcfgproj in projects:
-        if (ntcsv := get_csv_local_uname(fcfgproj, username, dirhome)) is not None:
-            ret.append(NTCFG(fcfgproj=fcfgproj, ntcsv=ntcsv))
-    return ret
+# ------------------------------------------------------------------------
+def _get_csv_proj_all(docproj, dirhome=None):
+    """Get csvs in the local project config file for a all usernames"""
+    fcsvs = docproj.get_filenames_csv(dirhome)
+    if fcsvs:
+        ret = []
+        for fcsv in fcsvs:
+            if path_exists(fcsv):
+                username = docproj.get_csv_username(fcsv)
+                ret.append(NTCSV(fcsv=fcsv, project=docproj.project, username=username))
+        return ret
+    return None
 
-#def get_csvs_local_all(fcfgproj, dirhome=None):
-#    """Get csvs in the local project config file for a all users"""
-#    if (docproj := get_docproj(fcfgproj)):
-#        return _get_nts_all(docproj, username, dirhome)
-#    return None
-#
-#def get_csvs_global_all(fcfgproj, dirhome=None):
-#    """Get csvs in projects listed in a global config file for a all users"""
-#    assert fcfgproj
-#    assert dirhome
-#
 #def _get_nt_all(docproj, dirhome):
 #    """For username, get nt w/fcsv & project -- get fcsv and project from CfgProj"""
 #    fcsv = docproj.get_filenames_csv(dirhome)
@@ -58,7 +78,6 @@ def get_csvs_global_uname(projects, username, dirhome=None):
 ####                     fcsv=fcsv,
 ####                     project=docproj.project,
 ####                     username=username)
-
 
 ####def get_csvs_username(projects, username, dirhome=None):
 ####    """Get csvs for the given projects for a single username"""

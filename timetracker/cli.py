@@ -7,8 +7,7 @@ from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
 #from os.path import exists
-from logging import debug
-from subprocess import run
+#from logging import debug
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -18,7 +17,7 @@ from timetracker.cmd.fncs import FNCS
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.none import cli_run_none
-from timetracker.cfg.utils import run_cmd
+from timetracker.proc import get_log1
 
 
 def main():
@@ -47,13 +46,13 @@ class Cli:
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        ##print(f'TIMETRACKER ARGS: {self.args}')
+        ##print(f'TIMETRACKER ARGS: {self.args}')  # DVK
 
     def run(self):
         """Run timetracker"""
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN ARGS: {self.args}')
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  {self.finder.get_dirtrk()}')
-        debug(f'Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: {self.fcfg}')
+        ##debug('Cli RUNNNNNNNNNNNNNNNNNN ARGS:    %s', self.args)
+        ##debug('Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  %s', self.finder.get_dirtrk())
+        ##debug('Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: %s', self.fcfg)
         if self.args.command is not None:
             FNCS[self.args.command](self.fcfg, self.args)
         else:
@@ -61,20 +60,20 @@ class Cli:
 
     def _adjust_args(self, given_args):
         """Replace config default values with researcher-specified values"""
-        debug(f'ARGV: {sys_argv}')
+        ##debug('ARGV: %s', sys_argv)
         ret = []
         args = sys_argv[1:] if given_args is None else given_args
         optname = None
         for elem in args:
             if optname == '--at':
-                #debug(f' --at opt was({elem})')
+                #debug(' --at opt was(%s)', elem)
                 elem = self._adjust_opt_at(elem)
-                #debug(f' --at opt now({elem})')
+                #debug(' --at opt now(%s)', elem)
                 optname = None
             ret.append(elem)
             if elem == '--at':
                 optname = elem
-            #debug(f'ADJUST_ARGS>>({elem})')
+            #debug('ADJUST_ARGS>>(%s)', elem)
         return ret
 
     @staticmethod
@@ -86,21 +85,19 @@ class Cli:
     def _init_args(self, arglist):
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
-        debug(f'TIMETRACKER ARGS: {args}')
         if args.version:
             print(f'trk {__version__}')
             sys_exit(0)
         if args.command == 'stop':
             if args.message == 'd':
-                msg = run_cmd('git log -1 --pretty=%B')
-                args.message = msg.strip() if msg else None
+                args.message = get_log1()
         return args
 
     def _init_trksubdir(self):
         found = False
         for arg in sys_argv:
             if found:
-                debug(f'Cli FOUND: argv --trk-dir {arg}')
+                ##debug('Cli FOUND: argv --trk-dir %s', arg)
                 return arg
             if arg == '--trk-dir':
                 found = True
@@ -125,8 +122,6 @@ class Cli:
             # Directory that holds the local project config file
             help='Directory that holds the local project config file')
             #help=SUPPRESS)
-        ####parser.add_argument('-f', '--file',
-        ####    help='Use specified file as the global config file')
         parser.add_argument('--username', metavar='NAME', dest='name', default=self.user,
             help="A person's alias or username running a timetracking command")
         parser.add_argument('--version', action='store_true',
@@ -146,7 +141,6 @@ class Cli:
         #self._add_subparser_tag(subparsers)
         #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
-        #self._add_subparser_projectsupdate(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -174,6 +168,9 @@ class Cli:
             help='Reinitialize the project: Add missing config files & keep existing')
         parser.add_argument('-G', '--global-config-file', metavar='FILE',
             help='Use specified file as the global config file')
+        parser.add_argument('--no-git-add', action='store_true',
+            help='Do not run `git add` on newly created local project timetracker files')
+        parser.add_argument( '--dirgit', help=SUPPRESS, default=self.finder.dirgit)
         return parser
 
     @staticmethod
@@ -189,10 +186,9 @@ class Cli:
 
     def _get_last_log(self):
         if self.finder.dirgit:
-            res = run(['git', 'log', '-1', '--pretty=%B'],
-                capture_output=True, text=True, check=False)
-            if res.stdout != '':
-                return f'({res.stdout}); invoked w/`-m d`'
+            rsp = get_log1()
+            if rsp.stdout != '':
+                return f'({rsp.stdout}); invoked w/`-m d`'
         return None
 
     def _add_subparser_stop(self, subparsers):
@@ -227,7 +223,9 @@ class Cli:
         parser.add_argument('-i', '--input', metavar='file.csv', nargs='*', dest='fcsv',
             help='Specify an input csv file')
         parser.add_argument('-g', '--global', dest='run_global', action='store_true',
-            help='List all hours for all projects that are listed in the global config file')
+            help=f'List hours for all projects for {self.user}')
+        parser.add_argument('-u', '--all-users', dest='all_users', action='store_true',
+            help='List hours for all projects for all usernames')
         parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser
@@ -279,18 +277,6 @@ class Cli:
         parser.add_argument('--rm-missing', action='store_true',
             help='Removes projects from the global config that do not exist')
         return parser
-
-    def _add_subparser_projectsupdate(self, subparsers):
-        parser = subparsers.add_parser(name='csvupdate',
-            help='Update values in csv columns containing weekday, am/pm, and duration',
-            formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-f', '--force', action='store_true',
-            help='Over-write the csv indicated in the project `config` by `filename`')
-        parser.add_argument('-i', '--input', metavar='file.csv',
-            help='Specify an input csv file')
-        parser.add_argument('-o', '--output', metavar='file.csv',
-            default='updated.csv',
-            help='Specify an output csv file')
 
 
 if __name__ == '__main__':

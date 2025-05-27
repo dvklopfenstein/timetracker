@@ -11,6 +11,7 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import dirname
 from os.path import normpath
+from os.path import basename
 from collections import namedtuple
 from glob import glob
 from timetracker.cfg.utils import get_username
@@ -18,6 +19,7 @@ from timetracker.cfg.utils import get_abspath
 from timetracker.cfg.utils import replace_envvar
 from timetracker.cfg.tomutils import read_config
 from timetracker.cfg.docutils import get_ntvalue
+from timetracker.starttime import Starttime
 
 
 NTDOC = namedtuple('NtDoc', 'doc docproj')
@@ -44,17 +46,17 @@ class DocProj:
         assert doc is not None
         assert type(doc).__name__ != 'RdCfg'
         assert filename is not None
+        self.filename = filename
         self.dircfg  = normpath(dirname(filename))
-        self.dirproj = dirname(self.dircfg)
-        #debug(pink(f'DocProj args filename {filename}'))
         self.project, self.csv_filename, self.global_config_filename, self.errors = \
             self._init_cfg_values(doc)
         self.dircsv = dirname(self.csv_filename) if self.csv_filename else None
 
     def get_abspath_dircsv(self):
         """Get the absolute pathname for doc['csv']['filename']"""
-        if self.dircsv is not None and self.dirproj is not None:
-            return get_abspath(self.dircsv, self.dirproj)
+        dirproj = dirname(self.dircfg)
+        if self.dircsv is not None and dirproj is not None:
+            return get_abspath(self.dircsv, dirproj)
         return None
 
     def get_filename_csv(self, username=None, dirhome=None):
@@ -69,12 +71,22 @@ class DocProj:
             return glob(replace_envvar(fcsvpat, '*'))
         return None
 
+    def get_csv_username(self, fcsv):
+        """Using the csv pattern in the project config, determine the username"""
+        bname = basename(self.csv_filename)
+        pc0 = bname.find('$')
+        if pc0 == -1:
+            return None
+        pc1 = bname.rfind('$')
+        pf0 = fcsv.find(bname[:pc0])
+        if pf0 == -1 or pc1 == -1:
+            return None
+        pf1 = len(bname) - pc1 - 1
+        return fcsv[pc0+pf0:-pf1]
+
     def _init_cfg_values(self, doc):
         """Get the config values from the local config as written"""
-        ####print(doc)
         project = get_ntvalue(doc, 'project')
-        ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV', project.value)
-        ####print('VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVERR', project.error)
         csv_filename = get_ntvalue(doc, 'csv', 'filename')
         global_config_filename = get_ntvalue(doc, 'global_config', 'filename')
         return project.value, \
@@ -83,6 +95,18 @@ class DocProj:
                {'project': project.error,
                 'csv_filename': csv_filename.error,
                 'global_config_filename': global_config_filename.error}
+
+    def timer_started(self, username):
+        """Return True if the timer is started, False otherwise"""
+        if (startobj := self.get_startobj(username)):
+            return startobj.started()
+        return False
+
+    def get_startobj(self, username):
+        """Get a Starttime object"""
+        if self.project:
+            return Starttime(self.dircfg, self.project, get_username(username))
+        return None
 
     #def set_filename_csv(self, filename_str):
     #    """Write the config file, replacing [csv][filename] value"""
@@ -124,7 +148,7 @@ class DocProj:
 
     #def get_project_from_filename(self):
     #    """Get the default project name from the project directory filename"""
-    #    return basename(self.dirproj)
+    #    return basename(dirproj)
 
     ##-------------------------------------------------------------
     def _get_csvfilename_proj_user(self, username, dirhome):
@@ -137,14 +161,15 @@ class DocProj:
     def _get_csvfilename_proj(self, dirhome):
         """Read a config file and load it into a TOML document"""
         if self.csv_filename and self.project:
-            fpat = get_abspath(self.csv_filename, self.dirproj, dirhome)
+            fpat = get_abspath(self.csv_filename, dirname(self.dircfg), dirhome)
             return fpat.replace('PROJECT', self.project)
         return None
 
-    def _get_csv_filename(self, dirhome):
-        """Read a config file and load it into a TOML document"""
-        fcsvpat = self.csv_filename
-        return get_abspath(fcsvpat, self.dirproj, dirhome) if fcsvpat is not None else None
+    ####def _get_csv_filename(self, dirhome):
+    ####    """Read a config file and load it into a TOML document"""
+    ####    fcsvpat = self.csv_filename
+    ####    return get_abspath(fcsvpat, dirname(self.dircfg), dirhome) \
+    ####        if fcsvpat is not None else None
 
     #@staticmethod
     #def _wr_cfg(fname, doc):
@@ -153,11 +178,6 @@ class DocProj:
     #    # Use `~`, if it makes the path shorter
     #    ##fcsv = replace_homepath(doc['csv']['filename'])
     #    ##doc['csv']['filename'] = fcsv
-    #    debug(pink(f'CfgProj _wr_cfg(...)  PROJ:     {doc["project"]}'))
-    #    debug(pink(f"CfgProj _wr_cfg(...)  CSV:      {doc['csv']['filename']}"))
-    #    debug(pink("CfgProj _wr_cfg(...)  GLOBAL    "
-    #        f"{doc['global_config']['filename'] if 'global_config' in doc else 'NONE'}"))
-    #    debug(pink(f'CfgProj _wr_cfg(...)  WROTE:    {fname}'))
 
     #def _rd_doc(self):
     #    """Read a config file and load it into a TOML document"""
@@ -174,12 +194,9 @@ class DocProj:
     #        self._add_doc_globalcfgfname(doc, fcfg_global)
     #    elif 'filename' in doc['global_config']:
     #        if (cur := doc['global_config']['filename']) != fcfg_global:
-    #            debug(pink(f'CfgProj WAS (fcfg_global={cur})'))
     #            doc['global_config']['filename'] = fcfg_global
-    #            debug(pink(f'CfgProj NOW (fcfg_global={fcfg_global})'))
     #    else:
     #        doc['global_config']['filename'] = fcfg_global
-    #        debug(pink(f'CfgProj SET (fcfg_global={fcfg_global})'))
 
     #@staticmethod
     #def _add_doc_globalcfgfname(doc, fcfg_global):
@@ -189,7 +206,6 @@ class DocProj:
     #    #csvdir.comment("Directory where the csv file is stored")
     #    section.add("filename", fcfg_global)
     #    doc.add("global_config", section)
-    #    debug(pink(f'CfgProj _add_doc_globalcfgfname(fcfg_global={fcfg_global})'))
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

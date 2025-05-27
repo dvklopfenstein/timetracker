@@ -7,11 +7,9 @@ __author__ = "DV Klopfenstein, PhD"
 from os.path import exists
 from collections import namedtuple
 from datetime import timedelta
-from logging import debug
 # https://docs.python.org/3/library/csv.html
 from csv import writer
 
-from timetracker.utils import orange
 from timetracker.csvutils import get_hdr_itr
 from timetracker.epoch.calc import dt_from_str
 from timetracker.epoch.calc import td_from_str
@@ -33,7 +31,6 @@ class CsvFile:
 
     def __init__(self, csvfilename):
         self.fcsv = csvfilename
-        debug(orange(f'CsvFile: {int(exists(csvfilename))} csvfilename {csvfilename}'))
 
     def get_ntdata(self):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
@@ -69,9 +66,9 @@ class CsvFile:
     # ------------------------------------------------------------------
     def _get_ntdata(self, csvlines):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
-        debug('get_ntdata')
         nto = self.nto
         def _get_nt(row):
+            assert len(row) == 5, f'{self.fcsv} ROW[{len(row)}]: {row}'
             return nto(
                 start_datetime=dt_from_str(row[0]),
                 duration=td_from_str(row[1]),

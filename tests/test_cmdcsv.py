@@ -6,6 +6,7 @@ from logging import basicConfig
 #from logging import DEBUG
 from tempfile import TemporaryDirectory
 from timetracker.cfg.finder import CfgFinder
+from timetracker.cfg.cfg import Cfg
 from timetracker.cmd.init import run_init
 from timetracker.cmd.start import run_start
 from timetracker.cmd.stop import run_stop
@@ -34,7 +35,8 @@ def test_get_filename_csv():
         for projname, projdir in projname2projdir.items():
             finder = CfgFinder(projdir)
             cfgfilename = finder.get_cfgfilename()
-            cfg = run_init(cfgfilename, dircsv, projname, dirhome=tmphome)
+            cfg = Cfg(cfgfilename)
+            run_init(cfg, finder.dirgit, dircsv, projname, dirhome=tmphome)
             for idx in range(2, 12, 2):
                 run_start(cfg.cfg_loc, username, defaultdt=now, start_at=f'{idx}pm')
                 ntcsv = get_ntcsv(f'{projname} {username} {idx}')

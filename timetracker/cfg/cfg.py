@@ -12,6 +12,7 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.doc_local import get_ntdocproj
 from timetracker.cfg.docutils import get_value
 from timetracker.cfg.utils import get_filename_globalcfg
+from timetracker.proc import git_commit_file
 
 
 class Cfg:
@@ -64,14 +65,16 @@ class Cfg:
         # TODO: Check global config
         return None
 
-    def init(self, project=None, dircsv=None, fcfg_global=None, dirhome=None, **kwargs):
+    def init(self, dirgit, project=None, dircsv=None, fcfg_global=None, dirhome=None, **kwargs):
         """Initialize a project, return CfgGlobal"""
-        debug('Cfg.init(project=%s, dirscv=%s, fcfg_global=%s, dirhome=%s)',
-              project, dircsv, fcfg_global, dirhome)
+        # pylint: disable=too-many-arguments
+        print(f'Cfg.init(\n  {dirgit=},\n  {project=},\n  {dircsv=},\n'
+              f'  {fcfg_global=},\n  {dirhome=},\n  {kwargs})')
         if project is None:
             project = self.cfg_loc.get_project_from_filename()
         assert project is not None
         self.cfg_loc.wr_ini_file(project, dircsv, fcfg_global)
+        git_commit_file(self.cfg_loc.filename, "Added project config file to repo")
         quiet = kwargs.get('quiet', False)
         if not quiet:
             print(f'Initialized project directory: {self.cfg_loc.dircfg}')
@@ -80,22 +83,22 @@ class Cfg:
         debug('INIT CfgGlobal filename %s', self.cfg_glb.filename)
         return self.cfg_glb.wr_ini_project(project, self.cfg_loc.filename, quiet=quiet)
 
-    def reinit(self, project=None, dircsv=None, fcfg_global=None, dirhome=None):
+    def reinit(self, dirgit, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""
-        debug('Cfg.init(project=%s, dirscv=%s, fcfg_global=%s, dirhome=%s)',
-              project, dircsv, fcfg_global, dirhome)
+        # pylint: disable=too-many-arguments
+        print(f'Cfg.reinit(\n  {dirgit=},\n  {project=},\n  '
+              f'{dircsv=},\n  {fcfg_global=},\n  {dirhome=})')
         assert self.cfg_loc is not None
 
         # pylint: disable=line-too-long
-        self._reinit_loc_main(project, dircsv, fcfg_global, dirhome)
-
+        self._reinit_loc_main(dirgit, project, dircsv, fcfg_global, dirhome)
         self._reinit_glb_main(fcfg_global, dirhome, self.cfg_loc.filename)
 
     # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
-    def _reinit_loc_main(self, project, dircsv, fcfg_global, dirhome):
+    def _reinit_loc_main(self, dirgit, project, dircsv, fcfg_global, dirhome):
         ntdoc = get_ntdocproj(self.cfg_loc.filename)
         if ntdoc.doc is None:
-            self.init(project, dircsv, fcfg_global, dirhome)
+            self.init(dirgit, project, dircsv, fcfg_global, dirhome)
             return
         if project is None:
             project = ntdoc.docproj.project
@@ -121,6 +124,8 @@ class Cfg:
             docproj.project, fcfg_global, dirhome, fcfg_loc)
         if self.cfg_glb is None:
             self.cfg_glb = CfgGlobal(fcfg_glb)
+        elif self.cfg_glb.filename != fcfg_glb:
+            self.cfg_glb.filename = fcfg_glb
 
         if not exists(self.cfg_glb.filename):
             self.cfg_glb.wr_ini_project(docproj.project, fcfg_loc)
@@ -136,7 +141,6 @@ class Cfg:
         if docproj.get_abspath_dircsv() == dircsv:
             return False
         return True
-
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

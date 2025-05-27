@@ -9,6 +9,7 @@ from logging import DEBUG
 from collections import namedtuple
 from timetracker.ntcsv import get_ntcsv
 from timetracker.utils import yellow
+from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cfg.cfg_global import get_cfgglobal
 from timetracker.cfg.docutils import get_value
@@ -150,8 +151,10 @@ class MngUsrProj:
         self.projname = projname
         self.cfg_global = get_cfgglobal(None, self.home, fcfg_doc=None)
         ##print(f'\nMngUsrProj({self.home:29}, {user:7}, {projname})')
-        self.fcfgproj, _, self.exp = proj_setup(self.home, projname, dircur='dirproj')
-        self.cfg = run_init(self.fcfgproj,
+        self.fcfgproj, finder, self.exp = proj_setup(self.home, projname, dircur='dirproj')
+        self.cfg = Cfg(self.fcfgproj)
+        run_init(self.cfg,
+            finder.dirgit,
             dircsv=dircsv,
             project=self.projname,
             dirhome=self.home,

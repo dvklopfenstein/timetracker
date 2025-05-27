@@ -51,6 +51,7 @@ from tempfile import TemporaryDirectory
 from pytest import raises
 
 from timetracker.utils import yellow
+from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.doc_local import DocProj
 from timetracker.cmd.init import run_init
 from timetracker.cfg.tomutils import read_config
@@ -80,8 +81,9 @@ def test_cmd_init(project='apple', user='picker'):
 def _run_0(project, user):
     print(yellow(f'{SEP}NO PROJECT GIVEN'))
     with TemporaryDirectory() as tmphome:
-        fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome)  # , project, force, global_config_file)
+        fcfgproj, finder, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg_top = Cfg(fcfgproj)
+        run_init(cfg_top, finder.dirgit, dirhome=tmphome)
 
         _chk_cfg_loc(cfg_top.cfg_loc, project, user,
             exp_cfg_filename=ntdirs.cfglocfilename,
@@ -95,8 +97,9 @@ def _run_0(project, user):
 def _run_proj(project, user, newproj):
     print(yellow(f'{SEP}'), end='')
     with TemporaryDirectory() as tmphome:
-        fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+        fcfgproj, finder, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg_top = Cfg(fcfgproj)
+        run_init(cfg_top, finder.dirgit, dirhome=tmphome,
             project=newproj)  #force, global_config_file)
 
         _chk_cfg_loc(cfg_top.cfg_loc, newproj, user,
@@ -111,8 +114,9 @@ def _run_proj(project, user, newproj):
 def _run_csv(project, user, newproj):
     print(yellow(f'{SEP}'), end='')
     with TemporaryDirectory() as tmphome:
-        fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+        fcfgproj, finder, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg_top = Cfg(fcfgproj)
+        run_init(cfg_top, finder.dirgit, dirhome=tmphome,
             project=newproj,
             dircsv=tmphome)
 
@@ -129,8 +133,9 @@ def _run_gcfg(project, user, newproj, fcfg_glb):
     print(yellow(f'{SEP}'), end='')
     with TemporaryDirectory() as tmphome:
         newgcfg = join(tmphome, fcfg_glb)
-        fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+        fcfgproj, finder, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg_top = Cfg(fcfgproj)
+        run_init(cfg_top, finder.dirgit, dirhome=tmphome,
             project=newproj,
             dircsv=tmphome,
             fcfg_global=newgcfg)
@@ -151,8 +156,9 @@ def _run_gcfg_ab(project, user, newproj, fcfg_glba, fcfg_glbb):
     with TemporaryDirectory() as tmphome:
         newgcfg_a = join(tmphome, fcfg_glba)
         newgcfg_b = join(tmphome, fcfg_glbb)
-        fcfgproj, _, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
-        cfg_top = run_init(fcfgproj, dirhome=tmphome,
+        fcfgproj, finder, ntdirs = proj_setup(tmphome, project, dircur='dirproj', dirgit01=True)
+        cfg_top = Cfg(fcfgproj)
+        run_init(cfg_top, finder.dirgit, dirhome=tmphome,
             project=newproj,
             dircsv=tmphome,
             fcfg_global=newgcfg_a)
@@ -168,7 +174,7 @@ def _run_gcfg_ab(project, user, newproj, fcfg_glba, fcfg_glbb):
             exp_loc_filename=ntdirs.cfglocfilename)
 
         with raises(SystemExit) as excinfo:
-            run_init(fcfgproj, dirhome=tmphome,
+            run_init(cfg_top, finder.dirgit, dirhome=tmphome,
                 project=newproj,
                 dircsv=tmphome,
                 fcfg_global=newgcfg_b)

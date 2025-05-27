@@ -29,6 +29,13 @@
 # Details
 
 ## Unreleased
+* ADDED `trk hours` options `--global` to show hours for all projects for a single username
+* ADDED `trk hours` options `--global` `--all-users` for hours for all projects for all usernames
+* ADDED function get_csv_local_uname
+* ADDED function get_csvs_local_all
+* ADDED function get_csvs_global_uname
+* ADDED function get_csvs_global_all
+* FIXED exit gracefully if `start --at` datetime cannot be parsed
 
 ## Release 2025-05-18 v0.5a7
 * ADDED start time to `report` stdout

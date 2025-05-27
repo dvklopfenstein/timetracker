@@ -4,38 +4,36 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
-##from logging import debug
+from logging import debug
 from timetracker.cfg.cfg import Cfg
 from timetracker.msgs import str_tostart
 
 
 def cli_run_init(fnamecfg, args):
     """initialize timetracking on a project"""
+    cfg = Cfg(fnamecfg)
     if not args.force:
-        run_init(
-            fnamecfg,
+        return run_init(
+            cfg,
+            args.dirgit,
             args.csvdir,
             project=args.project,
             trk_dir=args.trk_dir,
             fcfg_global=args.global_config_file)
-    else:
-        run_reinit(
-            fnamecfg,
-            args.csvdir,
-            project=args.project,
-            trk_dir=args.trk_dir,
-            fcfg_global=args.global_config_file)
+    return cfg.reinit(
+        args.dirgit,
+        args.project,
+        args.csvdir,
+        fcfg_global=args.global_config_file)
 
-def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
+def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
     """Initialize timetracking on a project"""
-    # TBD: param cfgproj?
-    cfg = Cfg(fnamecfg, cfg_global=kwargs.get('cfg_global'))
     # Initialize the local configuration file for a timetracking project
     cfg_loc = cfg.cfg_loc
-    ##debug('RUNNING COMMAND INIT')
-    ##debug('INIT: fnamecfg:    %s', cfg_loc.filename)
-    ##debug('INIT: project:     %s', project)
-    ##debug('INIT: dircsv(%s)', dircsv)
+    debug('RUNNING COMMAND INIT')
+    debug('INIT: fnamecfg:    %s', cfg_loc.filename)
+    debug('INIT: project:     %s', project)
+    debug('INIT: dircsv(%s)', dircsv)
     fcfg_global = kwargs.get('fcfg_global')
     ##res = _chk_global_cfg(cfg_loc, project, fcfg_global)
     dirhome = kwargs.get('dirhome')
@@ -46,16 +44,15 @@ def run_init(fnamecfg, dircsv=None, project=None, **kwargs):
             sys_exit(0)
     # WRITE A LOCAL PROJECT CONFIG FILE: ./.timetracker/config
     if not cfg_loc.file_exists():
-        cfg.init(project, dircsv, fcfg_global, dirhome, quiet=quiet)
+        cfg.init(dirgit, project, dircsv, fcfg_global, dirhome, quiet=quiet)
     elif not quiet:
         print(str_tostart())
     return cfg
 
-def run_reinit(fnamecfg, dircsv, project, **kwargs):
-    """Reinitialize timetracking project"""
-    cfg = Cfg(fnamecfg)
-    cfg.reinit(project, dircsv, kwargs.get('fcfg_global'), kwargs.get('dirhome'))
-    return cfg
+####def run_reinit(cfg, dirgit, dircsv, project, fcfg_global=None, dirhome=None):
+####    """Reinitialize timetracking project"""
+####    cfg.reinit(dirgit, project, dircsv, fcfg_global, dirhome)
+####    return cfg
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

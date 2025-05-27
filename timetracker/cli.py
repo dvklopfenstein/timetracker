@@ -46,7 +46,7 @@ class Cli:
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
         self.args = self._init_args(sysargs)
-        #print(f'TIMETRACKER ARGS: {self.args}')
+        print(f'TIMETRACKER ARGS: {self.args}')
 
     def run(self):
         """Run timetracker"""
@@ -91,9 +91,6 @@ class Cli:
         if args.command == 'stop':
             if args.message == 'd':
                 args.message = get_log1()
-        elif args.command == 'init':
-            if (dirgit := self.finder.dirgit) is not None:
-                args.dirgit = dirgit
         return args
 
     def _init_trksubdir(self):
@@ -171,7 +168,7 @@ class Cli:
             help='Reinitialize the project: Add missing config files & keep existing')
         parser.add_argument('-G', '--global-config-file', metavar='FILE',
             help='Use specified file as the global config file')
-        parser.add_argument( '--dirgit', help=SUPPRESS)
+        parser.add_argument( '--dirgit', help=SUPPRESS, default=self.finder.dirgit)
         return parser
 
     @staticmethod

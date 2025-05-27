@@ -3,7 +3,6 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import system
 from os.path import exists
 from os.path import relpath
 from logging import debug

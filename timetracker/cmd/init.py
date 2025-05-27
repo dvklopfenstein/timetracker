@@ -25,8 +25,7 @@ def cli_run_init(fnamecfg, args):
         args.dirgit,
         args.project,
         args.csvdir,
-        fcfg_global=args.global_config_file,
-        no_git_add=args.no_git_add)
+        fcfg_global=args.global_config_file)
 
 def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
     """Initialize timetracking on a project"""
@@ -51,11 +50,6 @@ def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
     elif not quiet:
         print(str_tostart())
     return cfg
-
-####def run_reinit(cfg, dirgit, dircsv, project, fcfg_global=None, dirhome=None):
-####    """Reinitialize timetracking project"""
-####    cfg.reinit(dirgit, project, dircsv, fcfg_global, dirhome)
-####    return cfg
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

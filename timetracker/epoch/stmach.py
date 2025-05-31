@@ -9,6 +9,7 @@ class _SmAmPm:
 
     def __init__(self):
         self.capture = None
+        self.state = 'start'
         self.num_ampms = 0
         self.dfa_am_pm = {
             'start': self._dfa_ampm_start,
@@ -16,14 +17,15 @@ class _SmAmPm:
             'M':     self._dfa_ampm_m,
         }
 
-    def run(self, state_cur, letter):
+    def run(self, letter):
         """Run the discrete state machine"""
-        state_nxt = self.dfa_am_pm[state_cur](letter)
-        print(f'LETTER({letter}) STCUR({state_cur}) STNXT({state_nxt})')
-        if state_nxt == 'ampm_found':
+        state = self.dfa_am_pm[self.state](letter)
+        print(f'StateMachine-AM/PM LETTER({letter}) STCUR({self.state}) STNXT({state})')
+        if self.capture is not None and state == 'ampm_found':
             self.capture = f'{self.capture}m'
             self.num_ampms += 1
-        return state_nxt
+        self.state = state
+        return state != 'ampm_found'
 
     def _dfa_ampm_start(self, letter):
         """A Discrete State Atomaton in the discrete state machine to find AM/PM"""
@@ -40,7 +42,7 @@ class _SmAmPm:
         return 'ampm_found' if letter in {'m', 'M'} else 'start'
 
 
-class _SSS:
+class _SDD:
     r"""DFA to find ':\d\d' in free text that describes timedelta or datetime"""
     # pylint: disable=too-few-public-methods
 
@@ -76,21 +78,23 @@ class _SSS:
 def ampm_examine(txt):
     """Examine all letters of the text"""
     num_colons = 0
-    st_ampm = 'start'
+    search_ampm = True
+    #search_sdd = True
     ##st_sss_cur = 'start'
     sm_ampm = _SmAmPm()
-    ##sm_sss = _SSS()
+    #sm_sdd = _SDD()
     for letter_cur in txt:
         # ':\d\d' Finate State Machine
-        ##if sm_sss and st_sss_cur == ':ss_found';
-        ##    sm_sss = None
+        ##if sm_sdd and st_sss_cur == ':ss_found';
+        ##    sm_sdd = None
         # AM/PM Finite State Machine
-        ##if st_ampm_nxt == 'ampm_found':
-        st_ampm = sm_ampm.run(st_ampm, letter_cur)
+        if search_ampm:
+            search_ampm = sm_ampm.run(letter_cur)
+        #if search_sdd:
+        #    search_sdd = sm_add.run(letter_cur)
         # Count semi-colons
         if letter_cur == ':':
             num_colons += 1
-    print('')
     return {'num_ampma':sm_ampm.num_ampms, 'num_colons':num_colons}
 
 

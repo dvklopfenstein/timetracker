@@ -3,6 +3,7 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 
 class _SmAmPm:
     # pylint: disable=too-few-public-methods
@@ -10,7 +11,7 @@ class _SmAmPm:
     def __init__(self):
         self.capture = None
         self.state = 'start'
-        self.dfa_am_pm = {
+        self.dfa = {
             'start': self._dfa_ampm_start,
             'm':     self._dfa_ampm_m,
             'M':     self._dfa_ampm_m,
@@ -18,7 +19,7 @@ class _SmAmPm:
 
     def run(self, letter):
         """Run the discrete state machine to search for AM/PM"""
-        state = self.dfa_am_pm[self.state](letter)
+        state = self.dfa[self.state](letter)
         #print(f'StateMachine-AM/PM LETTER({letter}) STCUR({self.state}) STNXT({state})')
         if self.capture is not None and state == 'ampm_found':
             self.capture = f'{self.capture}m'
@@ -36,23 +37,22 @@ class _SmAmPm:
         # Setting capture to None not needed
         return 'start'
 
-    def _dfa_ampm_m(self, letter):
+    @staticmethod
+    def _dfa_ampm_m(letter):
         if letter in {'m', 'M'}:
             return 'ampm_found'
         # Setting capture to None not needed
         return 'start'
 
-
 class _SDD:
     r"""DFA to find ':\d\d' in free text that describes timedelta or datetime"""
     # pylint: disable=too-few-public-methods
 
-    DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 
     def __init__(self):
         self.capture = None
         self.state = 'start'
-        self.dfa_ss = {
+        self.dfa = {
             'start': self._dfa_semi,
             ':':     self._dfa_semi,
             's10':   self._dfa_s10,
@@ -61,7 +61,7 @@ class _SDD:
 
     def run(self, letter):
         r"""Run the discrete state machine to search for seconds formatted as ':\d\d'"""
-        state = self.dfa_ss[self.state](letter)
+        state = self.dfa[self.state](letter)
         print(f'StateMachine-:dd LETTER({letter}) STCUR({self.state}) STNXT({state})')
         if state == ':ss_found':
             self.capture = ''.join(self.capture)
@@ -75,13 +75,45 @@ class _SDD:
         return 'start'
 
     def _dfa_s10(self, letter):
-        if letter in self.DIGITS:
+        if letter in DIGITS:
             self.capture.append(letter)
             return 's1'
         return 'start'
 
     def _dfa_s1(self, letter):
-        if letter in self.DIGITS:
+        if letter in DIGITS:
+            self.capture.append(letter)
+            return ':ss_found'
+        return 'start'
+
+class _hh:
+    r"""DFA to find \d or \d\d to find the hour"""
+    def __init__(self):
+        self.capture = None
+        self.state = 'start'
+        self.dfa = {
+            'start': self._dfa_h1,
+            'h1':    self._dfa_h1,
+            'h2':    self._dfa_h2,
+        }
+
+    def run(self, letter):
+        r"""Run the discrete state machine to search for seconds formatted as ':\d\d'"""
+        state = self.dfa[self.state](letter)
+        print(f'StateMachine-:dd LETTER({letter}) STCUR({self.state}) STNXT({state})')
+        if state == ':ss_found':
+            self.capture = ''.join(self.capture)
+        self.state = state
+        return state != ':ss_found'
+
+    def _dfa_h1(self, letter):
+        if letter in DIGITS:
+            self.capture = [letter]
+            return 's1'
+        return 'start'
+
+    def _dfa_h2(self, letter):
+        if letter in DIGITS:
             self.capture.append(letter)
             return ':ss_found'
         return 'start'

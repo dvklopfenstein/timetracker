@@ -5,6 +5,7 @@ from timeit import default_timer
 from datetime import timedelta
 from timetracker.epoch.stmach import _SmAmPm
 from timetracker.epoch.stmach import _SDD
+from timetracker.epoch.stmach import _HH
 from timetracker.utils import white
 
 
@@ -22,6 +23,12 @@ def test_sdd():
     _run_sdd(txt='5pm',           exp=[])
     _run_sdd(txt='13:23:00',      exp=[':23', ':00'])
     _run_sdd(txt='13 :23 :00 :a', exp=[':23', ':00'])
+
+def test_hour():
+    r"""Test state machines used for finding ':\d\d' in free text"""
+    _run_hour(txt='12',      exp=['12'])
+    _run_hour(txt='1',       exp=[])  # Needs to be followed by any of: \d : a p A P
+
 
 # ------------------------------------------------------------------------
 def _run_ampm(txt, exp):
@@ -77,7 +84,35 @@ def _search_for_sdd(txt):
         f'  state={smo.state}')
     return captures
 
+# ------------------------------------------------------------------------
+def _run_hour(txt, exp):
+    print(white(f'\nTRY TEXT({txt})'))
+    tic = default_timer()
+    act = _search_for_hour(txt)
+    print(white(f'{timedelta(seconds=default_timer()-tic)} RESULT({act})'))
+    assert act == exp, f'TXT({txt})\nTXT({txt}) -> EXP({exp})\nTXT({txt}) -> ACT({act})'
+
+def _search_for_hour(txt):
+    """Examine all letters of the text for AM/PM and semicolon count"""
+    smo = _HH()
+    do_search = True
+    captures = []
+    for letter_cur in txt:
+        if do_search:
+            do_search = smo.run(letter_cur)
+            # Restart state machine
+            if smo.found:
+                captures.append(smo.capture)
+                smo.state = 'start'
+                do_search = True
+    print('_HH:\n'
+        f'  capture={smo.capture}\n'
+        f'  captures={captures}\n'
+        f'  state={smo.state}')
+    return captures
+
 
 if __name__ == '__main__':
-    #test_ampm()
+    test_ampm()
     test_sdd()
+    test_hour()

@@ -11,6 +11,7 @@ class _SmAmPm:
     def __init__(self):
         self.capture = None
         self.state = 'start'
+        self.found = False
         self.dfa = {
             'start': self._dfa_ampm_start,
             'm':     self._dfa_ampm_m,
@@ -20,9 +21,11 @@ class _SmAmPm:
     def run(self, letter):
         """Run the discrete state machine to search for AM/PM"""
         state = self.dfa[self.state](letter)
-        #print(f'StateMachine-AM/PM LETTER({letter}) STCUR({self.state}) STNXT({state})')
+        print(f'StateMachine-AM/PM FOUND({int(self.found)}) LETTER({letter}) '
+              f'STCUR({self.state}) STNXT({state})')
         if self.capture is not None and state == 'ampm_found':
             self.capture = f'{self.capture}m'
+            self.found = True
         self.state = state
         return state != 'ampm_found'
 
@@ -51,6 +54,7 @@ class _SDD:
 
     def __init__(self):
         self.capture = None
+        self.found = False
         self.state = 'start'
         self.dfa = {
             'start': self._dfa_semi,
@@ -62,9 +66,11 @@ class _SDD:
     def run(self, letter):
         r"""Run the discrete state machine to search for seconds formatted as ':\d\d'"""
         state = self.dfa[self.state](letter)
-        print(f'StateMachine-:dd LETTER({letter}) STCUR({self.state}) STNXT({state})')
+        print(f'StateMachine-:dd FOUND({int(self.found)}) LETTER({letter}) '
+              f'STCUR({self.state}) STNXT({state})')
         if state == ':ss_found':
             self.capture = ''.join(self.capture)
+            self.found = True
         self.state = state
         return state != ':ss_found'
 
@@ -86,42 +92,62 @@ class _SDD:
             return ':ss_found'
         return 'start'
 
-class _hh:
+class _HH:
     r"""DFA to find \d or \d\d to find the hour"""
+    # pylint: disable=too-few-public-methods
+
     def __init__(self):
         self.capture = None
         self.state = 'start'
+        self.found = False
         self.dfa = {
             'start': self._dfa_h1,
-            'h1':    self._dfa_h1,
-            'h2':    self._dfa_h2,
+            'h1':    self._dfa_h2,
         }
 
     def run(self, letter):
         r"""Run the discrete state machine to search for seconds formatted as ':\d\d'"""
         state = self.dfa[self.state](letter)
-        print(f'StateMachine-:dd LETTER({letter}) STCUR({self.state}) STNXT({state})')
-        if state == ':ss_found':
+        print(f'StateMachine-hour FOUND({int(self.found)}) LETTER({letter}) '
+              f'STCUR({self.state}) STNXT({state}) '
+              f'HOUR={self.capture}')
+        if state == 'hour_found':
             self.capture = ''.join(self.capture)
+            self.found = True
         self.state = state
-        return state != ':ss_found'
+        return state != 'hour_found'
 
     def _dfa_h1(self, letter):
         if letter in DIGITS:
             self.capture = [letter]
-            return 's1'
+            return 'h1'
+        if letter == ':':
+            self.state = ':'
+            self.found = True
+            return 'hour_found'
+        if letter in {'a', 'p'}:
+            self.state = 'm'
+            self.found = True
+            return 'hour_found'
+        if letter in {'A', 'P'}:
+            self.state = 'M'
+            self.found = True
+            return 'hour_found'
         return 'start'
 
     def _dfa_h2(self, letter):
         if letter in DIGITS:
             self.capture.append(letter)
-            return ':ss_found'
+            self.found = True
+            return 'hour_found'
         return 'start'
 
 
 def ampm_examine(txt):
     """Examine all letters of the text"""
     num_colons = 0
+    smhh = _HH()
+    do_srch_hh = True
     ### Prepare Search for 'am', 'pm', 'AM', or 'PM'
     ##sm_ampm = _SmAmPm()
     ##search_ampm = True
@@ -130,6 +156,8 @@ def ampm_examine(txt):
     ##search_sdd = True
     # Search
     for letter_cur in txt:
+        if do_srch_hh:
+            do_srch_hh = smhh.run(letter_cur)
         ### ':\d\d' Finate State Machine
         ####if sm_sdd and st_sss_cur == ':ss_found';
         ####    sm_sdd = None

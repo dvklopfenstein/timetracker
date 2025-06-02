@@ -5,13 +5,31 @@ __author__ = "DV Klopfenstein, PhD"
 
 DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 
-class _SmAmPm:
+class _Base:
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
         self.capture = None
         self.state = 'start'
         self.found = False
+        self.dfa = None
+
+    def _run(self, state, letter, name, fnc_docapture):
+        """Run the discrete state machine to search for pattern"""
+        print(f'StateMachine-{name} FOUND({int(self.found)}) LETTER({letter}) '
+              f'STCUR({self.state}) STNXT({state})')
+        if self.capture is not None and state == 'matched':
+            ##self.capture = f'{self.capture}m'
+            fnc_docapture()
+            self.found = True
+        self.state = state
+        return state != 'matched'
+
+class _SmAmPm(_Base):
+    # pylint: disable=too-few-public-methods
+
+    def __init__(self):
+        _Base.__init__(self)
         self.dfa = {
             'start': self._dfa_ampm_start,
             'm':     self._dfa_ampm_m,
@@ -19,15 +37,11 @@ class _SmAmPm:
         }
 
     def run(self, letter):
-        """Run the discrete state machine to search for AM/PM"""
-        state = self.dfa[self.state](letter)
-        print(f'StateMachine-AM/PM FOUND({int(self.found)}) LETTER({letter}) '
-              f'STCUR({self.state}) STNXT({state})')
-        if self.capture is not None and state == 'ampm_found':
-            self.capture = f'{self.capture}m'
-            self.found = True
-        self.state = state
-        return state != 'ampm_found'
+        """Run the discrete state machine to search for pattern"""
+        return _Base._run(self, self.dfa[self.state](letter), letter, 'AM/PM', self._do_capture)
+
+    def _do_capture(self):
+        self.capture = f'{self.capture}m'
 
     def _dfa_ampm_start(self, letter):
         """A Discrete State Atomaton in the discrete state machine to find AM/PM"""
@@ -43,19 +57,16 @@ class _SmAmPm:
     @staticmethod
     def _dfa_ampm_m(letter):
         if letter in {'m', 'M'}:
-            return 'ampm_found'
+            return 'matched'
         # Setting capture to None not needed
         return 'start'
 
-class _SDD:
+class _SDD(_Base):
     r"""DFA to find ':\d\d' in free text that describes timedelta or datetime"""
     # pylint: disable=too-few-public-methods
 
-
     def __init__(self):
-        self.capture = None
-        self.found = False
-        self.state = 'start'
+        _Base.__init__(self)
         self.dfa = {
             'start': self._dfa_semi,
             ':':     self._dfa_semi,
@@ -64,15 +75,11 @@ class _SDD:
         }
 
     def run(self, letter):
-        r"""Run the discrete state machine to search for seconds formatted as ':\d\d'"""
-        state = self.dfa[self.state](letter)
-        print(f'StateMachine-:dd FOUND({int(self.found)}) LETTER({letter}) '
-              f'STCUR({self.state}) STNXT({state})')
-        if state == ':ss_found':
-            self.capture = ''.join(self.capture)
-            self.found = True
-        self.state = state
-        return state != ':ss_found'
+        """Run the discrete state machine to search for pattern"""
+        return _Base._run(self, self.dfa[self.state](letter), letter, ':SS', self._do_capture)
+
+    def _do_capture(self):
+        self.capture = ''.join(self.capture)
 
     def _dfa_semi(self, letter):
         if letter == ':':
@@ -89,33 +96,26 @@ class _SDD:
     def _dfa_s1(self, letter):
         if letter in DIGITS:
             self.capture.append(letter)
-            return ':ss_found'
+            return 'matched'
         return 'start'
 
-class _HH:
+class _HH(_Base):
     r"""DFA to find \d or \d\d to find the hour"""
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        self.capture = None
-        self.state = 'start'
-        self.found = False
+        _Base.__init__(self)
         self.dfa = {
             'start': self._dfa_h1,
             'h1':    self._dfa_h2,
         }
 
     def run(self, letter):
-        r"""Run the discrete state machine to search for seconds formatted as ':\d\d'"""
-        state = self.dfa[self.state](letter)
-        print(f'StateMachine-hour FOUND({int(self.found)}) LETTER({letter}) '
-              f'STCUR({self.state}) STNXT({state}) '
-              f'HOUR={self.capture}')
-        if state == 'hour_found':
-            self.capture = ''.join(self.capture)
-            self.found = True
-        self.state = state
-        return state != 'hour_found'
+        """Run the discrete state machine to search for pattern"""
+        return _Base._run(self, self.dfa[self.state](letter), letter, 'HH', self._do_capture)
+
+    def _do_capture(self):
+        self.capture = ''.join(self.capture)
 
     def _dfa_h1(self, letter):
         if letter in DIGITS:
@@ -124,30 +124,33 @@ class _HH:
         if letter == ':':
             self.state = ':'
             self.found = True
-            return 'hour_found'
+            return 'SS'
         if letter in {'a', 'p'}:
             self.state = 'm'
             self.found = True
-            return 'hour_found'
+            return 'AM'
         if letter in {'A', 'P'}:
             self.state = 'M'
             self.found = True
-            return 'hour_found'
+            return 'AM'
         return 'start'
 
     def _dfa_h2(self, letter):
         if letter in DIGITS:
             self.capture.append(letter)
             self.found = True
-            return 'hour_found'
+            return 'matched'
         return 'start'
 
 
-def ampm_examine(txt):
+def examine_texttime(txt):
     """Examine all letters of the text"""
     num_colons = 0
     smhh = _HH()
-    do_srch_hh = True
+    smmm = _SDD()
+    smam = _SmAmPm()
+    do_srch = 'HH'
+    captures = []
     ### Prepare Search for 'am', 'pm', 'AM', or 'PM'
     ##sm_ampm = _SmAmPm()
     ##search_ampm = True
@@ -156,10 +159,12 @@ def ampm_examine(txt):
     ##search_sdd = True
     # Search
     for letter_cur in txt:
-        if do_srch_hh:
-            do_srch_hh = smhh.run(letter_cur)
+        if do_srch == 'HH':
+            do_srch = smhh.run(letter_cur)
+            if smhh.found:
+                captures.append(smhh.capture)
         ### ':\d\d' Finate State Machine
-        ####if sm_sdd and st_sss_cur == ':ss_found';
+        ####if sm_sdd and st_sss_cur == 'matched';
         ####    sm_sdd = None
         ### AM/PM Finite State Machine
         ##if search_ampm:

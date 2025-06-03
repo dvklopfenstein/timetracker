@@ -8,15 +8,17 @@ DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 class _Base:
     # pylint: disable=too-few-public-methods
 
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.capture = None
         self.state = 'start'
         self.found = False
+        self.advance = False
         self.dfa = None
 
-    def _run(self, state, letter, name, fnc_docapture):
+    def _run(self, state, letter, fnc_docapture):
         """Run the discrete state machine to search for pattern"""
-        print(f'StateMachine-{name} FOUND({int(self.found)}) LETTER({letter}) '
+        print(f'StateMachine-{self.name} FOUND({int(self.found)}) LETTER({letter}) '
               f'STCUR({self.state}) STNXT({state})')
         if self.capture is not None and state == 'matched':
             ##self.capture = f'{self.capture}m'
@@ -25,11 +27,14 @@ class _Base:
         self.state = state
         return state != 'matched'
 
+    def __str__(self):
+        return f'{self.name} {int(self.found)} ST({self.state}) {self.capture}'
+
 class _SmAmPm(_Base):
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        _Base.__init__(self)
+        _Base.__init__(self, 'AM')
         self.dfa = {
             'start': self._dfa_ampm_start,
             'm':     self._dfa_ampm_m,
@@ -38,7 +43,7 @@ class _SmAmPm(_Base):
 
     def run(self, letter):
         """Run the discrete state machine to search for pattern"""
-        return _Base._run(self, self.dfa[self.state](letter), letter, 'AM/PM', self._do_capture)
+        return _Base._run(self, self.dfa[self.state](letter), letter, self._do_capture)
 
     def _do_capture(self):
         self.capture = f'{self.capture}m'
@@ -66,7 +71,7 @@ class _SDD(_Base):
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        _Base.__init__(self)
+        _Base.__init__(self, 'SS')
         self.dfa = {
             'start': self._dfa_semi,
             ':':     self._dfa_semi,
@@ -76,7 +81,7 @@ class _SDD(_Base):
 
     def run(self, letter):
         """Run the discrete state machine to search for pattern"""
-        return _Base._run(self, self.dfa[self.state](letter), letter, ':SS', self._do_capture)
+        return _Base._run(self, self.dfa[self.state](letter), letter, self._do_capture)
 
     def _do_capture(self):
         self.capture = ''.join(self.capture)
@@ -104,15 +109,16 @@ class _HH(_Base):
     # pylint: disable=too-few-public-methods
 
     def __init__(self):
-        _Base.__init__(self)
+        _Base.__init__(self, 'HH')
         self.dfa = {
             'start': self._dfa_h1,
             'h1':    self._dfa_h2,
+            'h2':    self._nxt_sm,
         }
 
     def run(self, letter):
         """Run the discrete state machine to search for pattern"""
-        return _Base._run(self, self.dfa[self.state](letter), letter, 'HH', self._do_capture)
+        return _Base._run(self, self.dfa[self.state](letter), letter, self._do_capture)
 
     def _do_capture(self):
         self.capture = ''.join(self.capture)
@@ -121,35 +127,40 @@ class _HH(_Base):
         if letter in DIGITS:
             self.capture = [letter]
             return 'h1'
-        if letter == ':':
-            self.state = ':'
-            self.found = True
-            return 'SS'
-        if letter in {'a', 'p'}:
-            self.state = 'm'
-            self.found = True
-            return 'AM'
-        if letter in {'A', 'P'}:
-            self.state = 'M'
-            self.found = True
-            return 'AM'
         return 'start'
+        #return self._dfa_nxtsm(letter)
 
     def _dfa_h2(self, letter):
         if letter in DIGITS:
             self.capture.append(letter)
             self.found = True
-            return 'matched'
+            return 'h2'
+        return self._nxt_sm(letter)
+
+    def _nxt_sm(self, letter):
+        if letter == ':':
+            self.state = ':'
+            self.found = True
+            self.advance = 1
+            return 'SS'
+        if letter in {'a', 'p'}:
+            self.state = 'm'
+            self.found = True
+            self.advance = 2
+            return 'AM'
+        if letter in {'A', 'P'}:
+            self.state = 'M'
+            self.found = True
+            self.advance = 2
+            return 'AM'
         return 'start'
 
 
 def examine_texttime(txt):
     """Examine all letters of the text"""
     num_colons = 0
-    smhh = _HH()
-    smmm = _SDD()
-    smam = _SmAmPm()
-    do_srch = 'HH'
+    it_hhss = iter([_HH(), _SDD(), _SmAmPm()])
+    smo = next(it_hhss)
     captures = []
     ### Prepare Search for 'am', 'pm', 'AM', or 'PM'
     ##sm_ampm = _SmAmPm()
@@ -159,10 +170,14 @@ def examine_texttime(txt):
     ##search_sdd = True
     # Search
     for letter_cur in txt:
-        if do_srch == 'HH':
-            do_srch = smhh.run(letter_cur)
-            if smhh.found:
-                captures.append(smhh.capture)
+        if smo is not None:
+            print(smo.run(letter_cur))
+            ##if not smo.run(letter_cur):
+            ##    try:
+            ##        smo = next(it_hhss)
+            ##    except StopIteration:
+            ##        smo = None
+            print(f'XXXXXXXXXXXXXXXXXXXXXX {letter_cur} {smo}\n')
         ### ':\d\d' Finate State Machine
         ####if sm_sdd and st_sss_cur == 'matched';
         ####    sm_sdd = None
@@ -174,6 +189,7 @@ def examine_texttime(txt):
         # Count semi-colons
         if letter_cur == ':':
             num_colons += 1
+    print(f'StateMachine: captures={captures}')
     ##return {'num_ampma':sm_ampm.num_ampms, 'num_colons':num_colons}
 
 

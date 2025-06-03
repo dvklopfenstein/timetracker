@@ -47,7 +47,7 @@ def _search_for_ampm(txt):
         if do_search:
             do_search = smo.run(letter_cur)
             # Restart state machine
-            if smo.state == 'ampm_found':
+            if smo.state == 'matched':
                 captures.append(smo.capture)
                 smo.state = 'start'
                 do_search = True
@@ -74,7 +74,7 @@ def _search_for_sdd(txt):
         if do_search:
             do_search = smo.run(letter_cur)
             # Restart state machine
-            if smo.state == ':ss_found':
+            if smo.state == 'matched':
                 captures.append(smo.capture)
                 smo.state = 'start'
                 do_search = True
@@ -102,7 +102,7 @@ def _search_for_hour(txt):
             do_search = smo.run(letter_cur)
             # Restart state machine
             if smo.found:
-                captures.append(smo.capture)
+                captures.append(''.join(smo.capture))
                 smo.state = 'start'
                 do_search = True
     print('_HH:\n'
@@ -113,6 +113,8 @@ def _search_for_hour(txt):
 
 
 if __name__ == '__main__':
+    tic_all = default_timer()
     test_ampm()
     test_sdd()
     test_hour()
+    print(white(f'{timedelta(seconds=default_timer()-tic_all)} TOTAL TIME FOR ALL TESTS'))

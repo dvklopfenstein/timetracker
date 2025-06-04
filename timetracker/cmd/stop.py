@@ -4,17 +4,20 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from logging import error
-from timetracker.cfg.utils import get_shortest_name
 from timetracker.ntcsv import get_ntcsv
-from timetracker.epoch.epoch import get_dtz
-from timetracker.epoch.epoch import get_now
 from timetracker.consts import FMTDT_H
 from timetracker.csvrun import wr_stopline
+from timetracker.cfg.utils import get_shortest_name
 from timetracker.cmd.common import get_cfg
+from timetracker.epoch.epoch import get_dtz
+from timetracker.epoch.epoch import get_now
 
 
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
+
+    if args.billable:
+        _add_tag_billable(args)
     _run_stop(
         fnamecfg,
         args.name,
@@ -75,6 +78,12 @@ def _msg_stop_complete(fcsv, delta, stoptime, quiet):
               f'{stoptime}\n'
               f'Elapsed H:M:S {delta} '
               f'appended to {get_shortest_name(fcsv)}')
+
+def _add_tag_billable(args):
+    if args.tags is None:
+        args.tags = ['Billable']
+    else:
+        args.tags.append('Billable')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

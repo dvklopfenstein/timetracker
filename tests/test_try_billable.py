@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test the TimeTracker project config dir finder"""
+"""Test adding 'Billable' tag, if specified in args"""
 
 from timetracker.cli import Cli
 from timetracker.cmd.stop import _add_tag_billable

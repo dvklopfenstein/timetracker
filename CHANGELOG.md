@@ -30,6 +30,8 @@
 # Details
 
 ## Unreleased
+* ADDED `trk invoice` command
+* ADDED `trk stop -b` or `trk stop --billable` to add 'Billable' tag with minimum typing
 
 ## Release 2025-05-27 v0.6a0
 * ADDED `trk hours` options `--global` to show hours for all projects for a single username

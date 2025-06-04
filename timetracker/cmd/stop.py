@@ -73,11 +73,8 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
 def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     """Finish stopping"""
     if not quiet:
-        print('Timetracker stopped at: '
-              f'{stoptime.strftime(FMTDT_H)}: '
-              f'{stoptime}\n'
-              f'Elapsed H:M:S {delta} '
-              f'appended to {get_shortest_name(fcsv)}')
+        print(f'Timetracker stopped at: {stoptime.strftime(FMTDT_H)}: {stoptime}\n'
+              f'Elapsed H:M:S {delta} appended to {get_shortest_name(fcsv)}')
 
 def _add_tag_billable(args):
     if args.tags is None:

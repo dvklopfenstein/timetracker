@@ -3,11 +3,8 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from logging import debug
-
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.doc_local import get_docproj
-from timetracker.utils import yellow
 from timetracker.cmd.common import no_csv
 from timetracker.csvfile import CsvFile
 from timetracker.docx import WordDoc
@@ -21,7 +18,7 @@ def cli_run_report(fcfgproj, args):
     """Report all time units"""
     ##if args.input is None:
     cfgproj = CfgProj(fcfgproj)
-    run_report_cli(cfgproj, args.name)
+    run_report_cli(cfgproj, args.name, args.docx)
     ##elif len(args.input) == 1:
     ##    _run_io(args.input[0], args.output, pnum=args.product)
     ##else:
@@ -40,7 +37,6 @@ def cli_run_report(fcfgproj, args):
 
 def run_report_cli(cfgproj, username, fout_docx=None, dirhome=None):
     """Report all time units"""
-    debug(yellow('RUNNING COMMAND REPORT'))
     if (docproj := get_docproj(cfgproj.filename)):
         fcsv = docproj.get_filename_csv(username, dirhome)
         ntcsv = run_report(fcsv, fout_docx) if fcsv is not None else None

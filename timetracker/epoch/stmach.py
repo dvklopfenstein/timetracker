@@ -3,6 +3,10 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+##from timetracker.epoch.sm_ampm import run_ampm
+##from timetracker.epoch.sm_ampm import get_match_ampm
+##from timetracker.epoch.sm_ampm import FOUND_AMPM
+
 
 DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 
@@ -32,24 +36,23 @@ class _SmHhSsAm:
             return None
         if 'AM/PM' not in capture:
             return None
-        ##print(f'CAPTURE({capture})')
-        ret = {'HH': int(''.join(capture['HH']))}
+        hour = int(''.join(capture['HH']))
+        if capture['AM/PM'] == ['P', 'M']:
+            hour += 12
+        ret = {'HH': hour}
         if 'SS' in capture:
             ret['SS'] = int(''.join(capture['SS']))
-        ret['AM/PM'] = ''.join(capture['AM/PM'])
         return ret
 
     def run(self, letter):
         """Run the discrete state machine to search for pattern"""
         state = self.dfa[self.state](letter)
-        print(f'StateMachine-{self.name} FOUND({int(self.found)}) LETTER({letter}) '
-              f'STCUR({self.state}) STNXT({state})')
+        ##print(f'StateMachine-{self.name} FOUND({int(self.found)}) LETTER({letter}) '
+        ##      f'STCUR({self.state}) STNXT({state})')
         if self.capture is not None and state == 'matched':
-            ##self.capture = f'{self.capture}m'
-            ##fnc_docapture()
             self.found = True
         self.state = state
-        print(f'RESULT: {letter} {self}\n')
+        ##print(f'RESULT: {letter} {self}\n')
         return state != 'matched'
 
     def __str__(self):
@@ -118,11 +121,15 @@ def search_texttime(txt):
     for letter_cur in txt:
         if not smo.found:
             smo.run(letter_cur)
+        ##if not FOUND_AMPM:
+        ##    run_ampm(letter_cur)
         if letter_cur == ':':
             num_colons += 1
     if num_colons >= 2:
         return None
     return smo.get_match()
+    ##return get_match_ampm()
+    ##return None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

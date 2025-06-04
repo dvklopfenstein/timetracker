@@ -3,10 +3,10 @@
 
 from timeit import default_timer
 from datetime import timedelta
-from timetracker.epoch.stmach import _SmAmPm
-from timetracker.epoch.stmach import _SDD
-from timetracker.epoch.stmach import _HH
 from timetracker.utils import white
+from tests.pkgtttest.stmach import _SmAmPm
+from tests.pkgtttest.stmach import _SDD
+from tests.pkgtttest.stmach import _HH
 
 
 def test_ampm():

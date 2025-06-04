@@ -12,15 +12,15 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from datetime import datetime
+from datetime import date
 from datetime import timedelta
 from timeit import default_timer
 from pytimeparse2 import parse as pyt2_parse_secs
 from dateparser import parse as dateparser_parserdt
 from dateparser.conf import SettingValidationError
 from timetracker.epoch.calc import RoundTime
+from timetracker.epoch.stmach import search_texttime
 from timetracker.consts import FMTDT_H
-from timetracker.utils import white
-from timetracker.utils import yellow
 
 
 def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
@@ -70,6 +70,7 @@ def get_now():
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
+    get_dt_ampm(elapsed_or_dt, defaultdt)
     dto = get_dt_from_td(elapsed_or_dt, dta)
     if dto is not None:
         return dto
@@ -82,9 +83,24 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
             print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
-        print('ERROR FROM', white('python-dateparser: '), yellow(f'{err}'))
+        print(f'ERROR FROM python-dateparser: {err}')
     print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
     return None
+
+def get_dt_ampm(elapsed_or_dt, defaultdt):
+    """Get a datetime object from free text that contains AM/PM"""
+    tic = default_timer()
+    ret = None
+    mtch = search_texttime(elapsed_or_dt)
+    if mtch:
+        if defaultdt is None:
+            today = date.today()
+            ret = datetime(today.year, today.month, today.day,
+                           hour=mtch['HH'],
+                           minute=mtch.get('SS', 0))
+            ##print(f'DEFAULTDT: {today} {ret}')
+    print(f'{timedelta(seconds=default_timer()-tic)} get_ampm     parse({elapsed_or_dt})')
+    return ret
 
 def get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""

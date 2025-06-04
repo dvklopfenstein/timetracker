@@ -11,8 +11,8 @@ from timetracker.epoch.stmach import search_texttime
 def test_sm_hhss_am():
     """Test state machines used for finding 'am', 'pm', 'AM', or 'PM' in free text"""
     tic = default_timer()
-    _run_time(time='5pm',     exp={'HH': 5, 'AM/PM': 'PM'})
-    _run_time(time='5:30pm',  exp={'HH': 5, 'SS': 30, 'AM/PM': 'PM'})
+    _run_time(time='5pm',     exp={'HH': 17})
+    _run_time(time='5:30pm',  exp={'HH': 17, 'SS': 30})
     _run(txt='ampm',          exp=None)
     _run(txt='13:23:00',      exp=None)
     _run(txt='13 :23 :00 :a', exp=None)

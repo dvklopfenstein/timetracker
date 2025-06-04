@@ -45,8 +45,9 @@ class Cli:
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
+        print('PARSE ARGS')  # DVK
         self.args = self._init_args(sysargs)
-        ##print(f'TIMETRACKER ARGS: {self.args}')  # DVK
+        print(f'TIMETRACKER ARGS: {self.args}')  # DVK
 
     def run(self):
         """Run timetracker"""
@@ -138,6 +139,7 @@ class Cli:
         self._add_subparser_hours(subparsers)
         self._add_subparser_csv(subparsers)
         self._add_subparser_report(subparsers)
+        self._add_subparser_invoice(subparsers)
         #self._add_subparser_tag(subparsers)
         #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
@@ -209,6 +211,8 @@ class Cli:
             help='Add an activity to this time slot')
         parser.add_argument('-t', '--tags', nargs='*',
             help='Tags for this time unit')
+        parser.add_argument('-b', '--billable', action='store_true',
+            help='Tags this time unit as billable')
         return parser
 
     @staticmethod
@@ -246,6 +250,18 @@ class Cli:
         parser = subparsers.add_parser(name='report',
             help='Generate a project report for time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
+        ##parser.add_argument('--docx', default='report.docx',
+        ##    help='Put report into the named Word document docx file')
+        return parser
+
+    def _add_subparser_invoice(self, subparsers):
+        parser = subparsers.add_parser(name='invoice',
+            help='Generate an invoice',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-i', '--input', metavar='file.csv', dest='fcsv',
+            help='Specify an input csv file')
+        parser.add_argument('--docx', default='report.docx',
+            help='Put report into the named Word document docx file')
         return parser
 
     def _add_subparser_tag(self, subparsers):

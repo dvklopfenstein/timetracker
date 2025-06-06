@@ -39,6 +39,7 @@ def run_report_cli(cfgproj, username, fout_docx=None, dirhome=None):
     """Report all time units"""
     if (docproj := get_docproj(cfgproj.filename)):
         fcsv = docproj.get_filename_csv(username, dirhome)
+        # pylint: disable=duplicate-code
         ntcsv = run_report(fcsv, fout_docx) if fcsv is not None else None
         if ntcsv.results is None:
             no_csv(fcsv, cfgproj, username)

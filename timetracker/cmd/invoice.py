@@ -49,6 +49,7 @@ def run_invoice_cli(cfgproj, username, fout_docx=None, hourly_rate=100, dirhome=
     """Generate an invoice"""
     if (docproj := get_docproj(cfgproj.filename)):
         fcsv = docproj.get_filename_csv(username, dirhome)
+        # pylint: disable=duplicate-code
         ntcsv = run_invoice(fcsv, fout_docx, hourly_rate) if fcsv is not None else None
         if ntcsv.results is None:
             no_csv(fcsv, cfgproj, username)

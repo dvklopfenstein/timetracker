@@ -262,6 +262,8 @@ class Cli:
             help='Specify an input csv file')
         parser.add_argument('--docx', default='report.docx',
             help='Put report into the named Word document docx file')
+        parser.add_argument('-$', '--hourly-rate', type=int, default=100,
+            help='Use given hourly rate to calculate charges')
         return parser
 
     def _add_subparser_tag(self, subparsers):

@@ -90,16 +90,18 @@ class _SmHhSsAm:
         return 'start'
 
     def _dfa_s(self, letter):
-        if letter in DIGITS:
-            if self.stnum is None:
-                self.stnum = '1'
-                self.work = [letter,]
-                return 'second'
-            if self.stnum == '1':
-                self.stnum = '2'
-                self.work.append(letter)
-                return 'second'
-            assert f'UNEXPECTED MINUTE DIGIT({letter})'
+        if (self._run_onetwodigit(letter):
+            return 'second'
+        ####if letter in DIGITS:
+        ####    if self.stnum is None:
+        ####        self.stnum = '1'
+        ####        self.work = [letter,]
+        ####        return 'second'
+        ####    if self.stnum == '1':
+        ####        self.stnum = '2'
+        ####        self.work.append(letter)
+        ####        return 'second'
+        ####    assert f'UNEXPECTED MINUTE DIGIT({letter})'
         elif self.stnum in {'1', '2'}:
             if (minute := int(''.join(self.work))) <= 60:
                 self.capture['second'] = minute
@@ -157,6 +159,20 @@ class _SmHhSsAm:
                 self.stnum = None
                 return 'day'
         return 'start'
+
+
+    def _run_onetwodigit(self, letter)
+        if letter in DIGITS:
+            if self.stnum is None:
+                self.stnum = '1'
+                self.work = [letter,]
+                return True
+            if self.stnum == '1':
+                self.stnum = '2'
+                self.work.append(letter)
+                return True
+            assert f'UNEXPECTED MINUTE DIGIT({letter})'
+        return False
 
 
     # -------------------------------------------------------------------

@@ -91,16 +91,28 @@ def get_dt_ampm(elapsed_or_dt, defaultdt):
     """Get a datetime object from free text that contains AM/PM"""
     tic = default_timer()
     ret = None
-    mtch = search_texttime(elapsed_or_dt)
-    if mtch:
-        if defaultdt is None:
-            today = date.today()
-            ret = datetime(today.year, today.month, today.day,
-                           hour=mtch['HH'],
-                           minute=mtch.get('SS', 0))
-            ##print(f'DEFAULTDT: {today} {ret}')
-    print(f'{timedelta(seconds=default_timer()-tic)} get_ampm     parse({elapsed_or_dt})')
+    if 'hour' in (mtch := search_texttime(elapsed_or_dt)):
+        print(f'{timedelta(seconds=default_timer()-tic)} get_ampm 1   parse({elapsed_or_dt})')
+        _get_ymd(mtch, defaultdt)
+        print(f'{timedelta(seconds=default_timer()-tic)} get_ampm 2   parse({elapsed_or_dt})')
+        ret = datetime(year=mtch['year'], month=mtch['month'], day=mtch['day'],
+                       hour=mtch['hour'],
+                       minute=mtch.get('minute', 0),
+                       second=mtch.get('second', 0))
+        ##print(f'DEFAULTDT: {today} {ret}')
+    print(f'{timedelta(seconds=default_timer()-tic)} get_ampm  3  parse({elapsed_or_dt})')
     return ret
+
+def _get_ymd(mtch, defaultdt):
+    if {'year', 'month', 'day'}.issubset(set(mtch.keys())):
+        return
+    today = date.today() if defaultdt is None else defaultdt
+    if 'year' not in mtch:
+        mtch['year'] = today.year
+    if 'month' not in mtch:
+        mtch['month'] = today.month
+    if 'day' not in mtch:
+        mtch['day'] = today.day
 
 def get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""

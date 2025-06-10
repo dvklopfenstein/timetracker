@@ -15,31 +15,31 @@ TESTIO = {
         'exp_dct':[{'hour':5, 'AM/PM':'PM'},
                    {'hour':3, 'AM/PM':'AM'}],
     },
-    
+
     '5pm a 3am a ':{
         'exp_dct':[{'hour':5, 'AM/PM':'PM'},
                    {'hour':3, 'AM/PM':'AM'}],
     },
-    
+
     '5pm xtra txt':{
         'exp_dct':[{'hour':5, 'AM/PM':'PM'}],
     },
-    
+
     'ampm':{'exp_dct':[]},
-    
+
     '13:23:00':{
         'exp_dct':[{'hour':13, 'minute': 23, 'second': 0}],
     },
-    
+
     '2025':{
         'exp_dct':[{'year': 2025}],
     },
-    
+
     '2025-06-10 08:57:12 AM':{
         'exp_dct':[{'year': 2025, 'month': 6, 'day': 10},
                    {'hour': 8, 'minute': 57, 'second': 12, 'AM/PM':'AM'}],
     },
-    
+
     '2025-06-10 8:57:12am':{
         'exp_dct':[{'year': 2025, 'month': 6, 'day': 10},
                    {'hour': 8, 'minute': 57, 'second': 12, 'AM/PM':'AM'}],

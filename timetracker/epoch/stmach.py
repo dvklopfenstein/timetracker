@@ -24,9 +24,9 @@ class _SmHhSsAm:
         self.dfa = {
             'start':  self._dfa_start,
             'digits': self._dfa_digits,  # year or hour
-            'minute': self._dfa_m,
-            'second': self._dfa_s,
-            'AM/PM':  self._dfa_ap,
+            'minute': self._dfa_min,
+            'second': self._dfa_sec,
+            'AM/PM':  self._dfa_ampm,
             'year':   self._dfa_year,
             'month':  self._dfa_month,
             'day':    self._dfa_day,
@@ -59,23 +59,12 @@ class _SmHhSsAm:
         # Process non-digit
         if letter == ':':
             return 'minute'
-        if letter in {'a', 'A', 'p', 'P'}:
-            self.work = [letter.upper()]
-            return 'AM/PM'
-        return 'start'
+        return self._run_ap(letter)
 
-    def _dfa_m(self, letter):
-        if letter in DIGITS:
-            if self.stnum is None:
-                self.stnum = '1'
-                self.work = [letter,]
-                return 'minute'
-            if self.stnum == '1':
-                self.stnum = '2'
-                self.work.append(letter)
-                return 'minute'
-            assert f'UNEXPECTED MINUTE DIGIT({letter})'
-        elif self.stnum in {'1', '2'}:
+    def _dfa_min(self, letter):
+        if self._run_onetwodigit(letter):
+            return 'minute'
+        if self.stnum in {'1', '2'}:
             if (minute := int(''.join(self.work))) <= 60:
                 self.capture['minute'] = minute
                 self.stnum = None
@@ -84,41 +73,33 @@ class _SmHhSsAm:
         # Process non-digit
         if letter == ':':
             return 'second'
-        if letter in {'a', 'A', 'p', 'P'}:
-            self.work = [letter.upper()]
-            return 'AM/PM'
-        return 'start'
+        return self._run_ap(letter)
 
-    def _dfa_s(self, letter):
-        if (self._run_onetwodigit(letter):
+    def _dfa_sec(self, letter):
+        if self._run_onetwodigit(letter):
             return 'second'
-        ####if letter in DIGITS:
-        ####    if self.stnum is None:
-        ####        self.stnum = '1'
-        ####        self.work = [letter,]
-        ####        return 'second'
-        ####    if self.stnum == '1':
-        ####        self.stnum = '2'
-        ####        self.work.append(letter)
-        ####        return 'second'
-        ####    assert f'UNEXPECTED MINUTE DIGIT({letter})'
-        elif self.stnum in {'1', '2'}:
+        if self.stnum in {'1', '2'}:
             if (minute := int(''.join(self.work))) <= 60:
                 self.capture['second'] = minute
                 self.stnum = None
             else:
                 return 'start'
         # Process non-digit
-        if letter in {'a', 'A', 'p', 'P'}:
-            self.work = [letter.upper()]
+        return self._run_ap(letter)
+
+    def _run_ap(self, letter):
+        if letter in {'a', 'A', 'p', 'P', ' '}:
+            if letter != ' ':
+                self.work = letter.upper()
+            else:
+                self.work = None
             return 'AM/PM'
         return 'start'
 
-    def _dfa_ap(self, letter):
-        if letter in {'m', 'M'}:
-            assert self.work and len(self.work) == 1
-            self.capture['AM/PM'] = f'{self.work[0]}M'
-        return 'start'
+    def _dfa_ampm(self, letter):
+        if letter in {'m', 'M'} and self.work:
+            self.capture['AM/PM'] = f'{self.work}M'
+        return self._run_ap(letter)
 
     def _dfa_year(self, letter):
         if letter in DIGITS:
@@ -132,36 +113,23 @@ class _SmHhSsAm:
         return 'start'
 
     def _dfa_month(self, letter):
-        if letter in DIGITS:
-            if self.stnum is None:
-                self.work = [letter]
-                self.stnum = '1'
-                return 'month'
-            if self.stnum == '1':
-                self.work.append(letter)
-                self.stnum = '2'
-                return 'month'
-        elif letter in {'-', '_', '/'}:
+        if self._run_onetwodigit(letter):
+            return 'month'
+        if letter in {'-', '_', '/'}:
             self.capture['month'] = int(''.join(self.work))
             self.stnum = None
             return 'day'
         return 'start'
 
     def _dfa_day(self, letter):
-        if letter in DIGITS:
-            if self.stnum is None:
-                self.work = [letter]
-                self.stnum = '1'
-                return 'day'
-            if self.stnum == '1':
-                self.work.append(letter)
-                self.capture['day'] = int(''.join(self.work))
-                self.stnum = None
-                return 'day'
+        if self._run_onetwodigit(letter):
+            return 'day'
+        self.capture['day'] = int(''.join(self.work))
+        self.stnum = None
         return 'start'
 
-
-    def _run_onetwodigit(self, letter)
+    # -------------------------------------------------------------------
+    def _run_onetwodigit(self, letter):
         if letter in DIGITS:
             if self.stnum is None:
                 self.stnum = '1'
@@ -171,9 +139,8 @@ class _SmHhSsAm:
                 self.stnum = '2'
                 self.work.append(letter)
                 return True
-            assert f'UNEXPECTED MINUTE DIGIT({letter})'
+            assert f'UNEXPECTED 1st OR 2nd DIGIT({letter})'
         return False
-
 
     # -------------------------------------------------------------------
     def run(self, state, letter):

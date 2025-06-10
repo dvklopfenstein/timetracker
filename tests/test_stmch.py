@@ -6,33 +6,55 @@ from datetime import timedelta
 from timetracker.utils import white
 from timetracker.epoch.stmach import _SmHhSsAm
 
+TESTIO = {
+    '5pm':{
+        'exp_dct':[{'hour':5, 'AM/PM':'PM'}],
+    },
+
+    '5pm 3am':{
+        'exp_dct':[{'hour':5, 'AM/PM':'PM'},
+                   {'hour':3, 'AM/PM':'AM'}],
+    },
+    
+    '5pm a 3am a ':{
+        'exp_dct':[{'hour':5, 'AM/PM':'PM'},
+                   {'hour':3, 'AM/PM':'AM'}],
+    },
+    
+    '5pm xtra txt':{
+        'exp_dct':[{'hour':5, 'AM/PM':'PM'}],
+    },
+    
+    'ampm':{'exp_dct':[]},
+    
+    '13:23:00':{
+        'exp_dct':[{'hour':13, 'minute': 23, 'second': 0}],
+    },
+    
+    '2025':{
+        'exp_dct':[{'year': 2025}],
+    },
+    
+    '2025-06-10 08:57:12 AM':{
+        'exp_dct':[{'year': 2025, 'month': 6, 'day': 10},
+                   {'hour': 8, 'minute': 57, 'second': 12, 'AM/PM':'AM'}],
+    },
+    
+    '2025-06-10 8:57:12am':{
+        'exp_dct':[{'year': 2025, 'month': 6, 'day': 10},
+                   {'hour': 8, 'minute': 57, 'second': 12, 'AM/PM':'AM'}],
+    },
+}
 
 def test_ampm():
     """Test state machines used for finding 'am', 'pm', 'AM', or 'PM' in free text"""
-    _run_ampm(txt='5pm',          exp=[{'hour':5, 'AM/PM':'PM'}])
-
-    _run_ampm(txt='5pm 3am',      exp=[{'hour':5, 'AM/PM':'PM'},
-                                       {'hour':3, 'AM/PM':'AM'}])
-
-    _run_ampm(txt='5pm a 3am a ', exp=[{'hour':5, 'AM/PM':'PM'},
-                                       {'hour':3, 'AM/PM':'AM'}])
-
-    _run_ampm(txt='5pm xtra txt', exp=[{'hour':5, 'AM/PM':'PM'}])
-
-    _run_ampm(txt='ampm',         exp=[])
-
-    _run_ampm(txt='13:23:00',     exp=[{'hour':13, 'minute': 23, 'second': 0}])
-
-    _run_ampm(txt='2025',         exp=[{'year': 2025}])
-
-    _run_ampm(txt='2025-06-10 08:57:12 AM',
-              exp=[{'year': 2025, 'month': 6, 'day': 10},
-                   {'hour': 8, 'minute': 57, 'second': 12}])
+    for txt, dct in TESTIO.items():
+        _run_ampm(txt, dct['exp_dct'])
 
 
 # ------------------------------------------------------------------------
 def _run_ampm(txt, exp):
-    print(white(f'\nTRY TEXT({txt})'))
+    print(white(f'\nTRY TXT({txt})'))
     tic = default_timer()
     act = _search_for_ampm(txt)
     print(white(f'{timedelta(seconds=default_timer()-tic)} '

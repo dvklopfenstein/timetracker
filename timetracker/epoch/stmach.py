@@ -50,24 +50,18 @@ class _SmHhSsAm:
                 self.stnum = '3'
                 return 'year'
             assert f'UNEXPECTED HOUR OR YEAR DIGIT({letter})'
-        if letter == ':':
+        elif self.stnum in {'1', '2'}:
             if (hour := int(''.join(self.work))) <= 24:
                 self.capture['hour'] = hour
                 self.stnum = None
-                return 'minute'
-            return 'start'
-        if letter in {'a', 'A'}:
-            if (hour := int(''.join(self.work))) <= 24:
-                self.capture['hour'] = hour
-                self.work = ['A',]
-                return 'AM/PM'
-            return 'start'
-        if letter in {'p', 'P'}:
-            if (hour := int(''.join(self.work))) <= 24:
-                self.capture['hour'] = hour
-                self.work = ['P',]
-                return 'AM/PM'
-            return 'start'
+            else:
+                return 'start'
+        # Process non-digit
+        if letter == ':':
+            return 'minute'
+        if letter in {'a', 'A', 'p', 'P'}:
+            self.work = [letter.upper()]
+            return 'AM/PM'
         return 'start'
 
     def _dfa_m(self, letter):
@@ -79,20 +73,19 @@ class _SmHhSsAm:
             if self.stnum == '1':
                 self.stnum = '2'
                 self.work.append(letter)
-                self.capture['minute'] = int(''.join(self.work))
                 return 'minute'
             assert f'UNEXPECTED MINUTE DIGIT({letter})'
+        elif self.stnum in {'1', '2'}:
+            if (minute := int(''.join(self.work))) <= 60:
+                self.capture['minute'] = minute
+                self.stnum = None
+            else:
+                return 'start'
+        # Process non-digit
         if letter == ':':
-            self.capture['minute'] = int(''.join(self.work))
-            self.stnum = None
             return 'second'
-        if letter in {'a', 'A'}:
-            self.capture['minute'] = int(''.join(self.work))
-            self.work = ['A',]
-            return 'AM/PM'
-        if letter in {'p', 'P'}:
-            self.capture['minute'] = int(''.join(self.work))
-            self.work = ['P',]
+        if letter in {'a', 'A', 'p', 'P'}:
+            self.work = [letter.upper()]
             return 'AM/PM'
         return 'start'
 
@@ -105,16 +98,17 @@ class _SmHhSsAm:
             if self.stnum == '1':
                 self.stnum = '2'
                 self.work.append(letter)
-                self.capture['second'] = int(''.join(self.work))
                 return 'second'
             assert f'UNEXPECTED MINUTE DIGIT({letter})'
-        if letter in {'a', 'A'}:
-            self.capture['second'] = int(''.join(self.work))
-            self.work = ['A',]
-            return 'AM/PM'
-        if letter in {'p', 'P'}:
-            self.capture['second'] = int(''.join(self.work))
-            self.work = ['P',]
+        elif self.stnum in {'1', '2'}:
+            if (minute := int(''.join(self.work))) <= 60:
+                self.capture['second'] = minute
+                self.stnum = None
+            else:
+                return 'start'
+        # Process non-digit
+        if letter in {'a', 'A', 'p', 'P'}:
+            self.work = [letter.upper()]
             return 'AM/PM'
         return 'start'
 
@@ -190,7 +184,7 @@ def search_texttime(txt):
     smo.run(state, None)
     if num_colons >= 2:
         return None
-    return smo
+    return smo.capture
     ##return get_match_ampm()
     ##return None
 

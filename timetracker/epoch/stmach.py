@@ -3,6 +3,10 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+# NOTE:
+# 24:00 refers to midnight at the end of a given date
+# 00:00 refers to the beginning of the day
+
 ##from timetracker.epoch.sm_ampm import run_ampm
 ##from timetracker.epoch.sm_ampm import get_match_ampm
 ##from timetracker.epoch.sm_ampm import FOUND_AMPM
@@ -14,122 +18,196 @@ class _SmHhSsAm:
     """State machine to find HH:SSam, HHam, and variations"""
 
     def __init__(self):
-        self.name = 'HH:SS:am'
-        self.capture = None
-        self.state = 'start'
-        self.found = False
+        self.capture = {}
+        self.work = None
+        self.stnum = None
         self.dfa = {
-            'start': self._dfa_h1,
-            'h1':    self._dfa_h2,
-            'h2':    self._dfa_after_h2,
-            's10':   self._dfa_s10,
-            's1':    self._dfa_s1,
-            'AP':    self._dfa_ap,
-            'm':     self._dfa_ampm_m,
-            'M':     self._dfa_ampm_m,
+            'start':  self._dfa_start,
+            'digits': self._dfa_digits,  # year or hour
+            'minute': self._dfa_m,
+            'second': self._dfa_s,
+            'AM/PM':  self._dfa_ap,
+            'year':   self._dfa_year,
+            'month':  self._dfa_month,
+            'day':    self._dfa_day,
         }
 
-    def get_match(self):
-        r"""Get the items from matching '\d{1,2}(:\d\d)?(am|AM|pm|PM)'"""
-        capture = self.capture
-        if capture is None:
-            return None
-        if 'AM/PM' not in capture:
-            return None
-        hour = int(''.join(capture['HH']))
-        if capture['AM/PM'] == ['P', 'M']:
-            hour += 12
-        ret = {'HH': hour}
-        if 'SS' in capture:
-            ret['SS'] = int(''.join(capture['SS']))
-        return ret
-
-    def run(self, letter):
-        """Run the discrete state machine to search for pattern"""
-        state = self.dfa[self.state](letter)
-        ##print(f'StateMachine-{self.name} FOUND({int(self.found)}) LETTER({letter}) '
-        ##      f'STCUR({self.state}) STNXT({state})')
-        if self.capture is not None and state == 'matched':
-            self.found = True
-        self.state = state
-        ##print(f'RESULT: {letter} {self}\n')
-        return state != 'matched'
-
-    def __str__(self):
-        return f'{self.name} {int(self.found)} ST({self.state}) {self.capture}'
-
-    def _dfa_ampm_start(self, letter):
-        """A Discrete State Atomaton in the discrete state machine to find AM/PM"""
-        if letter in {'a', 'p'}:
-            self.capture['AM/PM'] = [letter.upper()]
-            return 'm'
-        if letter in {'A', 'P'}:
-            self.capture['AM/PM'] = [letter]
-            return 'M'
-        return 'start'
-
-    def _dfa_ampm_m(self, letter):
-        if letter in {'m', 'M'}:
-            self.capture['AM/PM'].append('M')
-            self.found = True
-            return 'matched'
-        return 'start'
-
-    def _dfa_s10(self, letter):
+    def _dfa_start(self, letter):
         if letter in DIGITS:
-            self.capture['SS'] = [letter]
-            return 's1'
+            self.work = [letter,]
+            self.stnum = '1'
+            return 'digits'
         return 'start'
 
-    def _dfa_s1(self, letter):
+    def _dfa_digits(self, letter):
         if letter in DIGITS:
-            self.capture['SS'].append(letter)
-            return 'AP'
-        return 'start'
-
-    def _dfa_h1(self, letter):
-        if letter in DIGITS:
-            self.capture = {'HH': [letter]}
-            return 'h1'
-        return 'start'
-
-    def _dfa_h2(self, letter):
-        if letter in DIGITS:
-            self.capture['HH'].append(letter)
-            return 'h2'
-        return self._dfa_after_h2(letter)
-
-    def _dfa_after_h2(self, letter):
+            if self.stnum == '1':
+                self.work.append(letter)
+                self.stnum = '2'
+                return 'digits'
+            if self.stnum == '2':
+                self.work.append(letter)
+                self.stnum = '3'
+                return 'year'
+            assert f'UNEXPECTED HOUR OR YEAR DIGIT({letter})'
         if letter == ':':
-            return 's10'
-        return self._dfa_ap(letter)
+            if (hour := int(''.join(self.work))) <= 24:
+                self.capture['hour'] = hour
+                self.stnum = None
+                return 'minute'
+            return 'start'
+        if letter in {'a', 'A'}:
+            if (hour := int(''.join(self.work))) <= 24:
+                self.capture['hour'] = hour
+                self.work = ['A',]
+                return 'AM/PM'
+            return 'start'
+        if letter in {'p', 'P'}:
+            if (hour := int(''.join(self.work))) <= 24:
+                self.capture['hour'] = hour
+                self.work = ['P',]
+                return 'AM/PM'
+            return 'start'
+        return 'start'
+
+    def _dfa_m(self, letter):
+        if letter in DIGITS:
+            if self.stnum is None:
+                self.stnum = '1'
+                self.work = [letter,]
+                return 'minute'
+            if self.stnum == '1':
+                self.stnum = '2'
+                self.work.append(letter)
+                self.capture['minute'] = int(''.join(self.work))
+                return 'minute'
+            assert f'UNEXPECTED MINUTE DIGIT({letter})'
+        if letter == ':':
+            self.capture['minute'] = int(''.join(self.work))
+            self.stnum = None
+            return 'second'
+        if letter in {'a', 'A'}:
+            self.capture['minute'] = int(''.join(self.work))
+            self.work = ['A',]
+            return 'AM/PM'
+        if letter in {'p', 'P'}:
+            self.capture['minute'] = int(''.join(self.work))
+            self.work = ['P',]
+            return 'AM/PM'
+        return 'start'
+
+    def _dfa_s(self, letter):
+        if letter in DIGITS:
+            if self.stnum is None:
+                self.stnum = '1'
+                self.work = [letter,]
+                return 'second'
+            if self.stnum == '1':
+                self.stnum = '2'
+                self.work.append(letter)
+                self.capture['second'] = int(''.join(self.work))
+                return 'second'
+            assert f'UNEXPECTED MINUTE DIGIT({letter})'
+        if letter in {'a', 'A'}:
+            self.capture['second'] = int(''.join(self.work))
+            self.work = ['A',]
+            return 'AM/PM'
+        if letter in {'p', 'P'}:
+            self.capture['second'] = int(''.join(self.work))
+            self.work = ['P',]
+            return 'AM/PM'
+        return 'start'
 
     def _dfa_ap(self, letter):
-        if letter in {'a', 'p'}:
-            self.capture['AM/PM'] = [letter.upper()]
-            return 'm'
-        if letter in {'A', 'P'}:
-            self.capture['AM/PM'] = [letter]
-            return 'M'
+        if letter in {'m', 'M'}:
+            assert self.work and len(self.work) == 1
+            self.capture['AM/PM'] = f'{self.work[0]}M'
         return 'start'
 
+    def _dfa_year(self, letter):
+        if letter in DIGITS:
+            if self.stnum == '3':
+                self.work.append(letter)
+                self.capture['year'] = int(''.join(self.work))
+                self.stnum = None
+                return 'year'
+        elif letter in {'-', '_', '/'}:
+            return 'month'
+        return 'start'
+
+    def _dfa_month(self, letter):
+        if letter in DIGITS:
+            if self.stnum is None:
+                self.work = [letter]
+                self.stnum = '1'
+                return 'month'
+            if self.stnum == '1':
+                self.work.append(letter)
+                self.stnum = '2'
+                return 'month'
+        elif letter in {'-', '_', '/'}:
+            self.capture['month'] = int(''.join(self.work))
+            self.stnum = None
+            return 'day'
+        return 'start'
+
+    def _dfa_day(self, letter):
+        if letter in DIGITS:
+            if self.stnum is None:
+                self.work = [letter]
+                self.stnum = '1'
+                return 'day'
+            if self.stnum == '1':
+                self.work.append(letter)
+                self.capture['day'] = int(''.join(self.work))
+                self.stnum = None
+                return 'day'
+        return 'start'
+
+
+    # -------------------------------------------------------------------
+    def run(self, state, letter):
+        """Run the discrete state machine to search for pattern"""
+        msg = (f'LETTER({letter}) '
+               f'STCUR({state} {self.stnum}) '
+               f'WORK({self.work}) ' 
+               f'LETTER({letter})')
+        #print('MSG:', msg)
+        state = self.dfa[state](letter)
+        print(f'StateMachine {msg} '
+              f'WORK({self.work}) '
+              f'STNXT({state}) '
+              f'CAPTURE({self.capture})')
+        return state
 
 def search_texttime(txt):
     """Search for HH:SSam, HHam, and variations"""
     num_colons = 0
     smo = _SmHhSsAm()
-    for letter_cur in txt:
-        if not smo.found:
-            smo.run(letter_cur)
-        ##if not FOUND_AMPM:
-        ##    run_ampm(letter_cur)
-        if letter_cur == ':':
-            num_colons += 1
+    state = 'start'
+    for letter in txt:
+        state = smo.run(state, letter)
+    smo.run(state, None)
     if num_colons >= 2:
         return None
-    return smo.get_match()
+    return smo
     ##return get_match_ampm()
     ##return None
+
+####def get_match(self):
+####    r"""Get the items from matching '\d{1,2}(:\d\d)?(am|AM|pm|PM)'"""
+####    capture = self.capture
+####    if capture is None:
+####        return None
+####    if 'AM/PM' not in capture:
+####        return None
+####    hour = int(''.join(capture['HH']))
+####    if capture['AM/PM'] == ['P', 'M']:
+####        hour += 12
+####    ret = {'HH': hour}
+####    if 'SS' in capture:
+####        ret['SS'] = int(''.join(capture['SS']))
+####    return ret
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

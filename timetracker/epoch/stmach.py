@@ -105,10 +105,13 @@ class _SmHhSsAm:
         if letter in DIGITS:
             if self.stnum == '3':
                 self.work.append(letter)
-                self.capture['year'] = int(''.join(self.work))
-                self.stnum = None
+                self.stnum = 4
                 return 'year'
-        elif letter in {'-', '_', '/'}:
+        elif self.stnum == 4:
+            self.capture['year'] = int(''.join(self.work))
+            self.stnum = None
+        # Process non-digit
+        if letter in {'-', '_', '/'}:
             return 'month'
         return 'start'
 

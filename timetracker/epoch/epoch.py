@@ -70,7 +70,7 @@ def get_now():
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
-    get_dt_ampm(elapsed_or_dt, defaultdt)
+    ##get_dt_ampm(elapsed_or_dt, defaultdt)
     dto = get_dt_from_td(elapsed_or_dt, dta)
     if dto is not None:
         return dto

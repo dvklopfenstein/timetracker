@@ -137,9 +137,9 @@ class CfgGlobal:
 
     def _wr_project_init(self, project, fcfgproj):
         doc = self._get_new_doc()
-        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", doc)
-        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", project)
-        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", fcfgproj)
+        ##print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", doc)
+        ##print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", project)
+        ##print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", fcfgproj)
         doc['projects'].add_line((project, fcfgproj))
         ##TOMLFile(self.filename).write(doc)
         err = write_config(self.filename, doc)

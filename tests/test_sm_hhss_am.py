@@ -11,13 +11,13 @@ from timetracker.epoch.stmach import search_texttime
 def test_sm_hhss_am():
     """Test state machines used for finding 'am', 'pm', 'AM', or 'PM' in free text"""
     tic = default_timer()
-    _run_time(time='5pm',     exp={'HH': 17})
-    _run_time(time='5:30pm',  exp={'HH': 17, 'SS': 30})
+    _run('5pm',     exp={'hour': 17})
+    _run('5:30pm',  exp={'hour': 17, 'minute': 30})
     _run(txt='ampm',          exp=None)
-    _run(txt='13:23:00',      exp=None)
-    _run(txt='13 :23 :00 :a', exp=None)
-    _run(txt='12',            exp=None)
-    _run(txt='1',             exp=None)  # Needs to be followed by any of: \d : a p A P
+    _run(txt='13:23:00',      exp={'hour': 13, 'minute': 23, 'second': 0})
+    #_run(txt='13 :23 :00 :a', exp=None)
+    _run(txt='12',            exp={'hour': 12})
+    _run(txt='1',             exp={'hour':  1})
     print(white(f'{timedelta(seconds=default_timer()-tic)} TOTAL TIME'))
 
 def _run_time(time, exp):

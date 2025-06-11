@@ -3,6 +3,11 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+##from timeit import default_timer
+##tic = default_timer()
+##from datetime import timedelta
+##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: BEFORE IMPORTS')
+
 from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
@@ -19,6 +24,7 @@ from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.none import cli_run_none
 from timetracker.proc import get_log1
 
+##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')
 
 def main():
     """Connect all parts of the timetracker"""
@@ -45,9 +51,9 @@ class Cli:
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
-        print('PARSE ARGS')  # DVK
+        ##print('PARSE ARGS')  # DVK
         self.args = self._init_args(sysargs)
-        print(f'TIMETRACKER ARGS: {self.args}')  # DVK
+        ##print(f'TIMETRACKER ARGS: {self.args}')  # DVK
 
     def run(self):
         """Run timetracker"""
@@ -250,8 +256,8 @@ class Cli:
         parser = subparsers.add_parser(name='report',
             help='Generate a project report for time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
-        ##parser.add_argument('--docx', default='report.docx',
-        ##    help='Put report into the named Word document docx file')
+        parser.add_argument('--docx', default='report.docx',
+            help='Put report into the named Word document docx file')
         return parser
 
     def _add_subparser_invoice(self, subparsers):

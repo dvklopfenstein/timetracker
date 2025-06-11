@@ -15,7 +15,7 @@ __author__ = "DV Klopfenstein, PhD"
 DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 
 class _SmHhSsAm:
-    """State machine to find HH:SSam, HHam, and variations"""
+    """In free text, find HH:SSam, HHam, and variations"""
 
     def __init__(self):
         self.capture = {}
@@ -118,8 +118,8 @@ class _SmHhSsAm:
     def _dfa_month(self, letter):
         if self._run_onetwodigit(letter):
             return 'month'
-        if letter in {'-', '_', '/'}:
-            self.capture['month'] = int(''.join(self.work))
+        if letter in {'-', '_', '/'} and 1 <= (month := int(''.join(self.work))) <= 12:
+            self.capture['month'] = month
             self.stnum = None
             return 'day'
         return 'start'
@@ -127,8 +127,9 @@ class _SmHhSsAm:
     def _dfa_day(self, letter):
         if self._run_onetwodigit(letter):
             return 'day'
-        self.capture['day'] = int(''.join(self.work))
-        self.stnum = None
+        if 1 <= (day := int(''.join(self.work))) <= 31:
+            self.capture['day'] = day
+            self.stnum = None
         return 'start'
 
     # -------------------------------------------------------------------
@@ -146,48 +147,57 @@ class _SmHhSsAm:
         return False
 
     # -------------------------------------------------------------------
-    def run(self, state, letter):
-        """Run the discrete state machine to search for pattern"""
+    def run(self, stval, letter):
+        """Run the discrete sm to search for pattern"""
         msg = (f'LETTER({letter}) '
-               f'STCUR({state} {self.stnum}) '
-               f'WORK({self.work}) ' 
+               f'STCUR({stval} {self.stnum}) '
+               f'WORK({self.work}) '
                f'LETTER({letter})')
         #print('MSG:', msg)
-        state = self.dfa[state](letter)
-        print(f'StateMachine {msg} '
-              f'WORK({self.work}) '
-              f'STNXT({state}) '
-              f'CAPTURE({self.capture})')
-        return state
+        stval = self.dfa[stval](letter)
+        print(f'SM {msg} WORK({self.work}) STNXT({stval}) CAPTURE({self.capture})')
+        return stval
+
+    def finish(self):
+        """Finish finding time in text formatted as '5pm', '5:32am', '5:00:00', etc."""
+        capture = self.capture
+        print(f'CAPTURE @ FINISH: {capture}')
+        # Require that the hour is specified
+        if 'hour' not in capture:
+            self.capture = None
+        # Add 12 hours if 'pm'
+        if (ampm := capture.get('AM/PM')) is not None:
+            del self.capture['AM/PM']
+            if ampm == 'PM':
+                if 0 <= (hour := capture['hour']) < 12:
+                    capture['hour'] = hour + 12
+                elif hour != 12:
+                    self.capture = None
+            else:
+                assert ampm == 'AM', capture
+                if capture['hour'] == 12:
+                    capture['hour'] = 0
+        # Accept whole dates (YYYY-MM-DD) or none at all
+        if not {'year', 'month', 'day'}.issubset((keyset := set(capture.keys()))) and \
+           not {'year', 'month', 'day'}.isdisjoint(keyset):
+            self.capture = None
+        # Keep "nothing captured" consistent
+        if not capture:
+            self.capture = None
+
 
 def search_texttime(txt):
     """Search for HH:SSam, HHam, and variations"""
     num_colons = 0
     smo = _SmHhSsAm()
-    state = 'start'
+    stval = 'start'
     for letter in txt:
-        state = smo.run(state, letter)
-    smo.run(state, None)
+        stval = smo.run(stval, letter)
+    smo.run(stval, None)
+    smo.finish()
     if num_colons >= 2:
         return None
     return smo.capture
-    ##return get_match_ampm()
-    ##return None
-
-####def get_match(self):
-####    r"""Get the items from matching '\d{1,2}(:\d\d)?(am|AM|pm|PM)'"""
-####    capture = self.capture
-####    if capture is None:
-####        return None
-####    if 'AM/PM' not in capture:
-####        return None
-####    hour = int(''.join(capture['HH']))
-####    if capture['AM/PM'] == ['P', 'M']:
-####        hour += 12
-####    ret = {'HH': hour}
-####    if 'SS' in capture:
-####        ret['SS'] = int(''.join(capture['SS']))
-####    return ret
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

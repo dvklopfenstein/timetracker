@@ -2,7 +2,7 @@
 """Test adding 'Billable' tag, if specified in args"""
 
 from timetracker.cli import Cli
-from timetracker.cmd.stop import _add_tag_billable
+from timetracker.cmd.common import add_tag_billable
 
 
 def test_try_billable():
@@ -82,7 +82,7 @@ def _prt(args, cli):
 def _try_billable(args, billable):
     if not billable:
         return
-    _add_tag_billable(args)
+    add_tag_billable(args)
 
 
 if __name__ == '__main__':

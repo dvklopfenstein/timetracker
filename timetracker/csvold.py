@@ -74,7 +74,7 @@ class CsvFile:
                 self._add_timedelta_from_row(time_total, row, rownum)
         return sum(time_total, start=timedelta())
 
-    def wr_stopline(self, dta, dtz, delta, csvfields):
+    def wr_csvline(self, dta, dtz, delta, csvfields):
         """Write one data line in the csv file"""
         # Print header into csv, if needed
         if not exists(self.fcsv):

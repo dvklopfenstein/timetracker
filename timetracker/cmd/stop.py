@@ -6,9 +6,10 @@ __author__ = "DV Klopfenstein, PhD"
 from logging import error
 from timetracker.ntcsv import get_ntcsv
 from timetracker.consts import FMTDT_H
-from timetracker.csvrun import wr_stopline
+from timetracker.csvrun import wr_csvline
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.cmd.common import get_cfg
+from timetracker.cmd.common import add_tag_billable
 from timetracker.epoch.epoch import get_dtz
 from timetracker.epoch.epoch import get_now
 
@@ -17,7 +18,7 @@ def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
 
     if args.billable:
-        _add_tag_billable(args)
+        add_tag_billable(args)
     _run_stop(
         fnamecfg,
         args.name,
@@ -60,7 +61,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
     if not fcsv:
         error('Not saving time interval; no csv filename was provided')
         return {'fcsv':fcsv, 'csvline':None}
-    csvline = wr_stopline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
+    csvline = wr_csvline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
     _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
 
     # Remove the starttime file
@@ -75,12 +76,6 @@ def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     if not quiet:
         print(f'Timetracker stopped at: {stoptime.strftime(FMTDT_H)}: {stoptime}\n'
               f'Elapsed H:M:S {delta} appended to {get_shortest_name(fcsv)}')
-
-def _add_tag_billable(args):
-    if args.tags is None:
-        args.tags = ['Billable']
-    else:
-        args.tags.append('Billable')
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

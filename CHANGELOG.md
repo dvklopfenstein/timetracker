@@ -30,7 +30,8 @@
 # Details
 
 ## Unreleased
-* ADDED `trk invoice` command
+* ADDED command, `trk invoice`
+* ADDED command, `trk paid`
 * ADDED `trk stop -b` or `trk stop --billable` to add 'Billable' tag with minimum typing
 
 ## Release 2025-05-27 v0.6a0

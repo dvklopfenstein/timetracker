@@ -19,28 +19,28 @@ from timetracker.csvutils import get_hdr
 
 # pylint: disable=unknown-option-value
 # pylint: disable=too-many-arguments,too-many-positional-arguments
-def wr_stopline(csvfilename, dta, delta, csvfields, dtz, wr_old=False):
+def wr_csvline(csvfilename, dta, delta, csvfields, dtz='', wr_old=False):
     """Save csv in new format"""
     if csvfields is None:
         csvfields = get_ntcsv('NO MESSAGE GIVEN', None, None)
     if wr_old:
         #print('AAAAA INTENTIONALLY MAKING ORIG FMT AAA')
         oldobj = CsvFileOld(csvfilename)
-        return oldobj.wr_stopline(dta, dtz, delta, csvfields)
+        return oldobj.wr_csvline(dta, dtz, delta, csvfields)
 
     #print('BBBBB CHECKING CSV FORMAT BBBBBBBBBBBBB')
     newobj = CsvFileNew(csvfilename)
     if not exists(csvfilename):
         #print('CCCCC CREATING NEW CSV CCCCCCCCCCCCCCCC')
-        return newobj.wr_stopline(dta, delta, csvfields)
+        return newobj.wr_csvline(dta, delta, csvfields)
     hdr = get_hdr(csvfilename)
     #print('DDDDD CHECKING HDR FOR FORMAT DDDDDDDDD')
     if len(hdr) == 5:
         #print('EEEEE FOUND NEW FORMAT EEEEEEEEEEEEEEEE')
-        return newobj.wr_stopline(dta, delta, csvfields)
+        return newobj.wr_csvline(dta, delta, csvfields)
     #print('FFFFF FOUND ORIG FORMAT FFFFFFFFFFFFFFF')
     convert_csv(csvfilename)
-    return newobj.wr_stopline(dta, delta, csvfields)
+    return newobj.wr_csvline(dta, delta, csvfields)
 
 def chk_n_convert(fcsv):
     """Check & if needed, convert the original csv format to new concise format"""

@@ -181,7 +181,7 @@ class Run:
     def run(self, dta, dtz, desc):
         """Write a line into the csv file"""
         ntd = get_ntcsv(desc, 'testing', None)
-        data = self.obj.wr_stopline(dta, dtz-dta, ntd)
+        data = self.obj.wr_csvline(dta, dtz-dta, ntd)
         tdstr = data[1]
         tdobj = td_from_str(tdstr)
         assert str(tdobj) == tdstr, f'OBJ({tdobj}) != CSVSTR({tdstr})'

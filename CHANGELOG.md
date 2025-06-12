@@ -31,8 +31,12 @@
 
 ## Unreleased
 * ADDED command, `trk invoice`
-* ADDED command, `trk paid`
+* ADDED command option, `-b` or `--billable` to `trk stop`
+  to add a `Billable` tag when running `tag stop`
+* ADDED command, `trk paid`; `Billable` tag is added so the amount paid
+  will be printed in the invoice
 * ADDED `trk stop -b` or `trk stop --billable` to add 'Billable' tag with minimum typing
+* ADDED `--no-git-add` and `-A` options to the `trk init` command
 
 ## Release 2025-05-27 v0.6a0
 * ADDED `trk hours` options `--global` to show hours for all projects for a single username

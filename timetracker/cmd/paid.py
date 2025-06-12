@@ -15,9 +15,7 @@ from timetracker.epoch.epoch import get_dt_at
 
 def cli_run_paid(fnamecfg, args):
     """Stop the timer and record this time unit"""
-
-    if not args.not_billable:
-        add_tag_billable(args)
+    add_tag_billable(args)
     _run_paid(
         fnamecfg,
         args.name,

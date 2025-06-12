@@ -287,8 +287,6 @@ class Cli:
             help='Add an activity to this time slot')
         parser.add_argument('-t', '--tags', nargs='*',
             help='Tags for this time unit')
-        parser.add_argument('-B', '--not-billable', action='store_true',
-            help='Payments will be printed in an invoice unless `-B` is used')
         return parser
 
     def _add_subparser_tag(self, subparsers):

@@ -3,8 +3,7 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from timetracker.epoch.epoch import get_dtz
-from timetracker.epoch.epoch import get_now
+from timetracker.epoch.epoch import get_dt_at
 from timetracker.cmd.common import get_cfg
 from timetracker.cmd.common import prtmsg_start_01
 from timetracker.cmd.common import prt_elapsed
@@ -17,7 +16,6 @@ def cli_run_start(fnamecfg, args):
         args.name,
         start_at=args.at,
         force=args.force)
-        ##activity=args.activity,
 
 def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
@@ -27,7 +25,6 @@ def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
 
 def run_start(cfgproj, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
-    now = get_now() if 'now' not in kwargs else kwargs['now']
     startobj = cfgproj.get_starttime_obj(name)
     if startobj is None:
         return None
@@ -42,7 +39,7 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
 
     # Set (if not started) or reset (if start is forced) starting time
     if not startobj.started() or force:
-        starttime = now if start_at is None else get_dtz(start_at, now, kwargs.get('defaultdt'))
+        starttime = get_dt_at(start_at, kwargs.get('now'), kwargs.get('defaultdt'))
         if starttime is None:
             return startobj
         startobj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))

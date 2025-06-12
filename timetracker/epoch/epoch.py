@@ -64,6 +64,13 @@ def str_arg_epoch(dtval=None, dtfmt=None, desc=''):
     '# Today\n'
     )
 
+
+def get_dt_at(time_at=None, now=None, defaultdt=None):
+    """Get time as now or as time_at"""
+    if now is None:
+        now = get_now()
+    return now if time_at is None else get_dtz(time_at, now, defaultdt)
+
 def get_now():
     """Get the date and time as of right now"""
     return datetime.now()

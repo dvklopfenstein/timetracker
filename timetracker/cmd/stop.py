@@ -10,8 +10,7 @@ from timetracker.csvrun import wr_csvline
 from timetracker.cfg.utils import get_shortest_name
 from timetracker.cmd.common import get_cfg
 from timetracker.cmd.common import add_tag_billable
-from timetracker.epoch.epoch import get_dtz
-from timetracker.epoch.epoch import get_now
+from timetracker.epoch.epoch import get_dt_at
 
 
 def cli_run_stop(fnamecfg, args):
@@ -47,8 +46,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
               'Do `trk start` to begin tracking time ')
               #f'for project, {cfgproj.project}')
         return {'fcsv':fcsv, 'csvline':None}
-    now = get_now() if 'now' not in kwargs else kwargs['now']
-    dtz = now if stop_at is None else get_dtz(stop_at, now, kwargs.get('defaultdt'))
+    dtz = get_dt_at(stop_at, kwargs.get('now'), kwargs.get('defaultdt'))
     if dtz is None:
         raise RuntimeError(f'NO STOP TIME FOUND in "{stop_at}"; '
                            f'NOT STOPPING TIMER STARTED {dta.strftime(FMTDT_H)}')

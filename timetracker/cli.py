@@ -3,6 +3,11 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+##from timeit import default_timer  # PRT
+##tic = default_timer()             # PRT
+##from datetime import timedelta    # PRT
+##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT dt')  # PRT
+
 from sys import argv as sys_argv
 from sys import exit as sys_exit
 from os import getcwd
@@ -12,13 +17,16 @@ from os import getcwd
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
+##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
 from timetracker import __version__
 from timetracker.cmd.fncs import FNCS
+##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 from timetracker.cmd.none import cli_run_none
 from timetracker.proc import get_log1
 
+##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
 
 def main():
     """Connect all parts of the timetracker"""
@@ -45,8 +53,9 @@ class Cli:
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
+##        print('PARSE ARGS')                      # PRT
         self.args = self._init_args(sysargs)
-        ##print(f'TIMETRACKER ARGS: {self.args}')  # DVK
+##        print(f'TIMETRACKER ARGS: {self.args}')  # PRT
 
     def run(self):
         """Run timetracker"""
@@ -138,6 +147,8 @@ class Cli:
         self._add_subparser_hours(subparsers)
         self._add_subparser_csv(subparsers)
         self._add_subparser_report(subparsers)
+        self._add_subparser_invoice(subparsers)
+        self._add_subparser_paid(subparsers)
         #self._add_subparser_tag(subparsers)
         #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
@@ -168,7 +179,7 @@ class Cli:
             help='Reinitialize the project: Add missing config files & keep existing')
         parser.add_argument('-G', '--global-config-file', metavar='FILE',
             help='Use specified file as the global config file')
-        parser.add_argument('--no-git-add', action='store_true',
+        parser.add_argument('-A', '--no-git-add', action='store_true',
             help='Do not run `git add` on newly created local project timetracker files')
         parser.add_argument( '--dirgit', help=SUPPRESS, default=self.finder.dirgit)
         return parser
@@ -209,6 +220,8 @@ class Cli:
             help='Add an activity to this time slot')
         parser.add_argument('-t', '--tags', nargs='*',
             help='Tags for this time unit')
+        parser.add_argument('-b', '--billable', action='store_true',
+            help='Tags this time unit as billable')
         return parser
 
     @staticmethod
@@ -246,6 +259,34 @@ class Cli:
         parser = subparsers.add_parser(name='report',
             help='Generate a project report for time units and include cumulative time',
             formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('--docx', default='report.docx',
+            help='Put report into the named Word document docx file')
+        return parser
+
+    def _add_subparser_invoice(self, subparsers):
+        parser = subparsers.add_parser(name='invoice',
+            help='Generate an invoice',
+            formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument('-i', '--input', metavar='file.csv', dest='fcsv',
+            help='Specify an input csv file')
+        parser.add_argument('--docx', default='report.docx',
+            help='Put report into the named Word document docx file')
+        parser.add_argument('-$', '--hourly-rate', type=int, default=100,
+            help='Use given hourly rate to calculate charges')
+        return parser
+
+    def _add_subparser_paid(self, subparsers):
+        parser = subparsers.add_parser(name='paid',
+            help='Record the amount paid in the csv file')
+        parser.add_argument('amount', type=float,
+            help='The amount paid (floating point value)')
+        parser.add_argument('--at', metavar='time',
+            help='Mark the payment at a '
+                 'specific time (ex: 4pm, "2025-01-05 04:30pm")')
+        parser.add_argument('-a', '--activity', metavar='txt',
+            help='Add an activity to this time slot')
+        parser.add_argument('-t', '--tags', nargs='*',
+            help='Tags for this time unit')
         return parser
 
     def _add_subparser_tag(self, subparsers):

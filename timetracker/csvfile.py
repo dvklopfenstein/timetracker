@@ -40,7 +40,7 @@ class CsvFile:
         """Calculate the total time by parsing the csv"""
         return self._read_csv(self._sum_time)
 
-    def wr_stopline(self, dta, delta, csvfields):
+    def wr_csvline(self, dta, delta, csvfields):
         """Write one data line in the csv file"""
         # Print header into csv, if needed
         if not exists(self.fcsv):

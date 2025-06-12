@@ -32,6 +32,13 @@ def no_csv(fcsv, cfgproj, uname):
     else:
         print(str_tostart())
 
+def add_tag_billable(args):
+    """Add a 'Billable' tag to the tags list"""
+    if args.tags is None:
+        args.tags = ['Billable']
+    else:
+        args.tags.append('Billable')
+
 # ---------------------------------------------------------
 def prtmsg_started01(startobj):
     """Print message depending if timer is started or not"""

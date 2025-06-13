@@ -9,7 +9,7 @@ To begin, initialize your project for timetracking:
 $ trk init
 Ran `git add .timetracker/config .timetracker/.gitignore`
 Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
-Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
+Added project to the global timetracker config: /home/bez/.timetrackerconfig:
   project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
 ```
 
@@ -20,7 +20,7 @@ Use the `--no-git-add` option inhibit running `git add`.
 ```sh
 $ trk init --no-git-add
 Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
-Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
+Added project to the global timetracker config: /home/bez/.timetrackerconfig:
   project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
 ```
 

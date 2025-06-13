@@ -1,0 +1,206 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/gpl-3.0.html
+-->
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="DV Klopfenstein, PhD" /><link rel="canonical" href="https://dvklopfenstein.github.io/timetracker/config_local/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Config local - timetracker-csv</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet" />
+        <link href="../assets/colors.css" rel="stylesheet" />
+        <link href="../assets/theme.css" rel="stylesheet" />
+        <link href="../assets/highlight.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Config local";
+        var mkdocs_page_input_path = "config_local.md";
+        var mkdocs_page_url = "/timetracker/config_local/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> timetracker-csv
+        </a>
+  
+    <div role="search">
+      <form id ="rtd-search-form" class="wy-form mkdocs-search" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+        <button class="icon icon-search" aria-label="submit"></button>
+      </form>
+    </div>
+  
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Timetracker-csv</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Quickstart</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage_basic/">Basic Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage_advanced/">Advanced Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pandas/">Pandas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../invoicing/">Invoicing</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config_global/">Global configuration File</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Community</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing to timetracker-csv</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">timetracker-csv</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><!--
+Copied from https://github.com/mkdocs/mkdocs/blob/master/mkdocs/themes/readthedocs/breadcrumbs.html
+Then lightly modified for accessibility
+-->
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>Config local</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/dvklopfenstein/timetracker/edit/main/docs/config_local.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!--
+Copyright (C) DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
+https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
+-->
+<h1 id="the-local-project-timetracker-config-files">The local (project) timetracker config file(s)</h1>
+<p>The local configuration file the project name and a pattern for the csv filename where time units are appended upon running <code>trk stop</code>..
+A project is added to the local configuration file by the <code>init</code> command.
+The timetracker-csv <code>export</code> command concatenates CSV files for each repo into a single CSV file for multi-project analysis.
+Commands such as <code>hours</code> and <code>report</code> use the local config
+if the researcher asks for total hours for multiple projects.</p>
+<ul>
+<li><a href="#location">Location</a></li>
+</ul>
+<h2 id="location">Location</h2>
+<ol>
+<li>
+<p><code>~/.timetrackerconfig</code>: Contains a list of projects time-tracked specifically by you.</p>
+</li>
+<li>
+<p>The environmental variable, <code>TIMETRACKERCONF</code> may be used to specify
+a local timetracker-csv file other than  '~/.timetrackerconfig'.</p>
+</li>
+<li>
+<p>The timetracker-csv local config file can be specified on the command-line at runtime.
+Specifying the local config file on the CLI overrides using '~/.timetrackerconfig' or 
+the config file specified by <code>TIMETRACKERCONF</code>.</p>
+</li>
+</ol>
+<h2 id="examples">Examples</h2>
+<h3 id="initialize-a-timetracker-project-repo">Initialize a timetracker project repo</h3>
+<h4 id="the-sheep-decide-to-start-a-new-project-called-grazing">The sheep decide to start a new project called <code>grazing</code>.</h4>
+<p>```</p>
+<h1 id="version-manage-the-grazing-project">Version-manage the grazing project:</h1>
+<p>$ cd /home/sheep/projects/
+$ git init grazing
+Initialized empty Git repository in /home/sheep/projects/grazing/grazing/.git/</p>
+<h1 id="time-track-the-grazing-project">Time-track the grazing project:</h1>
+<p>$ trk init
+Initialized timetracker directory:  /home/sheep/projects/grazing/grazing/.timetracker</p>
+<h3 id="example-of-using-multiple-local-config-files">Example of using multiple local config files</h3>
+<p>The sheep and the goats begin to track their time grazing.</p>
+<p>The lions and the wolves want to observe the sheep and the goats,
+but do not want the sheep and goats to know.
+So they begin tracking their time on the hunting project.</p>
+<p>David is taking care of the herds and flocks by
+watching over his flock and being on the lookout for lions.</p>
+<p>Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/dvklopfenstein/timetracker/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -16,8 +16,8 @@ from timetracker.cfg.doc_local import get_docproj
 ##from timetracker.utils import yellow
 from timetracker.csvrun import chk_n_convert
 from timetracker.csvfile import CsvFile
-from timetracker.csvget import get_csv_doc_uname
 #from timetracker.csvget import get_csvs_local_all # NEXT TBD
+from timetracker.csvget import get_csv_doc_uname
 from timetracker.csvget import get_csvs_global_uname
 from timetracker.csvget import get_csvs_global_all
 from timetracker.csvget import get_ntcsvproj01

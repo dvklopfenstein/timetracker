@@ -108,48 +108,6 @@ class DocProj:
             return Starttime(self.dircfg, self.project, get_username(username))
         return None
 
-    #def set_filename_csv(self, filename_str):
-    #    """Write the config file, replacing [csv][filename] value"""
-    #    filenamecfg = self.get_filename_cfg()
-    #    if exists(filenamecfg):
-    #        doc = TOMLFile(filenamecfg).read()
-    #        doc['csv']['filename'] = filename_str
-    #        self._wr_cfg(filenamecfg, doc)
-    #        return
-    #    raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
-
-
-    #def reinit(self, project, dircsv, fcfg_global=None):
-    #    """Update the cfg file, if needed"""
-    #    fname = self.get_filename_cfg()
-    #    assert exists(fname)   # checked in Cfg.reinit prior to calling
-    #    doc = TOMLFile(fname).read()
-    #    assert 'project' in doc
-    #    assert 'csv' in doc
-    #    assert 'filename' in doc['csv']
-    #    proj_orig = doc.get('project')
-    #    csv_orig = doc['csv'].get('filename')
-    #    chgd = False
-    #    if proj_orig != project:
-    #        print(f'{fname} -> Changed `project` from {proj_orig} to {project}')
-    #        doc['project'] = project
-    #        chgd = True
-    #    csv_new = self._ini_csv_filename(dircsv)
-    #    if csv_orig != csv_new:
-    #        print(f'{fname} -> Changed csv directory from {csv_orig} to {csv_new}')
-    #        doc['csv']['filename'] = self._ini_csv_filename(dircsv)
-    #        chgd = True
-    #    if fcfg_global is not None:
-    #        self._update_doc_globalcfgname(doc, fcfg_global)
-    #    if chgd:
-    #        TOMLFile(fname).write(doc)
-    #    else:
-    #        print(f'No changes needed to global config: {self.filename}')
-
-    #def get_project_from_filename(self):
-    #    """Get the default project name from the project directory filename"""
-    #    return basename(dirproj)
-
     ##-------------------------------------------------------------
     def _get_csvfilename_proj_user(self, username, dirhome):
         """Read a config file and load it into a TOML document"""
@@ -164,48 +122,6 @@ class DocProj:
             fpat = get_abspath(self.csv_filename, dirname(self.dircfg), dirhome)
             return fpat.replace('PROJECT', self.project)
         return None
-
-    ####def _get_csv_filename(self, dirhome):
-    ####    """Read a config file and load it into a TOML document"""
-    ####    fcsvpat = self.csv_filename
-    ####    return get_abspath(fcsvpat, dirname(self.dircfg), dirhome) \
-    ####        if fcsvpat is not None else None
-
-    #@staticmethod
-    #def _wr_cfg(fname, doc):
-    #    """Write config file"""
-    #    TOMLFile(fname).write(doc)
-    #    # Use `~`, if it makes the path shorter
-    #    ##fcsv = replace_homepath(doc['csv']['filename'])
-    #    ##doc['csv']['filename'] = fcsv
-
-    #def _rd_doc(self):
-    #    """Read a config file and load it into a TOML document"""
-    #    fin_cfglocal = self.get_filename_cfg()
-    #    return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
-
-    ##@staticmethod
-    ##def _strdbg_cfg_global(doc):
-    ##    return doc['global_config']['filename'] if 'global_config' in doc else 'NONE}
-
-
-    #def _update_doc_globalcfgname(self, doc, fcfg_global):
-    #    if 'global_config' not in doc:
-    #        self._add_doc_globalcfgfname(doc, fcfg_global)
-    #    elif 'filename' in doc['global_config']:
-    #        if (cur := doc['global_config']['filename']) != fcfg_global:
-    #            doc['global_config']['filename'] = fcfg_global
-    #    else:
-    #        doc['global_config']['filename'] = fcfg_global
-
-    #@staticmethod
-    #def _add_doc_globalcfgfname(doc, fcfg_global):
-    #    # [global_config]
-    #    # filename = "/home/uname/myglobal.cfg"
-    #    section = table()
-    #    #csvdir.comment("Directory where the csv file is stored")
-    #    section.add("filename", fcfg_global)
-    #    doc.add("global_config", section)
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

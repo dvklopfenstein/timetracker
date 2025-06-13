@@ -32,6 +32,7 @@ nav:
     - Basic Usage: usage_basic.md
     - Advanced Usage: usage_advanced.md
     - Pandas: pandas.md
+    - Invoicing: invoicing.md
   - 'Reference':
     - Global configuration File: config_global.md
   - 'Community':

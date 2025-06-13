@@ -37,6 +37,8 @@
   will be printed in the invoice
 * ADDED `trk stop -b` or `trk stop --billable` to add 'Billable' tag with minimum typing
 * ADDED `--no-git-add` and `-A` options to the `trk init` command
+* CHANGED "Run `trk init`" message so it is clearer that no trk command
+  will be run until the project is initialized
 
 ## Release 2025-05-27 v0.6a0
 * ADDED `trk hours` options `--global` to show hours for all projects for a single username

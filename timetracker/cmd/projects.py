@@ -5,8 +5,8 @@ __author__ = "DV Klopfenstein, PhD"
 
 from os.path import dirname
 from os.path import exists
-from timetracker.msgs import str_init
 from timetracker.cfg.cfg import Cfg
+from timetracker.cmd.common import str_uninitialized
 
 
 def cli_run_projects(fnamecfg, args):
@@ -19,13 +19,11 @@ def cli_run_projects(fnamecfg, args):
 def run_projects(cfg, show_exists=False, rm_missing=False):
     """Show the projects listed in the global config"""
     cfg_glb = cfg.cfg_glb
-    if exists(cfg_glb.filename):
+    if not str_uninitialized(cfg_glb.filename):
         if not rm_missing:
             _show_projects(cfg_glb, show_exists)
         else:
             _rm_missing_projects(cfg_glb)
-    else:
-        print(str_init(cfg.cfg_loc.filename))
 
 def _show_projects(cfg_glb, show_exists=False):
     """Show the projects listed in the global config"""

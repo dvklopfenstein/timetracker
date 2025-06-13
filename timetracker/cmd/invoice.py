@@ -8,12 +8,10 @@ from datetime import timedelta
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cmd.common import no_csv
+from timetracker.cmd.common import str_uninitialized
 from timetracker.epoch.calc import str_td
 from timetracker.csvfile import CsvFile
 from timetracker.docx import WordDoc
-##from timetracker.epoch.text import get_data_formatted
-##from timetracker.csvrun import chk_n_convert
-from timetracker.msgs import str_init
 
 NtPaid = namedtuple('NtPaid', 'span cum_time due desc')
 
@@ -47,14 +45,13 @@ def run_invoice_csv(fcsv):
 
 def run_invoice_cli(cfgproj, username, fout_docx=None, hourly_rate=100, dirhome=None):
     """Generate an invoice"""
-    if (docproj := get_docproj(cfgproj.filename)):
+    if not str_uninitialized(cfgproj.filename) and (docproj := get_docproj(cfgproj.filename)):
         fcsv = docproj.get_filename_csv(username, dirhome)
         # pylint: disable=duplicate-code
         ntcsv = run_invoice(fcsv, fout_docx, hourly_rate) if fcsv is not None else None
         if ntcsv.results is None:
             no_csv(fcsv, cfgproj, username)
         return ntcsv
-    print(str_init(cfgproj.filename))
     return None
 
 def run_invoice(fcsv, fout_docx='invoice.docx', hourly_rate=100):  #, report_all=False):
@@ -96,7 +93,7 @@ def _get_billable_timeslots(nts, hourly_rate, currency_sym='$'):
                 Due=ntiv.due,
                 Description=ntiv.desc)
             ntbillable.append(nta)
-            print('AAAAAAAAAAAAAAAAAAAAA', nta)
+            ##print('AAAAAAAAAAAAAAAAAAAAA', nta)
             ##print(f'BILLABLE: {ntd}')
             ##print(f'BILLABLE: {nta}')
             ##print(f'TAGS: {tags}')
@@ -107,15 +104,6 @@ def _get_cum_due(cum_due, ntd, tags, hourly_rate):
     if 'PAID' in tags:
         return cum_due - tags['PAID']
     return cum_due + hourly_rate/3600*ntd.duration.total_seconds()
-
-
-##def _get_data_formatted(nts_billable):
-##    nts = []
-##    nto = namedtuple('NtBill', 'Day Date Span Total Price Description')
-##    assert len(billable) == len(billable)
-##    for ntd in zip(billable, get_data_formatted(billable)):
-##        print('AAAA', ntd)
-##    return nts
 
 ##def _get_invoice_row(ntd, cum_time, cum_due, tags, hourly_rate, currency_sym):
 def _get_invoice_row(ntd, cum_time, cum_due, tags, currency_sym):

@@ -6,7 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 from sys import exit as sys_exit
 from timetracker.cfg.cfg import Cfg
 from timetracker.csvget import get_csv_local_uname
-from timetracker.msgs import str_uninitialized
+from timetracker.cmd.common import str_uninitialized
 
 
 def cli_run_csv(fnamecfg, args):

@@ -71,11 +71,6 @@ class CfgProj:
         if (docproj := get_docproj(self.filename)):
             return docproj.get_filenames_csv(dirhome)
         return None
-        #fcsvpat = self._read_csvpat_from_cfgfile(dirhome)
-        #if fcsvpat is not None:
-        #    globpat = replace_envvar(fcsvpat, '*')
-        #    return glob(globpat)
-        #return None
 
     def set_filename_csv(self, filename_str):
         """Write the config file, replacing [csv][filename] value"""
@@ -124,14 +119,6 @@ class CfgProj:
                 fptr.write('start_*.txt')
         return self.NTFILE(filename=fname, error=error)
 
-    ##def wr_gitignore(self, start=None):
-    ##    """Add .gitignore file in .timetracker/ directory"""
-    ##    fname = join(self.dircfg, '.gitignore')
-    ##    with open(fname, 'w', encoding='utf-8') as prt:
-    ##        prt.write(f'start_*.txt')
-    ##    ##return relpath(fname, start)
-    ##    return fname
-
     def reinit(self, project, dircsv, fcfg_global=None, ntdoc=None):
         """Update the cfg file, if needed"""
         fname = self.get_filename_cfg()
@@ -142,8 +129,6 @@ class CfgProj:
         docproj = ntdoc.docproj
         assert docproj.project is not None
         assert docproj.csv_filename is not None
-        ####proj_orig = docproj.project
-        ####csv_orig = docproj.csv_filename
         chgd = False
         doc = ntdoc.doc
         if docproj.project != project:
@@ -151,7 +136,10 @@ class CfgProj:
             doc['project'] = project
             chgd = True
         if docproj.csv_filename != (csv_new := self._assemble_csv_filepat(dircsv, doc['project'])):
-            print(f'{fname} -> Changed csv directory from {docproj.csv_filename} to {csv_new}')
+            print('In local project configuration file, changed csv directory:\n'
+                  f'   local cfg:  {fname}\n'
+                  f'      csvdir WAS: {dirname(docproj.csv_filename)}\n'
+                  f'      csvdir NOW: {dirname(csv_new)}')
             doc['csv']['filename'] = csv_new
             chgd = True
         if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
@@ -159,12 +147,8 @@ class CfgProj:
             print(f'{fname} -> Changed the global config filename\n'
                   f'        from: "{fcfgg_orig}"\n'
                   f'        to:   "{fcfg_global}"')
-            ####doc['global_config']['filename'] = fcfg_global
             self._update_doc_globalcfgname(doc, fcfg_global)
             chgd = True
-        ####if fcfg_global is not None:
-        ####    print('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', fcfg_global)
-        ####    self._update_doc_globalcfgname(doc, fcfg_global)
         if chgd:
             TOMLFile(fname).write(doc)
         else:
@@ -185,8 +169,6 @@ class CfgProj:
         """Write config file"""
         ret = write_config(fname, doc)
         # Use `~`, if it makes the path shorter
-        ##fcsv = replace_homepath(doc['csv']['filename'])
-        ##doc['csv']['filename'] = fcsv
         debug('CfgProj _wr_cfg(...)  PROJ:     %s', doc["project"])
         debug("CfgProj _wr_cfg(...)  CSV:      %s", doc['csv']['filename'])
         debug("CfgProj _wr_cfg(...)  GLOBAL    %s",

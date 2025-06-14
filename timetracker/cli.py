@@ -173,10 +173,10 @@ class Cli:
         # DEFAULTS: dir_csv project
         parser.add_argument('--csvdir',
             help='Directory for csv files storing start and stop times')
-        parser.add_argument('-p', '--project', default=self.finder.project,
-            help="The name of the project to be time tracked")
         parser.add_argument('-f', '--force', action='store_true',
             help='Reinitialize the project: Add missing config files & keep existing')
+        parser.add_argument('-p', '--project', default=self.finder.project,
+            help="The name of the project to be time tracked")
         parser.add_argument('-G', '--global-config-file', metavar='FILE',
             help='Use specified file as the global config file')
         parser.add_argument('-A', '--no-git-add', action='store_true',
@@ -301,10 +301,11 @@ class Cli:
 
     def _add_subparser_activity(self, subparsers):
         parser = subparsers.add_parser(name='activity',
-            help='Show all activities used in this project',
-            formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument('-g', '--run_global', action='store_true',
-            help='List all activity for projects found in the global config file')
+            help='Show all activities used in this project')
+        parser.add_argument('-g', '--global', dest='run_global', action='store_true',
+            help=f'List hours for all projects for {self.user}')
+        parser.add_argument('-u', '--all-users', dest='all_users', action='store_true',
+            help='List hours for all projects for all usernames')
         parser.add_argument('-G', '--global-config-file', metavar='file.cfg',
             help='Use specified file as the global config file')
         return parser

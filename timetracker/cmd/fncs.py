@@ -17,7 +17,7 @@ from timetracker.cmd.report    import cli_run_report
 from timetracker.cmd.invoice    import cli_run_invoice
 from timetracker.cmd.paid       import cli_run_paid
 #from timetracker.cmd.tag       import cli_run_tag
-#from timetracker.cmd.activity  import cli_run_activity
+from timetracker.cmd.activity  import cli_run_activity
 #from timetracker.cmd.csvloc   import cli_run_csvloc
 
 
@@ -32,7 +32,7 @@ FNCS = {
     'invoice'  : cli_run_invoice,
     'paid'     : cli_run_paid,
     #'tag'      : cli_run_tag,
-    #'activity' : cli_run_activity,
+    'activity' : cli_run_activity,
     'projects' : cli_run_projects,
     #'csvloc'   : cli_run_csvloc,
 }

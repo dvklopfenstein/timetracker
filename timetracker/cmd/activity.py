@@ -5,8 +5,6 @@ __author__ = "DV Klopfenstein, PhD"
 
 #from os.path import dirname
 #from os.path import exists
-from logging import debug
-from timetracker.utils import yellow
 #from timetracker.cfg.cfg import Cfg
 #from timetracker.cfg.utils import get_filename_globalcfg
 #from timetracker.cfg.cfg_global import CfgGlobal
@@ -20,7 +18,6 @@ def cli_run_activity(fnamecfg, args):
 def run_activity(fcfg_local, fcfg_global, dirhome=None):
     """Stop the timer and record this time unit"""
     # Get the starting time, if the timer is running
-    debug(yellow('RUNNING COMMAND ACTIVITY'))
     assert fcfg_local
     assert fcfg_global
     assert dirhome

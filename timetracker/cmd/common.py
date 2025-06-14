@@ -4,9 +4,12 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
+from os.path import exists
+from os.path import dirname
 
 from timetracker.utils import prt_todo
-from timetracker.msgs import str_uninitialized
+from timetracker.utils import yellow
+from timetracker.msgs import str_init
 from timetracker.msgs import str_tostart
 from timetracker.msgs import str_no_time_recorded
 from timetracker.msgs import str_started_epoch
@@ -23,6 +26,13 @@ def get_cfg(fnamecfg):
     if str_uninitialized(fnamecfg):
         sys_exit(0)
     return Cfg(fnamecfg)
+
+def str_uninitialized(fcfgloc):
+    """Print an init message if the timetracker local configuration does not exist"""
+    if exists(fcfgloc):
+        return False
+    print(yellow(str_init(dirname(dirname(fcfgloc)))))
+    return True
 
 def no_csv(fcsv, cfgproj, uname):
     """Messages to print if there is no csv file"""

@@ -3,16 +3,6 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os.path import exists
-from os.path import dirname
-
-
-def str_uninitialized(fcfgloc):
-    """Print an init message if the timetracker local configuration does not exist"""
-    if exists(fcfgloc):
-        return False
-    print(str_init(fcfgloc))
-    return True
 
 def str_tostart():
     """Message instructing how to start the timer"""
@@ -57,10 +47,10 @@ def str_init0():
     """Simple trk init message"""
     return 'Run `trk init` to initialize time-tracking'
 
-def str_init(fcfg_loc):
+def str_init(dirproj):
     """Message that occurs when there is no Timetracking config file"""
     return ('Run `trk init` to initialize time-tracking '
-           f'for the project in {dirname(dirname(fcfg_loc))}')
+           f'for the project in {dirproj}')
 
 def str_notrkrepo_mount(mountname, trkdir):
     """Message when researcher is not in a dir or subdir that is managed by trk"""

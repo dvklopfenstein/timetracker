@@ -6,12 +6,12 @@ __author__ = "DV Klopfenstein, PhD"
 from timetracker.cfg.cfg_local import CfgProj
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cmd.common import no_csv
+from timetracker.cmd.common import str_uninitialized
 from timetracker.csvfile import CsvFile
 from timetracker.docx import WordDoc
 from timetracker.epoch.text import get_data_formatted
 from timetracker.csvrun import chk_n_convert
 from timetracker.report import prt_basic
-from timetracker.msgs import str_init
 
 
 def cli_run_report(fcfgproj, args):
@@ -37,14 +37,13 @@ def cli_run_report(fcfgproj, args):
 
 def run_report_cli(cfgproj, username, fout_docx=None, dirhome=None):
     """Report all time units"""
-    if (docproj := get_docproj(cfgproj.filename)):
+    if not str_uninitialized(cfgproj.filename) and (docproj := get_docproj(cfgproj.filename)):
         fcsv = docproj.get_filename_csv(username, dirhome)
         # pylint: disable=duplicate-code
         ntcsv = run_report(fcsv, fout_docx) if fcsv is not None else None
         if ntcsv.results is None:
             no_csv(fcsv, cfgproj, username)
         return ntcsv
-    print(str_init(cfgproj.filename))
     return None
 
 def run_report(fcsv, fout_docx):

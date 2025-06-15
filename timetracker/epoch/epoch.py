@@ -77,24 +77,28 @@ def get_now():
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
-    ##if (dto := get_dt_ampm(elapsed_or_dt, defaultdt)) is not None:
+    ##if (dto := _get_dt_ampm(elapsed_or_dt, defaultdt)) is not None:
     ##    return dto
-    if (dto := get_dt_from_td(elapsed_or_dt, dta)) is not None:
+    if (dto := _get_dt_from_td(elapsed_or_dt, dta)) is not None:
         return dto
+    return _conv_datetime(elapsed_or_dt, defaultdt)
+
+def _conv_datetime(timestr, defaultdt):
     try:
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
         ##tic = default_timer()
-        dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({elapsed_or_dt})')
+        dto = dateparser_parserdt(timestr, settings=settings)
+        ##print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({timestr})')
         ##if dto is None:
-        ##    print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
+        ##    print(f'ERROR: text({timestr}) could not be converted to a datetime object')
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print(f'ERROR FROM python-dateparser: {err}')
-    print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
+    print(f'"{timestr}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
     return None
 
-def get_dt_ampm(elapsed_or_dt, defaultdt):
+
+def _get_dt_ampm(elapsed_or_dt, defaultdt):
     """Get a datetime object from free text that contains AM/PM"""
     ##tic = default_timer()
     ##print(f'TEXT({elapsed_or_dt})')
@@ -120,7 +124,7 @@ def _get_ymd(mtch, defaultdt):
     mtch['month'] = today.month
     mtch['day']   = today.day
 
-def get_dt_from_td(elapsed_or_dt, dta):
+def _get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""
     if elapsed_or_dt.count(':') != 2 and (secs := _conv_timedelta(elapsed_or_dt)):
         return dta + timedelta(seconds=secs)

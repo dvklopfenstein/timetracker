@@ -7,9 +7,32 @@ __author__ = "DV Klopfenstein, PhD"
 # 24:00 refers to midnight at the end of a given date
 # 00:00 refers to the beginning of the day
 
+#from enum import Enum
+#from enum import auto
 ##from timetracker.epoch.sm_ampm import run_ampm
 ##from timetracker.epoch.sm_ampm import get_match_ampm
 ##from timetracker.epoch.sm_ampm import FOUND_AMPM
+
+#class TimePart(Enum):
+#    """Use enums for dfa names"""
+#    START  = auto()
+#    DIGITS = auto()
+#    MINUTE = auto()
+#    SECOND = auto()
+#    AM_PM  = auto()
+#    YEAR   = auto()
+#    MONTH  = auto()
+#    DAY    = auto()
+#
+#START  = TimePart.START
+#DIGITS = TimePart.DIGITS
+#MINUTE = TimePart.MINUTE
+#SECOND = TimePart.SECOND
+#AM_PM  = TimePart.AM_PM
+#YEAR   = TimePart.YEAR
+#MONTH  = TimePart.MONTH
+#DAY    = TimePart.DAY
+
 
 
 DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
@@ -149,19 +172,19 @@ class _SmHhSsAm:
     # -------------------------------------------------------------------
     def run(self, stval, letter):
         """Run the discrete sm to search for pattern"""
-        msg = (f'LETTER({letter}) '
-               f'STCUR({stval} {self.stnum}) '
-               f'WORK({self.work}) '
-               f'LETTER({letter})')
-        #print('MSG:', msg)
+        #msg = (f'LETTER({letter}) '
+        #       f'STCUR({stval} {self.stnum}) '
+        #       f'WORK({self.work}) '
+        #       f'LETTER({letter})')
+        ##print('MSG:', msg)
         stval = self.dfa[stval](letter)
-        print(f'SM {msg} WORK({self.work}) STNXT({stval}) CAPTURE({self.capture})')
+        #print(f'SM {msg} WORK({self.work}) STNXT({stval}) CAPTURE({self.capture})')
         return stval
 
     def finish(self):
         """Finish finding time in text formatted as '5pm', '5:32am', '5:00:00', etc."""
         capture = self.capture
-        print(f'CAPTURE @ FINISH: {capture}')
+        #print(f'CAPTURE @ FINISH: {capture}')
         # Require that the hour is specified
         if 'hour' not in capture:
             self.capture = None

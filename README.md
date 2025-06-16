@@ -1,16 +1,23 @@
-# Timetracker-csv
-[![PyPI - Version](https://img.shields.io/pypi/v/timetracker-csv)](https://pypi.org/project/timetracker-csv)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg)](https://doi.org/10.5281/zenodo.14803225)
-![GitHub License](https://img.shields.io/github/license/dvklopfenstein/timetracker)
+<p align="center" style="display:inline">
+<h1 align="center">Timetracker-csv</h1>
+<h3 align="center">Pandas-friendly time tracking from the CLI, repo by repo</h3>
+<h3 align="center">
+<img src="https://img.shields.io/pypi/v/timetracker-csv" alt="PyPI - Version"> |
+<img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg" alt="DOI"> |
+<img src="https://img.shields.io/github/license/dvklopfenstein/timetracker" alt="License">
+</h3>
+</p>
 
-Track time spent on multiple projects,
+---
+
+* Track time spent on multiple projects,
 one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-command-line-interface)    
 
-Time is saved in
+* Time is saved in
 [pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly
 [CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files.
 
-CSV files for each project can be combined into a single CSV file for analysis and plotting.
+* CSV files for each project can be combined into a single CSV file for analysis and plotting.
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/doc/mkdocs/source/images/stopwatch.png" alt="timetracker" width="750"/></p>
 

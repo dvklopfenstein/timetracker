@@ -78,11 +78,11 @@ class _SmHhSsAm:
         val = int(''.join(self.work))
         # Process non-digit
         if letter == ':':
-            return self._run_hour_month('hour', val, 'minute', 23)
+            return self._run_hour_month(val, 'hour', 0, 23, 'minute')
         if letter in {'-', '/', '_'}:
-            return self._run_hour_month('month', val, 'day', 12)
+            return self._run_hour_month(val, 'month', 1, 12, 'day')
         nxt = self._run_ap(letter)
-        return self._run_hour_month('hour', val, nxt, 23)
+        return self._run_hour_month(val, 'hour', 0, 23, nxt)
 
     def _dfa_min(self, letter):
         if self._run_onetwodigit(letter):
@@ -109,15 +109,6 @@ class _SmHhSsAm:
                 return 'start'
         # Process non-digit
         return self._run_ap(letter)
-
-    def _run_ap(self, letter):
-        if letter in {'a', 'A', 'p', 'P', ' '}:
-            if letter != ' ':
-                self.work = letter.upper()
-            else:
-                self.work = None
-            return 'AM/PM'
-        return 'start'
 
     def _dfa_ampm(self, letter):
         if letter in {'m', 'M'} and self.work:
@@ -155,8 +146,18 @@ class _SmHhSsAm:
             self.stnum = None
         return 'start'
 
-    def _run_hour_month(self, capture_key, capture_val, nxt, max_val):
-        if capture_val <= max_val:
+    def _run_ap(self, letter):
+        if letter in {'a', 'A', 'p', 'P', ' '}:
+            if letter != ' ':
+                self.work = letter.upper()
+            else:
+                self.work = None
+            return 'AM/PM'
+        return 'start'
+
+    def _run_hour_month(self, capture_val, capture_key, min_val, max_val, nxt):
+        # pylint: disable=too-many-arguments
+        if min_val <= capture_val <= max_val:
             self.capture[capture_key] = capture_val
             self.stnum = None
             return nxt

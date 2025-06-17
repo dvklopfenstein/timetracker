@@ -32,6 +32,9 @@ def test_tt_getdt():
         ttc = timedelta(seconds=default_timer()-tic)
         print(f'{ttc} _conv_timedelta({timestr}) {dtc}')
 
+        perc_faster = ttb.total_seconds()/tta.total_seconds()
+        print(f'{perc_faster:10.1f} times faster is trk alg compared to dateparser for use case({timestr})')
+
         if dta is not None and dtb is not None:
             assert dta == dtb, f'ACT != EXP\nTXT({timestr})\nACT({dta})\nEXP({dtb})'
 

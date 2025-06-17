@@ -18,7 +18,7 @@ def test_tt_getdt():
 
         tic = default_timer()
         dta = _get_dt_ampm(timestr, NOW)
-        assert dta == expdct['dt']
+        assert dta == expdct['dt'], f'ACT != EXP\nTXT({timestr})\nACT({dta})\nEXP({expdct["dt"]})'
         tta = timedelta(seconds=default_timer()-tic)
         print(f'{tta}    _get_dt_ampm({timestr}) {dta}')
 
@@ -33,7 +33,7 @@ def test_tt_getdt():
         print(f'{ttc} _conv_timedelta({timestr}) {dtc}')
 
         if dta is not None and dtb is not None:
-            assert dta == dtb
+            assert dta == dtb, f'ACT != EXP\nTXT({timestr})\nACT({dta})\nEXP({dtb})'
 
 
 if __name__ == '__main__':

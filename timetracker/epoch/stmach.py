@@ -73,16 +73,16 @@ class _SmHhSsAm:
                 self.stnum = '3'
                 return 'year'
             assert f'UNEXPECTED HOUR OR YEAR DIGIT({letter})'
-        elif self.stnum in {'1', '2'}:
-            if (hour := int(''.join(self.work))) <= 24:
-                self.capture['hour'] = hour
-                self.stnum = None
-            else:
-                return 'start'
+            return 'start'
+        assert self.stnum in {'1', '2'}
+        val = int(''.join(self.work))
         # Process non-digit
         if letter == ':':
-            return 'minute'
-        return self._run_ap(letter)
+            return self._run_hour_month('hour', val, 'minute', 23)
+        if letter in {'-', '/', '_'}:
+            return self._run_hour_month('month', val, 'day', 12)
+        nxt = self._run_ap(letter)
+        return self._run_hour_month('hour', val, nxt, 23)
 
     def _dfa_min(self, letter):
         if self._run_onetwodigit(letter):
@@ -155,6 +155,13 @@ class _SmHhSsAm:
             self.stnum = None
         return 'start'
 
+    def _run_hour_month(self, capture_key, capture_val, nxt, max_val):
+        if capture_val <= max_val:
+            self.capture[capture_key] = capture_val
+            self.stnum = None
+            return nxt
+        return 'start'
+
     # -------------------------------------------------------------------
     def _run_onetwodigit(self, letter):
         if letter in DIGITS:
@@ -188,6 +195,7 @@ class _SmHhSsAm:
         # Require that the hour is specified
         if 'hour' not in capture:
             self.capture = None
+            return
         # Add 12 hours if 'pm'
         if (ampm := capture.get('AM/PM')) is not None:
             del self.capture['AM/PM']

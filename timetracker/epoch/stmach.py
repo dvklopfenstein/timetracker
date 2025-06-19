@@ -44,6 +44,7 @@ class _SmHhSsAm:
         self.capture = {}
         self.work = None
         self.stnum = None
+        self.errors = []
         self.dfa = {
             'start':  self._dfa_start,
             'digits': self._dfa_digits,  # year or hour
@@ -81,8 +82,7 @@ class _SmHhSsAm:
             return self._run_hour_month(val, 'hour', 0, 23, 'minute')
         if letter in {'-', '/', '_'}:
             return self._run_hour_month(val, 'month', 1, 12, 'day')
-        nxt = self._run_ap(letter)
-        return self._run_hour_month(val, 'hour', 0, 23, nxt)
+        return self._run_hour_month(val, 'hour', 0, 23, self._run_ap(letter))
 
     def _dfa_min(self, letter):
         if self._run_onetwodigit(letter):
@@ -132,10 +132,12 @@ class _SmHhSsAm:
     def _dfa_month(self, letter):
         if self._run_onetwodigit(letter):
             return 'month'
-        if letter in {'-', '_', '/'} and 1 <= (month := int(''.join(self.work))) <= 12:
-            self.capture['month'] = month
-            self.stnum = None
-            return 'day'
+        if letter in {'-', '_', '/'}:
+            if 1 <= (month := int(''.join(self.work))) <= 12:
+                self.capture['month'] = month
+                self.stnum = None
+                return 'day'
+            self.errors.append(f'BAD MONTH({month})')
         return 'start'
 
     def _dfa_day(self, letter):
@@ -161,6 +163,8 @@ class _SmHhSsAm:
             self.capture[capture_key] = capture_val
             self.stnum = None
             return nxt
+        self.errors.append(f'BAD {capture_key}({capture_val}) '
+                           f'NOT IN RANGE {min_val}<=x<={max_val}')
         return 'start'
 
     # -------------------------------------------------------------------
@@ -191,6 +195,7 @@ class _SmHhSsAm:
 
     def finish(self):
         """Finish finding time in text formatted as '5pm', '5:32am', '5:00:00', etc."""
+        #print('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', self.errors)
         capture = self.capture
         #print(f'CAPTURE @ FINISH: {capture}')
         # Require that the hour is specified
@@ -209,10 +214,10 @@ class _SmHhSsAm:
                 assert ampm == 'AM', capture
                 if capture['hour'] == 12:
                     capture['hour'] = 0
-        # Accept whole dates (YYYY-MM-DD) or none at all
-        if not {'year', 'month', 'day'}.issubset((keyset := set(capture.keys()))) and \
-           not {'year', 'month', 'day'}.isdisjoint(keyset):
-            self.capture = None
+        # Accept whole dates (YYYY-MM-DD or MM-DD) or none at all
+        ##if not {'year', 'month', 'day'}.issubset((keyset := set(capture.keys()))) and \
+        ##   not {'year', 'month', 'day'}.isdisjoint(keyset):
+        ##    self.capture = None
         # Keep "nothing captured" consistent
         if not capture:
             self.capture = None
@@ -220,16 +225,15 @@ class _SmHhSsAm:
 
 def search_texttime(txt):
     """Search for HH:SSam, HHam, and variations"""
-    num_colons = 0
     smo = _SmHhSsAm()
     stval = 'start'
     for letter in txt:
         stval = smo.run(stval, letter)
     smo.run(stval, None)
-    smo.finish()
-    if num_colons >= 2:
-        return None
-    return smo.capture
+    if not smo.errors:
+        smo.finish()
+        return smo.capture
+    return None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

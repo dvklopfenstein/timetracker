@@ -116,13 +116,15 @@ def _get_dt_ampm(elapsed_or_dt, defaultdt):
     return ret
 
 def _get_ymd(mtch, defaultdt):
-    # If 'year' is in match, than 'month' and 'day' are also in match
-    if 'year' in mtch:
+    if {'year', 'month', 'day'}.issubset(set(mtch.keys())):
         return
     today = date.today() if defaultdt is None else defaultdt
-    mtch['year']  = today.year
-    mtch['month'] = today.month
-    mtch['day']   = today.day
+    if 'year' not in mtch:
+        mtch['year']  = today.year
+    if 'month' not in mtch:
+        mtch['month'] = today.month
+    if 'day' not in mtch:
+        mtch['day']   = today.day
 
 def _get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""

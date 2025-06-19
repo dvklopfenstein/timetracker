@@ -86,33 +86,32 @@ def get_dtz(elapsed_or_dt, dta, defaultdt=None):
 def _conv_datetime(timestr, defaultdt):
     try:
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
-        ##tic = default_timer()
+        ##tic = default_timer()  # PRT
         dto = dateparser_parserdt(timestr, settings=settings)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({timestr})')
-        ##if dto is None:
-        ##    print(f'ERROR: text({timestr}) could not be converted to a datetime object')
+        ##print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({timestr})')  # PRT
+        ##if dto is None:  # PRT
+        ##    print(f'ERROR: text({timestr}) could not be converted to a datetime object')  # PRT
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print(f'ERROR FROM python-dateparser: {err}')
     print(f'"{timestr}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
     return None
 
-
 def _get_dt_ampm(elapsed_or_dt, defaultdt):
     """Get a datetime object from free text that contains AM/PM"""
-    ##tic = default_timer()
-    ##print(f'TEXT({elapsed_or_dt})')
+    ##tic = default_timer()  # PRT
+    ##print(f'TEXT({elapsed_or_dt})')  # PRT
     ret = None
     if (mtch := search_texttime(elapsed_or_dt)) is not None and 'hour' in mtch:
-        ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) SM')
+        ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) SM')  # PRT
         _get_ymd(mtch, defaultdt)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) today()')
+        ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) today()')  # PRT
         ret = datetime(year=mtch['year'], month=mtch['month'], day=mtch['day'],
                        hour=mtch['hour'],
                        minute=mtch.get('minute', 0),
                        second=mtch.get('second', 0))
-        ##print(f'DEFAULTDT: {today} {ret}')
-    ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) new datetime')
+        ##print(f'DEFAULTDT: {today} {ret}')  # PRT
+    ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) new datetime')  # PRT
     return ret
 
 def _get_ymd(mtch, defaultdt):
@@ -134,13 +133,12 @@ def _get_dt_from_td(elapsed_or_dt, dta):
 
 def _conv_timedelta(elapsed_or_dt):
     try:
-        ##tic = default_timer()
+        ##tic = default_timer()  # PRT
         ret = pyt2_parse_secs(elapsed_or_dt)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} pytimeparse2 parse({elapsed_or_dt})')
+        ##print(f'{timedelta(seconds=default_timer()-tic)} pytimeparse2 parse({elapsed_or_dt})')  # PRT
         return ret
     except TypeError as err:
         raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
                             'TO A timedelta object') from err
-
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

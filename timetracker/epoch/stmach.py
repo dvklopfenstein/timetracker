@@ -158,7 +158,7 @@ class _SmHhSsAm:
         return 'start'
 
     def _run_hour_month(self, capture_val, capture_key, min_val, max_val, nxt):
-        # pylint: disable=too-many-arguments
+        # pylint: disable=unknown-option-value,too-many-arguments,too-many-positional-arguments
         if min_val <= capture_val <= max_val:
             self.capture[capture_key] = capture_val
             self.stnum = None

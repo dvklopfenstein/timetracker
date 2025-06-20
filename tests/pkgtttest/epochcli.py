@@ -11,7 +11,7 @@ from timetracker.utils import white
 from timetracker.utils import yellow
 
 from timetracker.epoch.cli import run
-from timetracker.epoch.epoch import get_dt_from_td
+from timetracker.epoch.epoch import _get_dt_from_td
 
 
 def main(arglist=None):
@@ -22,7 +22,7 @@ def main(arglist=None):
 
 def get_dateutils_answer(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
-    dto = get_dt_from_td(elapsed_or_dt, dta)
+    dto = _get_dt_from_td(elapsed_or_dt, dta)
     if dto is not None:
         return dto
     try:

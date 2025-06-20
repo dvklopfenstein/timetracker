@@ -14,7 +14,7 @@ __author__ = "DV Klopfenstein, PhD"
 from datetime import datetime
 from datetime import date
 from datetime import timedelta
-##from timeit import default_timer
+#from timeit import default_timer  # PRT
 from pytimeparse2 import parse as pyt2_parse_secs
 from dateparser import parse as dateparser_parserdt
 from dateparser.conf import SettingValidationError
@@ -77,64 +77,69 @@ def get_now():
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
-    ##if (dto := get_dt_ampm(elapsed_or_dt, defaultdt)) is not None:
-    ##    return dto
-    if (dto := get_dt_from_td(elapsed_or_dt, dta)) is not None:
+#    _get_dt_ampm(elapsed_or_dt, defaultdt)  # PRT
+    if (dto := _get_dt_ampm(elapsed_or_dt, defaultdt)) is not None:
         return dto
+    if (dto := _get_dt_from_td(elapsed_or_dt, dta)) is not None:
+        return dto
+    return _conv_datetime(elapsed_or_dt, defaultdt)
+
+def _conv_datetime(timestr, defaultdt):
     try:
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
-        ##tic = default_timer()
-        dto = dateparser_parserdt(elapsed_or_dt, settings=settings)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({elapsed_or_dt})')
-        ##if dto is None:
-        ##    print(f'ERROR: text({elapsed_or_dt}) could not be converted to a datetime object')
+#        tic = default_timer()  # PRT
+        dto = dateparser_parserdt(timestr, settings=settings)
+#        print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({timestr})')  # PRT
+#        if dto is None:  # PRT
+#            print(f'ERROR: text({timestr}) could not be converted to a datetime object')  # PRT
         return dto
     except (ValueError, TypeError, SettingValidationError) as err:
         print(f'ERROR FROM python-dateparser: {err}')
-    print(f'"{elapsed_or_dt}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
+    print(f'"{timestr}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
     return None
 
-def get_dt_ampm(elapsed_or_dt, defaultdt):
+def _get_dt_ampm(elapsed_or_dt, defaultdt):
     """Get a datetime object from free text that contains AM/PM"""
-    ##tic = default_timer()
-    ##print(f'TEXT({elapsed_or_dt})')
+#    tic = default_timer()  # PRT
+#    print(f'TEXT({elapsed_or_dt})')  # PRT
     ret = None
     if (mtch := search_texttime(elapsed_or_dt)) is not None and 'hour' in mtch:
-        ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) SM')
+#        print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) SM')  # PRT
         _get_ymd(mtch, defaultdt)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) today()')
+#        print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) today()')  # PRT
         ret = datetime(year=mtch['year'], month=mtch['month'], day=mtch['day'],
                        hour=mtch['hour'],
                        minute=mtch.get('minute', 0),
                        second=mtch.get('second', 0))
-        ##print(f'DEFAULTDT: {today} {ret}')
-    ##print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) new datetime')
+#    print(f'{timedelta(seconds=default_timer()-tic)} parse({elapsed_or_dt}) new datetime')  # PRT
     return ret
 
 def _get_ymd(mtch, defaultdt):
-    # If 'year' is in match, than 'month' and 'day' are also in match
-    if 'year' in mtch:
+    if {'year', 'month', 'day'}.issubset(set(mtch.keys())):
         return
     today = date.today() if defaultdt is None else defaultdt
-    mtch['year']  = today.year
-    mtch['month'] = today.month
-    mtch['day']   = today.day
+#    print(f'DEFAULTDT: {today}')  # PRT
+    if 'year' not in mtch:
+        mtch['year']  = today.year
+    if 'month' not in mtch:
+        mtch['month'] = today.month
+    if 'day' not in mtch:
+        mtch['day']   = today.day
 
-def get_dt_from_td(elapsed_or_dt, dta):
+def _get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""
     if elapsed_or_dt.count(':') != 2 and (secs := _conv_timedelta(elapsed_or_dt)):
         return dta + timedelta(seconds=secs)
     return None
 
-def _conv_timedelta(elapsed_or_dt):
+def _conv_timedelta(timestr):
     try:
-        ##tic = default_timer()
-        ret = pyt2_parse_secs(elapsed_or_dt)
-        ##print(f'{timedelta(seconds=default_timer()-tic)} pytimeparse2 parse({elapsed_or_dt})')
+#        tic = default_timer()  # PRT
+        ret = pyt2_parse_secs(timestr)
+#        print(f'{timedelta(seconds=default_timer()-tic)} pytimeparse2 parse({timestr})')  # PRT
         return ret
     except TypeError as err:
-        raise RuntimeError(f'UNABLE TO CONVERT str({elapsed_or_dt}) '
+        raise RuntimeError(f'UNABLE TO CONVERT str({timestr}) '
                             'TO A timedelta object') from err
-
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

@@ -3,10 +3,13 @@ site_url: https://dvklopfenstein.github.io/timetracker/
 docs_dir: source
 site_dir: ../../site
 theme:
-  name: readthedocs
-  custom_dir: docs_theme
-  static_templates:
-      - index.html
+  name: mkdocs
+    #custom_dir: docs_theme
+    #static_templates:
+    #    - index.html
+  palette:
+    scheme: slate
+    primary: green
 watch:
   - source
   - docs_theme

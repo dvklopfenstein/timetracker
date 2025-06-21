@@ -3,21 +3,19 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from logging import error
 from timetracker.ntcsv import get_ntcsv
-from timetracker.consts import FMTDT_H
+from timetracker import consts
 from timetracker.csvrun import wr_csvline
 from timetracker.cfg.utils import get_shortest_name
-from timetracker.cmd.common import get_cfg
-from timetracker.cmd.common import add_tag_billable
-from timetracker.epoch.epoch import get_dt_at
+from timetracker.cmd import common
+from timetracker.epoch import epoch
 
 
 def cli_run_stop(fnamecfg, args):
     """Stop the timer and record this time unit"""
 
     if args.billable:
-        add_tag_billable(args)
+        common.add_tag_billable(args)
     _run_stop(
         fnamecfg,
         args.name,
@@ -27,7 +25,7 @@ def cli_run_stop(fnamecfg, args):
 
 def _run_stop(fnamecfg, uname, csvfields, stop_at=None, **kwargs):
     """Stop the timer and record this time unit"""
-    cfg = get_cfg(fnamecfg)
+    cfg = common.get_cfg(fnamecfg)
     return run_stop(cfg.cfg_loc, uname, csvfields, stop_at, **kwargs)
 
 def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
@@ -46,18 +44,18 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
               'Do `trk start` to begin tracking time ')
               #f'for project, {cfgproj.project}')
         return {'fcsv':fcsv, 'csvline':None}
-    dtz = get_dt_at(stop_at, kwargs.get('now'), kwargs.get('defaultdt'))
+    dtz = epoch.get_dt_at(stop_at, kwargs.get('now'), kwargs.get('defaultdt'))
     if dtz is None:
         raise RuntimeError(f'NO STOP TIME FOUND in "{stop_at}"; '
-                           f'NOT STOPPING TIMER STARTED {dta.strftime(FMTDT_H)}')
+                           f'NOT STOPPING TIMER STARTED {dta.strftime(consts.FMTDT_H)}')
     if dtz <= dta:
-        error(f'NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
+        print(f'ERROR: NOT WRITING ELAPSED TIME: starttime({dta}) > stoptime({dtz})')
         return {'fcsv':fcsv, 'csvline':None}
     delta = dtz - dta
 
     # Append the timetracker file with this time unit
     if not fcsv:
-        error('Not saving time interval; no csv filename was provided')
+        print('ERROR: Not saving time interval; no csv filename was provided')
         return {'fcsv':fcsv, 'csvline':None}
     csvline = wr_csvline(fcsv, dta, delta, csvfields, dtz, kwargs.get('wr_old', False))
     _msg_stop_complete(fcsv, delta, dtz, kwargs.get('quiet', False))
@@ -72,7 +70,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
 def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     """Finish stopping"""
     if not quiet:
-        print(f'Timetracker stopped at: {stoptime.strftime(FMTDT_H)}: {stoptime}\n'
+        print(f'Timetracker stopped at: {stoptime.strftime(consts.FMTDT_H)}: {stoptime}\n'
               f'Elapsed H:M:S {delta} appended to {get_shortest_name(fcsv)}')
 
 

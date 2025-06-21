@@ -3,26 +3,17 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os.path import exists
-from os.path import relpath
-from os.path import abspath
+import os.path as os_path
 from os.path import dirname
-from os.path import join
-from os.path import ismount
-from os.path import basename
-from os.path import normpath
-from os.path import realpath
-from logging import debug
 from timetracker.consts import DIRTRK
 
 
 class CfgFinder:
-    """Functionality to find the local project config, if one exists"""
+    """Functionality to find the local project config, if one is present"""
 
     def __init__(self, dircur, trksubdir=None):
         self.dircur = dircur
         self.trksubdir = trksubdir if trksubdir is not None else DIRTRK
-        debug('CfgFinder %s=dircur %s=trksubdir', self.dircur, self.trksubdir)
         # Existing directory (ex: ./timetracker) or None if dir not exist
         self.dirtrk = _get_abspathtrk(dircur, self.trksubdir)
         self.dirgit = _get_abspathtrk(dircur, '.git')
@@ -41,13 +32,13 @@ class CfgFinder:
 
     def get_cfgfilename(self):
         """Get the local (aka project) config full filename"""
-        return join(self.dirtrk_pathname, 'config')
+        return os_path.join(self.dirtrk_pathname, 'config')
 
     def get_dircsv_default(self):
         """Get the default csv directory for use in the cli help string.
 
-                   exists(dirtrk)
-                     exists(dirgit)
+               is_present(dirtrk)
+                 is_present(dirgit)
                               00|01|11|10
                              +--+--+--+--
                            0 | X| P| P| P
@@ -56,7 +47,7 @@ class CfgFinder:
                              +--+--+--+--
         Not using in default value
         """
-        if realpath(self.dircur) == realpath(self.dirproj):
+        if os_path.realpath(self.dircur) == os_path.realpath(self.dirproj):
             return '.'
         assert not (self.dirtrk is None and self.dirgit is None)
         return self.dirproj
@@ -67,7 +58,7 @@ class CfgFinder:
 
     def get_dircur_rel(self):
         """Get the current directory relative to the project directory"""
-        return relpath(self.dircur, self.get_dirproj())
+        return os_path.relpath(self.dircur, self.get_dirproj())
 
     def get_desc(self):
         """Get a description of the state of a CfgFinder instance"""
@@ -83,7 +74,7 @@ class CfgFinder:
 
     def _init_project(self):
         dirtrk = self.dirtrk_pathname if self.dirtrk is None else self.dirtrk
-        return basename(dirname(dirtrk))
+        return os_path.basename(dirname(dirtrk))
 
     def _init_dirtrk(self):
         """Get the project tracking directory that is or will be tracked"""
@@ -91,8 +82,8 @@ class CfgFinder:
             return self.dirtrk
         dirgit = self.get_dirgit()
         if dirgit is not None:
-            return normpath(join(dirname(dirgit), self.trksubdir))
-        return normpath(join(self.dircur, self.trksubdir))
+            return os_path.normpath(os_path.join(dirname(dirgit), self.trksubdir))
+        return os_path.normpath(os_path.join(self.dircur, self.trksubdir))
 
 
 def _get_abspathtrk(path, trksubdir):
@@ -102,16 +93,19 @@ def _get_abspathtrk(path, trksubdir):
 
 def _finddirtrk(path, trksubdir):
     """Walk up dirs until find .timetracker/ proj dir or mount dir"""
-    path = abspath(path)
+    path = os_path.abspath(path)
+    join = os_path.join
     trkdir = join(path, trksubdir)
+    exists = os_path.exists
     if exists(trkdir):
-        return normpath(trkdir), True
+        return os_path.normpath(trkdir), True
+    ismount = os_path.ismount
     while not ismount(path):
         trkdir = join(path, trksubdir)
         if exists(trkdir):
-            return normpath(trkdir), True
+            return os_path.normpath(trkdir), True
         path = dirname(path)
-    return normpath(path), False
+    return os_path.normpath(path), False
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

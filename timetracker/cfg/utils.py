@@ -4,37 +4,31 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from os import environ
-from os.path import isabs
-from os.path import exists
+import os.path as op
 from os.path import expanduser
 from os.path import relpath
 from os.path import abspath
-from os.path import normpath
-from os.path import join
-from os.path import commonprefix
-from os.path import split
 from subprocess import run
-##from logging import debug
 from timetracker.consts import FILENAME_GLOBALCFG
 
 
 def get_abspath(fnam, dirproj, dirhome=None):
     """Get the path of the path fnam relative to dirproj"""
-    if isabs(fnam):
-        return normpath(fnam)
+    if op.isabs(fnam):
+        return op.normpath(fnam)
     if fnam == '':
         return dirproj
     if fnam[:1] == '~':
         fnam = expanduser(fnam) if dirhome is None else abspath(fnam.replace('~', dirhome))
-    return normpath(join(dirproj, fnam))
+    return op.normpath(op.join(dirproj, fnam))
 
 def get_relpath(absfilename, dirproj, dirhome=None):
     """From a absolute path path, get a path relative to the timetracker proj"""
-    assert isabs(absfilename)
-    assert isabs(dirproj)
+    assert op.isabs(absfilename)
+    assert op.isabs(dirproj)
     if dirhome is not None:
-        isabs(dirhome)
-    absfilename = normpath(absfilename)
+        op.isabs(dirhome)
+    absfilename = op.normpath(absfilename)
     if has_homedir(absfilename, dirproj):
         return relpath(absfilename, dirproj)
     rpth = relpath(absfilename, dirproj)
@@ -60,7 +54,7 @@ def run_cmd(cmd):
 def get_relpath_adj(projdir, dirhome):
     """Collapse an absolute pathname into one with a `~` if projdir is a child of home"""
     if has_homedir(projdir, abspath(dirhome)):
-        return join('~', relpath(projdir, dirhome))
+        return op.join('~', relpath(projdir, dirhome))
     return projdir
 
 def has_homedir(projdir, homedir):
@@ -69,7 +63,7 @@ def has_homedir(projdir, homedir):
     assert projdir == abspath(projdir)
     homedir = abspath(homedir)
     #if commonpath([homedir]) == commonpath([homedir, abspath(projdir)]):
-    if homedir == commonprefix([homedir, abspath(projdir)]):
+    if homedir == op.commonprefix([homedir, abspath(projdir)]):
         # `projdir` is under `homedir`
         return True
     return False
@@ -92,7 +86,7 @@ def replace_homepath(fname):
     """Replace expanded home dir with '~' if using '~' is shorter"""
     # pylint: disable=fixme
     # TODO: use commonprefix
-    #fname = normpath(fname)
+    #fname = op.normpath(fname)
     fname = abspath(fname)
     home_str = expanduser('~')
     home_len = len(home_str)
@@ -101,7 +95,8 @@ def replace_homepath(fname):
     return fname if fname[:home_len] != home_str else f'~{fname[home_len:]}'
 
 def get_dirhome(dirhome):
-    """Get a global configuration directory which exists"""
+    """Get a global configuration directory which is present"""
+    exists = op.exists
     if dirhome == '~':
         return expanduser(dirhome)
     if exists(dirhome):
@@ -127,14 +122,14 @@ def get_shortest_name(filename):
     fabs = abspath(filename)
     # pylint: disable=fixme
     # TODO: use commonprefix
-    frel = normpath(relpath(filename))
+    frel = op.normpath(relpath(filename))
     return fabs if len(fabs) < len(frel) else frel
 
 def splitall(path):
     """Split a path into all its parts"""
     allparts = []
     while 1:
-        parts = split(path)
+        parts = op.split(path)
         if parts[0] == path:  # sentinel for absolute paths
             allparts.insert(0, parts[0])
             break
@@ -156,7 +151,7 @@ def get_filename_globalcfg(dirhome=None, fcfg_cli=None, fcfg_doc=None):
             f'GLOBAL CONFIG NAME HAS .timetracker {fcfg_doc}'
     if fcfg_cli is None and fcfg_doc is None:  # 00
         if 'TIMETRACKERCONF' not in environ:
-            return join(expanduser('~') if dirhome is None else dirhome, FILENAME_GLOBALCFG)
+            return op.join(expanduser('~') if dirhome is None else dirhome, FILENAME_GLOBALCFG)
         return environ['TIMETRACKERCONF']
     if fcfg_cli is not None:                   # 10 & 11
         return fcfg_cli

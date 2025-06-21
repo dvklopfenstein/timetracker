@@ -3,39 +3,34 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from sys import exit as sys_exit
-from os.path import exists
-from os.path import dirname
-
-from timetracker.utils import prt_todo
-from timetracker.utils import yellow
-from timetracker.msgs import str_init
 from timetracker.msgs import str_tostart
-from timetracker.msgs import str_no_time_recorded
-from timetracker.msgs import str_started_epoch
-from timetracker.msgs import str_tostart_epoch
-from timetracker.msgs import str_how_to_stop_now
-from timetracker.cfg.cfg import Cfg
-from timetracker.epoch.epoch import str_arg_epoch
 from timetracker.consts import FMTDT_H
-from timetracker.msgs import str_not_running
 
 
 def get_cfg(fnamecfg):
     """Get the Cfg object, exit if no CfgProj exists"""
+    # pylint: disable=import-outside-toplevel
     if str_uninitialized(fnamecfg):
+        from sys import exit as sys_exit
         sys_exit(0)
+    from timetracker.cfg.cfg import Cfg
     return Cfg(fnamecfg)
 
 def str_uninitialized(fcfgloc):
     """Print an init message if the timetracker local configuration does not exist"""
-    if exists(fcfgloc):
+    # pylint: disable=import-outside-toplevel
+    import os.path as os_path
+    if os_path.exists(fcfgloc):
         return False
-    print(yellow(str_init(dirname(dirname(fcfgloc)))))
+    from timetracker.utils import yellow
+    from timetracker.msgs import str_init
+    print(yellow(str_init(os_path.dirname(os_path.dirname(fcfgloc)))))
     return True
 
 def no_csv(fcsv, cfgproj, uname):
     """Messages to print if there is no csv file"""
+    # pylint: disable=import-outside-toplevel
+    from timetracker.msgs import str_no_time_recorded
     print(str_no_time_recorded(fcsv))
     if (startobj := cfgproj.get_starttime_obj(uname)):
         prtmsg_started01(startobj)
@@ -61,15 +56,21 @@ def prtmsg_start_01(startobj, dtstart, force=False):
     """Print message depending if timer is started or not; no starting instructions"""
     hms = startobj.hms_from_startfile(dtstart)
     hms1 = hms is not None
+    # pylint: disable=import-outside-toplevel
     if hms1 and hms <= startobj.min_trigger:
         _prtmsg_basic(startobj, dtstart, hms, force)
     elif hms1:
         _prtmsg_triggered(startobj, dtstart, hms, force)
     else:
+        from timetracker.utils import prt_todo
         prt_todo('TODO: STARTFILE WITH NO HMS')
 
 def _prtmsg_triggered(startobj, dta, hms, force):
     """Print message info regarding triggered (started) timer"""
+    # pylint: disable=import-outside-toplevel
+    from timetracker.epoch.epoch import str_arg_epoch
+    from timetracker.msgs import str_started_epoch
+    from timetracker.msgs import str_tostart_epoch
     _prt_started_n_running(startobj, dta, hms)
     print(str_started_epoch())
     print(str_arg_epoch(dta, desc=' after start'))
@@ -81,6 +82,8 @@ def _prtmsg_basic(startobj, dta, hms, force):
     """Print basic start time message"""
     _prt_started_n_running(startobj, dta, hms)
     if not force:
+        # pylint: disable=import-outside-toplevel
+        from timetracker.msgs import str_how_to_stop_now
         print(str_how_to_stop_now())
 
 def _prt_started_n_running(startobj, dta, hms):
@@ -93,11 +96,13 @@ def _prt_started_n_running(startobj, dta, hms):
 # ---------------------------------------------------------
 def prt_elapsed(startobj, pretxt='Timer running;'):
     """Print elapsed time if timer is started"""
+    # pylint: disable=import-outside-toplevel
     if (dtstart := startobj.read_starttime()) is not None:
         if (hms := startobj.hms_from_startfile(dtstart)) is not None:
             msg = f'{pretxt} started {dtstart.strftime(FMTDT_H)}; running'
             print(startobj.str_elapsed_hms(hms, msg))
         else:
+            from timetracker.msgs import str_not_running
             print(str_not_running())
 
 

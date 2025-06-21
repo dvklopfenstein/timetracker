@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-06-21 v0.7a0**](#release-2025-06-21-v07a0) Much added functionality for invoicing
 * [**Release 2025-05-27 v0.6a0**](#release-2025-05-27-v06a0) Added functions to collect various groups of csv files
 * [**Release 2025-05-18 v0.5a7**](#release-2025-05-18-v05a7) Add starttime to `report`; Bug fix in `cancel`
 * [**Release 2025-05-16 v0.5a6**](#release-2025-05-16-v05a6) Add options to `projects` command; Fix `report` command
@@ -30,6 +31,8 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-06-21 v0.7a0
 * ADDED command, `trk invoice`
 * ADDED command option, `-b` or `--billable` to `trk stop`
   to add a `Billable` tag when running `tag stop`
@@ -39,6 +42,7 @@
 * ADDED `--no-git-add` and `-A` options to the `trk init` command
 * CHANGED "Run `trk init`" message so it is clearer that no trk command
   will be run until the project is initialized
+* CHANGED imports to improve speed
 
 ## Release 2025-05-27 v0.6a0
 * ADDED `trk hours` options `--global` to show hours for all projects for a single username

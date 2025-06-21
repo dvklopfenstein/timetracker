@@ -3,30 +3,34 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-##from timeit import default_timer  # PRT
-##tic = default_timer()             # PRT
-##from datetime import timedelta    # PRT
-##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT dt')  # PRT
+#from timeit import default_timer  # PRT
+#tic = default_timer()             # PRT
+#from datetime import timedelta    # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT dt')  # PRT
 
 from sys import argv as sys_argv
-from sys import exit as sys_exit
+#from sys import exit as sys_exit
 from os import getcwd
 #from os.path import exists
 #from logging import debug
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT sys, getcwd')  # PRT
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
-##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
 from timetracker import __version__
 from timetracker.cmd.fncs import FNCS
-##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
 from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
-from timetracker.cmd.none import cli_run_none
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER CfgFinder')  # PRT
+#from timetracker.cmd.none import cli_run_none
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER cli_run_none')  # PRT
 from timetracker.proc import get_log1
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER get_log1')  # PRT
 
-##print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
 
 def main():
     """Connect all parts of the timetracker"""
@@ -53,18 +57,20 @@ class Cli:
         self.fcfg = self.finder.get_cfgfilename()
         self.user = get_username()  # default username
         self.parser = self._init_parser_top('timetracker')
-##        print('PARSE ARGS')                      # PRT
+#        print('PARSE ARGS')                      # PRT
         self.args = self._init_args(sysargs)
-##        print(f'TIMETRACKER ARGS: {self.args}')  # PRT
+#        print(f'TIMETRACKER ARGS: {self.args}')  # PRT
 
     def run(self):
         """Run timetracker"""
         ##debug('Cli RUNNNNNNNNNNNNNNNNNN ARGS:    %s', self.args)
         ##debug('Cli RUNNNNNNNNNNNNNNNNNN DIRTRK:  %s', self.finder.get_dirtrk())
         ##debug('Cli RUNNNNNNNNNNNNNNNNNN CFGNAME: %s', self.fcfg)
+        # pylint: disable=import-outside-toplevel
         if self.args.command is not None:
             FNCS[self.args.command](self.fcfg, self.args)
         else:
+            from timetracker.cmd.none import cli_run_none
             cli_run_none(self.fcfg, self.args)
 
     def _adjust_args(self, given_args):
@@ -95,6 +101,8 @@ class Cli:
         """Get arguments for ScriptFrame"""
         args = self.parser.parse_args(arglist)
         if args.version:
+            # pylint: disable=import-outside-toplevel
+            from sys import exit as sys_exit
             print(f'trk {__version__}')
             sys_exit(0)
         if args.command == 'stop':

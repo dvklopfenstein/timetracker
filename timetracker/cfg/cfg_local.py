@@ -9,20 +9,13 @@ in a version supported by cygwin, conda, and venv.
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import makedirs
+import os
+import os.path as op
 from os.path import exists
-from os.path import basename
-from os.path import join
-from os.path import abspath
-from os.path import dirname
-from os.path import normpath
 from logging import debug
 from collections import namedtuple
 
-from tomlkit import comment
-from tomlkit import document
-from tomlkit import nl
-from tomlkit import table
+import tomlkit
 from tomlkit.toml_file import TOMLFile
 
 from timetracker.consts import DIRTRK
@@ -46,11 +39,11 @@ class CfgProj:
     def __init__(self, filename):
         assert filename is not None
         self.filename = filename
-        ####self.exists = exists(self.filename)
         debug('CfgProj args %d filename %s', exists(filename), filename)
-        self.trksubdir = DIRTRK if filename is None else basename(dirname(filename))
-        self.dircfg  = abspath(DIRTRK) if filename is None else normpath(dirname(filename))
-        self.dirproj = dirname(self.dircfg)
+        dnam = op.dirname
+        self.trksubdir = DIRTRK if filename is None else op.basename(dnam(filename))
+        self.dircfg  = op.abspath(DIRTRK) if filename is None else op.normpath(dnam(filename))
+        self.dirproj = dnam(self.dircfg)
 
     def file_exists(self):
         """Return True if config file exists and False otherwise"""
@@ -58,7 +51,7 @@ class CfgProj:
 
     def get_filename_cfg(self):
         """Get the full filename of the local config file"""
-        return join(self.dircfg, 'config')
+        return op.join(self.dircfg, 'config')
 
     def get_filename_csv(self, username=None, dirhome=None):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
@@ -98,7 +91,7 @@ class CfgProj:
         fname = self.get_filename_cfg()
         assert not exists(fname)
         if not exists(self.dircfg):
-            makedirs(self.dircfg, exist_ok=True)
+            os.makedirs(self.dircfg, exist_ok=True)
         if dircsv is None:
             dircsv = '.'
         doc = self._get_new_doc(project, dircsv)
@@ -109,7 +102,7 @@ class CfgProj:
     def wr_gitignore(self):
         """Add .gitignore file in .timetracker/ directory"""
         error = None
-        fname = join(self.dircfg, '.gitignore')
+        fname = op.join(self.dircfg, '.gitignore')
         try:
             fptr = open(fname, 'w', encoding='utf-8')
         except (PermissionError, OSError) as err:
@@ -136,10 +129,11 @@ class CfgProj:
             doc['project'] = project
             chgd = True
         if docproj.csv_filename != (csv_new := self._assemble_csv_filepat(dircsv, doc['project'])):
+            dnam = op.dirname
             print('In local project configuration file, changed csv directory:\n'
                   f'   local cfg:  {fname}\n'
-                  f'      csvdir WAS: {dirname(docproj.csv_filename)}\n'
-                  f'      csvdir NOW: {dirname(csv_new)}')
+                  f'      csvdir WAS: {dnam(docproj.csv_filename)}\n'
+                  f'      csvdir NOW: {dnam(csv_new)}')
             doc['csv']['filename'] = csv_new
             chgd = True
         if fcfg_global is not None and docproj.global_config_filename != fcfg_global:
@@ -156,13 +150,13 @@ class CfgProj:
 
     def get_project_from_filename(self):
         """Get the default project name from the project directory filename"""
-        return basename(self.dirproj)
+        return op.basename(self.dirproj)
 
     #-------------------------------------------------------------
     def _assemble_csv_filepat(self, dircsv, project):
         if dircsv is None or dircsv == '':
             dircsv = '.'
-        return join(dircsv, self.CSVPAT.replace('PROJECT', project))
+        return op.join(dircsv, self.CSVPAT.replace('PROJECT', project))
 
     @staticmethod
     def _wr_cfg(fname, doc):
@@ -177,7 +171,7 @@ class CfgProj:
         return ret
 
     def _rd_doc(self):
-        """Read a config file and load it into a TOML document"""
+        """Read a config file and load it into a TOML doc"""
         fin_cfglocal = self.get_filename_cfg()
         return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
 
@@ -189,7 +183,7 @@ class CfgProj:
         """Read the project cfg to get the csv dir name for storing time data"""
         ##fcsv = self._read_csvdir_from_cfgfile(dirhome)
         ##if fcsv is not None:
-        ##    return dirname(fcsv)
+        ##    return op.dirname(fcsv)
         dircsv = get_abspath(DIRCSV, self.dirproj, dirhome)
         return dircsv
 
@@ -206,17 +200,17 @@ class CfgProj:
         assert project is not None and isinstance(project, str)
         #assert dircsv
         debug('TODO: dircsv=%s', dircsv)
-        doc = document()
-        doc.add(comment("TimeTracker project configuration file"))
-        doc.add(nl())
+        doc = tomlkit.document()
+        doc.add(tomlkit.comment("TimeTracker project configuration file"))
+        doc.add(tomlkit.nl())
         doc["project"] = project
 
         # [csv]
         # format = "timetracker_architecting_bez.csv"
-        csv_section = table()
+        csv_section = tomlkit.table()
         #csvdir.comment("Directory where the csv file is stored")
         ##csvpat = self.CSVPAT.replace('PROJECT', project)
-        ##csv_section.add("filename", join(self._get_dircsv_relname(dirhome), csvpat))
+        ##csv_section.add("filename", op.join(self._get_dircsv_relname(dirhome), csvpat))
         csv_section.add("filename", self._assemble_csv_filepat(dircsv, project))
         doc.add("csv", csv_section)
         return doc
@@ -237,7 +231,7 @@ class CfgProj:
     def _add_doc_globalcfgfname(doc, fcfg_global):
         # [global_config]
         # filename = "/home/uname/myglobal.cfg"
-        section = table()
+        section = tomlkit.table()
         #csvdir.comment("Directory where the csv file is stored")
         section.add("filename", fcfg_global)
         doc.add("global_config", section)

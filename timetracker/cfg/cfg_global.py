@@ -3,20 +3,12 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os.path import isabs
-from os.path import isdir
+import os.path as op
 from os.path import exists
-from os.path import dirname
-from os.path import join
-from os.path import abspath
-from os.path import relpath
 from logging import debug
 from collections import namedtuple
 
-from tomlkit import comment
-from tomlkit import document
-from tomlkit import nl
-from tomlkit import array
+import tomlkit
 from tomlkit.toml_file import TOMLFile
 
 from timetracker.cfg.tomutils import read_config
@@ -101,8 +93,8 @@ class CfgGlobal:
 
     # -------------------------------------------------------------
     def _chk_global_dir(self):
-        dir_global = dirname(self.filename)
-        if exists(dir_global) and isdir(dir_global) or dir_global == '':
+        dir_global = op.dirname(self.filename)
+        if exists(dir_global) and op.isdir(dir_global) or dir_global == '':
             return
         raise NotADirectoryError(f'{dir_global}\n'
             f'Directory for global config does not exist({dir_global})\n'
@@ -112,7 +104,7 @@ class CfgGlobal:
     def _add_project(self, doc, project, fcfgproj):
         """Add a project to the global config file, if it is not already present"""
         debug('CfgGlobal _add_project(%s, %s)', project, fcfgproj)
-        assert isabs(fcfgproj), f'CfgGlobal._add_project(...) cfg NOT abspath: {fcfgproj}'
+        assert op.isabs(fcfgproj), f'CfgGlobal._add_project(...) cfg NOT abs path: {fcfgproj}'
         debug('CfgGlobal %s', doc)
         # If project is not already in global config
         if self._noproj(doc, project, fcfgproj):
@@ -150,23 +142,23 @@ class CfgGlobal:
     def _get_docprt(self, doc):
         doc_cur = doc.copy()
         ##truehome = expanduser('~')
-        dirhome = dirname(self.filename)
+        dirhome = op.dirname(self.filename)
         for idx, (projname, projdir) in enumerate(doc['projects'].unwrap()):
-            ##pdir = relpath(abspath(projdir), truehome)
-            ##pdir = relpath(abspath(projdir), dirhome)
+            ##pdir = op.relpath(op.abspath(projdir), truehome)
+            ##pdir = op.relpath(op.abspath(projdir), dirhome)
             ##if pdir[:2] != '..':
-            if has_homedir(dirhome, abspath(projdir)):
-                ##pdir = join('~', pdir)
-                pdir = join('~', relpath(abspath(projdir), dirhome))
+            if has_homedir(dirhome, op.abspath(projdir)):
+                ##pdir = op.join('~', pdir)
+                pdir = op.join('~', op.relpath(op.abspath(projdir), dirhome))
                 doc_cur['projects'][idx] = [projname, pdir]
                 debug('CFGGLOBAL XXXXXXXXXXX %20s %s', projname, pdir)
         return doc_cur
 
     def _get_new_doc(self):
-        doc = document()
-        doc.add(comment("TimeTracker global configuration file"))
-        doc.add(nl())
-        arr = array()
+        doc = tomlkit.document()
+        doc.add(tomlkit.comment("TimeTracker global configuration file"))
+        doc.add(tomlkit.nl())
+        arr = tomlkit.array()
         arr.multiline(True)
         doc["projects"] = arr
         return doc

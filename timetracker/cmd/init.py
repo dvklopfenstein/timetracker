@@ -4,9 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from sys import exit as sys_exit
-from logging import debug
 from timetracker.cfg.cfg import Cfg
-from timetracker.msgs import str_tostart
 
 
 def cli_run_init(fnamecfg, args):
@@ -31,10 +29,6 @@ def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
     """Initialize timetracking on a project"""
     # Initialize the local configuration file for a timetracking project
     cfg_loc = cfg.cfg_loc
-    debug('RUNNING COMMAND INIT')
-    debug('INIT: fnamecfg:    %s', cfg_loc.filename)
-    debug('INIT: project:     %s', project)
-    debug('INIT: dircsv(%s)', dircsv)
     fcfg_global = kwargs.get('fcfg_global')
     ##res = _chk_global_cfg(cfg_loc, project, fcfg_global)
     dirhome = kwargs.get('dirhome')
@@ -48,6 +42,8 @@ def run_init(cfg, dirgit, dircsv=None, project=None, **kwargs):
         cfg.init(dirgit, project, dircsv, fcfg_global, dirhome, quiet=quiet,
                  no_git_add=kwargs.get('no_git_add', False))
     elif not quiet:
+        # pylint: disable=import-outside-toplevel
+        from timetracker.msgs import str_tostart
         print(str_tostart())
     return cfg
 

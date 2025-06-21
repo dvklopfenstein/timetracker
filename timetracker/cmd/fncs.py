@@ -6,35 +6,79 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 
-from timetracker.cmd.init      import cli_run_init
-from timetracker.cmd.start     import cli_run_start
-from timetracker.cmd.stop      import cli_run_stop
-from timetracker.cmd.projects  import cli_run_projects
-from timetracker.cmd.cancel    import cli_run_cancel
-from timetracker.cmd.hours     import cli_run_hours
-from timetracker.cmd.csv       import cli_run_csv
-from timetracker.cmd.report    import cli_run_report
-from timetracker.cmd.invoice    import cli_run_invoice
-from timetracker.cmd.paid       import cli_run_paid
-#from timetracker.cmd.tag       import cli_run_tag
-from timetracker.cmd.activity  import cli_run_activity
-#from timetracker.cmd.csvloc   import cli_run_csvloc
+# pylint: disable=import-outside-toplevel
+def _cli_run_init(fcfgloc, args):
+    from timetracker.cmd.init      import cli_run_init
+    return cli_run_init(fcfgloc, args)
+
+def _cli_run_start(fcfgloc, args):
+    from timetracker.cmd.start     import cli_run_start
+    return cli_run_start(fcfgloc, args)
+
+def _cli_run_stop(fcfgloc, args):
+    from timetracker.cmd.stop      import cli_run_stop
+    return cli_run_stop(fcfgloc, args)
+
+def _cli_run_projects(fcfgloc, args):
+    from timetracker.cmd.projects  import cli_run_projects
+    return cli_run_projects(fcfgloc, args)
+
+def _cli_run_cancel(fcfgloc, args):
+    from timetracker.cmd.cancel    import cli_run_cancel
+    return cli_run_cancel(fcfgloc, args)
+
+def _cli_run_hours(fcfgloc, args):
+    from timetracker.cmd.hours     import cli_run_hours
+    return cli_run_hours(fcfgloc, args)
+
+def _cli_run_csv(fcfgloc, args):
+    from timetracker.cmd.csv       import cli_run_csv
+    return cli_run_csv(fcfgloc, args)
+
+def _cli_run_report(fcfgloc, args):
+    from timetracker.cmd.report    import cli_run_report
+    return cli_run_report(fcfgloc, args)
+
+def _cli_run_invoice(fcfgloc, args):
+    from timetracker.cmd.invoice    import cli_run_invoice
+    return cli_run_invoice(fcfgloc, args)
+
+def _cli_run_paid(fcfgloc, args):
+    from timetracker.cmd.paid       import cli_run_paid
+    return cli_run_paid(fcfgloc, args)
+
+def _cli_run_activity(fcfgloc, args):
+    from timetracker.cmd.activity  import cli_run_activity
+    return cli_run_activity(fcfgloc, args)
+
+#from timetracker.cmd.start     import cli_run_start
+#from timetracker.cmd.stop      import cli_run_stop
+#from timetracker.cmd.projects  import cli_run_projects
+#from timetracker.cmd.cancel    import cli_run_cancel
+#from timetracker.cmd.hours     import cli_run_hours
+#from timetracker.cmd.csv       import cli_run_csv
+#from timetracker.cmd.report    import cli_run_report
+#from timetracker.cmd.invoice    import cli_run_invoice
+#from timetracker.cmd.paid       import cli_run_paid
+##from timetracker.cmd.tag       import cli_run_tag
+#from timetracker.cmd.activity  import cli_run_activity
+##from timetracker.cmd.csvloc   import cli_run_csvloc
 
 
 FNCS = {
-    'init'     : cli_run_init,
-    'start'    : cli_run_start,
-    'stop'     : cli_run_stop,
-    'cancel'   : cli_run_cancel,
-    'hours'    : cli_run_hours,
-    'csv'      : cli_run_csv,
-    'report'   : cli_run_report,
-    'invoice'  : cli_run_invoice,
-    'paid'     : cli_run_paid,
-    #'tag'      : cli_run_tag,
-    'activity' : cli_run_activity,
-    'projects' : cli_run_projects,
-    #'csvloc'   : cli_run_csvloc,
+    'init'     : _cli_run_init,
+    'start'    : _cli_run_start,
+    'stop'     : _cli_run_stop,
+    'cancel'   : _cli_run_cancel,
+    'hours'    : _cli_run_hours,
+    'csv'      : _cli_run_csv,
+    'report'   : _cli_run_report,
+    'invoice'  : _cli_run_invoice,
+    'paid'     : _cli_run_paid,
+    #'tag'      : _cli_run_tag,
+    'activity' : _cli_run_activity,
+    'projects' : _cli_run_projects,
+    #'csvloc'   : _cli_run_csvloc,
 }
 
 

@@ -40,6 +40,7 @@
   will be printed in the invoice
 * ADDED `trk stop -b` or `trk stop --billable` to add 'Billable' tag with minimum typing
 * ADDED `--no-git-add` and `-A` options to the `trk init` command
+* CHANGED speed to 100x faster for parsing free text into datetime objects
 * CHANGED "Run `trk init`" message so it is clearer that no trk command
   will be run until the project is initialized
 * CHANGED imports to improve speed

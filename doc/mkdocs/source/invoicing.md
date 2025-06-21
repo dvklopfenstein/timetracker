@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------------------
 ## Quickstart invoicing
 ### Mark timeslots as `Billable`
-To mark an item as billable, use the `--billable` or `-b' option in the `stop` command:
+To mark an item as billable, use the `--billable` or `-b` option in the `stop` command:
 ```sh
 $ trk start
 Timetracker started at: Wed 08:00 AM: 2025-06-04 08:00:00

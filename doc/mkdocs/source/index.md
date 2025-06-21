@@ -17,6 +17,25 @@ Time is saved in
 
 <p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/doc/mkdocs/source/images/stopwatch.png" alt="timetracker" width="750"/></p>
 
+## Description
+```
+┌────────────────────────────┐
+│ 🕒 Timetracker CLI Tool    │
+│ Track time → CSV → pandas  │
+└────────────────────────────┘
+```
+Timetracker is a
+lightweight, privacy-respecting CLI tool
+that logs your work sessions into
+clean, pandas-friendly CSV files.
+Whether you're juggling multiple projects or
+just want a no-fuss way to monitor your productivity,
+Timetracker keeps your data local, editable, and analysis-ready.
+- No cloud. No surveillance.
+- Human-readable logs perfect for Python and pandas workflows.
+- Quick to set up, easy to use, and fully open source.
+- Supports free-form messages, optional activity types, and tag metadata
+
 ## Quickstart
 The `name` used by this time tracker is determined
 by the `USER` environmental variable by default.

@@ -3,8 +3,6 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-#from os.path import dirname
-#from os.path import exists
 from logging import debug
 from timetracker.utils import yellow
 #from timetracker.cfg.cfg import Cfg

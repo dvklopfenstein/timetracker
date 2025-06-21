@@ -23,16 +23,18 @@ def test_tt_getdt(fcsv='timetrials_datatime.csv'):
 
 
 def _run(nto):
+    # pylint: disable=too-many-locals
     timedata = []
     #cmp_time = re_compile(r'((\d{1,2}):){0,2}(\d{1,2})\s*(?P<AM_PM>[aApP][mM])')
     # pylint: disable=line-too-long
-    cmp_time = re_compile(r'((?P<hour>\d{1,2})[^-/_](:(?P<minute>\d{1,2}))?[^-/_](:(?P<second>\d{1,2}))?\s*(?P<AM_PM>[aApP][mM])?)')
+    cmp_time = re_compile(r'((?P<hour>\d{1,2})(:(?P<minute>\d{1,2}))?(:(?P<second>\d{1,2}))?\s*(?P<AM_PM>[aApP][mM])?)')
     cmp_date = re_compile(r'((?P<year>\d{4})[-/_]?)?(?P<month>\d{1,2})[-/_](?P<day>\d{1,2})')
     print(f'NOW: {NOW}')
     for timestr, expdct in TIMESTRS.items():
+        # pylint: disable=too-many-locals
         print(f'\nTIMESTR({timestr})')
         tic = default_timer()
-        print("SEARCH FOR TIME:", cmp_time.search(timestr))
+        print("SEARCH FOR TIME:", (m := cmp_time.search(timestr)), m.groupdict() if m else '')
         print("SEARCH FOR DATE:", cmp_date.search(timestr))
         tt0 = timedelta(seconds=default_timer()-tic)
         print(f'{tt0}    re          ({timestr})')  # {dta}')
@@ -46,7 +48,7 @@ def _run(nto):
         tic = default_timer()
         dtb = _conv_datetime(timestr, NOW)
         ttb = timedelta(seconds=default_timer()-tic)
-        #print(f'{ttb}  _conv_datetime({timestr}) {dtb}')
+        print(f'{ttb}  _conv_datetime({timestr}) {dtb}')
 
         tic = default_timer()
         dtc = _conv_timedelta(timestr)

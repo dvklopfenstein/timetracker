@@ -4,9 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from timetracker.epoch.epoch import get_dt_at
-from timetracker.cmd.common import get_cfg
-from timetracker.cmd.common import prtmsg_start_01
-from timetracker.cmd.common import prt_elapsed
+from timetracker.cmd import common
 
 
 def cli_run_start(fnamecfg, args):
@@ -19,7 +17,7 @@ def cli_run_start(fnamecfg, args):
 
 def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
-    cfg = get_cfg(fnamecfg)
+    cfg = common.get_cfg(fnamecfg)
     cfgproj = cfg.cfg_loc
     return run_start(cfgproj, name, start_at, **kwargs)
 
@@ -33,9 +31,9 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
     force = kwargs.get('force', False)
     if start_at is None:
         if (dtstart := startobj.read_starttime()):
-            prtmsg_start_01(startobj, dtstart, force)
+            common.prtmsg_start_01(startobj, dtstart, force)
     else:
-        prt_elapsed(startobj)
+        common.prt_elapsed(startobj)
 
     # Set (if not started) or reset (if start is forced) starting time
     if not startobj.started() or force:

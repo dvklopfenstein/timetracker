@@ -16,8 +16,7 @@ from datetime import date
 from datetime import timedelta
 #from timeit import default_timer  # PRT
 from pytimeparse2 import parse as pyt2_parse_secs
-from dateparser import parse as dateparser_parserdt
-from dateparser.conf import SettingValidationError
+import dateparser
 from timetracker.epoch.calc import RoundTime
 from timetracker.epoch.stmach import search_texttime
 from timetracker.consts import FMTDT_H
@@ -88,12 +87,12 @@ def _conv_datetime(timestr, defaultdt):
     try:
         settings = None if defaultdt is None else {'RELATIVE_BASE': defaultdt}
 #        tic = default_timer()  # PRT
-        dto = dateparser_parserdt(timestr, settings=settings)
+        dto = dateparser.parse(timestr, settings=settings)
 #        print(f'{timedelta(seconds=default_timer()-tic)} dateparser   parse({timestr})')  # PRT
 #        if dto is None:  # PRT
 #            print(f'ERROR: text({timestr}) could not be converted to a datetime object')  # PRT
         return dto
-    except (ValueError, TypeError, SettingValidationError) as err:
+    except (ValueError, TypeError, dateparser.conf.SettingValidationError) as err:
         print(f'ERROR FROM python-dateparser: {err}')
     print(f'"{timestr}" COULD NOT BE CONVERTED TO A DATETIME BY dateparsers')
     return None

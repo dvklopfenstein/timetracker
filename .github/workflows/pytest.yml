@@ -19,7 +19,7 @@ jobs:
         discussions: none
         packages: none
         pages: none
-        pull-requests: none
+        pull-requests: read
         security-events: none
         statuses: none
     strategy:

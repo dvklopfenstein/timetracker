@@ -7,11 +7,11 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
+    # permissions:
       # actions: none
       # attestations: none
       # checks: none
-      contents: read|write
+      # contents: read|write
       # deployments: none
       # id-token: write|none
       # issues: none
@@ -22,8 +22,6 @@ jobs:
       # pull-requests: read
       # security-events: none
       # statuses: none
-    permissions:
-      contents: read
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]

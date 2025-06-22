@@ -7,18 +7,18 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-      permissions:
+      #permissions:
         # actions: none
         # attestations: none
         # checks: none
-        contents: read
+        #contents: read
         # contents: read|write
         # deployments: none
         # id-token: write|none
         # issues: none
         # models: read|none
         # discussions: none
-        packages: read
+        #packages: read
         # pages: none
         # pull-requests: read
         # security-events: none

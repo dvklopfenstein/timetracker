@@ -18,6 +18,8 @@ extra_css:
     - assets/colors.css
     - assets/theme.css
     - assets/highlight.css
+extra_templates:
+  - sitemap.xml
 markdown_extensions:
   - admonition
 repo_url: https://github.com/dvklopfenstein/timetracker/

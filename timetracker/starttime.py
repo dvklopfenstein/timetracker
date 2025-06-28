@@ -3,13 +3,11 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from os import remove
+import os
 import os.path as op
-from os.path import exists
 import datetime
-
 from timetracker import consts
-from timetracker.cfg.utils import get_username
+
 
 # 2025-01-21 17:09:47.035936
 
@@ -18,15 +16,15 @@ class Starttime:
 
     min_trigger = datetime.timedelta(hours=10)
 
-    def __init__(self, dircfg, project=None, name=None):
+    def __init__(self, dircfg, project, name):
         self.dircfg  = op.abspath(consts.DIRTRK) if dircfg is None else op.normpath(dircfg)
-        self.project = op.basename(op.dirname(self.dircfg)) if project is None else project
-        self.name = get_username(name) if name is None else name
-        self.filename = op.join(self.dircfg, f'start_{self.project}_{self.name}.txt')
+        self.project = project
+        self.name = name
+        self.filename = op.join(self.dircfg, f'start_{project}_{name}.txt')
 
     def started(self):
         """Return True if the timer is starte, False if not"""
-        return exists(self.filename)
+        return op.exists(self.filename)
 
     def wr_starttime(self, starttime, activity=None, tags=None):
         """Write the start time into a ./timetracker/start_*.txt"""
@@ -44,14 +42,14 @@ class Starttime:
     def get_desc(self, note=' set'):
         """Get a string describing the state of an instance of the CfgProj"""
         return (
-            f'CfgProj {note} {int(exists(self.filename))} '
+            f'CfgProj {note} {int(op.exists(self.filename))} '
             f'fname start {self.filename}')
 
     def rm_starttime(self):
         """Remove the starttime file, thus resetting the timer"""
         fstart = self.filename
-        if exists(fstart):
-            remove(fstart)
+        if op.exists(fstart):
+            os.remove(fstart)
 
     def read_starttime(self):
         """Read the starttime"""

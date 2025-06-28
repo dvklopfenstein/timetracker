@@ -7,6 +7,22 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
+      #permissions:
+        # actions: none
+        # attestations: none
+        # checks: none
+        #contents: read
+        # contents: read|write
+        # deployments: none
+        # id-token: write|none
+        # issues: none
+        # models: read|none
+        # discussions: none
+        #packages: read
+        # pages: none
+        # pull-requests: read
+        # security-events: none
+        # statuses: none
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]

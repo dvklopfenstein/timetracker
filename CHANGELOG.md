@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-06-28 v0.8a0**](#release-2025-06-28-v08a0) Documentation; minor speed; simplify stop defaults
 * [**Release 2025-06-21 v0.7a0**](#release-2025-06-21-v07a0) Much added functionality for invoicing
 * [**Release 2025-05-27 v0.6a0**](#release-2025-05-27-v06a0) Added functions to collect various groups of csv files
 * [**Release 2025-05-18 v0.5a7**](#release-2025-05-18-v05a7) Add starttime to `report`; Bug fix in `cancel`
@@ -32,6 +33,10 @@
 
 ## Unreleased
 
+## Release 2025-06-28 v0.8a0
+* CHANGED Starttime object for minor import speed improvement
+* `trk stop -m msg` message be specified 
+
 ## Release 2025-06-21 v0.7a0
 * ADDED command, `trk invoice`
 * ADDED command option, `-b` or `--billable` to `trk stop`
@@ -40,6 +45,7 @@
   will be printed in the invoice
 * ADDED `trk stop -b` or `trk stop --billable` to add 'Billable' tag with minimum typing
 * ADDED `--no-git-add` and `-A` options to the `trk init` command
+* CHANGED speed to 100x faster for parsing free text into datetime objects
 * CHANGED "Run `trk init`" message so it is clearer that no trk command
   will be run until the project is initialized
 * CHANGED imports to improve speed

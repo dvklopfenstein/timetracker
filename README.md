@@ -6,6 +6,12 @@
 <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg" alt="DOI"> |
 <img src="https://img.shields.io/github/license/dvklopfenstein/timetracker" alt="License">
 </h3>
+<pre align="center" style="font-family: monospace; font-size: larger; border: 1px solid #ccc; padding: 10px; display: inline-block;">
+┌────────────────────────────┐
+│ 🕒 Timetracker CLI Tool    │
+│ Track time → CSV → pandas  │
+└────────────────────────────┘
+</pre>
 </p>
 
 ---

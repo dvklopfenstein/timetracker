@@ -1,4 +1,5 @@
 MAKEFLAGS := --no-print-directory
+
 PYTHON := python3
 CSV := /home/dvklo/timetrackers/timetracker_trk_dvklo.csv
 

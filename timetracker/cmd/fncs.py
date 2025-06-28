@@ -23,6 +23,10 @@ def _cli_run_projects(fcfgloc, args):
     from timetracker.cmd.projects  import cli_run_projects
     return cli_run_projects(fcfgloc, args)
 
+def _cli_run_running(fcfgloc, args):
+    from timetracker.cmd.running  import cli_run_running
+    return cli_run_running(fcfgloc, args)
+
 def _cli_run_cancel(fcfgloc, args):
     from timetracker.cmd.cancel    import cli_run_cancel
     return cli_run_cancel(fcfgloc, args)
@@ -78,6 +82,7 @@ FNCS = {
     #'tag'      : _cli_run_tag,
     'activity' : _cli_run_activity,
     'projects' : _cli_run_projects,
+    'running' : _cli_run_running,
     #'csvloc'   : _cli_run_csvloc,
 }
 

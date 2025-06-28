@@ -21,7 +21,7 @@ one repo at a time from the [CLI](https://blog.iron.io/pros-and-cons-of-a-comman
 
 * Time is saved in
 [pandas](https://pandas.pydata.org/pandas-docs/stable/index.html)-friendly
-[CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files.
+plain text [CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations) files.
 
 * CSV files for each project can be combined into a single CSV file for analysis and plotting.
 

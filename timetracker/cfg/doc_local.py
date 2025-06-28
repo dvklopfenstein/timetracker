@@ -81,18 +81,6 @@ class DocProj:
         pf1 = len(bname) - pc1 - 1
         return fcsv[pc0+pf0:-pf1]
 
-    def _init_cfg_values(self, doc):
-        """Get the config values from the local config as written"""
-        project = get_ntvalue(doc, 'project')
-        csv_filename = get_ntvalue(doc, 'csv', 'filename')
-        global_config_filename = get_ntvalue(doc, 'global_config', 'filename')
-        return project.value, \
-               csv_filename.value, \
-               global_config_filename.value, \
-               {'project': project.error,
-                'csv_filename': csv_filename.error,
-                'global_config_filename': global_config_filename.error}
-
     def timer_started(self, username):
         """Return True if the timer is started, False otherwise"""
         if (startobj := self.get_startobj(username)):
@@ -106,6 +94,18 @@ class DocProj:
         return None
 
     ##-------------------------------------------------------------
+    def _init_cfg_values(self, doc):
+        """Get the config values from the local config as written"""
+        project = get_ntvalue(doc, 'project')
+        csv_filename = get_ntvalue(doc, 'csv', 'filename')
+        global_config_filename = get_ntvalue(doc, 'global_config', 'filename')
+        return project.value, \
+               csv_filename.value, \
+               global_config_filename.value, \
+               {'project': project.error,
+                'csv_filename': csv_filename.error,
+                'global_config_filename': global_config_filename.error}
+
     def _get_csvfilename_proj_user(self, username, dirhome):
         """Read a config file and load it into a TOML document"""
         fcsvpat = self._get_csvfilename_proj(dirhome)

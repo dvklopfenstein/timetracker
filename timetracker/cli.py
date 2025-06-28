@@ -18,7 +18,6 @@ from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
-from timetracker import __version__
 from timetracker.cmd.fncs import FNCS
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
 from timetracker.cfg.utils import get_username
@@ -100,6 +99,7 @@ class Cli:
         if args.version:
             # pylint: disable=import-outside-toplevel
             from sys import exit as sys_exit
+            from timetracker import __version__
             print(f'trk {__version__}')
             sys_exit(0)
         return args
@@ -154,6 +154,7 @@ class Cli:
         #self._add_subparser_tag(subparsers)
         #self._add_subparser_activity(subparsers)
         self._add_subparser_projects(subparsers)
+        self._add_subparser_running(subparsers)
         #help='timetracker subcommand help')
         ##self._add_subparser_files(subparsers)
         ##return parser
@@ -312,6 +313,13 @@ class Cli:
             help='Add text indicating if the project exists')
         parser.add_argument('--rm-missing', action='store_true',
             help='Removes projects from the global config that do not exist')
+        return parser
+
+    def _add_subparser_running(self, subparsers):
+        parser = subparsers.add_parser(name='running',
+            help='Show all projects whose timer is running')
+        parser.add_argument('-v', '--verbose', action='store_true',
+            help='Show project location if the timer is running')
         return parser
 
 

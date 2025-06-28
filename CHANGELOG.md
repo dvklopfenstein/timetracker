@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-06-28 v0.8a1**](#release-2025-06-28-v08a1) Added the command `trk running`
 * [**Release 2025-06-28 v0.8a0**](#release-2025-06-28-v08a0) Documentation; minor speed; simplify stop defaults
 * [**Release 2025-06-21 v0.7a0**](#release-2025-06-21-v07a0) Much added functionality for invoicing
 * [**Release 2025-05-27 v0.6a0**](#release-2025-05-27-v06a0) Added functions to collect various groups of csv files
@@ -32,6 +33,9 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-06-28 v0.8a1
+* ADDED command, `trk running` and `trk running --verbose`
 
 ## Release 2025-06-28 v0.8a0
 * CHANGED Starttime object for minor import speed improvement

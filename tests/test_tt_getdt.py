@@ -33,13 +33,14 @@ def _run(nto):
         # pylint: disable=too-many-locals
         print(f'\nTIMESTR({timestr})')
         tic = default_timer()
-        dta = reobj.search(timestr)
+        dtre = reobj.search(timestr)
         tt0 = timedelta(seconds=default_timer()-tic)
-        print(f'{tt0}    re          ({timestr}) {dta}')
+        print(f'{tt0}    re          ({timestr}) {dtre}')
 
         tic = default_timer()
         dta = _get_dt_ampm(timestr, NOW)
         assert dta == expdct['dt'], f'ACT != EXP\nTXT({timestr})\nACT({dta})\nEXP({expdct["dt"]})'
+        #assert dta == dtre, f'RE != ME\nTXT({timestr})\nRE({dtre})\nME({dta})'
         tta = timedelta(seconds=default_timer()-tic)
         print(f'{tta}    _get_dt_ampm({timestr}) {dta}')
 
@@ -86,7 +87,7 @@ class _ReDatetime:
     # pylint: disable=too-few-public-methods
 
     # pylint: disable=line-too-long
-    cmp_time = re_compile(r'((?P<hour>\d{1,2})(:(?P<minute>\d{1,2}))?(:(?P<second>\d{1,2}))?\s*(?P<AM_PM>[aApP][mM])?)')
+    cmp_time = re_compile(r'((?<![-\d/])(?P<hour>\d{1,2})(?![-\d/])(:(?P<minute>\d{1,2}))?(:(?P<second>\d{1,2}))?\s*(?P<AM_PM>[aApP][mM])?)')
     cmp_date = re_compile(r'((?P<year>\d{4})[-/_]?)?(?P<month>\d{1,2})[-/_](?P<day>\d{1,2})')
 
     def search(self, timestr):
@@ -101,7 +102,8 @@ class _ReDatetime:
         dct_ymd = self._get_ymd(mtch_date)
         dct = {**dct_ymd, **dct_hms}
         if (m := mtch_time.group('AM_PM')) is not None:
-            self._ampm(dct, m)
+            if not self._ampm(dct, m):
+                return None
         print("SEARCH DATETIME:", dct)
         if dct:
             try:
@@ -123,17 +125,18 @@ class _ReDatetime:
 
     def _ampm(self, dct, ampm):
         if ampm is None:
-            return
+            return True
         ampm = ampm.upper()
         if ampm == 'PM':
             if 0 <= (hour := dct['hour']) < 12:
                 dct['hour'] = hour + 12
             elif hour != 12:
-                return
+                return False
         else:
             assert ampm == 'AM', dct
             if dct['hour'] == 12:
                 dct['hour'] = 0
+        return True
 
     def _get_ymd(self, mtch):
         if mtch:

@@ -23,19 +23,19 @@ def test_dateparser():
     print(f'{base}: RELATIVE_BASE Wed Jan 1, 2025')
     print(f'{date}: "{timestr}"')
 
-    # UNCOMMENT WHEN FIX IS RELEASED:
+    # UNCOMMENT WHEN dateparser FIX IS RELEASED:
     #   https://github.com/scrapinghub/dateparser/pull/1274
-    ##assert date == datetime(2024, 12, 29, 9), (
-    ##    f'GitHub issue https://github.com/scrapinghub/dateparser/issues/1266\n'
-    ##    f'{CALSTR}\n'
-    ##    'If today  is Wed, Jan 1, 2025;\n'
-    ##    f'then "{timestr}" is Sun, Dec 29, 2024\n\n'
-    ##    f'EXP: "2024-12-29 09:00:00"\n'
-    ##    f'ACT: "{date}"'
-    ##    )
+    assert date == datetime(2024, 12, 29, 9), (
+        f'GitHub issue https://github.com/scrapinghub/dateparser/issues/1266\n'
+        f'{CALSTR}\n'
+        'If today  is Wed, Jan 1, 2025;\n'
+        f'then "{timestr}" is Sun, Dec 29, 2024\n\n'
+        f'EXP: "2024-12-29 09:00:00"\n'
+        f'ACT: "{date}"'
+        )
 
-    # THIS IS INCORRECT, BUT THAT IS WHAT COMES OUT
-    assert date == datetime(2024, 1, 29, 9)
+    # THIS IS INCORRECT, BUT THAT IS WHAT COMES OUT WITH OLD dateparser
+    #assert date == datetime(2024, 1, 29, 9)
 
 
 if __name__ == '__main__':

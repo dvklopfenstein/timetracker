@@ -35,7 +35,7 @@
 
 ## Release 2025-06-28 v0.8a0
 * CHANGED Starttime object for minor import speed improvement
-* `trk stop -m msg` message be specified 
+* CHANGED `trk stop -m msg` message be specified on command line
 
 ## Release 2025-06-21 v0.7a0
 * ADDED command, `trk invoice`

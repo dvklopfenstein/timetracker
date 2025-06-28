@@ -9,7 +9,6 @@ __author__ = "DV Klopfenstein, PhD"
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT dt')  # PRT
 
 from sys import argv as sys_argv
-#from sys import exit as sys_exit
 from os import getcwd
 #from os.path import exists
 #from logging import debug
@@ -27,8 +26,6 @@ from timetracker.cfg.finder import CfgFinder
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER CfgFinder')  # PRT
 #from timetracker.cmd.none import cli_run_none
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER cli_run_none')  # PRT
-from timetracker.proc import get_log1
-#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER get_log1')  # PRT
 
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
 
@@ -105,9 +102,6 @@ class Cli:
             from sys import exit as sys_exit
             print(f'trk {__version__}')
             sys_exit(0)
-        if args.command == 'stop':
-            if args.message == 'd':
-                args.message = get_log1()
         return args
 
     def _init_trksubdir(self):
@@ -122,7 +116,7 @@ class Cli:
 
     @staticmethod
     def _get_cmds():
-        """In ArgumentParser, usage=f'%(prog)s [-h] {self._get_cmds()}'"""
+        """In argumentparser, usage=f'%(prog)s [-h] {self._get_cmds()}'"""
         # parser.add_subparsers(dest='command', metavar=self._get_cmds(), help=SUPPRESS)
         cmds = ','.join(k for k in FNCS if k != 'invoice')
         return f'{{{cmds}}}'
@@ -203,19 +197,11 @@ class Cli:
                  'elapsed time(ex: 10min, -10min, 4hr)')
         return parser
 
-    def _get_last_log(self):
-        if self.finder.dirgit:
-            rsp = get_log1()
-            if rsp.stdout != '':
-                return f'({rsp.stdout}); invoked w/`-m d`'
-        return None
-
     def _add_subparser_stop(self, subparsers):
         parser = subparsers.add_parser(name='stop',
             help='Stop timetracking',
             formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument('-m', '--message', required=True, metavar='TXT',
-            default=self._get_last_log(),
             help='Message describing the work done in the time unit')
         parser.add_argument('-k', '--keepstart', action='store_true', default=False,
             #help='Resetting the timer is the normal behavior; Keep the start time this time')

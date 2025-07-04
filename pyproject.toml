@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "timetracker-csv"
 description = "Pandas-friendly time tracking from the CLI"
-version = "0.8.1"
+version = '0.8.2'
 license = "AGPL-3.0-or-later"
 authors = [
   {name = 'DV Klopfenstein, PhD', email = 'dvklopfenstein@protonmail.com'},
@@ -42,10 +42,12 @@ dependencies = [
 # https://pypi.org/classifiers/
 classifiers=[
   'Intended Audience :: Science/Research',
+  'Intended Audience :: Developers',
+  'Intended Audience :: End Users/Desktop',
   'Topic :: Office/Business :: Financial :: Spreadsheet',
   'Programming Language :: Python',
   'Environment :: Console',
-  'Development Status :: 2 - Pre-Alpha',
+  'Development Status :: 5 - Production/Stable',
   'Programming Language :: Python :: 3.9',
   'Programming Language :: Python :: 3.10',
   'Programming Language :: Python :: 3.11',
@@ -66,6 +68,9 @@ timestr = "timetracker.epoch.cli:main"
 [project.urls]
 Homepage = "https://github.com/dvklopfenstein/timetracker"
 Issues = "https://github.com/dvklopfenstein/timetracker/issues"
+Changelog = "https://github.com/dvklopfenstein/timetracker/blob/main/CHANGELOG.md"
+Documentation = "https://dvklopfenstein.github.io/timetracker/"
+PiPy = "https://pypi.org/project/timetracker-csv/"
 
 
 [tool.pytest.ini_options]

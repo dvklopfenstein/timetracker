@@ -2,7 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
-* **Release 2025-06-30 v0.8.1** Software release
+* **Release 2025-07-04 v0.8.3** Clean README
 * [**Release 2025-06-28 v0.8a1**](#release-2025-06-28-v08a1) Added the command `trk running`
 * [**Release 2025-06-28 v0.8a0**](#release-2025-06-28-v08a0) Documentation; minor speed; simplify stop defaults
 * [**Release 2025-06-21 v0.7a0**](#release-2025-06-21-v07a0) Much added functionality for invoicing
@@ -34,6 +34,9 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-06-28 v0.8a1 - 2025-07-04 v0.8a3
+* CHANGED: README cleanup
 
 ## Release 2025-06-28 v0.8a1
 * ADDED command, `trk running` and `trk running --verbose`

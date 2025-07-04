@@ -2,9 +2,9 @@
 <h1 align="center">Timetracker-csv</h1>
 <h3 align="center">Pandas-friendly time tracking from the CLI, repo by repo</h3>
 <h3 align="center">
-<img src="https://img.shields.io/pypi/v/timetracker-csv" alt="PyPI - Version"> |
-<img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14803225.svg" alt="DOI"> |
-<img src="https://img.shields.io/github/license/dvklopfenstein/timetracker" alt="License">
+<a href="https://pypi.org/project/timetracker-csv"><img src="https://img.shields.io/pypi/v/timetracker-csv" alt="PyPI - Version"></a> |
+<a href="https://doi.org/10.5281/zenodo.14803226"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14803226.svg" alt="DOI"></a> |
+<a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/github/license/dvklopfenstein/timetracker" alt="License"></a>
 </h3>
 <pre align="center" style="font-family: monospace; font-size: larger; border: 1px solid #ccc; padding: 10px; display: inline-block;">
 ┌────────────────────────────┐

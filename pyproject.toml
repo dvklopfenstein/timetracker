@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "timetracker-csv"
 description = "Pandas-friendly time tracking from the CLI"
-version = '0.8.2'
+version = '0.8.3'
 license = "AGPL-3.0-or-later"
 authors = [
   {name = 'DV Klopfenstein, PhD', email = 'dvklopfenstein@protonmail.com'},
@@ -45,6 +45,8 @@ classifiers=[
   'Intended Audience :: Developers',
   'Intended Audience :: End Users/Desktop',
   'Topic :: Office/Business :: Financial :: Spreadsheet',
+  'Topic :: Office/Business :: News/Diary',
+  'Topic :: Scientific/Engineering',
   'Programming Language :: Python',
   'Environment :: Console',
   'Development Status :: 5 - Production/Stable',

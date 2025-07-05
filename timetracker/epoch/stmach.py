@@ -73,8 +73,11 @@ class _SmHhSsAm:
                 self.work.append(letter)
                 self.stnum = '3'
                 return 'year'
-            assert f'UNEXPECTED HOUR OR YEAR DIGIT({letter})'
+            #print(f'UNEXPECTED HOUR OR YEAR DIGIT({letter})')
             return 'start'
+        return self._dfa_nondigits(letter)
+
+    def _dfa_nondigits(self, letter):
         assert self.stnum in {'1', '2'}
         val = int(''.join(self.work))
         # Process non-digit
@@ -82,7 +85,12 @@ class _SmHhSsAm:
             return self._run_hour_month(val, 'hour', 0, 23, 'minute')
         if letter in {'-', '/', '_'}:
             return self._run_hour_month(val, 'month', 1, 12, 'day')
-        return self._run_hour_month(val, 'hour', 0, 23, self._run_ap(letter))
+        if letter is None:
+            return self._run_hour_month(val, 'hour', 0, 23, 'start')
+        if (nxt := self._run_ap(letter)) == 'AM/PM':
+            return self._run_hour_month(val, 'hour', 0, 23, nxt)
+        self.errors.append(letter)
+        return 'start'
 
     def _dfa_min(self, letter):
         if self._run_onetwodigit(letter):
@@ -230,6 +238,8 @@ def search_texttime(txt):
     for letter in txt:
         stval = smo.run(stval, letter)
     smo.run(stval, None)
+    #print(f'ERRORS:  {smo.errors}')
+    #print(f'CAPTURE: {smo.capture}')
     if not smo.errors:
         smo.finish()
         return smo.capture

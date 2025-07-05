@@ -2,7 +2,7 @@
 """Run epoch.cli using dateparser, rather than dateutil"""
 
 from logging import basicConfig, DEBUG
-from timetracker.epoch.cli import main
+from timetracker.epoch.cli.timestr import main
 basicConfig(level=DEBUG)
 
 

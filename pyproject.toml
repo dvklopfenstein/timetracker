@@ -64,7 +64,8 @@ classifiers=[
 
 [project.scripts]
 trk     = "timetracker.cli:main"
-timestr = "timetracker.epoch.cli:main"
+timestr = "timetracker.epoch.cli.timestr:main"
+timecalc = "timetracker.epoch.cli.calc:main"
 
 
 [project.urls]
@@ -93,4 +94,5 @@ packages = [
   'timetracker.cmd',
   'timetracker.cfg',
   'timetracker.epoch',
+  'timetracker.epoch.cli',
 ]

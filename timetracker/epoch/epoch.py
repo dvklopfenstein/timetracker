@@ -76,12 +76,22 @@ def get_now():
 
 def get_dtz(elapsed_or_dt, dta, defaultdt=None):
     """Get stop datetime, given a start time and a specific or elapsed time"""
-#    _get_dt_ampm(elapsed_or_dt, defaultdt)  # PRT
     if (dto := _get_dt_ampm(elapsed_or_dt, defaultdt)) is not None:
         return dto
     if (dto := _get_dt_from_td(elapsed_or_dt, dta)) is not None:
+        print(f'get_dtz({elapsed_or_dt}, ...): {dto}')
         return dto
     return _conv_datetime(elapsed_or_dt, defaultdt)
+
+def get_dt_or_td(elapsed_or_dt, defaultdt=None):
+    """Get stop datetime, given a start time and a specific or elapsed time"""
+    if (dto := _get_dt_ampm(elapsed_or_dt, defaultdt)) is not None:
+        return {'datetime':dto}
+    if (tdo := _conv_timedelta(elapsed_or_dt)) is not None:
+        return {'timedelta':tdo}
+    if (dto := _conv_datetime(elapsed_or_dt, defaultdt)) is not None:
+        return {'datetime':dto}
+    return None
 
 def _conv_datetime(timestr, defaultdt):
     try:
@@ -128,8 +138,12 @@ def _get_ymd(mtch, defaultdt):
 def _get_dt_from_td(elapsed_or_dt, dta):
     """Get a datetime object from a timedelta time string"""
     if elapsed_or_dt.count(':') != 2 and (secs := _conv_timedelta(elapsed_or_dt)):
-        return dta + timedelta(seconds=secs)
+        return get_dtb(dta, secs)
     return None
+
+def get_dtb(dta, seconds):
+    """Get a datetime object given a starting datetime and seconds elapsed"""
+    return dta + timedelta(seconds=seconds)
 
 def _conv_timedelta(timestr):
     try:

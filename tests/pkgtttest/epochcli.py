@@ -10,7 +10,7 @@ from dateutil.parser import UnknownTimezoneWarning
 from timetracker.utils import white
 from timetracker.utils import yellow
 
-from timetracker.epoch.cli import run
+from timetracker.epoch.cli.timestr import run
 from timetracker.epoch.epoch import _get_dt_from_td
 
 

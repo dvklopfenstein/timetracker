@@ -35,24 +35,25 @@ plain text [CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases
 * [Issues and feedback](https://github.com/dvklopfenstein/timetracker/issues/new/choose)
 
 ## Advantages
-* Libre Software (aka open-source)
-* Quick to set up
-* Own your data
-* NO invasive tracking **ever** of keystrokes, browser activity, mouse-clicks, etc.,
+* **Freedom**: Libre Software (aka open-source)
+* **Simple**: Quick to set up
+* **Privacy**: Own your data
+* **Anti-stalking**: NO invasive tracking ever of keystrokes, browser activity, mouse-clicks, etc.,
 as is done by multitudinous other timetracking apps
-* Human-readable ASCII data stored in CSV (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
-  * Ready for [pandas](https://pandas.pydata.org/), **the** Python Data Analysis Library for tabular data
+* **Human-and-machine-readable**: ASCII data stored in CSV (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
+  * Ready for [pandas](https://pandas.pydata.org/), the Python Data Analysis Library for tabular data
   * Editable using [many editors](https://survey.stackoverflow.co/2024/technology/#3-integrated-development-environment), including vim and Notepad++
-* Modify your data if you forget to log time
-* Quickly see the current task being recorded
-* Quickly see elapsed time spent on the current task
-* No clicking and clicking and clicking on a GUI
-* No required use of the internet or cloud-based services
-* Data supported for each time interval includes:
+* **Flexible**: Modify your data if you forget to log time
+* **Quickview**:
+  * Current task being recorded
+  * Elapsed time spent on the current task
+* **No clicking and clicking and clicking** on a GUI
+* **Go off-line**: No required use of the internet or cloud-based services
+* **Data field support**: Data supported for each time interval includes:
   * A required free-form descriptive message
   * An optional `activity` or type
-  * Any number of tags
-* Export data for import by external time-tracking viewers
+  * Any number of optional `tag`s
+* **Plays nice**: Export data for import by external time-tracking viewers
 
 ## Quickstart
 The `name` used by this time tracker is determined by the `USER` environmental variable by default.

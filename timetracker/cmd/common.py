@@ -90,7 +90,8 @@ def _prt_started_n_running(startobj, dta, hms):
     """Return a string detailing how long the timer has been running"""
     msg = startobj.str_elapsed_hms(
           hms,
-          f'Timer started on {dta.strftime(FMTDT_H)} and running')
+          (f'Timer started on {dta.strftime(FMTDT_H)} {startobj.str_info()}\n'
+           'Timer running'))
     print(msg)
 
 # ---------------------------------------------------------

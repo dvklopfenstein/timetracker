@@ -74,7 +74,12 @@ class Starttime:
 
     def str_elapsed_hms(self, hms, msg):
         """Get a string describing the elapsed time"""
-        return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+        ##return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+        return f"{msg} H:M:S {hms}"
+
+    def str_info(self):
+        """Get a string with the project, username, and csv filename"""
+        return f'on `{self.project}` by `{self.name}`'
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

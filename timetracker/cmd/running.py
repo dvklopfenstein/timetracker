@@ -7,7 +7,6 @@ from os.path import dirname
 from timetracker.cfg.cfg import Cfg
 from timetracker.cfg.doc_local import get_docproj
 from timetracker.cmd.common import str_uninitialized
-from timetracker.consts import FMTDT_H
 
 
 def cli_run_running(fnamecfg, args):
@@ -33,9 +32,9 @@ def _show_running(cfg_glb, uname, verbose):
                (startobj := doc.get_startobj(uname)) is not None and \
                 startobj.started():
                 if (dta := startobj.read_starttime()):
-                    print(startobj.str_elapsed_hms(
-                          startobj.hms_from_startfile(dta),
-                          f'Timer started on {dta.strftime(FMTDT_H)} and running'))
+                    hms = startobj.hms_from_startfile(dta)
+                    # Timer started 2025-07-15 11:56:17 AM; Running H:M:S
+                    print(f'{startobj.str_started(dta)}; {startobj.str_running(hms)}')
                     if verbose:
                         print(f'    {dirname(dirname(pcfg))}\n')
                     runcnt += 1

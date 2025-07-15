@@ -113,6 +113,7 @@ clean:
 	rm -f *.docx
 	rm -f .timetracker_starttime
 	rm -f *.cfg
+	rm -f timetrials_datatime.csv
 
 clobber:
 	make clean

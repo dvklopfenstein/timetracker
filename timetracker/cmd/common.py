@@ -88,9 +88,9 @@ def _prtmsg_basic(startobj, dta, hms, force):
 
 def _prt_started_n_running(startobj, dta, hms):
     """Return a string detailing how long the timer has been running"""
-    msg = startobj.str_elapsed_hms(
+    msg = startobj.str_elapsed_ymdhms(
           hms,
-          (f'Timer started on {dta.strftime(FMTDT_H)} {startobj.str_info()}\n'
+          (f'Timer started {dta.strftime(FMTDT_H)} {startobj.str_info()}\n'
            'Timer running'))
     print(msg)
 
@@ -101,7 +101,7 @@ def prt_elapsed(startobj, pretxt='Timer running;'):
     if (dtstart := startobj.read_starttime()) is not None:
         if (hms := startobj.hms_from_startfile(dtstart)) is not None:
             msg = f'{pretxt} started {dtstart.strftime(FMTDT_H)}; running'
-            print(startobj.str_elapsed_hms(hms, msg))
+            print(startobj.str_elapsed_ymdhms(hms, msg))
         else:
             from timetracker.msgs import str_not_running
             print(str_not_running())

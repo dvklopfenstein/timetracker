@@ -72,9 +72,26 @@ class Starttime:
         """Get the elapsed time starting from time in a starttime file"""
         return datetime.datetime.now() - dtstart if dtstart is not None else None
 
-    def str_elapsed_hms(self, hms, msg):
-        """Get a string describing the elapsed time"""
-        return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+    def str_elapsed_ymdhms(self, hms, msg):
+        """Get a string describing the elapsed time: YYYY-MM-DD HH:MM:SS"""
+        ##return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+        return f"{msg} H:M:S {hms}"
+
+    def str_started(self, dta):
+        """Get a string describing the elapsed time: HH:MM:SS"""
+        ##return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+        return dta.strftime(consts.FMTDT_H)
+
+    def str_running(self, hms, rm_useconds=True):
+        """Get a string describing the elapsed time: HH:MM:SS"""
+        ##return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
+        if rm_useconds:
+            hms = hms - datetime.timedelta(microseconds=hms.microseconds)
+        return f"H:M:S {hms} by {self.name} for {self.project}"
+
+    def str_info(self):
+        """Get a string with the project, username, and csv filename"""
+        return f'on `{self.project}` by `{self.name}`'
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

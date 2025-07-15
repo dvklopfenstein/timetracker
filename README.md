@@ -38,7 +38,7 @@ plain text [CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases
 * **Freedom**: Libre Software (aka open-source)
 * **Simple**: Quick to set up
 * **Privacy**: Own your data
-* **Anti-stalking**: NO invasive tracking ever of keystrokes, browser activity, mouse-clicks, etc.,
+* **Anti-stalking**: No invasive tracking ever of keystrokes, browser activity, mouse-clicks, etc.,
 as is done by multitudinous other timetracking apps
 * **Human-and-machine-readable**: ASCII data stored in CSV (comma-separated values) [plaintext](http://www.markwk.com/plain-text-life.html) files:
   * Ready for [pandas](https://pandas.pydata.org/), the Python Data Analysis Library for tabular data

@@ -3,10 +3,14 @@ site_url: https://dvklopfenstein.github.io/timetracker/
 docs_dir: source
 site_dir: ../../site
 theme:
+  #name: mkdocs
   name: readthedocs
   custom_dir: docs_theme
   static_templates:
       - index.html
+  #palette:
+  #  scheme: slate
+  #  primary: green
 watch:
   - source
   - docs_theme
@@ -15,6 +19,8 @@ extra_css:
     - assets/colors.css
     - assets/theme.css
     - assets/highlight.css
+#extra_templates:
+#  - sitemap.xml
 markdown_extensions:
   - admonition
 repo_url: https://github.com/dvklopfenstein/timetracker/
@@ -32,6 +38,7 @@ nav:
     - Basic Usage: usage_basic.md
     - Advanced Usage: usage_advanced.md
     - Pandas: pandas.md
+    - Invoicing: invoicing.md
   - 'Reference':
     - Global configuration File: config_global.md
   - 'Community':

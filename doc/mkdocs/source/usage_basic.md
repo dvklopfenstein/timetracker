@@ -4,22 +4,19 @@ License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
 -->
 
 # Basic Usage #
-**Timetracker-csv** tracks time one project repository at a time.
+**Timetracker-csv** tracks time one project repository (repo) at a time.
 
 For a list of **timetracker-csv** commands, enter `trk --help`.
 
 ## Projects ##
-A project repository is a directory that contains
-project files and project sub-directories.
-
 **Timetracker-csv** works seemlessly
 with projects that are version-managed with `git`.
 But it also works with any project.
 
-If you use `git`, then each git-managed project repository
+If you use `git`, then each git-managed project repository (repo)
 will also be a trk-managed project.
 This means that time will be saved in separate
-CSV files for separate projects.
+CSV files for separate repos.
 
 Multiple CSV files can be combined
 into a single CSV file
@@ -75,7 +72,7 @@ To begin, initialize your project for timetracking:
 $ trk init
 Ran `git add .timetracker/config .timetracker/.gitignore`
 Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
-Added project to the global timetracker config: /home/dvklo/.timetrackerconfig:
+Added project to the global timetracker config: /home/bez/.timetrackerconfig:
   project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
 ```
 
@@ -174,7 +171,6 @@ $ timestr "2025-03-01T15:55-04:00"
 ```
 
 ### Track your time
-
 Use the `start` and `stop` commands to record time:
 ```sh
 $ trk start --at 9am
@@ -216,6 +212,45 @@ Mon  2025-03-31  02:30    05:00  Trained apprentices in decorative art
 Mon  2025-03-31  00:30    05:30  Began crafting a chest from Acacia wood to store crucial docs
 Mon  2025-03-31  02:00    07:30  Covered chest in gold
 ```
+
+## Show running timers
+Show all timers that are currently running in either
+the default concise format or the verbose format.
+
+### Concise format
+Bez is the researcher whose username is `bez`.
+Bez is currently working on three projects:
+`architecture`, `stonecutting`, and `cabinetry`.
+
+The command, `trk running` will show
+the day and time that the timer was started (`Tue 2025-07-15 11:56:17 AM`) and
+the elapsed time in hours, minutes, and seconds (`H:M:S 1:04:45`).
+
+```sh
+$ trk running
+Began Tue 2025-07-15 11:56:17 AM -> H:M:S 1:04:45 by bez for architecture
+Began Tue 2025-07-15 11:35:40 AM -> H:M:S 1:25:22 by bez for stonecutting
+Began Tue 2025-07-15 12:00:00 PM -> H:M:S 1:01:03 by bez for cabinetry
+3 of 37 projects have running timers; listed in: /home/bez/.timetrackerconfig
+```
+
+### Verbose format
+Using `--verbose` will show the directory for each project that has a running timer.
+In this example, each project directory is in the `/home/bez/projs/` directory.
+```sh
+$ architecture running -v
+Began Tue 2025-07-15 11:56:17 AM -> H:M:S 1:06:35 by bez for architecture
+    /home/bez/projs/architecture
+
+Began Tue 2025-07-15 11:35:40 AM -> H:M:S 1:27:12 by bez for stonecutting
+    /home/bez/projs/stonecutting
+
+Began Tue 2025-07-15 12:00:00 PM -> H:M:S 1:02:53 by bez for cabinetry
+    /home/bez/projs/cabinetry
+
+3 of 37 projects have running timers; listed in: /home/bez/.timetrackerconfig
+```
+
 
 ## Activities
 There is one `Activity` column in each CSV file.

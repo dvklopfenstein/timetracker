@@ -3,6 +3,9 @@ MAKEFLAGS := --no-print-directory
 PYTHON := python3
 CSV := ~/timetrackers/timetracker_trk_dvklo.csv
 
+dox:
+	find doc/mkdocs
+
 install:
 	pip install .
 
@@ -69,9 +72,6 @@ csv:
 
 hours:
 	trk --trk-dir $(DIRTRK) hours
-
-dox:
-	find doc/mkdocs
 
 	
 files:

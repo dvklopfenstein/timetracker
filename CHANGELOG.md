@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-07-15 v0.8a4**](#release-2025-07-15-v08a4) Made options and output more concise
 * **Release 2025-07-04 v0.8.3** Clean README
 * [**Release 2025-06-28 v0.8a1**](#release-2025-06-28-v08a1) Added the command `trk running`
 * [**Release 2025-06-28 v0.8a0**](#release-2025-06-28-v08a0) Documentation; minor speed; simplify stop defaults
@@ -34,9 +35,13 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-07-15 v0.8a4
+* CHANGED `trk running` output to be more concise
 * ADDED short option '-d' to original long option '--csvdir' in command, 'trk init'
 * ADDED new script, `timecalc` that takes two of: starttime, stoptime, or timedelta and
   returns the missing datetime or timedelta
+* ADDED documentation for `trk running`
 
 ## Release 2025-06-28 v0.8a1 - 2025-07-04 v0.8a3
 * CHANGED: README cleanup and added links

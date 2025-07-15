@@ -34,7 +34,7 @@ def _show_running(cfg_glb, uname, verbose):
                 if (dta := startobj.read_starttime()):
                     hms = startobj.hms_from_startfile(dta)
                     # Timer started 2025-07-15 11:56:17 AM; Running H:M:S
-                    print(f'{startobj.str_started(dta)}; {startobj.str_running(hms)}')
+                    print(f'Began {startobj.str_started(dta)} -> {startobj.str_running(hms)}')
                     if verbose:
                         print(f'    {dirname(dirname(pcfg))}\n')
                     runcnt += 1

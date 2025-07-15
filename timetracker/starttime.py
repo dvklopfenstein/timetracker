@@ -80,12 +80,14 @@ class Starttime:
     def str_started(self, dta):
         """Get a string describing the elapsed time: HH:MM:SS"""
         ##return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
-        return f"Timer started {dta.strftime(consts.FMTDT_H)}"
+        return dta.strftime(consts.FMTDT_H)
 
-    def str_running(self, hms):
+    def str_running(self, hms, rm_useconds=True):
         """Get a string describing the elapsed time: HH:MM:SS"""
         ##return f"{msg} H:M:S {hms} for '{self.project}' ID={self.name}"
-        return f"Running H:M:S {hms} by {self.name} for {self.project}"
+        if rm_useconds:
+            hms = hms - datetime.timedelta(microseconds=hms.microseconds)
+        return f"H:M:S {hms} by {self.name} for {self.project}"
 
     def str_info(self):
         """Get a string with the project, username, and csv filename"""

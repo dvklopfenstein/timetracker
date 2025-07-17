@@ -1,6 +1,0 @@
-# TimeTracker project configuration file
-
-project = "timetracker"
-
-[csv]
-filename = "./timetracker_timetracker_$USER$.csv"

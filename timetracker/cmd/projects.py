@@ -32,10 +32,10 @@ def _show_projects(cfg_glb, show_exists=False):
         print(f'{len(proj_cfgs)} projects listed in global config: {cfg_glb.filename}')
         if not show_exists:
             for proj, pcfg in proj_cfgs:
-                print(f'    {proj:25} {dirname(pcfg)}')
+                print(f'    {proj:25} {dirname(dirname(pcfg))}')
         else:
             for proj, pcfg in proj_cfgs:
-                print(f'exists({int(exists(pcfg))})    {proj:25} {dirname(pcfg)}')
+                print(f'exists({int(exists(pcfg))})    {proj:25} {dirname(dirname(pcfg))}')
     else:
         print(f'There are no projects in {cfg_glb.filename}')
 

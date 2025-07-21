@@ -70,7 +70,7 @@ def run_stop(cfgproj, uname, csvfields, stop_at=None, **kwargs):
 def _msg_stop_complete(fcsv, delta, stoptime, quiet):
     """Finish stopping"""
     if not quiet:
-        print(f'Timetracker stopped at: {stoptime.strftime(consts.FMTDT_H)}: {stoptime}\n'
+        print(f'Timetracker stopped at: {stoptime.strftime(consts.FMTDT_H)}\n'
               f'Elapsed H:M:S {delta} appended to {get_shortest_name(fcsv)}')
 
 

@@ -50,6 +50,8 @@ The project repository (repo) name is "meetinghouse."
 $ cd /home/bez/projs/meetinghouse
 
 $ trk init --csvdir doc/
+or
+$ trk init --d doc/
 Initialized timetracker directory: /home/bez/projs/meetinghouse/.timetracker
 
 #----------------------------------------------------
@@ -58,7 +60,8 @@ $ trk start
 Timetracker started now: Mon 09:00 AM: 2025-03-24 09:00:00
 ```
 
-Initializing with the option `--csvdir doc/` will cause time units to be written to
+Initializing with the option `--csvdir doc/` (`-d doc/`)
+will cause time units to be written to
 a csv file stored in the `doc/` directory,
 rather than in the default repo root directory.
 ```sh
@@ -83,7 +86,7 @@ $ trk hours
 ## Installation
 Install with [timetracker-csv](https://pypi.org/project/timetracker-csv/) pip:
 ```sh
-$ pip install timetracker-csv
+$ pip install --upgrade timetracker-csv
 ```
 Or install from source:
 ```sh

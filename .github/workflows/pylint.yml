@@ -32,11 +32,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
+    # `pytest` is required for linting because it is imported by some tests
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade build
         pip install --upgrade setuptools[core]
         pip install --upgrade pylint
+        pip install --upgrade pytest
         pip install pytimeparse2
         pip install dateparser
         pip install python-docx

@@ -1,53 +1,52 @@
 #!/usr/bin/env python3
-"""Test Timetracker use cases"""
+"""Test Timetracker use cases.
 
-#from os import environ
-#from datetime import timedelta
-#from timeit import default_timer
-#from timetracker.consts import DIRTRK
-#from timetracker.cli import Cli
+NOTE: Package `lxml` did not load easily in cygwin, hanging in:
+      `Building wheel for lxml (pyproject.toml) ...`
+
+Therefore, `docx` (`pip install python-docx`), is optional.
+I successfully installed it in cygwin by:
+    $ git clone git@github.com:lxml/lxml.git
+    $ cd lxml
+    $ python setup.py build
+    $ python setup.py install
+
+"""
+
 from datetime import datetime
 from datetime import timedelta
-from timetracker.docx import WordDoc
+
+from timetracker.docx import write_doc
+from timetracker.docx import write_invoice
+from timetracker.cmd.invoice import _get_billable_timeslots
+
 from timetracker.csvfile import CsvFile
 from timetracker.epoch.text import get_data_formatted
 from tests.pkgtttest.cmpstr import get_filename
 
-# pylint: disable=fixme
 
+def test_docx_report():
+    """Test Timetracker report writing"""
+    print('\nTEST REPORT WRITING...')
+    filename = get_filename('docxtest_report.docx')
+    ##doc = WordDoc(get_data_formatted(_get_datadt()))
+    ##doc.write_doc(filename)
+    time_formatted = get_data_formatted(_get_datadt())
+    exp = _get_exp_worddoc()
+    assert (act := write_doc(filename, time_formatted)) == exp, f'WordDoc: EXP({exp}) != ACT({act})'
 
-def test_docx():
+def test_docx_invoice():
     """Test Timetracker use cases"""
-    filename = get_filename('docxtest.docx')
-    doc = WordDoc(get_data_formatted(_get_datadt()))
-    doc.write_doc(filename)
-    # pylint: disable=line-too-long
-    # make clobber
+    print('\nTEST INVOICE WRITING...')
+    filename = get_filename('docxtest_invoice.docx')
+    ##doc = WordDoc(get_data_formatted(_get_datadt()))
+    ##doc.write_doc(filename)
+    ##time_formatted = get_data_formatted(_get_datadt())
+    nttimeslots = _get_datadt()
+    exp = _get_exp_worddoc()
+    billable = _get_billable_timeslots(nttimeslots, hourly_rate=350)
+    assert (act := write_invoice(filename, billable)) == exp, f'WordDoc: EXP({exp}) != ACT({act})'
 
-    # trk
-    # Run `trk init` to initialize time-tracking for the project in
-
-    # trk
-    # Run `trk init` to initialize time-tracking for the project in
-
-    # trk init
-    # Initialized timetracker directory:
-
-    # trk init
-    # Trk repository already initialized:
-
-    # trk start
-    # Timetracker started Wed 03:21 PM: 2025-02-05 15:21:36.452917 for project 'timetracker' ID=username
-
-    # trk start
-    # Do `trk stop -m "task description"` to stop tracking this time unit
-
-    # trk stop
-    # usage: timetracker stop [-h] -m MESSAGE [--activity ACTIVITY] [-t [TAGS ...]]
-    # timetracker stop: error: the following arguments are required: -m/--message
-
-    # trk stop -m 'test stopped'
-    # Timer stopped; Elapsed H:M:S=0:00:19.531226 appended to timetracker_timetracker_username.csv
 
 def _get_datadt():
     # pylint: disable=line-too-long
@@ -74,5 +73,16 @@ def _get_datadt():
     ]
 
 
+def _get_exp_worddoc():
+    try:
+        # pylint: disable=import-outside-toplevel
+        # pylint: disable=unused-import
+        import docx
+        return True
+    except ModuleNotFoundError:
+        return False
+
+
 if __name__ == '__main__':
-    test_docx()
+    test_docx_report()
+    test_docx_invoice()

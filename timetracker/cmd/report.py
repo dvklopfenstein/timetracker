@@ -8,10 +8,10 @@ from timetracker.cfg.doc_local import get_docproj
 from timetracker.cmd.common import no_csv
 from timetracker.cmd.common import str_uninitialized
 from timetracker.csvfile import CsvFile
-from timetracker.docx import WordDoc
 from timetracker.epoch.text import get_data_formatted
 from timetracker.csvrun import chk_n_convert
 from timetracker.report import prt_basic
+from timetracker.docx import write_doc
 
 
 def cli_run_report(fcfgproj, args):
@@ -55,8 +55,9 @@ def run_report(fcsv, fout_docx):
         timefmtd = get_data_formatted(ntcsv.results)
         prt_basic(timefmtd)
         if fout_docx:
-            doc = WordDoc(timefmtd)
-            doc.write_doc(fout_docx)
+            ##doc = get_worddoc(timefmtd)
+            ##doc.write_doc(fout_docx)
+            write_doc(fout_docx, timefmtd)
     return ntcsv
 
 

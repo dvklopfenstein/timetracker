@@ -11,7 +11,8 @@ from timetracker.cmd.common import no_csv
 from timetracker.cmd.common import str_uninitialized
 from timetracker.epoch.calc import str_td
 from timetracker.csvfile import CsvFile
-from timetracker.docx import WordDoc
+#from timetracker.docx import WordDoc
+from timetracker.docx import write_invoice
 
 NtPaid = namedtuple('NtPaid', 'span cum_time due desc')
 
@@ -64,12 +65,13 @@ def run_invoice(fcsv, fout_docx='invoice.docx', hourly_rate=100):  #, report_all
         billable = _get_billable_timeslots(ntcsv.results, hourly_rate)
         num_billable = len(billable)
         if num_billable != 0:
-            doc = WordDoc()
-            ##doc.write_doc(fout_docx)
-            doc.write_invoice(fout_docx, billable)
+            ##doc = WordDoc()
+            ##doc.write_invoice(fout_docx, billable)
+            write_invoice(fout_docx, billable)
             print(f'WROTE: {num_billable} billable rows of {num_all} total rows: {fout_docx}')
         else:
-            print('Use `--bill-all` to get an invoice for all timeslots')
+            print('INFO: NO TIMESLOTS MARKED BILLABLE; '
+                  'Use `--bill-all` to get an invoice for all timeslots')
     return ntcsv
 
 def _get_billable_timeslots(nts, hourly_rate, currency_sym='$'):

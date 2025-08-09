@@ -90,7 +90,7 @@ $ trk hours
 ## Installation
 Install with [timetracker-csv](https://pypi.org/project/timetracker-csv/) pip:
 ```
-$ pip install timetracker-csv
+$ pip install --upgrade timetracker-csv
 ```
 Or install from source:
 ```

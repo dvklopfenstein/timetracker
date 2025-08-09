@@ -35,8 +35,9 @@ keywords = [
 dependencies = [
   'tomlkit',
   'pytimeparse2',
-  'dateparser',
-  'python-docx',
+  # 'python-docx', # OPTIONAL; lxml (does not install in some systems)
+  #                  typing_extensions
+  'dateparser',    # python-dateutil, pytz, regex, tzlocal
 ]
 
 # https://pypi.org/classifiers/
@@ -46,6 +47,7 @@ classifiers=[
   'Intended Audience :: End Users/Desktop',
   'Topic :: Office/Business :: Financial :: Spreadsheet',
   'Topic :: Office/Business :: News/Diary',
+  'Topic :: Office/Business :: Scheduling',
   'Topic :: Scientific/Engineering',
   'Programming Language :: Python',
   'Environment :: Console',

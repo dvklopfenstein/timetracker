@@ -8,7 +8,7 @@ License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
 ## Installation
 Install with [timetracker-csv](https://pypi.org/project/timetracker-csv/) pip:
 ```sh
-$ pip install timetracker-csv
+$ pip install --upgrade timetracker-csv
 ```
 Or install from source:
 ```sh

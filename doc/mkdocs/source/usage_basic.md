@@ -29,15 +29,15 @@ Comma-separated value
 files store tabular data in plain text.
 CSV files are readable by both humans and computers.
 Each time unit is stored in a single row.
-Each row contains several columns, including:
+Each row contains five columns:
 
-Name              | Example
-------------------|-----------------------------
-Start time        | 9am Monday, March 31, 2025
-Duration          | 2 hours
-One activity type | "documenting" or "coding"
-Description       | Made decorative almond tree blossoms out of gold
-Tags              | grant=ABC, grant=XYZ, art, metalwork
+Name              | Required | Example
+------------------|----------|------------------
+Start time        | required | 9am Monday, March 31, 2025
+Duration          | required | 2 hours
+One activity type | optional | "documenting" or "coding"
+Description       | required | Made decorative almond tree blossoms out of gold
+Tags              | optional | grant=ABC, grant=XYZ, art, metalwork
 
 There can be one activity per time unit.
 

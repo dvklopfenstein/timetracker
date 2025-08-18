@@ -1,17 +1,72 @@
 # Advanced usage
-Under construction...
 
 
 ## Initialize a project
-To begin, initialize your project for timetracking with `trk init`:
+To begin to track time in a git-managed repo,
+initialize your project for timetracking
+while sitting at your git root directory:
 ```sh
-# Initialize project for timetracking
+# Where am I? Present Working Directory (pwd)
+$ pwd
+/home/bez/projects/meetinghouse
+
+# Am I at the root of my git-managed repo? (yes)
+$ git rev-parse --show-toplevel
+/home/bez/projects/meetinghouse
+
+# Initialize the meetinghouse project for timetracking
 $ trk init
 Ran `git add .timetracker/config .timetracker/.gitignore`
 Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
 Added project to the global timetracker config: /home/bez/.timetrackerconfig:
   project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
 ```
+
+
+### Initializing prepares the local project for time tracking
+Initializing creates
+a local project timetracker-csv
+`config` file and a `.gitignore` file, which causes git to ignore temporary timetracker working files.
+Both files are stored in the `.timetracker` directory at the project root.
+```sh
+$ pwd
+/home/bez/projects/meetinghouse
+
+$ find .timetracker/ -type f
+.timetracker/.gitignore
+.timetracker/config
+```
+
+See the [advanced usage](usage_advanced.md#initializing-runs-git-add)
+more information about initialization and its options.
+
+
+### Initializing adds the local project to the global config file
+Initializing a timetracked project 
+adds your project into a list containing
+all of your timetracked projects
+and is stored in a global configuration file.
+
+The default global configuration file is `~/.timetrackerconfig`.
+Each item in the list of timetracked projects contains both
+the project name (e.g., `meetinghouse`) and 
+the location of that project's local config file
+(e.g., `/home/bez/projects/meetinghouse/.timetracker/config`).
+
+```sh
+# The global timetracker-csv config file contains a list of all projects
+$ cat ~/.timetrackerconfig
+projects = [
+    ["meetinghouse", "/home/bez/projects/meetinghouse/.timetracker/config"],
+    ["stonecutting",  "/home/bez/projects/stonecutting/.timetracker/config"],
+]
+```
+The list of projects 
+inside the global configuration file
+is used for tasks such as:
+
+  * Report total time spent on each project
+  * Export a single CSV file containing all time entries for all projects.
 
 ### Initializing runs `git add`
 If the project is git-managed, timetracker runs

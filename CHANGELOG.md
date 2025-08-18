@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-08-09 v0.8a5**](#release-2025-08-09-v08a5) Creating Microsoft Word docx files is now optional
 * [**Release 2025-07-15 v0.8a4**](#release-2025-07-15-v08a4) Made options and output more concise
 * **Release 2025-07-04 v0.8.3** Clean README
 * [**Release 2025-06-28 v0.8a1**](#release-2025-06-28-v08a1) Added the command `trk running`
@@ -35,6 +36,16 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-08-09 v0.8a5
+* CHANGED basic usage documentation to add a tip
+* CHANGED Simplify basic usage by docs by moving selected basic usage docs to advanced docs
+* CHANGED Creating Microsoft Word docx files is now optional:
+  * Most researchers may not want/need to create a Microsoft docx file     
+  * Makes installation easier:
+    * The `lxml` package (a requirement of `python-docx`) can be difficult to install
+* CHANGED installation instructions to include `--upgrade` due to rapid development
+* CHANGED improved readability of stdout messages
 
 ## Release 2025-07-15 v0.8a4
 * CHANGED `trk running` output to be more concise

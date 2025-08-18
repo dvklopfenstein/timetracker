@@ -28,33 +28,35 @@ Comma-separated value
 ([CSV](https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations))
 files store tabular data in plain text.
 CSV files are readable by both humans and computers.
+
+### CSV rows and columns
 Each time unit is stored in a single row.
 Each row contains five columns:
 
-Name              | Required | Example
-------------------|----------|------------------
-Start time        | required | 9am Monday, March 31, 2025
-Duration          | required | 2 hours
-One activity type | optional | "documenting" or "coding"
-Description       | required | Made decorative almond tree blossoms out of gold
-Tags              | optional | grant=ABC, grant=XYZ, art, metalwork
+Name       | Required | Example
+-----------|----------|------------------
+Start time | required | 9am Monday, March 31, 2025
+Duration   | required | 2 hours
+Activity   | optional | "documenting" or "coding"
+Description| required | Made decorative almond tree blossoms out of gold
+Tags       | optional | grant=ABC, grant=XYZ, art, metalwork
 
-There can be one activity per time unit.
+* **Start time**: Determined automatically upon running `trk start`
+* **Duration**: Calculated automatically upon running
+  `trk stop -m msg`
+* **Activity**: There can be one activity per time unit.
+* **Description**: Just as a `git commit` message is mandatory,
+  so is a `trk stop` message, which describes the work that was done in the time unit.
+* **Tags**: There can be any number of tags per time unit.
+  Tags can be of the form `key=value` or simply `value`.
 
-There can be any number of tags per time unit.
-Tags can be of the form `key=value` or simply `value`.
-
-The description of a time unit is mandatory
-(just as a `git commit` message is mandatory)
-and is specified when stopping the timer
-to describe the work that was done in the time unit.
-
+### CSV files for a single project
 There is one CSV file written per user per project.
 Therefore, a single project repository will have more than
 one CSV file if there is more than one
 person working on the project.
-Having one project CSV file per person(user) prevents
-conflicts when using `git` to commit the files.
+Having one project CSV file per person (username) prevents
+conflicts when using `git` to commit timetracking csv files.
 
 People commonly use
 [pandas](https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/01_table_oriented.html#min-tut-01-tableoriented)
@@ -130,10 +132,29 @@ unless otherwise specified by the researcher.
 $ trk start
 Timetracker started at: Mon 09:00 AM: 2025-03-31 09:00:00
 ```
+
+Just as `git` requires a message when running `git commit`,
+`trk` also requires a message when stopping the timer:
 ```sh
 $ trk stop -m "Received skills necessary for the job"
 Timer stopped at Mon 2025-03-31 11:30:00 AM
 Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+```
+
+Researchers may find it convenient to reuse a message
+for both stopping the timer and commiting files
+use the `!$` [shell variable](https://stackoverflow.com/a/5163158):
+```sh
+$ trk stop -m "Received skills necessary for the job"
+Timer stopped at Mon 2025-03-31 11:30:00 AM
+Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+
+$ git commit -a -m !$
+git commit -a -m 'Received skills necessary for the job'
+[main 8d2d5e1] Received skills necessary for the job
+8 files changed, 33 insertions(+)
+# or use the long version of the `git commit` options:
+#   $ git commit --all --message=!$
 ```
 
 ## Specify a date and time

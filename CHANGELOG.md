@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-08-18 v0.8a6**](#release-2025-08-18-v08a6) Added to documentation
 * [**Release 2025-08-09 v0.8a5**](#release-2025-08-09-v08a5) Creating Microsoft Word docx files is now optional
 * [**Release 2025-07-15 v0.8a4**](#release-2025-07-15-v08a4) Made options and output more concise
 * **Release 2025-07-04 v0.8.3** Clean README
@@ -37,9 +38,11 @@
 
 ## Unreleased
 
-## Release 2025-08-09 v0.8a5
+## Release 2025-08-18 v0.8a6
 * CHANGED basic usage documentation to add a tip
 * CHANGED Simplify basic usage by docs by moving selected basic usage docs to advanced docs
+
+## Release 2025-08-09 v0.8a5
 * CHANGED Creating Microsoft Word docx files is now optional:
   * Most researchers may not want/need to create a Microsoft docx file     
   * Makes installation easier:

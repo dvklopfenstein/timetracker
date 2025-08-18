@@ -1,0 +1,295 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/gpl-3.0.html
+-->
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="DV Klopfenstein, PhD" /><link rel="canonical" href="https://dvklopfenstein.github.io/timetracker/contributing/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Contributing to timetracker-csv - timetracker-csv</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet" />
+        <link href="../assets/colors.css" rel="stylesheet" />
+        <link href="../assets/theme.css" rel="stylesheet" />
+        <link href="../assets/highlight.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Contributing to timetracker-csv";
+        var mkdocs_page_input_path = "contributing.md";
+        var mkdocs_page_url = "/timetracker/contributing/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> timetracker-csv
+        </a>
+  
+    <div role="search">
+      <form id ="rtd-search-form" class="wy-form mkdocs-search" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+        <button class="icon icon-search" aria-label="submit"></button>
+      </form>
+    </div>
+  
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Timetracker-csv</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Quickstart</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage_basic/">Basic Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage_advanced/">Advanced Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pandas/">Pandas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../invoicing/">Invoicing</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config_global/">Global configuration File</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Community</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Contributing to timetracker-csv</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reporting-bugs">Reporting Bugs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#editing-documentation">Editing Documentation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#external-editors-and-tips-and-tricks">External editors and tips and tricks</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#submitting-feature-requests-and-ideas">Submitting feature requests and ideas</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#developing">Developing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#updating-automated-tests">Updating automated tests</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#submitting-pull-requests">Submitting pull requests</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#finding-things-to-work-on">Finding things to work on</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#a-note-for-new-programmers-and-programmers-new-to-python">A note for new programmers and programmers new to Python</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">timetracker-csv</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><!--
+Copied from https://github.com/mkdocs/mkdocs/blob/master/mkdocs/themes/readthedocs/breadcrumbs.html
+Then lightly modified for accessibility
+-->
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Community &raquo;</li>
+      <li>Contributing to timetracker-csv</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/dvklopfenstein/timetracker/edit/main/docs/contributing.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
+-->
+
+<h1 id="contributing-to-timetracker-csv">Contributing to timetracker-csv</h1>
+<p>We welcome contributions to timetracker-csv,
+whether it's through reporting bugs,
+improving the documentation,
+testing releases,
+engaging in discussion on features and bugs,
+or writing code.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#code-of-conduct">Code of Conduct</a></li>
+<li><a href="#reporting-bugs">Reporting Bugs</a></li>
+<li><a href="#editing-documentation">Editing Documentation</a></li>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#submitting-feature-requests-and-ideas">Submitting feature requests and ideas</a></li>
+<li><a href="#developing">Developing timetracker-csv</a></li>
+</ul>
+<h2 id="code-of-conduct">Code of Conduct</h2>
+<p>Before starting, please read the
+<a href="https://github.com/dvklopfenstein/timetracker/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>.</p>
+<h2 id="reporting-bugs">Reporting Bugs</h2>
+<p>Please report bugs by
+<a href="https://github.com/dvklopfenstein/timetracker/issues/new/choose">opening a new issue</a>
+and describing it as well as possible.
+Many bugs are specific to a particular operating system and Python version, so please include that information!</p>
+<h2 id="editing-documentation">Editing Documentation</h2>
+<p>If you find a typo or a mistake in the docs,
+please fix it right away and send a pull request.
+If you're unsure what to change but still see a problem, you can
+<a href="https://github.com/dvklopfenstein/timetracker/issues/new/choose">open a new issue</a>
+with the "Documentation change" type.</p>
+<p>To edit the documentation, edit the <code>docs/*.md</code> files on the <strong>main</strong> branch.
+You can see the result by running <code>make mkdoc</code> inside the project's root directory,
+then navigating your browser to <a href="http://localhost:8000">localhost:8000</a>.</p>
+<h3 id="external-editors-and-tips-and-tricks">External editors and tips and tricks</h3>
+<p>If you'd like to share a timetracker-csv command line trick that you find useful,
+you may find it worthwhile to add it to the
+<a href="../tips-and-tricks/">"Tips and Tricks" section</a>.</p>
+<h2 id="testing">Testing</h2>
+<p>Much of the work of maintaining timetracker-csv involves testing rather than coding.
+We welcome tests.</p>
+<h2 id="submitting-feature-requests-and-ideas">Submitting feature requests and ideas</h2>
+<p>If you have a feature request or idea for timetracker-csv, please
+<a href="https://github.com/dvklopfenstein/timetracker/issues/new/choose">open a new issue</a>
+and describe the goal of the feature, and any relevant use cases.
+We'll discuss the issue with you, and decide if it's a good fit for the project.</p>
+<p>When discussing new features, please keep in mind our design goals. timetracker-csv strives to
+<a href="https://en.wikipedia.org/wiki/Unix_philosophy">do one thing well</a>. To us, that means:</p>
+<ul>
+<li>being <em>nimble</em></li>
+<li>having a simple interface</li>
+<li>avoiding duplicating functionality</li>
+</ul>
+<h2 id="developing">Developing</h2>
+<p>Pull requests should be made on the <code>main</code> branch.</p>
+<h3 id="updating-automated-tests">Updating automated tests</h3>
+<p>When resolving bugs or adding new functionality,
+please add tests to prevent that functionality from breaking in the future.
+If you notice any functionality that isn't covered in the tests,
+feel free to submit a test-only pull request as well.</p>
+<p>For testing, timetracker-csv uses <a href="https://docs.pytest.org">pytest</a> for unit tests.
+All tests are in the <code>tests</code> folder.</p>
+<h3 id="submitting-pull-requests">Submitting pull requests</h3>
+<p>When you're ready, feel free to submit a pull request (PR).
+The continuous integration pipeline will
+run automated tests on your PR within a matter of minutes and
+will report back any issues
+it has found with your code across a variety of environments.</p>
+<p>The pull request template contains a checklist full of housekeeping items. Please fill them out as necessary when you submit.</p>
+<p>If a pull request contains failing tests,
+it probably will not be reviewed,
+and it definitely will not be approved.
+However, if you need help resolving a failing test, please mention that in your PR.</p>
+<h3 id="finding-things-to-work-on">Finding things to work on</h3>
+<p>You can search the
+<a href="https://github.com/dvklopfenstein/timetracker/issues">timetracker-csv GitHub issues</a> by
+<a href="https://github.com/dvklopfenstein/timetracker/labels">label</a>
+for things to work on. Here are some labels worth searching:</p>
+<ul>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/bug">bug</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/documentation">documentation</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/duplicate">duplicate</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/enhancement">enhancement</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/good%20first%20issue">good first issue</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/help%20wanted">help wanted</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/invalid">invalid</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/question">question</a></li>
+<li><a href="https://github.com/dvklopfenstein/timetracker/labels/wontfix">wontfix</a></li>
+</ul>
+<h3 id="a-note-for-new-programmers-and-programmers-new-to-python">A note for new programmers and programmers new to Python</h3>
+<p>If you have a question, please don't hesitate to ask!
+Python is known for its welcoming community and openness to novice programmers,
+so feel free to fork the code and play around with it!
+If you create something you want to share with us, please create a pull request.
+We never expect pull requests to be perfect, idiomatic, instantly mergeable code.
+We can work through it together!</p>
+<p>Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../config_global/" class="btn btn-neutral float-left" title="Global configuration File"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/dvklopfenstein/timetracker/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../config_global/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -90,6 +90,9 @@ vim_ver:
 	vim -p timetracker/__init__.py pyproject.toml CHANGELOG.md
 
 # -----------------------------------------------------------------------------
+./doc/mkdocs/source/contributing.md: CONTRIBUTING.md
+	cp $< $@
+
 clean_build:
 	rm -rf build/
 	rm -rf timetracker_csv.egg-info/
@@ -102,6 +105,7 @@ cltt:
 	rm -rf .timetracker/
 
 clean:
+	make ./doc/mkdocs/source/contributing.md
 	make clean_build
 	make clean_pycache
 	rm -f test_timetracker.csv

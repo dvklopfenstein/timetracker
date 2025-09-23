@@ -65,10 +65,34 @@ class CsvFile:
         """Write header"""
         print(','.join(self.hdrs), file=prt)
 
-    def get_next_start_datetime(self):
+    @staticmethod
+    def get_next_start_datetime(ntd, **tdkws):
         """Get the next start_datetime after the last line in a timetracker csv file"""
-        ntd = self._rd_last_line()
-        return ntd.start_datetime + ntd.duration + timedelta(seconds=1) if ntd else None
+        # https://docs.python.org/3/library/datetime.html#datetime.timedelta
+        return ntd.start_datetime + ntd.duration + timedelta(**tdkws)
+
+    def rd_last_line(self):
+        """Return the last line in the csv file"""
+        try:
+            fptr = open(self.fcsv, mode='rb')  #encoding='utf8')
+        except (PermissionError, OSError) as err:
+            print(type(err).__name__, err.args)
+        else:
+            with fptr as csvstrm:
+                try:
+                    csvstrm.seek(-2, os.SEEK_END)
+                    while csvstrm.read(1) != b'\n':
+                        csvstrm.seek(-2, os.SEEK_CUR)
+                except OSError:
+                    csvstrm.seek(0)
+                csv_line   = csvstrm.readline().decode()
+                csv_reader = csv.reader([csv_line])
+                row = next(csv_reader)
+                nts = self._get_ntdata([row])
+                if nts:
+                    assert len(nts) == 1, nts
+                    return nts[0]
+        return None
 
     # ------------------------------------------------------------------
     def _get_ntdata(self, csvlines):
@@ -109,29 +133,6 @@ class CsvFile:
                 self._chk_hdr(hdrs)
                 return self.ntrdcsv(results=fnc_csvlines(itr), error=error)
         return self.ntrdcsv(results=None, error=error)
-
-    def _rd_last_line(self):
-        """Return the last line in the csv file"""
-        try:
-            fptr = open(self.fcsv, mode='rb')  #encoding='utf8')
-        except (PermissionError, OSError) as err:
-            print(type(err).__name__, err.args)
-        else:
-            with fptr as csvstrm:
-                try:
-                    csvstrm.seek(-2, os.SEEK_END)
-                    while csvstrm.read(1) != b'\n':
-                        csvstrm.seek(-2, os.SEEK_CUR)
-                except OSError:
-                    csvstrm.seek(0)
-                csv_line   = csvstrm.readline().decode()
-                csv_reader = csv.reader([csv_line])
-                row = next(csv_reader)
-                nts = self._get_ntdata([row])
-                if nts:
-                    assert len(nts) == 1, nts
-                    return nts[0]
-        return None
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

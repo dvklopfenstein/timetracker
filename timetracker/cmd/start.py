@@ -39,13 +39,9 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
         common.prt_elapsed(startobj)
 
     # Set (if not started) or reset (if start is forced) starting time
-    if not startobj.started() or force or start_at == 'last':
+    if not startobj.started() or force:
         starttime = _get_starttime(start_at, cfgproj, kwargs)
-           # .get('now'),
-           # kwargs.get('defaultdt'),
-           # kwargs.get('dirhome'),
-           # kwargs.get(')
-        print(f'STARTTIME: {starttime}')
+        #print(f'STARTTIME: {starttime}')
         if starttime is None:
             return startobj
         startobj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
@@ -67,10 +63,17 @@ def _get_starttime(start_at, cfgproj, kwargs):
         return get_dt_at(start_at, kwargs.get('now'), kwargs.get('defaultdt'))
     fcsv = cfgproj.get_filename_csv(kwargs.get('uname'), kwargs.get('dirhome'))
     if op.exists(fcsv):
-        csvfile = CsvFile(fcsv)
-        next_startdatetime = csvfile.get_next_start_datetime()
-        return next_startdatetime if next_startdatetime else None
+        return _get_next_starttime(fcsv)
     return get_dt_at(None, kwargs.get('now'), kwargs.get('defaultdt'))
+
+def _get_next_starttime(fcsv):
+    csvfile = CsvFile(fcsv)
+    ntd = csvfile.rd_last_line()
+    if ntd:
+        #print(f'  READ: {fcsv}')
+        #print(ntd)
+        return csvfile.get_next_start_datetime(ntd, seconds=1)
+    return None
 
 def _get_msg(start_at, force):
     if force:

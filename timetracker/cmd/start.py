@@ -3,6 +3,8 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+import os.path as op
+from timetracker.csvfile import CsvFile
 from timetracker.epoch.epoch import get_dt_at
 from timetracker.cmd import common
 
@@ -13,7 +15,8 @@ def cli_run_start(fnamecfg, args):
         fnamecfg,
         args.name,
         start_at=args.at,
-        force=args.force)
+        force=args.force,
+        uname=args.name)
 
 def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
     """Initialize timetracking on a project"""
@@ -36,8 +39,13 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
         common.prt_elapsed(startobj)
 
     # Set (if not started) or reset (if start is forced) starting time
-    if not startobj.started() or force:
-        starttime = get_dt_at(start_at, kwargs.get('now'), kwargs.get('defaultdt'))
+    if not startobj.started() or force or start_at == 'last':
+        starttime = _get_starttime(start_at, cfgproj, kwargs)
+           # .get('now'),
+           # kwargs.get('defaultdt'),
+           # kwargs.get('dirhome'),
+           # kwargs.get(')
+        print(f'STARTTIME: {starttime}')
         if starttime is None:
             return startobj
         startobj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
@@ -52,6 +60,17 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
         if start_at is not None:
             print(f'Run `trk start --at {start_at} --force` to force restart')
     return startobj
+
+
+def _get_starttime(start_at, cfgproj, kwargs):
+    if start_at != 'last':
+        return get_dt_at(start_at, kwargs.get('now'), kwargs.get('defaultdt'))
+    fcsv = cfgproj.get_filename_csv(kwargs.get('uname'), kwargs.get('dirhome'))
+    if op.exists(fcsv):
+        csvfile = CsvFile(fcsv)
+        next_startdatetime = csvfile.get_next_start_datetime()
+        return next_startdatetime if next_startdatetime else None
+    return get_dt_at(None, kwargs.get('now'), kwargs.get('defaultdt'))
 
 def _get_msg(start_at, force):
     if force:

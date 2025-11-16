@@ -15,16 +15,17 @@ def cli_run_start(fnamecfg, args):
         fnamecfg,
         args.name,
         start_at=args.at,
+        last=args.last,
         force=args.force,
         uname=args.name)
 
-def _run_start(fnamecfg, name=None, start_at=None, **kwargs):
+def _run_start(fnamecfg, name=None, start_at=None, last=None, **kwargs):
     """Initialize timetracking on a project"""
     cfg = common.get_cfg(fnamecfg)
     cfgproj = cfg.cfg_loc
-    return run_start(cfgproj, name, start_at, **kwargs)
+    return run_start(cfgproj, name, start_at, last, **kwargs)
 
-def run_start(cfgproj, name=None, start_at=None, **kwargs):
+def run_start(cfgproj, name=None, start_at=None, last=None, **kwargs):
     """Initialize timetracking on a project"""
     startobj = cfgproj.get_starttime_obj(name)
     if startobj is None:
@@ -40,7 +41,7 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
 
     # Set (if not started) or reset (if start is forced) starting time
     if not startobj.started() or force:
-        starttime = _get_starttime(start_at, cfgproj, kwargs)
+        starttime = _get_starttime(start_at, last, cfgproj, kwargs)
         #print(f'STARTTIME: {starttime}')
         if starttime is None:
             return startobj
@@ -58,8 +59,9 @@ def run_start(cfgproj, name=None, start_at=None, **kwargs):
     return startobj
 
 
-def _get_starttime(start_at, cfgproj, kwargs):
-    if start_at != 'last':
+def _get_starttime(start_at, last, cfgproj, kwargs):
+    ##if start_at != 'last':
+    if not last:
         return get_dt_at(start_at, kwargs.get('now'), kwargs.get('defaultdt'))
     fcsv = cfgproj.get_filename_csv(kwargs.get('uname'), kwargs.get('dirhome'))
     if op.exists(fcsv):

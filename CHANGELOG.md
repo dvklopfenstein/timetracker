@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2025-11-17 v0.8a7**](#release-2025-11-17-v08a7) Easily start timer using the end time of the last time unit
 * [**Release 2025-08-18 v0.8a6**](#release-2025-08-18-v08a6) Added to documentation
 * [**Release 2025-08-09 v0.8a5**](#release-2025-08-09-v08a5) Creating Microsoft Word docx files is now optional
 * [**Release 2025-07-15 v0.8a4**](#release-2025-07-15-v08a4) Made options and output more concise
@@ -37,6 +38,10 @@
 # Details
 
 ## Unreleased
+
+## Release 2025-11-17 v0.8a7
+* ADDED ability to start timer 1 second after the end of the previous time slot
+  * usage: `git start --last`
 
 ## Release 2025-08-18 v0.8a6
 * CHANGED basic usage documentation to add a tip

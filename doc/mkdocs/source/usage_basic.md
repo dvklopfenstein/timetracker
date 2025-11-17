@@ -42,6 +42,8 @@ Description| required | Made decorative almond tree blossoms out of gold
 Tags       | optional | grant=ABC, grant=XYZ, art, metalwork
 
 * **Start time**: Determined automatically upon running `trk start`
+*     * The `--last` option can be used with `trk start` to automatically start the timer one second after the previous time unit ended. This is useful when you want to continue tracking time seamlessly without any gaps between sessions.
+*     * Example: `$ trk start --last`
 * **Duration**: Calculated automatically upon running
   `trk stop -m msg`
 * **Activity**: There can be one activity per time unit.

@@ -4,11 +4,12 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+import os
 from os.path import exists
 from collections import namedtuple
 from datetime import timedelta
 # https://docs.python.org/3/library/csv.html
-from csv import writer
+import csv
 
 from timetracker.csvutils import get_hdr_itr
 from timetracker.epoch.calc import dt_from_str
@@ -47,6 +48,7 @@ class CsvFile:
             with open(self.fcsv, 'w', encoding='utf8') as csvfile:
                 self.wr_hdrs(csvfile)
         # Print time information into csv
+        _writer = csv.writer
         with open(self.fcsv, 'a', encoding='utf8') as csvfile:
             # timedelta(days=0, seconds=0, microseconds=0,
             #           milliseconds=0, minutes=0, hours=0, weeks=0)
@@ -55,7 +57,7 @@ class CsvFile:
             data = [str(dta),
                     str(delta),
                     csvfields.activity, csvfields.message, csvfields.tags]
-            writer(csvfile, lineterminator='\n').writerow(data)
+            _writer(csvfile, lineterminator='\n').writerow(data)
             return data
         return None
 
@@ -63,12 +65,41 @@ class CsvFile:
         """Write header"""
         print(','.join(self.hdrs), file=prt)
 
+    @staticmethod
+    def get_next_start_datetime(ntd, **tdkws):
+        """Get the next start_datetime after the last line in a timetracker csv file"""
+        # https://docs.python.org/3/library/datetime.html#datetime.timedelta
+        return ntd.start_datetime + ntd.duration + timedelta(**tdkws)
+
+    def rd_last_line(self):
+        """Return the last line in the csv file"""
+        try:
+            fptr = open(self.fcsv, mode='rb')  #encoding='utf8')
+        except (PermissionError, OSError) as err:
+            print(type(err).__name__, err.args)
+        else:
+            with fptr as csvstrm:
+                try:
+                    csvstrm.seek(-2, os.SEEK_END)
+                    while csvstrm.read(1) != b'\n':
+                        csvstrm.seek(-2, os.SEEK_CUR)
+                except OSError:
+                    csvstrm.seek(0)
+                csv_line   = csvstrm.readline().decode()
+                csv_reader = csv.reader([csv_line])
+                row = next(csv_reader)
+                nts = self._get_ntdata([row])
+                if nts:
+                    assert len(nts) == 1, nts
+                    return nts[0]
+        return None
+
     # ------------------------------------------------------------------
     def _get_ntdata(self, csvlines):
         """Get data where start and stop are datetimes; timdelta is calculated from them"""
         nto = self.nto
         def _get_nt(row):
-            assert len(row) == 5, f'{self.fcsv} ROW[{len(row)}]: {row}'
+            assert len(row) == 5, row
             return nto(
                 start_datetime=dt_from_str(row[0]),
                 duration=td_from_str(row[1]),

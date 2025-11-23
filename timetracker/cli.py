@@ -196,6 +196,8 @@ class Cli:
             help='start tracking at a '
                  'specific(ex: 4pm, "Tue 4pm") or '
                  'elapsed time(ex: 10min, -10min, 4hr)')
+        parser.add_argument('-l', '--last', action='store_true',
+            help='start timer using the end of the last time period')
         return parser
 
     def _add_subparser_stop(self, subparsers):

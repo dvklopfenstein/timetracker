@@ -1,0 +1,258 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/gpl-3.0.html
+-->
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Track your time on multiple projects from the CLI; Task time is saved to pandas-friendly csv files" /><meta name="author" content="DV Klopfenstein, PhD" /><link rel="canonical" href="https://dvklopfenstein.github.io/timetracker/" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>timetracker-csv</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet" />
+        <link href="assets/colors.css" rel="stylesheet" />
+        <link href="assets/theme.css" rel="stylesheet" />
+        <link href="assets/highlight.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = "/timetracker/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> timetracker-csv
+        </a>
+  
+    <div role="search">
+      <form id ="rtd-search-form" class="wy-form mkdocs-search" action="./search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+        <button class="icon icon-search" aria-label="submit"></button>
+      </form>
+    </div>
+  
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="overview/">Overview</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Timetracker-csv</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="installation/">Quickstart</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="usage_basic/">Basic Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="usage_advanced/">Advanced Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="pandas/">Pandas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="invoicing/">Invoicing</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="config_global/">Global configuration File</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Community</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="contributing/">Contributing to timetracker-csv</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">timetracker-csv</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><!--
+Copied from https://github.com/mkdocs/mkdocs/blob/master/mkdocs/themes/readthedocs/breadcrumbs.html
+Then lightly modified for accessibility
+-->
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/dvklopfenstein/timetracker/edit/main/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!--
+Copyright (C) DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
+https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
+-->
+<p align="center" style="display:inline">
+<h1 align="center">Timetracker-csv</h1>
+<h3 align="center">Pandas-friendly time tracking from the CLI, repo by repo</h3>
+<h3 align="center">
+<a href="https://pypi.org/project/timetracker-csv"><img src="https://img.shields.io/pypi/v/timetracker-csv" alt="PyPI - Version"></a> |
+<a href="https://doi.org/10.5281/zenodo.14803226"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14803226.svg" alt="DOI"></a> |
+<a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/github/license/dvklopfenstein/timetracker" alt="License"></a>
+</h3>
+<pre align="center" style="font-family: monospace; font-size: larger; border: 1px solid #ccc; padding: 10px; display: inline-block;">
+┌────────────────────────────┐
+│ 🕒 Timetracker CLI Tool    │
+│ Track time → CSV → pandas  │
+└────────────────────────────┘
+</pre>
+</p>
+
+<p>Track time spent on multiple projects,
+one repo at a time from the <a href="https://blog.iron.io/pros-and-cons-of-a-command-line-interface">CLI</a>    </p>
+<p>Time is saved in
+<a href="https://pandas.pydata.org/pandas-docs/stable/index.html">pandas</a>-friendly plaintext
+<a href="https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations">CSV</a> files</p>
+<p align="center"><img src="https://github.com/dvklopfenstein/timetracker/raw/main/doc/mkdocs/source/images/stopwatch.png" alt="timetracker" width="750"/></p>
+
+<h2 id="description">Description</h2>
+<p>Timetracker is a
+lightweight, privacy-respecting CLI tool
+that logs your work sessions into
+clean, pandas-friendly CSV files.
+Whether you're juggling multiple projects or
+just want a no-fuss way to monitor your productivity,
+Timetracker keeps your data local, editable, and analysis-ready.
+* No cloud. No surveillance.
+* Human-readable logs perfect for Python and pandas workflows.
+* Quick to set up, easy to use, and fully open source.
+* Supports free-form messages, optional activity types, and tag metadata</p>
+<h2 id="quickstart">Quickstart</h2>
+<p>The username of the researcher running this timer is "bez."
+The project repository (repo) name is "meetinghouse."</p>
+<pre><code class="language-sh">#----------------------------------------------------
+# 1) Initialize a timetracker project
+$ cd /home/bez/projs/meetinghouse
+
+$ trk init --csvdir doc/
+or
+$ trk init --d doc/
+Initialized timetracker directory: /home/bez/projs/meetinghouse/.timetracker
+
+#----------------------------------------------------
+# 2) Start the timer
+$ trk start
+Timetracker started now: Mon 09:00 AM: 2025-03-24 09:00:00
+</code></pre>
+<p>Initializing with the option <code>--csvdir doc/</code> (<code>-d doc/</code>)
+will cause time units to be written to
+a csv file stored in the <code>doc/</code> directory,
+rather than in the default repo root directory.</p>
+<pre><code class="language-sh">#----------------------------------------------------
+# 3) Stop the timer
+$ trk stop -m 'Received instructions'
+Timer stopped at Mon 2025-03-24 12:00:00 PM
+Elapsed H:M:S 0:03:00 appended to doc/timetracker_meetinghouse_bez.csv
+
+#----------------------------------------------------
+# 4a) Report my time units for this project
+$ trk report
+Day  Date        Span     Total  Description
+Sun  2025-03-24  03:00    03:00  Received instructions
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - 
+# 4b) Get my total hours spent on the project:
+$ trk hours
+0:03:00 H:M:S or 3.000 hours
+</code></pre>
+<h2 id="installation">Installation</h2>
+<p>Install with <a href="https://pypi.org/project/timetracker-csv/">timetracker-csv</a> pip:</p>
+<pre><code class="language-sh">$ pip install --upgrade timetracker-csv
+</code></pre>
+<p>Or install from source:</p>
+<pre><code class="language-sh">$ git clone git@github.com:dvklopfenstein/timetracker.git
+$ cd timetracker
+$ pip install .
+</code></pre>
+<p>Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="overview/" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/dvklopfenstein/timetracker/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+      <span><a href="overview/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-11-23 17:43:17.558706+00:00
+-->

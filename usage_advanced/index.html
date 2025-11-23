@@ -1,0 +1,297 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/gpl-3.0.html
+-->
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="DV Klopfenstein, PhD" /><link rel="canonical" href="https://dvklopfenstein.github.io/timetracker/usage_advanced/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Advanced Usage - timetracker-csv</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet" />
+        <link href="../assets/colors.css" rel="stylesheet" />
+        <link href="../assets/theme.css" rel="stylesheet" />
+        <link href="../assets/highlight.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Advanced Usage";
+        var mkdocs_page_input_path = "usage_advanced.md";
+        var mkdocs_page_url = "/timetracker/usage_advanced/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> timetracker-csv
+        </a>
+  
+    <div role="search">
+      <form id ="rtd-search-form" class="wy-form mkdocs-search" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+        <button class="icon icon-search" aria-label="submit"></button>
+      </form>
+    </div>
+  
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Timetracker-csv</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Quickstart</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage_basic/">Basic Usage</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Advanced Usage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#initialize-a-project">Initialize a project</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#initializing-prepares-the-local-project-for-time-tracking">Initializing prepares the local project for time tracking</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#initializing-adds-the-local-project-to-the-global-config-file">Initializing adds the local project to the global config file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#initializing-runs-git-add">Initializing runs git add</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#restarting-the-timer">Restarting the timer</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#restarting-the-timer-with-force">Restarting the timer with force</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#starting-the-timer-at-the-end-of-the-last-time-unit">Starting the timer at the end of the last time unit</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#cancel-the-timer">Cancel the timer</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#specify-a-project-timetracking-directory">Specify a project timetracking directory</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pandas/">Pandas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../invoicing/">Invoicing</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config_global/">Global configuration File</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Community</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing to timetracker-csv</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">timetracker-csv</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><!--
+Copied from https://github.com/mkdocs/mkdocs/blob/master/mkdocs/themes/readthedocs/breadcrumbs.html
+Then lightly modified for accessibility
+-->
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Timetracker-csv &raquo;</li>
+      <li>Advanced Usage</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/dvklopfenstein/timetracker/edit/main/docs/usage_advanced.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="advanced-usage">Advanced usage</h1>
+<h2 id="initialize-a-project">Initialize a project</h2>
+<p>To begin to track time in a git-managed repo,
+initialize your project for timetracking
+while sitting at your git root directory:</p>
+<pre><code class="language-sh"># Where am I? Present Working Directory (pwd)
+$ pwd
+/home/bez/projects/meetinghouse
+
+# Am I at the root of my git-managed repo? (yes)
+$ git rev-parse --show-toplevel
+/home/bez/projects/meetinghouse
+
+# Initialize the meetinghouse project for timetracking
+$ trk init
+Ran `git add .timetracker/config .timetracker/.gitignore`
+Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
+Added project to the global timetracker config: /home/bez/.timetrackerconfig:
+  project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
+</code></pre>
+<h3 id="initializing-prepares-the-local-project-for-time-tracking">Initializing prepares the local project for time tracking</h3>
+<p>Initializing creates
+a local project timetracker-csv
+<code>config</code> file and a <code>.gitignore</code> file, which causes git to ignore temporary timetracker working files.
+Both files are stored in the <code>.timetracker</code> directory at the project root.</p>
+<pre><code class="language-sh">$ pwd
+/home/bez/projects/meetinghouse
+
+$ find .timetracker/ -type f
+.timetracker/.gitignore
+.timetracker/config
+</code></pre>
+<p>See the <a href="./#initializing-runs-git-add">advanced usage</a>
+more information about initialization and its options.</p>
+<h3 id="initializing-adds-the-local-project-to-the-global-config-file">Initializing adds the local project to the global config file</h3>
+<p>Initializing a timetracked project 
+adds your project into a list containing
+all of your timetracked projects
+and is stored in a global configuration file.</p>
+<p>The default global configuration file is <code>~/.timetrackerconfig</code>.
+Each item in the list of timetracked projects contains both
+the project name (e.g., <code>meetinghouse</code>) and 
+the location of that project's local config file
+(e.g., <code>/home/bez/projects/meetinghouse/.timetracker/config</code>).</p>
+<pre><code class="language-sh"># The global timetracker-csv config file contains a list of all projects
+$ cat ~/.timetrackerconfig
+projects = [
+    [&quot;meetinghouse&quot;, &quot;/home/bez/projects/meetinghouse/.timetracker/config&quot;],
+    [&quot;stonecutting&quot;,  &quot;/home/bez/projects/stonecutting/.timetracker/config&quot;],
+]
+</code></pre>
+<p>The list of projects 
+inside the global configuration file
+is used for tasks such as:</p>
+<ul>
+<li>Report total time spent on each project</li>
+<li>Export a single CSV file containing all time entries for all projects.</li>
+</ul>
+<h3 id="initializing-runs-git-add">Initializing runs <code>git add</code></h3>
+<p>If the project is git-managed, timetracker runs
+<code>git add .timetracker/config .timetracker/.gitignore</code>,
+which adds these timetracker files to your project's git repo:  <br />
+  * <code>.timetracker/config</code>
+  * '.timetracker/.gitignore'
+Use the <code>--no-git-add</code> option inhibit running <code>git add</code>.</p>
+<pre><code class="language-sh">$ trk init --no-git-add
+Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
+Added project to the global timetracker config: /home/bez/.timetrackerconfig:
+  project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
+</code></pre>
+<p>If you wish to "unadd" the timetracker files, do:</p>
+<pre><code class="language-sh">$ git reset .timetracker/.gitignore
+$ git reset .timetracker/config
+</code></pre>
+<h2 id="restarting-the-timer">Restarting the timer</h2>
+<h3 id="restarting-the-timer-with-force">Restarting the timer with force</h3>
+<p>To restart the timer, even if it is currently running,
+use the <code>--force</code> option with the <code>trk start</code> command.</p>
+<pre><code class="language-sh">trk 
+Timer started on Tue 2025-04-01 05:08:24 AM and running H:M:S 3:39:16.348502 for 'trk' ID=bez
+Run `trk stop -m &quot;task description&quot;` to stop tracking now and record this time unit
+
+$ trk --trk-dir ./.trkr start --at 8am --force
+Timer running; started Tue 2025-04-01 05:08:24 AM; running H:M:S 3:40:17.187956 for 'trk' ID=bez
+Timetracker reset to: Tue 08:00 AM: 2025-04-01 08:00:00
+</code></pre>
+<h3 id="starting-the-timer-at-the-end-of-the-last-time-unit">Starting the timer at the end of the last time unit</h3>
+<h2 id="cancel-the-timer">Cancel the timer</h2>
+<p>To cancel the timer, use the <code>cancel</code> command.</p>
+<pre><code class="language-sh">$ trk init
+Run `trk start` to start tracking
+
+$ trk start
+Timetracker started at: Tue 07:00 AM: 2025-04-01 07:00:00
+
+$ trk cancel
+Timer is canceled; was started Tue 2025-04-01 07:00:00 AM; running H:M:S 1:56:59.595338 for 'timetracker' ID=bez
+</code></pre>
+<h2 id="specify-a-project-timetracking-directory">Specify a project timetracking directory</h2>
+<p>Specify a project timetracking directory
+other than <code>.timetracker</code> using the <code>--trk-dir</code> option.</p>
+<pre><code class="language-sh">trk --trk-dir ./.trkr
+Timer started on Tue 2025-04-01 05:08:24 AM and running H:M:S 3:39:16.348502 for 'trk' ID=bez
+Run `trk stop -m &quot;task description&quot;` to stop tracking now and record this time unit
+</code></pre>
+<p>Copyright (C) 2025, DV Klopfenstein, PhD. All rights reserved</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../usage_basic/" class="btn btn-neutral float-left" title="Basic Usage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pandas/" class="btn btn-neutral float-right" title="Pandas">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/dvklopfenstein/timetracker/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../usage_basic/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pandas/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

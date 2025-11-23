@@ -1,0 +1,453 @@
+<!--
+Copyright (C) 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/gpl-3.0.html
+-->
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="DV Klopfenstein, PhD" /><link rel="canonical" href="https://dvklopfenstein.github.io/timetracker/usage_basic/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Basic Usage - timetracker-csv</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet" />
+        <link href="../assets/colors.css" rel="stylesheet" />
+        <link href="../assets/theme.css" rel="stylesheet" />
+        <link href="../assets/highlight.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Basic Usage";
+        var mkdocs_page_input_path = "usage_basic.md";
+        var mkdocs_page_url = "/timetracker/usage_basic/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> timetracker-csv
+        </a>
+  
+    <div role="search">
+      <form id ="rtd-search-form" class="wy-form mkdocs-search" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+        <button class="icon icon-search" aria-label="submit"></button>
+      </form>
+    </div>
+  
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Timetracker-csv</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Quickstart</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Basic Usage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#projects">Projects</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#csv-files">CSV files</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#csv-rows-and-columns">CSV rows and columns</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#csv-files-for-a-single-project">CSV files for a single project</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#initialize-a-project">Initialize a project</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#start-and-stop-the-timer">Start and stop the timer</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#specify-a-date-and-time">Specify a date and time</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#track-your-time">Track your time</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#show-running-timers">Show running timers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#concise-format">Concise format</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#verbose-format">Verbose format</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#activities">Activities</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tags">Tags</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage_advanced/">Advanced Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pandas/">Pandas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../invoicing/">Invoicing</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config_global/">Global configuration File</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Community</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing to timetracker-csv</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">timetracker-csv</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><!--
+Copied from https://github.com/mkdocs/mkdocs/blob/master/mkdocs/themes/readthedocs/breadcrumbs.html
+Then lightly modified for accessibility
+-->
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Timetracker-csv &raquo;</li>
+      <li>Basic Usage</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/dvklopfenstein/timetracker/edit/main/docs/usage_basic.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!--
+Copyright 2025 DV Klopfenstein, PhD
+License: https://www.gnu.org/licenses/agpl-3.0.en.html#license-text
+-->
+
+<h1 id="basic-usage">Basic Usage</h1>
+<p><strong>Timetracker-csv</strong> tracks time one project repository (repo) at a time.</p>
+<p>For a list of <strong>timetracker-csv</strong> commands, enter <code>trk --help</code>.</p>
+<h2 id="projects">Projects</h2>
+<p><strong>Timetracker-csv</strong> works seemlessly
+with projects that are version-managed with <code>git</code>.
+But it also works with any project.</p>
+<p>If you use <code>git</code>, then each git-managed project repository (repo)
+will also be a trk-managed project.
+This means that time will be saved in separate
+CSV files for separate repos.</p>
+<p>Multiple CSV files can be combined
+into a single CSV file
+using the <code>trk export</code> command.</p>
+<h2 id="csv-files">CSV files</h2>
+<p>Comma-separated value
+(<a href="https://www.datarisy.com/blog/understanding-csv-files-use-cases-benefits-and-limitations">CSV</a>)
+files store tabular data in plain text.
+CSV files are readable by both humans and computers.</p>
+<h3 id="csv-rows-and-columns">CSV rows and columns</h3>
+<p>Each time unit is stored in a single row.
+Each row contains five columns:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start time</td>
+<td>required</td>
+<td>9am Monday, March 31, 2025</td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>required</td>
+<td>2 hours</td>
+</tr>
+<tr>
+<td>Activity</td>
+<td>optional</td>
+<td>"documenting" or "coding"</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>required</td>
+<td>Made decorative almond tree blossoms out of gold</td>
+</tr>
+<tr>
+<td>Tags</td>
+<td>optional</td>
+<td>grant=ABC, grant=XYZ, art, metalwork</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Start time</strong>: Determined automatically upon running <code>trk start</code></li>
+<li>The <code>--last</code> option can be used with <code>trk start</code> to automatically start the timer one second after the previous time unit ended. This is useful when you want to continue tracking time seamlessly without any gaps between sessions.<ul>
+<li>Example: <code>$ trk start --last</code></li>
+</ul>
+</li>
+<li><strong>Duration</strong>: Calculated automatically upon running
+  <code>trk stop -m msg</code></li>
+<li><strong>Activity</strong>: There can be one activity per time unit.</li>
+<li><strong>Description</strong>: Just as a <code>git commit</code> message is mandatory,
+  so is a <code>trk stop</code> message, which describes the work that was done in the time unit.</li>
+<li><strong>Tags</strong>: There can be any number of tags per time unit.
+  Tags can be of the form <code>key=value</code> or simply <code>value</code>.</li>
+</ul>
+<h3 id="csv-files-for-a-single-project">CSV files for a single project</h3>
+<p>There is one CSV file written per user per project.
+Therefore, a single project repository will have more than
+one CSV file if there is more than one
+person working on the project.
+Having one project CSV file per person (username) prevents
+conflicts when using <code>git</code> to commit timetracking csv files.</p>
+<p>People commonly use
+<a href="https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/01_table_oriented.html#min-tut-01-tableoriented">pandas</a>
+to analyze and plot data contained in CSV files.</p>
+<p>Multiple CSV files can be combined
+into a single CSV file
+using the <code>trk export</code> command.</p>
+<h2 id="initialize-a-project">Initialize a project</h2>
+<p>To begin to track time in a git-managed repo,
+initialize your project for timetracking
+while sitting at your git root directory:</p>
+<pre><code class="language-sh"># Where am I? Present Working Directory (pwd)
+$ pwd
+/home/bez/projects/meetinghouse
+
+# Initialize the meetinghouse project for timetracking
+$ trk init
+Ran `git add .timetracker/config .timetracker/.gitignore`
+Initialized project directory: /home/bez/projects/meetinghouse/.timetracker
+Added project to the global timetracker config: /home/bez/.timetrackerconfig:
+  project: timetracker; config: /home/bez/projects/meetinghouse/.timetracker/config
+</code></pre>
+<h2 id="start-and-stop-the-timer">Start and stop the timer</h2>
+<p>The commands, <code>trk start</code> or <code>trk stop</code>,
+use the current time for a start-time or a stop-time
+unless otherwise specified by the researcher.</p>
+<pre><code class="language-sh">$ trk start
+Timetracker started at: Mon 09:00 AM: 2025-03-31 09:00:00
+</code></pre>
+<p>Just as <code>git</code> requires a message when running <code>git commit</code>,
+<code>trk</code> also requires a message when stopping the timer:</p>
+<pre><code class="language-sh">$ trk stop -m &quot;Received skills necessary for the job&quot;
+Timer stopped at Mon 2025-03-31 11:30:00 AM
+Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+</code></pre>
+<p>Researchers may find it convenient to reuse a message
+for both stopping the timer and commiting files
+use the <code>!$</code> <a href="https://stackoverflow.com/a/5163158">shell variable</a>:</p>
+<pre><code class="language-sh">$ trk stop -m &quot;Received skills necessary for the job&quot;
+Timer stopped at Mon 2025-03-31 11:30:00 AM
+Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+
+$ git commit -a -m !$
+git commit -a -m 'Received skills necessary for the job'
+[main 8d2d5e1] Received skills necessary for the job
+8 files changed, 33 insertions(+)
+# or use the long version of the `git commit` options:
+#   $ git commit --all --message=!$
+</code></pre>
+<h2 id="specify-a-date-and-time">Specify a date and time</h2>
+<p>Explicitly specify a start and/or stop time, with the <code>--at</code> option
+(e.g. <code>trk start --at 9am</code> and <code>trk stop --at 5:3pm</code>):</p>
+<pre><code class="language-sh">$ trk start --at 9am
+Timetracker started at: Mon 09:00 AM: 2025-03-31 09:00:00
+
+$ trk stop --at 5:30pm -m &quot;Discuss the appointment of the meetinghouse architect&quot;
+Timer stopped at Mon 2025-03-31 05:30:00 PM
+Elapsed H:M:S 8:30:00 appended to timetracker_meetinghouse_bez.csv
+</code></pre>
+<p>To preview a date and time determined from a given time string,
+use <strong>timetracker-csv</strong>'s <code>timestr</code> command:</p>
+<pre><code class="language-sh">$ date
+Mon, Mar 31, 2025  2:50:06 PM
+
+$ timestr &quot;9am monday&quot;
+2025-03-24 09:00:00        &lt;- &quot;9am monday&quot;
+
+$ timestr &quot;noon&quot;
+2025-03-31 12:00:00        &lt;- &quot;noon&quot;
+
+$ timestr &quot;23 march 2025 8:30am&quot;
+2025-03-23 08:30:00        &lt;- &quot;23 march 2025 8:30am&quot;
+
+$ timestr &quot;3/25 at 5:30pm&quot;
+2025-03-25 17:30:00        &lt;- &quot;3/25 at 5:30pm&quot;
+
+$ timestr &quot;2025-03-01T15:55-04:00&quot;
+2025-03-01 15:55:00-04:00  &lt;- &quot;2025-03-01T15:55-04:00&quot;
+</code></pre>
+<h3 id="track-your-time">Track your time</h3>
+<p>Use the <code>start</code> and <code>stop</code> commands to record time:</p>
+<pre><code class="language-sh">$ trk start --at 9am
+Timetracker started at: Mon 09:00 AM: 2025-03-31 09:00:00
+
+$ trk stop --at 11:30am -m &quot;Received skills necessary for the job&quot;
+Timer stopped at Mon 2025-03-31 11:30:00 AM
+Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+
+$ trk start --at 12:30pm
+Timetracker started at: Mon 12:30 PM: 2025-03-31 12:30:00
+
+$ trk stop --at 3pm -m &quot;Trained apprentices in decorative art&quot;
+Timer stopped at Mon 2025-03-31 03:00:00 PM
+Elapsed H:M:S 2:30:00 appended to timetracker_meetinghouse_bez.csv
+
+$ trk start --at 3pm
+Timetracker started at: Mon 03:00 PM: 2025-03-31 15:00:00
+
+$ trk stop --at 3:30pm -m &quot;Began crafting a chest from Acacia wood to store crucial docs&quot;
+Timer stopped at Mon 2025-03-31 03:30:00 PM
+Elapsed H:M:S 0:30:00 appended to timetracker_meetinghouse_bez.csv
+
+$ trk start --at 3:30pm
+Timetracker started at: Mon 03:30 PM: 2025-03-31 15:30:00
+
+$ trk stop  --at 5:30pm -m &quot;Covered chest in gold&quot;
+Timer stopped at Mon 2025-03-31 05:30:00 PM
+Elapsed H:M:S 2:00:00 appended to timetracker_meetinghouse_bez.csv
+
+$ trk hours
+7:30:00 H:M:S or 7.500 hours
+
+$ trk report
+Day  Date        Span     Total  Description
+---  ----------  -----    -----  -----------------------------------
+Mon  2025-03-31  02:30    02:30  Received skills necessary for the job
+Mon  2025-03-31  02:30    05:00  Trained apprentices in decorative art
+Mon  2025-03-31  00:30    05:30  Began crafting a chest from Acacia wood to store crucial docs
+Mon  2025-03-31  02:00    07:30  Covered chest in gold
+</code></pre>
+<h2 id="show-running-timers">Show running timers</h2>
+<p>Show all timers that are currently running in either
+the default concise format or the verbose format.</p>
+<h3 id="concise-format">Concise format</h3>
+<p>Bez is the researcher whose username is <code>bez</code>.
+Bez is currently working on three projects:
+<code>architecture</code>, <code>stonecutting</code>, and <code>cabinetry</code>.</p>
+<p>The command, <code>trk running</code> will show
+the day and time that the timer was started (<code>Tue 2025-07-15 11:56:17 AM</code>) and
+the elapsed time in hours, minutes, and seconds (<code>H:M:S 1:04:45</code>).</p>
+<pre><code class="language-sh">$ trk running
+Began Tue 2025-07-15 11:56:17 AM -&gt; H:M:S 1:04:45 by bez for architecture
+Began Tue 2025-07-15 11:35:40 AM -&gt; H:M:S 1:25:22 by bez for stonecutting
+Began Tue 2025-07-15 12:00:00 PM -&gt; H:M:S 1:01:03 by bez for cabinetry
+3 of 37 projects have running timers; listed in: /home/bez/.timetrackerconfig
+</code></pre>
+<h3 id="verbose-format">Verbose format</h3>
+<p>Using <code>--verbose</code> will show the directory for each project that has a running timer.
+In this example, each project directory is in the <code>/home/bez/projs/</code> directory.</p>
+<pre><code class="language-sh">$ architecture running -v
+Began Tue 2025-07-15 11:56:17 AM -&gt; H:M:S 1:06:35 by bez for architecture
+    /home/bez/projs/architecture
+
+Began Tue 2025-07-15 11:35:40 AM -&gt; H:M:S 1:27:12 by bez for stonecutting
+    /home/bez/projs/stonecutting
+
+Began Tue 2025-07-15 12:00:00 PM -&gt; H:M:S 1:02:53 by bez for cabinetry
+    /home/bez/projs/cabinetry
+
+3 of 37 projects have running timers; listed in: /home/bez/.timetrackerconfig
+</code></pre>
+<h2 id="activities">Activities</h2>
+<p>There is one <code>Activity</code> column in each CSV file.
+For example, to add the activity, <code>docs</code>, to a time unit do:</p>
+<pre><code class="language-sh">$ trk stop -a docs -m &quot;Document the ordered architecture for the meetinghouse&quot;
+
+# or the longer form (for shell scripts and makefiles)
+$ trk stop --activity docs -m &quot;Document meetinghouse architecture&quot;
+Timer stopped at Wed 2025-04-02 08:00:00 PM
+Elapsed H:M:S 12:00:00 appended to timetracker_meetinghouse_bez.csv
+</code></pre>
+<h2 id="tags">Tags</h2>
+<p><code>trk</code> supports multiple tags per time entry.
+Tags can be of the format, <code>key=value</code>, or simply <code>value</code>.</p>
+<p>For example, to add tags describing which metals are being crafted into various products, do:</p>
+<pre><code class="language-sh">$ trk stop -a art -t metal=gold product=lampstand -m &quot;Crafted light holders for the meetinghouse&quot;
+Timer stopped at Thu 2025-04-03 09:00:00 PM
+Elapsed H:M:S 13:00:00 appended to timetracker_meetinghouse_bez.csv
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Quickstart"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../usage_advanced/" class="btn btn-neutral float-right" title="Advanced Usage">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/dvklopfenstein/timetracker/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../usage_advanced/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

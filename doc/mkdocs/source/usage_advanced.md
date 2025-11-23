@@ -89,7 +89,9 @@ $ git reset .timetracker/config
 ```
 
 ## Restarting the timer
-To restart the timer, use the `--force` option with the `trk start` command.
+### Restarting the timer with force
+To restart the timer, even if it is currently running,
+use the `--force` option with the `trk start` command.
 ```sh
 trk 
 Timer started on Tue 2025-04-01 05:08:24 AM and running H:M:S 3:39:16.348502 for 'trk' ID=bez
@@ -99,6 +101,7 @@ $ trk --trk-dir ./.trkr start --at 8am --force
 Timer running; started Tue 2025-04-01 05:08:24 AM; running H:M:S 3:40:17.187956 for 'trk' ID=bez
 Timetracker reset to: Tue 08:00 AM: 2025-04-01 08:00:00
 ```
+### Starting the timer at the end of the last time unit
 
 ## Cancel the timer
 To cancel the timer, use the `cancel` command.

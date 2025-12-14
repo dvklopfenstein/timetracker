@@ -47,7 +47,7 @@ def run_start(cfgproj, name=None, start_at=None, last=None, **kwargs):
             return startobj
         startobj.wr_starttime(starttime, kwargs.get('activity'), kwargs.get('tag'))
         if not kwargs.get('quiet', False):
-            print(f'Timetracker {_get_msg(start_at, force)}: '
+            print(f'Timetracker {_get_msg(start_at, force, last)}: '
                   f'{starttime.strftime("%a %I:%M %p")}: '
                   f'{starttime} ')
                   #f"for project '{cfgproj.project}'")
@@ -77,10 +77,10 @@ def _get_next_starttime(fcsv):
         return csvfile.get_next_start_datetime(ntd, seconds=1)
     return None
 
-def _get_msg(start_at, force):
+def _get_msg(start_at, force, last):
     if force:
         return "start reset to"
-    return "started now" if start_at is None else "started at"
+    return "started now" if start_at is None and last is None else "started at"
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

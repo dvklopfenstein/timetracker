@@ -3,7 +3,7 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-import os.path as os_path
+import os.path as op
 from os.path import dirname
 from timetracker.consts import DIRTRK
 
@@ -32,7 +32,7 @@ class CfgFinder:
 
     def get_cfgfilename(self):
         """Get the local (aka project) config full filename"""
-        return os_path.join(self.dirtrk_pathname, 'config')
+        return op.join(self.dirtrk_pathname, 'config')
 
     def get_dircsv_default(self):
         """Get the default csv directory for use in the cli help string.
@@ -47,7 +47,7 @@ class CfgFinder:
                              +--+--+--+--
         Not using in default value
         """
-        if os_path.realpath(self.dircur) == os_path.realpath(self.dirproj):
+        if op.realpath(self.dircur) == op.realpath(self.dirproj):
             return '.'
         assert not (self.dirtrk is None and self.dirgit is None)
         return self.dirproj
@@ -58,7 +58,7 @@ class CfgFinder:
 
     def get_dircur_rel(self):
         """Get the current directory relative to the project directory"""
-        return os_path.relpath(self.dircur, self.get_dirproj())
+        return op.relpath(self.dircur, self.get_dirproj())
 
     def get_desc(self):
         """Get a description of the state of a CfgFinder instance"""
@@ -74,7 +74,7 @@ class CfgFinder:
 
     def _init_project(self):
         dirtrk = self.dirtrk_pathname if self.dirtrk is None else self.dirtrk
-        return os_path.basename(dirname(dirtrk))
+        return op.basename(dirname(dirtrk))
 
     def _init_dirtrk(self):
         """Get the project tracking directory that is or will be tracked"""
@@ -82,8 +82,8 @@ class CfgFinder:
             return self.dirtrk
         dirgit = self.get_dirgit()
         if dirgit is not None:
-            return os_path.normpath(os_path.join(dirname(dirgit), self.trksubdir))
-        return os_path.normpath(os_path.join(self.dircur, self.trksubdir))
+            return op.normpath(op.join(dirname(dirgit), self.trksubdir))
+        return op.normpath(op.join(self.dircur, self.trksubdir))
 
 
 def _get_abspathtrk(path, trksubdir):
@@ -93,19 +93,19 @@ def _get_abspathtrk(path, trksubdir):
 
 def _finddirtrk(path, trksubdir):
     """Walk up dirs until find .timetracker/ proj dir or mount dir"""
-    path = os_path.abspath(path)
-    join = os_path.join
+    path = op.abspath(path)
+    join = op.join
     trkdir = join(path, trksubdir)
-    exists = os_path.exists
+    exists = op.exists
     if exists(trkdir):
-        return os_path.normpath(trkdir), True
-    ismount = os_path.ismount
+        return op.normpath(trkdir), True
+    ismount = op.ismount
     while not ismount(path):
         trkdir = join(path, trksubdir)
         if exists(trkdir):
-            return os_path.normpath(trkdir), True
+            return op.normpath(trkdir), True
         path = dirname(path)
-    return os_path.normpath(path), False
+    return op.normpath(path), False
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

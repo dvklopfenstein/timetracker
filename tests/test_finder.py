@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Test the TimeTracker project config dir finder"""
+# https://stackoverflow.com/questions/16373510/improving-speed-of-python-module-import
 
 from os import makedirs
 from os.path import exists
@@ -12,7 +13,10 @@ from tempfile import TemporaryDirectory
 from timeit import default_timer
 from datetime import timedelta
 
+tic0 = default_timer()
 from timetracker.cfg.finder import CfgFinder
+print(f'{timedelta(seconds=default_timer()-tic0)} IMPORT CfgFinder')  # PRT
+
 from tests.pkgtttest.mkprojs import mkdirs
 from tests.pkgtttest.mkprojs import findhome
 from tests.pkgtttest.cmpstr import str_get_dirtrk
@@ -55,7 +59,7 @@ def test_finder(trksubdir='.timetracker', prt_desc=True):
         proj2wdir = mkdirs(tmp_home)
         _test_tracked1_git1(proj2wdir, trksubdir, prt_desc)
 
-
+# pylint: disable=line-too-long
 def _test_tracked0_git0(proj2wdir, trksubdir, prt_desc=True):
     """Test Finder when proj/.timetracker directory does not exist"""
     for proj, dirproj in proj2wdir.items():
@@ -66,7 +70,7 @@ def _test_tracked0_git0(proj2wdir, trksubdir, prt_desc=True):
         dircur = dirproj
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked0_git0 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None
@@ -80,7 +84,7 @@ def _test_tracked0_git0(proj2wdir, trksubdir, prt_desc=True):
         dircur = join(dirproj, 'doc')
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked0_git0 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None, str(finder)
@@ -103,7 +107,7 @@ def _test_tracked1_git0(proj2wdir, trksubdir, prt_desc=True):
         dircur = dirproj
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked1_git0 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
@@ -117,7 +121,7 @@ def _test_tracked1_git0(proj2wdir, trksubdir, prt_desc=True):
         dircur = join(dirproj, 'doc')
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked1_git0 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
@@ -138,7 +142,7 @@ def _test_tracked0_git1(proj2wdir, trksubdir, prt_desc=True):
         dircur = dirproj
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked0_git1 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None
@@ -153,7 +157,7 @@ def _test_tracked0_git1(proj2wdir, trksubdir, prt_desc=True):
         dircur = join(dirproj, 'doc')
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked0_git1 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk is None, str(finder)
@@ -176,7 +180,7 @@ def _test_tracked1_git1(proj2wdir, trksubdir, prt_desc=True):
         dircur = dirproj
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked1_git1 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)
@@ -190,7 +194,7 @@ def _test_tracked1_git1(proj2wdir, trksubdir, prt_desc=True):
         dircur = join(dirproj, 'doc')
         tic = default_timer()
         finder = CfgFinder(dircur=dircur, trksubdir=trksubdir)
-        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder()')  # PRT
+        print(f'{timedelta(seconds=default_timer()-tic)} NEW CfgFinder() _tracked1_git1 {dircur}')  # PRT
         if prt_desc:
             print(f'{proj:11} TEST {finder.get_desc()}')
         assert finder.dirtrk == dirtrk_exp, str_get_dirtrk(dirtrk_exp, finder)

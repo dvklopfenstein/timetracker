@@ -4,8 +4,13 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 import os.path as op
-from os.path import dirname
 from timetracker.consts import DIRTRK
+
+JOIN = op.join
+EXISTS = op.exists
+NORMPATH = op.normpath
+DIRNAME = op.dirname
+GITSUBDIR = '.git'
 
 
 class CfgFinder:
@@ -14,12 +19,13 @@ class CfgFinder:
     def __init__(self, dircur, trksubdir=None):
         self.dircur = dircur
         self.trksubdir = trksubdir if trksubdir is not None else DIRTRK
+        dirs_trk_git = _finddirs_trk_git(dircur, self.trksubdir)
         # Existing directory (ex: ./timetracker) or None if dir not exist
-        self.dirtrk = _get_abspathtrk(dircur, self.trksubdir)
-        self.dirgit = _get_abspathtrk(dircur, '.git')
+        self.dirtrk = dirs_trk_git.get('trk')
+        self.dirgit = dirs_trk_git.get('git')
         # Get the project tracking directory that is or will be tracked
         self.dirtrk_pathname = self._init_dirtrk()
-        self.dirproj = dirname(self.dirtrk_pathname)
+        self.dirproj = DIRNAME(self.dirtrk_pathname)
         self.project = self._init_project()
 
     def get_dirtrk(self):
@@ -28,7 +34,8 @@ class CfgFinder:
 
     def get_dirgit(self):
         """Get the .git directory if it is the current dir or any parents"""
-        return _get_abspathtrk(self.dircur, '.git')
+        ##return _get_abspathtrk(self.dircur, GITSUBDIR)
+        return self.dirgit
 
     def get_cfgfilename(self):
         """Get the local (aka project) config full filename"""
@@ -54,7 +61,7 @@ class CfgFinder:
 
     def get_dirproj(self):
         """Get the project directory"""
-        return dirname(self.dirtrk_pathname)
+        return DIRNAME(self.dirtrk_pathname)
 
     def get_dircur_rel(self):
         """Get the current directory relative to the project directory"""
@@ -74,7 +81,7 @@ class CfgFinder:
 
     def _init_project(self):
         dirtrk = self.dirtrk_pathname if self.dirtrk is None else self.dirtrk
-        return op.basename(dirname(dirtrk))
+        return op.basename(DIRNAME(dirtrk))
 
     def _init_dirtrk(self):
         """Get the project tracking directory that is or will be tracked"""
@@ -82,30 +89,67 @@ class CfgFinder:
             return self.dirtrk
         dirgit = self.get_dirgit()
         if dirgit is not None:
-            return op.normpath(op.join(dirname(dirgit), self.trksubdir))
+            return op.normpath(op.join(DIRNAME(dirgit), self.trksubdir))
         return op.normpath(op.join(self.dircur, self.trksubdir))
 
 
-def _get_abspathtrk(path, trksubdir):
-    """Get .timetracker/ proj dir by searching up parent path"""
-    trkabsdir, found = _finddirtrk(path, trksubdir)
-    return trkabsdir if found else None
-
-def _finddirtrk(path, trksubdir):
+def _finddirs_trk_git(path, trksubdir):
     """Walk up dirs until find .timetracker/ proj dir or mount dir"""
     path = op.abspath(path)
-    join = op.join
-    trkdir = join(path, trksubdir)
-    exists = op.exists
-    if exists(trkdir):
-        return op.normpath(trkdir), True
+    ret =  _init_dict_trkgit(path, trksubdir)
+    if set(ret) == {'trk', 'git'}:
+        return ret
+    path = DIRNAME(path)
     ismount = op.ismount
     while not ismount(path):
-        trkdir = join(path, trksubdir)
-        if exists(trkdir):
-            return op.normpath(trkdir), True
-        path = dirname(path)
-    return op.normpath(path), False
+        _add_trk_git(ret, path, trksubdir)
+        if set(ret) == {'trk', 'git'}:
+            return ret
+        path = DIRNAME(path)
+    ret['mountdir'] = path
+    return ret
+
+def _add_trk_git(ret, path, trksubdir):
+    if 'trk' not in ret:
+        trkdir = JOIN(path, trksubdir)
+        if EXISTS(trkdir):
+            ret['trk'] = NORMPATH(trkdir)
+    if 'git' not in ret:
+        gitdir = JOIN(path, GITSUBDIR)
+        if EXISTS(gitdir):
+            ret['git'] = NORMPATH(gitdir)
+
+def _init_dict_trkgit(path, trksubdir):
+    trkdir = JOIN(path, trksubdir)
+    gitdir = JOIN(path, GITSUBDIR)
+    exists_trk = EXISTS(trkdir)
+    exists_git = EXISTS(gitdir)
+    if exists_trk and exists_git:
+        return {'trk': NORMPATH(trkdir), 'git': NORMPATH(gitdir)}
+    if exists_trk:
+        return {'trk': NORMPATH(trkdir)}
+    return {'git': NORMPATH(gitdir)} if exists_git else {}
+
+####def _get_abspathtrk(path, trksubdir):
+####    """Get .timetracker/ proj dir by searching up parent path"""
+####    trkabsdir, found = _finddirtrk(path, trksubdir)
+####    return trkabsdir if found else None
+
+####def _finddirtrk(path, trksubdir):
+####    """Walk up dirs until find .timetracker/ proj dir or mount dir"""
+####    path = op.abspath(path)
+####    join = op.join
+####    trkdir = join(path, trksubdir)
+####    exists = op.exists
+####    if exists(trkdir):
+####        return op.normpath(trkdir), True
+####    ismount = op.ismount
+####    while not ismount(path):
+####        trkdir = join(path, trksubdir)
+####        if exists(trkdir):
+####            return op.normpath(trkdir), True
+####        path = DIRNAME(path)
+####    return op.normpath(path), False
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

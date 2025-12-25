@@ -28,16 +28,6 @@ from timetracker.cfg.finder import CfgFinder
 
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
 
-def main():
-    """Connect all parts of the timetracker"""
-    #from logging import basicConfig, DEBUG
-    #basicConfig(level=DEBUG)
-    #print('ENTERING Cli')
-    obj = Cli()
-    #print('ENTERING Cli.run')
-    obj.run()
-    #print('EXITING  Cli.run')
-
 
 class Cli:
     """Command line interface (CLI) for timetracking"""
@@ -104,7 +94,8 @@ class Cli:
             sys_exit(0)
         return args
 
-    def _init_trksubdir(self):
+    @staticmethod
+    def _init_trksubdir():
         found = False
         for arg in sys_argv:
             if found:
@@ -324,8 +315,5 @@ class Cli:
             help='Show project location if the timer is running')
         return parser
 
-
-if __name__ == '__main__':
-    main()
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

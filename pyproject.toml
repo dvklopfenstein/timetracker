@@ -65,7 +65,7 @@ classifiers=[
 
 
 [project.scripts]
-trk     = "timetracker.cli:main"
+trk     = "timetracker.main:main"
 timestr = "timetracker.epoch.cli.timestr:main"
 timecalc = "timetracker.epoch.cli.calc:main"
 

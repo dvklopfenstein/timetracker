@@ -38,13 +38,14 @@ def get_relpath(absfilename, dirproj, dirhome=None):
         return rpth if len(rpth) < len(hpth) else hpth
     return rpth
 
-def get_username(name=None):
-    """Get the default username"""
-    if name is None:
-        return environ.get('USER', 'researcher')
-    if name in environ:
-        return environ[name]
-    return name
+####def get_username(name=None):
+####    """Get the default username"""
+####    # timetracker/cli/main.py environ
+####    if name is None:
+####        return environ.get('USER', 'researcher')
+####    if name in environ:
+####        return environ[name]
+####    return name
 
 def run_cmd(cmd):
     """Run a command with output to stdout"""

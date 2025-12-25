@@ -6,7 +6,7 @@ from datetime import timedelta
 from timeit import default_timer
 from pytest import raises
 from timetracker.consts import DIRTRK
-from timetracker.cli import Cli
+from timetracker.cli.cli import Cli
 
 # pylint: disable=fixme
 
@@ -91,12 +91,13 @@ def _trk():
     assert args.command is None
 
 def _parse_args(arglist):
-    print(f'RESEARCHER  ARGS: {arglist}')
-    cli = Cli(arglist)
+    username = environ.get('USER', 'researcher')
+    print(f'{username}  ARGS: {arglist}')
+    cli = Cli(username, arglist)
     print(f'TEST ARGS: {cli.args}\n')
     return cli.args
 
 if __name__ == '__main__':
     test_cfg()
-    #test_basic()
-    #test_dir()
+    test_basic()
+    test_dir()

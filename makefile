@@ -32,7 +32,7 @@ start:
 	trk --trk-dir $(DIRTRK) start
 	find $(DIRTRK)
 	@grep -Hw --color filename $(DIRTRK)/config
-	@ls -lrt ~/timetrackers/timetracker_trk_$(USER).csv
+	@ls -lrt ../timetrackers/timetracker_trk_$(USER).csv
 	find $(DIRTRK)
 
 cancel:

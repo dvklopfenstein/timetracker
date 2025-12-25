@@ -14,6 +14,7 @@ from timeit import default_timer
 from datetime import timedelta
 
 tic0 = default_timer()
+# pylint: disable=wrong-import-position
 from timetracker.cfg.finder import CfgFinder
 print(f'{timedelta(seconds=default_timer()-tic0)} IMPORT CfgFinder')  # PRT
 

@@ -6,6 +6,7 @@ __author__ = "DV Klopfenstein, PhD"
 import os.path as op
 from timetracker.consts import DIRTRK
 
+# pylint: disable=invalid-name
 JOIN = op.join
 EXISTS = op.exists
 NORMPATH = op.normpath

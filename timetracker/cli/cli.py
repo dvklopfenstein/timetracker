@@ -3,29 +3,29 @@
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
-from timeit import default_timer  # PRT
-tic = default_timer()             # PRT
-from datetime import timedelta    # PRT
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT dt')  # PRT
+#from timeit import default_timer  # PRT
+#tic = default_timer()             # PRT
+#from datetime import timedelta    # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT dt')  # PRT
 
 from sys import argv as sys_argv
 from os import getcwd
 #from os.path import exists
 #from logging import debug
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT sys, getcwd')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT sys, getcwd')  # PRT
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from argparse import SUPPRESS
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
 from timetracker.cmd.fncs import FNCS
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
 from timetracker.cfg.finder import CfgFinder
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER CfgFinder')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER CfgFinder')  # PRT
 #from timetracker.cmd.none import cli_run_none
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER cli_run_none')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER cli_run_none')  # PRT
 
-print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
+#print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER IMPORTS')  # PRT
 
 
 class Cli:
@@ -42,9 +42,9 @@ class Cli:
         self.fcfg = self.finder.get_cfgfilename()
         self.user = username  # default username
         self.parser = self._init_parser_top('timetracker')
-        print('PARSE ARGS')                      # PRT
+#        print('PARSE ARGS')                      # PRT
         self.args = self._init_args(sysargs)
-        print(f'TIMETRACKER ARGS: {self.args}')  # PRT
+#        print(f'TIMETRACKER ARGS: {self.args}')  # PRT
 
     def run(self):
         """Run timetracker"""

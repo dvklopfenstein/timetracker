@@ -131,26 +131,5 @@ def _init_dict_trkgit(path, trksubdir):
         return {'trk': NORMPATH(trkdir)}
     return {'git': NORMPATH(gitdir)} if exists_git else {}
 
-####def _get_abspathtrk(path, trksubdir):
-####    """Get .timetracker/ proj dir by searching up parent path"""
-####    trkabsdir, found = _finddirtrk(path, trksubdir)
-####    return trkabsdir if found else None
-
-####def _finddirtrk(path, trksubdir):
-####    """Walk up dirs until find .timetracker/ proj dir or mount dir"""
-####    path = op.abspath(path)
-####    join = op.join
-####    trkdir = join(path, trksubdir)
-####    exists = op.exists
-####    if exists(trkdir):
-####        return op.normpath(trkdir), True
-####    ismount = op.ismount
-####    while not ismount(path):
-####        trkdir = join(path, trksubdir)
-####        if exists(trkdir):
-####            return op.normpath(trkdir), True
-####        path = DIRNAME(path)
-####    return op.normpath(path), False
-
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

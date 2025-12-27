@@ -9,6 +9,7 @@ in a version supported by cygwin, conda, and venv.
 __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.'
 __author__ = "DV Klopfenstein, PhD"
 
+import os
 import os.path as op
 from os.path import dirname
 from collections import namedtuple
@@ -59,7 +60,7 @@ class DocProj:
     def get_filename_csv(self, username=None, dirhome=None):
         """Get the csv filename by reading the cfg csv pattern and filling in"""
         assert username is None or '/' not in username
-        username = utils.get_username(username)
+        username = self.get_username(username)
         return self._get_csvfilename_proj_user(username, dirhome)
 
     def get_filenames_csv(self, dirhome):
@@ -90,7 +91,7 @@ class DocProj:
     def get_startobj(self, username):
         """Get a Starttime object"""
         if self.project:
-            return Starttime(self.dircfg, self.project, utils.get_username(username))
+            return Starttime(self.dircfg, self.project, self.get_username(username))
         return None
 
     ##-------------------------------------------------------------
@@ -119,6 +120,16 @@ class DocProj:
             fpat = utils.get_abspath(self.csv_filename, dirname(self.dircfg), dirhome)
             return fpat.replace('PROJECT', self.project)
         return None
+
+    @staticmethod
+    def get_username(name=None):
+        """Get the default username"""
+        # timetracker/cli/main.py environ
+        if name is None:
+            return os.environ.get('USER', 'researcher')
+        if name in os.environ:
+            return os.environ[name]
+        return name
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

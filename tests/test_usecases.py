@@ -5,7 +5,7 @@
 #from datetime import timedelta
 #from timeit import default_timer
 #from timetracker.consts import DIRTRK
-#from timetracker.cli import Cli
+#from timetracker.cli.cli import Cli
 
 # pylint: disable=fixme
 

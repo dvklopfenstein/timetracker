@@ -20,7 +20,6 @@ from argparse import SUPPRESS
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT argparse')  # PRT
 from timetracker.cmd.fncs import FNCS
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: IMPORT FNCS')  # PRT
-from timetracker.cfg.utils import get_username
 from timetracker.cfg.finder import CfgFinder
 #print(f'{timedelta(seconds=default_timer()-tic)} TOP OF CLI: AFTER CfgFinder')  # PRT
 #from timetracker.cmd.none import cli_run_none
@@ -37,11 +36,11 @@ class Cli:
         'trksubdir': set(['--trk-dir']),
     }
 
-    def __init__(self, args=None):
+    def __init__(self, username, args=None):
         sysargs = self._adjust_args(args)
         self.finder = CfgFinder(getcwd(), self._init_trksubdir())
         self.fcfg = self.finder.get_cfgfilename()
-        self.user = get_username()  # default username
+        self.user = username  # default username
         self.parser = self._init_parser_top('timetracker')
 #        print('PARSE ARGS')                      # PRT
         self.args = self._init_args(sysargs)

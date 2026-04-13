@@ -2,6 +2,7 @@
 
 # Summary
 * [**Unreleased**](#unreleased)
+* [**Release 2026-04-13 v0.8a8**](#release-2026-04-13-v08a8) Made initialization friendlier and more informative
 * [**Release 2025-11-17 v0.8a7**](#release-2025-11-17-v08a7) Easily start timer using the end time of the last time unit
 * [**Release 2025-08-18 v0.8a6**](#release-2025-08-18-v08a6) Added to documentation
 * [**Release 2025-08-09 v0.8a5**](#release-2025-08-09-v08a5) Creating Microsoft Word docx files is now optional
@@ -38,6 +39,11 @@
 # Details
 
 ## Unreleased
+
+## Release 2026-04-13 v0.8a8
+* ADDED: When initializing a repo for timetracking, add info re the --csvdir DIRNAME option to trk init
+* ADDED: Warn if --csvdir dirname does not exist
+* CHANGED: Update tests to use current year
 
 ## Release 2025-11-17 v0.8a7
 * ADDED ability to start timer 1 second after the end of the previous time slot

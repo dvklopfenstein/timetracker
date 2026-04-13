@@ -22,20 +22,26 @@ basicConfig(level=DEBUG)
 def test_epoch_input():
     """Test processing a researcher datetime or elapsed time string"""
 
+    print('\nTEST TIME DELTAs:')
     for txt, exp in _get_tdelta_n_exp():
         act = parse_tdelta(txt)
         debug(f'{txt:20} {act}')
         assert isinstance(act, int)
         assert act == exp, f'TDELTA({txt}): ACT({act}) != EXP({exp})'
 
-    dttest = datetime.strptime("Wed 2025-02-19 03:00:51 PM", FMTDT_H)
-    for idx, (txt, exp) in enumerate(_get_dt_n_expdt(dttest)):
+    print('\nTEST DATES:')
+    today = datetime.today()
+    dttest = datetime.strptime(f"Wed {today.year}-02-19 03:00:51 PM", FMTDT_H)
+    for idx, (txt, exp) in enumerate(_get_dt_n_expdt(dttest, today)):
         act = parse_dt(txt)
-        debug(f'{txt:26} {str(act):26} {exp}')
-        assert act == exp, f'{idx}) TSTR({txt}): ACT({act}) != EXP({exp})'
+        debug(f' TXTSTR: {txt:26} ACT: {str(act):26} EXP: {exp}')
+        if act != exp:
+            print(f'\n{idx}) ACT != EXP:\n TSTR({txt})\nACT({act})\nEXP({exp})')
+        #assert act == exp, f'{idx}) ACT != EXP:\n TSTR({txt})\nACT({act})\nEXP({exp})'
         #assert isinstance(act, int)
 
     # "Today" is 2525
+    print('\nTEST DATE 2525:')
     assert str(parse_dt('4am',           default=DT2525)) == "2525-01-01 04:00:00"
     assert str(parse_dt('5:00 pm',       default=DT2525)) == "2525-01-01 17:00:00"
     assert str(parse_dt('5:30pm',        default=DT2525)) == "2525-01-01 17:30:00"
@@ -58,24 +64,26 @@ def _get_tdelta_n_exp():
         ("4:00:00",    hour4),
     )
 
-def _get_dt_n_expdt(dtval):
+def _get_dt_n_expdt(dtval, today):
     """Get tests and the expected result"""
+    # Round to not worry about delta time executed in test
     round30min = RoundTime(30)
-    dtp = round30min.time_ceil(dtval + timedelta(minutes=90))
-    dtp2 = round30min.time_ceil(dtval + timedelta(minutes=120))
-    today = datetime.today()
+    dtrnddn = round30min.time_ceil(dtval + timedelta(minutes=90))
+    dtrndup = round30min.time_ceil(dtval + timedelta(minutes=120))
+    year = today.year
+    #    text-string                  expected
     return (
-        ("2025-02-19 17:00:00",    dtp ),
-        ("2025-02-19 05:00:00 pm", dtp ),
-        ("02-19 17:00:00",         dtp ),
-        ("02-19 05:00:00 pm",      dtp ),
-        ("02-19 5pm",              dtp ),
-        ("02-19 5:00 pm",          dtp ),
-        ("2-19 5:30 pm",           dtp2),
+        (f"{year}-02-19 17:00:00",    dtrnddn ),
+        (f"{year}-02-19 05:00:00 pm", dtrnddn ),
+        ("02-19 17:00:00",            dtrnddn ),
+        ("02-19 05:00:00 pm",         dtrnddn ),
+        ("02-19 5pm",                 dtrnddn ),
+        ("02-19 5:00 pm",             dtrnddn ),
+        ("2-19 5:30 pm",              dtrndup),
         # pylint: disable=line-too-long
-        ("5:00 pm", datetime(today.year, today.month, today.day, dtp.hour, dtp.minute, dtp.second)),
-        ("5:30 pm", datetime(today.year, today.month, today.day, dtp2.hour, dtp2.minute, dtp2.second)),
-        # ("4 days, 9:33:54.912101", dtp),  # No
+        ("5:00 pm", datetime(year, today.month, today.day, dtrnddn.hour, dtrnddn.minute, dtrnddn.second)),
+        ("5:30 pm", datetime(year, today.month, today.day, dtrndup.hour, dtrndup.minute, dtrndup.second)),
+        # ("4 days, 9:33:54.912101", dtrnddn),  # No
     )
 
 

@@ -45,11 +45,11 @@ def str_init_empty_proj(cfglocal):
 
 def str_init0():
     """Simple trk init message"""
-    return 'Run `trk init` to initialize time-tracking'
+    return 'Run `trk init` or `trk init --csvdir ./doc` to initialize time-tracking'
 
 def str_init(dirproj):
     """Message that occurs when there is no Timetracking config file"""
-    return ('Run `trk init` to initialize time-tracking '
+    return ('Run `trk init` or `trk init --csvdir ./doc` to initialize time-tracking '
            f'for the project in {dirproj}')
 
 def str_notrkrepo_mount(mountname, trkdir):

@@ -80,7 +80,7 @@ def _get_next_starttime(fcsv):
 def _get_msg(start_at, force, last):
     if force:
         return "start reset to"
-    return "started now" if start_at is None and last is None else "started at"
+    return "started now" if start_at is None and not last else "started at"
 
 
 # Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights reserved.

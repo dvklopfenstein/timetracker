@@ -73,9 +73,9 @@ TIMESTRS = {
 
     # ========================================================
     # ========================================================
-    '2025-01-02 12am':{
-        'exp_dct':{'year': 2025, 'month': 1, 'day': 2, 'hour': 0},
-        'dt': datetime(2025, 1, 2, 0, 0, 0)
+    f'{NOW.year}-01-02 12am':{
+        'exp_dct':{'year': NOW.year, 'month': 1, 'day': 2, 'hour': 0},
+        'dt': datetime(NOW.year, 1, 2, 0, 0, 0)
     },
 
     '01-02 12:01am':{
@@ -103,15 +103,15 @@ TIMESTRS = {
         'dt': datetime(NOW.year, NOW.month, NOW.day, 13, 23, 0),
     },
 
-    '2025':{
+    f'{NOW.year}':{
         'exp_dct': None,
         'dt': None,
     },
 
-    '2025-06-10 08:57:12 AM':{
-        'exp_dct':{'year': 2025, 'month': 6, 'day': 10,
+    f'{NOW.year}-06-10 08:57:12 AM':{
+        'exp_dct':{'year': NOW.year, 'month': 6, 'day': 10,
                    'hour': 8, 'minute': 57, 'second': 12},
-        'dt': datetime(2025, 6, 10, 8, 57, 12),
+        'dt': datetime(NOW.year, 6, 10, 8, 57, 12),
     },
 
     # ========================================================
@@ -119,22 +119,22 @@ TIMESTRS = {
     '06-10 08:57:12 AM':{
         'exp_dct':{'month': 6, 'day': 10,
                    'hour': 8, 'minute': 57, 'second': 12},
-        'dt': datetime(2025, 6, 10, 8, 57, 12),
+        'dt': datetime(NOW.year, 6, 10, 8, 57, 12),
     },
 
     '6-10 08:57:12 AM':{
         'exp_dct':{'month': 6, 'day': 10,
                    'hour': 8, 'minute': 57, 'second': 12},
-        'dt': datetime(2025, 6, 10, 8, 57, 12),
+        'dt': datetime(NOW.year, 6, 10, 8, 57, 12),
     },
 
     # timetracker-csv requires a value for an hour
-    '2025-06-10':{'exp_dct': None, 'dt': None},
+    f'{NOW.year}-06-10':{'exp_dct': None, 'dt': None},
 
-    '2025-06-10 8:57:12am':{
-        'exp_dct':{'year': 2025, 'month': 6, 'day': 10,
+    f'{NOW.year}-06-10 8:57:12am':{
+        'exp_dct':{'year': NOW.year, 'month': 6, 'day': 10,
                    'hour': 8, 'minute': 57, 'second': 12},
-        'dt': datetime(2025, 6, 10, 8, 57, 12),
+        'dt': datetime(NOW.year, 6, 10, 8, 57, 12),
     },
 
     # ========================================================

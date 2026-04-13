@@ -92,6 +92,13 @@ class Cfg:
                 print(f'Ran `git add {filestr}`')
         if not quiet:
             print(f'Initialized project directory: {self.cfg_loc.dircfg}')
+        if dircsv is not None and not exists(dircsv):
+            self._prt_exist0_dir(dircsv)
+
+    @staticmethod
+    def _prt_exist0_dir(dircsv):
+        print(f'\n**WARNING-DIR NOT EXIST: {dircsv}')
+        print('**WARNING-CREATE THE DIRECTORY BEFORE STOPPING THE TIMER')
 
     def reinit(self, dirgit, project=None, dircsv=None, fcfg_global=None, dirhome=None):
         """Re-initialize the project, keeping existing files"""

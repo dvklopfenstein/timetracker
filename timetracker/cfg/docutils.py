@@ -4,8 +4,7 @@ __copyright__ = 'Copyright (C) 2025-present, DV Klopfenstein, PhD. All rights re
 __author__ = "DV Klopfenstein, PhD"
 
 from collections import namedtuple
-from tomlkit.exceptions import NonExistentKey
-from tomlkit.exceptions import ParseError
+import tomlkit.exceptions
 
 
 NTKEYVAL = namedtuple('RdKey', 'value error')
@@ -22,7 +21,9 @@ def get_ntvalue(doc, key, key2=None):
         value = doc[key]
         if key2 is not None:
             value = value[key2]
-    except (TypeError,NonExistentKey,ParseError) as err:
+    except (TypeError,
+            tomlkit.exceptions.NonExistentKey,
+            tomlkit.exceptions.ParseError) as err:
         error = err
         #print(f'{type(err).__name__}{err.args}')
     else:

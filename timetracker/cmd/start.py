@@ -55,7 +55,7 @@ def run_start(cfgproj, name=None, start_at=None, last=None, **kwargs):
     # Informational message
     elif not force:
         if start_at is not None:
-            print(f'Run `trk start --at {start_at} --force` to force restart')
+            print(f'Run `trk start --at "{start_at}" --force` to force restart')
     return startobj
 
 

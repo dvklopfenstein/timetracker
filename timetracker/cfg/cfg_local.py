@@ -16,7 +16,6 @@ from logging import debug
 from collections import namedtuple
 
 import tomlkit
-from tomlkit.toml_file import TOMLFile
 
 from timetracker.consts import DIRTRK
 from timetracker.consts import DIRCSV
@@ -69,7 +68,7 @@ class CfgProj:
         """Write the config file, replacing [csv][filename] value"""
         filenamecfg = self.get_filename_cfg()
         if exists(filenamecfg):
-            doc = TOMLFile(filenamecfg).read()
+            doc = tomlkit.toml_file.TOMLFile(filenamecfg).read()
             doc['csv']['filename'] = filename_str
             return self._wr_cfg(filenamecfg, doc)
         raise RuntimeError(f"CAN NOT WRITE {filenamecfg}")
@@ -144,7 +143,7 @@ class CfgProj:
             self._update_doc_globalcfgname(doc, fcfg_global)
             chgd = True
         if chgd:
-            TOMLFile(fname).write(doc)
+            tomlkit.toml_file.TOMLFile(fname).write(doc)
         else:
             print(f'No changes needed to local config: {self.filename}')
 
@@ -173,7 +172,8 @@ class CfgProj:
     def _rd_doc(self):
         """Read a config file and load it into a TOML doc"""
         fin_cfglocal = self.get_filename_cfg()
-        return TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
+        # pylint: disable=line-too-long
+        return tomlkit.toml_file.TOMLFile(fin_cfglocal).read() if exists(fin_cfglocal) else None
 
     #@staticmethod
     #def _strdbg_cfg_global(doc):
